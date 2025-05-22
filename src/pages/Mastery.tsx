@@ -1325,7 +1325,7 @@ python -m twine upload dist/*
 """
 # my_package/__init__.py
 
-# Define what's accessible via `from my_package import *`
+# Define what's accessible via 'from my_package import *'
 __all__ = ['function_a', 'ClassA', 'ClassB']
 
 # Import key components to make them available at package level
