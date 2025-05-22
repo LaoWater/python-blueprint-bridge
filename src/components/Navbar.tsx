@@ -1,48 +1,62 @@
 
-import { Link, useLocation } from 'react-router-dom';
-import { ThemeToggle } from './theme-toggle';
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { useAuth } from './AuthContext';
 import NavbarAuth from './NavbarAuth';
+import ThemeToggle from './theme-toggle';
+import { Feather } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 const Navbar = () => {
-  const location = useLocation();
-  
-  // Function to check if a link is active
-  const isActive = (path: string) => location.pathname === path;
-  
+  const { user, isAdmin, isAuthenticated } = useAuth();
+
   return (
-    <nav className="sticky top-0 z-10 backdrop-blur-md bg-white/80 dark:bg-gray-900/80 border-b border-gray-200 dark:border-gray-800 transition-all duration-300">
-      <div className="max-w-7xl mx-auto px-4">
-        <div className="flex justify-between items-center h-16">
-          <Link to="/" className="flex items-center space-x-2">
-            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-python-yellow to-python-blue flex items-center justify-center">
-              <span className="text-white font-bold text-sm">Py</span>
+    <nav className="sticky top-0 z-50 bg-white dark:bg-gray-950/90 backdrop-blur-md border-b border-border">
+      <div className="container mx-auto px-4">
+        <div className="flex h-16 items-center justify-between">
+          <div className="flex items-center">
+            <Link to="/" className="flex items-center space-x-2">
+              <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center">
+                <Feather className="text-white w-4 h-4" />
+              </div>
+              <span className="text-lg font-semibold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                Blue Pigeon
+              </span>
+            </Link>
+            
+            <div className="hidden md:flex ml-10 space-x-6 text-sm">
+              <Link 
+                to="/python"
+                className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
+              >
+                Python
+              </Link>
+              <Link 
+                to="/foundations"
+                className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
+              >
+                Foundations
+              </Link>
+              <Link 
+                to="/mastery"
+                className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
+              >
+                Mastery
+              </Link>
+              {isAdmin && (
+                <Link 
+                  to="/admin"
+                  className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
+                >
+                  Admin
+                </Link>
+              )}
             </div>
-            <span className="font-semibold text-lg text-gray-900 dark:text-white">Pythonic Transcriber</span>
-          </Link>
-          
-          <div className="flex items-center space-x-1">
-            <Link 
-              to="/" 
-              className={`px-3 py-2.5 rounded-md text-sm font-medium transition-all duration-200 hover:bg-gray-100 dark:hover:bg-gray-800 ${isActive('/') ? 'text-python-blue dark:text-python-yellow font-semibold' : 'text-gray-700 dark:text-gray-300'}`}
-            >
-              Launchpad
-            </Link>
-            <Link 
-              to="/foundations" 
-              className={`px-3 py-2.5 rounded-md text-sm font-medium transition-all duration-200 hover:bg-gray-100 dark:hover:bg-gray-800 ${isActive('/foundations') ? 'text-python-blue dark:text-python-yellow font-semibold' : 'text-gray-700 dark:text-gray-300'}`}
-            >
-              Foundations
-            </Link>
-            <Link 
-              to="/mastery" 
-              className={`px-3 py-2.5 rounded-md text-sm font-medium transition-all duration-200 hover:bg-gray-100 dark:hover:bg-gray-800 ${isActive('/mastery') ? 'text-python-blue dark:text-python-yellow font-semibold' : 'text-gray-700 dark:text-gray-300'}`}
-            >
-              Mastery
-            </Link>
-            <div className="ml-2 flex items-center space-x-2">
-              <ThemeToggle />
-              <NavbarAuth />
-            </div>
+          </div>
+
+          <div className="flex items-center space-x-4">
+            <ThemeToggle />
+            <NavbarAuth />
           </div>
         </div>
       </div>

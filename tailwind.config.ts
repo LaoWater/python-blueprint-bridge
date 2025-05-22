@@ -31,6 +31,12 @@ export default {
 					dark: '#1A2733',
 					light: '#F3F8FC',
 				},
+				bluepigeon: {
+					blue: '#2563eb',
+					indigo: '#4f46e5',
+					dark: '#1e3a8a',
+					light: '#F3F8FC',
+				},
 				primary: {
 					DEFAULT: 'hsl(var(--primary))',
 					foreground: 'hsl(var(--primary-foreground))'
@@ -109,7 +115,42 @@ export default {
 			backgroundImage: {
 				'blueprint-grid': 'linear-gradient(#306998 1px, transparent 1px), linear-gradient(90deg, #306998 1px, transparent 1px)',
 			},
+			typography: (theme: any) => ({
+				DEFAULT: {
+					css: {
+						maxWidth: 'none',
+						color: theme('colors.gray.700'),
+						'h1, h2, h3, h4': {
+							color: theme('colors.gray.900'),
+							'font-weight': '600',
+						},
+						a: {
+							color: theme('colors.blue.600'),
+							'&:hover': {
+								color: theme('colors.blue.700'),
+							},
+						},
+					},
+				},
+				dark: {
+					css: {
+						color: theme('colors.gray.300'),
+						'h1, h2, h3, h4': {
+							color: theme('colors.gray.100'),
+						},
+						a: {
+							color: theme('colors.blue.400'),
+							'&:hover': {
+								color: theme('colors.blue.300'),
+							},
+						},
+					},
+				},
+			}),
 		}
 	},
-	plugins: [require("tailwindcss-animate")],
+	plugins: [
+		require("tailwindcss-animate"),
+		require('@tailwindcss/typography'),
+	],
 } satisfies Config;

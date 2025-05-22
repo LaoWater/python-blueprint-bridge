@@ -1,6 +1,6 @@
 
 import React, { useState, useRef, useEffect } from 'react';
-import { MessageCircle, X, Send, User } from 'lucide-react';
+import { MessageCircle, X, Send, Bot } from 'lucide-react';
 import { useTheme } from './theme-provider';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -84,8 +84,8 @@ const ChatButton = () => {
     <div className="fixed bottom-8 right-8 z-50">
       {isOpen && (
         <div className="mb-4 w-96 h-[500px] bg-white dark:bg-gray-900 rounded-lg shadow-xl border border-border animate-fade-in overflow-hidden">
-          <div className="p-4 bg-python-blue dark:bg-python-dark text-white dark:text-python-yellow flex justify-between items-center">
-            <h3 className="font-medium">Python Assistant</h3>
+          <div className="p-4 bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-indigo-800 dark:to-blue-900 text-white dark:text-python-yellow flex justify-between items-center">
+            <h3 className="font-medium">Blue Pigeon Assistant</h3>
             <button onClick={toggleChat} className="p-1 rounded-full hover:bg-white/10">
               <X size={18} />
             </button>
@@ -101,12 +101,12 @@ const ChatButton = () => {
                   <div 
                     className={`p-3 rounded-lg max-w-[80%] ${
                       message.sender === 'user' 
-                        ? 'bg-python-light dark:bg-python-dark text-python-blue dark:text-python-yellow self-end' 
+                        ? 'bg-gradient-to-r from-blue-500/80 to-indigo-500/80 text-white dark:from-blue-700 dark:to-indigo-800 self-end' 
                         : 'bg-gray-100 dark:bg-gray-800 self-start'
                     }`}
                   >
                     <p className="text-sm whitespace-pre-wrap">{message.content}</p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                    <p className="text-xs text-gray-300 dark:text-gray-400 mt-1">
                       {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </p>
                   </div>
@@ -129,7 +129,7 @@ const ChatButton = () => {
                 onClick={handleSendMessage}
                 size="icon"
                 disabled={!inputText.trim()}
-                className="shrink-0"
+                className="shrink-0 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700"
               >
                 <Send size={18} />
               </Button>
@@ -140,10 +140,12 @@ const ChatButton = () => {
       
       <button 
         onClick={toggleChat}
-        className="flex items-center justify-center w-14 h-14 bg-python-blue dark:bg-python-dark text-white rounded-full shadow-lg hover:bg-python-blue/90 dark:hover:bg-python-dark/90 transition-all"
+        className="flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-500 to-indigo-600 dark:from-blue-600 dark:to-indigo-800 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden"
         aria-label="Open chat assistant"
       >
-        <MessageCircle size={24} className="animate-pulse" />
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-indigo-500 opacity-0 hover:opacity-30 transition-opacity duration-300"></div>
+        <div className="absolute inset-0 blue-pigeon-glow"></div>
+        <Bot size={28} className="relative z-10" />
       </button>
     </div>
   );

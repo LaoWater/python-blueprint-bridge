@@ -5,6 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "@/components/theme-provider";
+import LandingPage from "./pages/LandingPage";
 import Index from "./pages/Index";
 import Foundations from "./pages/Foundations";
 import Mastery from "./pages/Mastery";
@@ -21,7 +22,7 @@ const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <ThemeProvider defaultTheme="light" storageKey="pythonic-theme">
+    <ThemeProvider defaultTheme="light" storageKey="bluepigeon-theme">
       <AuthProvider>
         <ContentProvider>
           <TooltipProvider>
@@ -31,7 +32,8 @@ const App = () => (
               <div className="min-h-screen bg-background transition-colors duration-300">
                 <Navbar />
                 <Routes>
-                  <Route path="/" element={<Index />} />
+                  <Route path="/" element={<LandingPage />} />
+                  <Route path="/python" element={<Index />} />
                   <Route path="/foundations" element={<Foundations />} />
                   <Route path="/mastery" element={<Mastery />} />
                   <Route path="/auth" element={<AuthPage />} />
