@@ -26,31 +26,36 @@ const EditableContent = ({ type, page, section, children, className, contentId }
 
   const handleSave = async () => {
     try {
-      let data: Partial<ContentRow> = {
+      // Define the data to update, starting with updated_at
+      const updateData: Partial<ContentRow> = {
         updated_at: new Date().toISOString(),
       };
 
       // Set the appropriate field based on the type
-      if (type === 'title') data.title = content;
-      else if (type === 'description') data.description = content;
-      else if (type === 'code') data.code = content;
+      if (type === 'title') updateData.title = content;
+      else if (type === 'description') updateData.description = content;
+      else if (type === 'code') updateData.code = content;
 
       if (contentId) {
         // Update existing content
         const { error } = await supabase
           .from('content')
-          .update(data)
+          .update(updateData)
           .eq('id', contentId);
 
         if (error) throw error;
       } else {
         // Create new content if it doesn't exist
-        data.page = page;
-        data.section = section;
+        // Make sure page and section are included for new content
+        const insertData = {
+          ...updateData,
+          page,
+          section,
+        };
         
         const { error } = await supabase
           .from('content')
-          .insert([data]);
+          .insert(insertData);
 
         if (error) throw error;
       }
