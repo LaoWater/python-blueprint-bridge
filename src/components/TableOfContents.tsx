@@ -24,14 +24,14 @@ const TableOfContents = ({ items }: TableOfContentsProps) => {
   };
 
   return (
-    <div className="sticky top-24 max-h-[calc(100vh-6rem)] overflow-y-auto p-4 bg-white border border-gray-200 rounded-md">
-      <h3 className="text-sm font-medium text-gray-900 mb-3">On This Page</h3>
+    <div className="sticky top-24 max-h-[calc(100vh-6rem)] overflow-y-auto p-4 bg-white/50 dark:bg-gray-900/50 backdrop-blur-md border border-gray-200 dark:border-gray-800 rounded-md transition-all duration-300 animate-fade-in shadow-sm hover:shadow-md">
+      <h3 className="text-sm font-medium text-gray-900 dark:text-white mb-3">On This Page</h3>
       <ul className="space-y-2 text-sm">
         {items.map((item) => (
           <li key={item.id}>
             <button
               onClick={() => scrollToSection(item.id)}
-              className="text-gray-600 hover:text-python-blue text-left w-full transition-colors"
+              className="text-gray-600 dark:text-gray-400 hover:text-python-blue dark:hover:text-python-yellow text-left w-full transition-colors"
             >
               {item.title}
             </button>

@@ -21,8 +21,28 @@ const Index = () => {
     window.scrollTo(0, 0);
   }, []);
 
+  // Create a staggered animation effect for the sections
+  useEffect(() => {
+    const sections = document.querySelectorAll('.concept-card');
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+    
+    sections.forEach((section) => observer.observe(section));
+    
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen transition-colors duration-300">
       <PageHeader 
         title="Python Launchpad" 
         subtitle="Essential syntax for common tasks, presented as direct Python equivalents to familiar concepts."

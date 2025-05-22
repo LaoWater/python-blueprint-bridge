@@ -36,6 +36,36 @@
     --radius: 0.5rem;
   }
 
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+  }
+
   * {
     @apply border-border;
   }
@@ -51,23 +81,23 @@
 
 @layer components {
   .blueprint {
-    @apply bg-python-light bg-[size:40px_40px] bg-blueprint-grid bg-opacity-[0.03];
+    @apply bg-python-light bg-[size:40px_40px] bg-blueprint-grid bg-opacity-[0.03] dark:bg-python-dark dark:bg-opacity-[0.05] transition-all duration-300;
   }
   
   .code-block {
-    @apply relative bg-white border border-border rounded-md shadow-sm p-4 my-4 overflow-x-auto;
+    @apply relative bg-white dark:bg-gray-900 border border-border rounded-md shadow-sm p-4 my-4 overflow-x-auto transition-all duration-200;
   }
   
   .code-block pre {
-    @apply m-0 font-mono text-sm text-gray-800;
+    @apply m-0 font-mono text-sm text-gray-800 dark:text-gray-200;
   }
   
   .code-block-title {
-    @apply absolute top-2 right-2 text-xs text-gray-500;
+    @apply absolute top-2 right-2 text-xs text-gray-500 dark:text-gray-400;
   }
   
   .copy-button {
-    @apply absolute top-2 right-2 p-1 rounded-md text-gray-500 hover:text-gray-900 hover:bg-gray-100 transition-colors;
+    @apply absolute top-2 right-2 p-1 rounded-md text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors;
   }
   
   .section-container {
@@ -75,26 +105,68 @@
   }
   
   .page-title {
-    @apply text-4xl font-bold mb-2 text-gray-900;
+    @apply text-4xl font-bold mb-2 text-gray-900 dark:text-white;
   }
   
   .page-subtitle {
-    @apply text-xl text-gray-600 mb-8;
+    @apply text-xl text-gray-600 dark:text-gray-300 mb-8;
   }
   
   .concept-card {
-    @apply bg-white border border-border rounded-lg shadow-sm p-6 my-8 animate-fade-in;
+    @apply bg-white dark:bg-gray-900/80 border border-border rounded-lg shadow-sm p-6 my-8 backdrop-blur-sm hover:shadow-md transition-all duration-300;
+    animation: fadeInUp 0.6s ease-out forwards;
+    opacity: 0;
+    transform: translateY(20px);
   }
   
   .concept-title {
-    @apply text-xl font-semibold mb-2 text-python-blue flex items-center;
+    @apply text-xl font-semibold mb-2 text-python-blue dark:text-python-yellow flex items-center;
   }
   
   .analogy-badge {
-    @apply inline-flex items-center rounded-full bg-python-light text-python-blue px-2 py-1 text-xs font-medium ml-2;
+    @apply inline-flex items-center rounded-full bg-python-light dark:bg-python-dark text-python-blue dark:text-python-yellow px-2 py-1 text-xs font-medium ml-2 transition-colors duration-200;
   }
   
   .use-case {
-    @apply text-sm text-gray-600 mt-2 italic;
+    @apply text-sm text-gray-600 dark:text-gray-400 mt-2 italic;
+  }
+
+  /* Animation for staggered card appearance */
+  @keyframes fadeInUp {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animation-delay-150 {
+    animation-delay: 150ms;
+  }
+
+  /* Grid background patterns */
+  .bg-grid-small-white {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 8 8'%3E%3Cg fill='%23FFFFFF' fill-opacity='0.1'%3E%3Cpath fill-rule='evenodd' d='M0 0h4v4H0V0zm4 4h4v4H4V4z'/%3E%3C/g%3E%3C/svg%3E");
   }
 }
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.hover\:animate-pulse:hover {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Apply staggered animations to concept cards */
+.concept-card:nth-child(2) { animation-delay: 0.1s; }
+.concept-card:nth-child(3) { animation-delay: 0.2s; }
+.concept-card:nth-child(4) { animation-delay: 0.3s; }
+.concept-card:nth-child(5) { animation-delay: 0.4s; }
+.concept-card:nth-child(6) { animation-delay: 0.5s; }
+.concept-card:nth-child(7) { animation-delay: 0.6s; }
+.concept-card:nth-child(8) { animation-delay: 0.7s; }
