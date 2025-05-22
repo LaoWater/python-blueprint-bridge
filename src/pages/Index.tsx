@@ -1,10 +1,17 @@
-
 import { useState, useEffect } from 'react';
-import PageHeader from '../components/PageHeader';
-import CodeBlock from '../components/CodeBlock';
+import { useAuth } from '@/components/AuthContext';
+import { useContent } from '@/components/ContentProvider';
 import TableOfContents from '../components/TableOfContents';
+import CodeBlock from '../components/CodeBlock';
+import EditablePageHeader from '../components/EditablePageHeader';
+import EditableCodeBlock from '../components/EditableCodeBlock';
+import { Button } from '@/components/ui/button';
+import { supabase } from '@/integrations/supabase/client';
+import { seedInitialContent } from '@/migrations/initialContentData';
 
 const Index = () => {
+  const { isAdmin } = useAuth();
+  const { content, loading } = useContent();
   const [tocItems, setTocItems] = useState([
     { id: 'variables-basic-types', title: 'Variables & Basic Types' },
     { id: 'collections', title: 'Collections' },
@@ -15,6 +22,13 @@ const Index = () => {
     { id: 'error-handling', title: 'Error Handling' },
     { id: 'list-comprehensions', title: 'List Comprehensions' }
   ]);
+
+  // Initialize content if admin and content is empty
+  useEffect(() => {
+    if (isAdmin && !loading && Object.keys(content).length === 0) {
+      seedInitialContent();
+    }
+  }, [isAdmin, loading, content]);
 
   // Scroll to top on page load
   useEffect(() => {
@@ -43,9 +57,10 @@ const Index = () => {
 
   return (
     <div className="min-h-screen transition-colors duration-300">
-      <PageHeader 
-        title="Python Launchpad" 
-        subtitle="Essential syntax for common tasks, presented as direct Python equivalents to familiar concepts."
+      <EditablePageHeader 
+        page="launchpad" 
+        defaultTitle="Python Launchpad" 
+        defaultSubtitle="Essential syntax for common tasks, presented as direct Python equivalents to familiar concepts."
       />
       
       <div className="max-w-7xl mx-auto px-4 py-8 flex">
@@ -55,7 +70,7 @@ const Index = () => {
             <h2 className="concept-title">Variables & Basic Types</h2>
             <p className="mb-4">Python uses dynamic typing - no type declarations needed.</p>
             
-            <CodeBlock
+            <EditableCodeBlock
               title="Variable Declaration" 
               code={`# No type declarations required
 name = "Python"  # string
@@ -70,6 +85,8 @@ x, y, z = 1, 2, 3
 print(type(name))  # <class 'str'>
 print(type(age))   # <class 'int'>
 print(type(price)) # <class 'float'>`}
+              page="launchpad"
+              section="variables-basic-types"
             />
             
             <div className="analogy-badge">Similar to: var in JavaScript, auto in C++</div>
@@ -80,7 +97,7 @@ print(type(price)) # <class 'float'>`}
             <h2 className="concept-title">Collections</h2>
             
             <h3 className="text-lg font-medium mb-2 mt-4">Lists</h3>
-            <CodeBlock
+            <EditableCodeBlock
               title="Creating and Working with Lists"
               code={`# Creating lists
 numbers = [1, 2, 3, 4, 5]
@@ -100,6 +117,8 @@ numbers.insert(1, 10)    # [1, 10, 2, 3, 4, 5, 6]
 popped = numbers.pop()   # popped = 6, numbers = [1, 10, 2, 3, 4, 5]
 numbers.remove(10)       # [1, 2, 3, 4, 5]
 length = len(numbers)    # 5`}
+              page="launchpad"
+              section="collections-lists"
             />
             <div className="analogy-badge">Similar to: ArrayList in Java, vector in C++</div>
             <p className="use-case">Use for ordered collections of items that may change during program execution.</p>

@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Copy, Check } from 'lucide-react';
 import { useContent } from './ContentProvider';
 import EditableContent from './EditableContent';
@@ -14,7 +14,7 @@ interface CodeBlockProps {
 
 const EditableCodeBlock = ({ title, language = 'python', code, page, section }: CodeBlockProps) => {
   const [copied, setCopied] = useState(false);
-  const { getContent } = useContent();
+  const { getContent, loading } = useContent();
   
   const codeContent = getContent(page, section);
   const displayCode = codeContent?.code || code;
@@ -26,7 +26,7 @@ const EditableCodeBlock = ({ title, language = 'python', code, page, section }: 
   };
 
   return (
-    <div className="code-block">
+    <div className="code-block relative group mb-4">
       <div className="flex justify-between mb-2">
         {title && <span className="text-sm font-medium text-python-blue dark:text-python-yellow">{title}</span>}
         <div className="flex items-center gap-2">
@@ -42,13 +42,13 @@ const EditableCodeBlock = ({ title, language = 'python', code, page, section }: 
         className="relative"
       >
         <pre className="p-4 bg-gray-50 dark:bg-gray-800 rounded-md overflow-x-auto">
-          <code>{displayCode}</code>
+          <code className="language-python">{displayCode}</code>
         </pre>
       </EditableContent>
       
       <button 
         onClick={handleCopy} 
-        className="copy-button" 
+        className="absolute top-3 right-3 p-2 bg-white/90 dark:bg-gray-800/90 rounded-md shadow-sm opacity-0 group-hover:opacity-100 transition-opacity"
         aria-label="Copy code to clipboard"
       >
         {copied ? (
