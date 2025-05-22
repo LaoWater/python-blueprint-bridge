@@ -3,12 +3,12 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from './AuthContext';
 import NavbarAuth from './NavbarAuth';
-import ThemeToggle from './theme-toggle';
+import { ThemeToggle } from '@/components/theme-toggle';
 import { Feather } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const Navbar = () => {
-  const { user, isAdmin, isAuthenticated } = useAuth();
+  const { user, isAdmin } = useAuth();
 
   return (
     <nav className="sticky top-0 z-50 bg-white dark:bg-gray-950/90 backdrop-blur-md border-b border-border">

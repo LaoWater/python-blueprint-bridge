@@ -3,7 +3,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useTheme } from '@/components/theme-provider';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, Code, Package, Tool, Feather, Zap, BookOpen } from 'lucide-react';
+import { ArrowRight, Code, Package, Wrench, Feather, Zap, BookOpen } from 'lucide-react';
 
 const LandingPage = () => {
   const { theme } = useTheme();
@@ -94,7 +94,7 @@ const LandingPage = () => {
             
             <div className="feature-card">
               <div className="feature-icon">
-                <Tool className="h-6 w-6 text-blue-600 dark:text-blue-400" />
+                <Wrench className="h-6 w-6 text-blue-600 dark:text-blue-400" />
               </div>
               <h3 className="text-xl font-semibold mb-2">Common Patterns</h3>
               <p className="text-gray-600 dark:text-gray-300">
