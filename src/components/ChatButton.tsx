@@ -84,14 +84,19 @@ const ChatButton = () => {
     <div className="fixed bottom-8 right-8 z-50">
       {isOpen && (
         <div className="mb-4 w-96 h-[500px] bg-white dark:bg-gray-900 rounded-lg shadow-xl border border-border animate-fade-in overflow-hidden">
-          <div className="p-4 bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-indigo-800 dark:to-blue-900 text-white dark:text-python-yellow flex justify-between items-center">
-            <h3 className="font-medium">Blue Pigeon Assistant</h3>
-            <button onClick={toggleChat} className="p-1 rounded-full hover:bg-white/10">
+          <div className="p-4 bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-indigo-800 dark:to-blue-900 text-white dark:text-blue-100 flex justify-between items-center">
+            <div className="flex items-center">
+              <div className="w-6 h-6 bg-white/20 rounded-full flex items-center justify-center mr-2">
+                <Bot size={14} className="text-white" />
+              </div>
+              <h3 className="font-medium">Blue Pigeon Assistant</h3>
+            </div>
+            <button onClick={toggleChat} className="p-1 rounded-full hover:bg-white/10 transition-colors">
               <X size={18} />
             </button>
           </div>
           
-          <div className="p-4 h-[calc(100%-140px)] overflow-y-auto">
+          <div className="p-4 h-[calc(100%-140px)] overflow-y-auto bg-gray-50 dark:bg-gray-900">
             <div className="flex flex-col space-y-4">
               {messages.map((message, index) => (
                 <div 
@@ -101,8 +106,8 @@ const ChatButton = () => {
                   <div 
                     className={`p-3 rounded-lg max-w-[80%] ${
                       message.sender === 'user' 
-                        ? 'bg-gradient-to-r from-blue-500/80 to-indigo-500/80 text-white dark:from-blue-700 dark:to-indigo-800 self-end' 
-                        : 'bg-gray-100 dark:bg-gray-800 self-start'
+                        ? 'bg-gradient-to-r from-blue-500 to-indigo-500 text-white dark:from-blue-600 dark:to-indigo-700 shadow-sm' 
+                        : 'bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 shadow-sm'
                     }`}
                   >
                     <p className="text-sm whitespace-pre-wrap">{message.content}</p>
@@ -116,14 +121,14 @@ const ChatButton = () => {
             </div>
           </div>
           
-          <div className="p-3 border-t border-border">
+          <div className="p-3 border-t border-border bg-white dark:bg-gray-900">
             <div className="flex items-center space-x-2">
               <Input
                 value={inputText}
                 onChange={(e) => setInputText(e.target.value)}
                 onKeyDown={handleKeyPress}
                 placeholder="Ask about Python..."
-                className="flex-grow"
+                className="flex-grow dark:bg-gray-800"
               />
               <Button 
                 onClick={handleSendMessage}
@@ -138,14 +143,16 @@ const ChatButton = () => {
         </div>
       )}
       
+      {/* Fixed chat button with transparent background */}
       <button 
         onClick={toggleChat}
-        className="flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-500 to-indigo-600 dark:from-blue-600 dark:to-indigo-800 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden"
+        className="relative flex items-center justify-center w-16 h-16 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden"
         aria-label="Open chat assistant"
       >
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-indigo-600 dark:from-blue-600 dark:to-indigo-800"></div>
         <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-indigo-500 opacity-0 hover:opacity-30 transition-opacity duration-300"></div>
         <div className="absolute inset-0 blue-pigeon-glow"></div>
-        <Bot size={28} className="relative z-10" />
+        <Bot size={28} className="relative z-10 text-white" />
       </button>
     </div>
   );

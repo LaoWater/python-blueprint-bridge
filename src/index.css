@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -179,12 +178,12 @@
 
   /* Hero section styles */
   .hero-section {
-    @apply relative min-h-[70vh] flex flex-col items-center justify-center overflow-hidden;
-    background: linear-gradient(135deg, rgba(30, 64, 175, 0.05) 0%, rgba(79, 70, 229, 0.1) 100%);
+    @apply relative min-h-[85vh] flex flex-col items-center justify-center overflow-hidden;
+    background: linear-gradient(135deg, rgba(30, 64, 175, 0.02) 0%, rgba(79, 70, 229, 0.05) 100%);
   }
   
   .hero-content {
-    @apply z-10 text-center max-w-3xl px-4;
+    @apply z-10 text-center max-w-4xl px-4 py-16;
   }
   
   .hero-title {
@@ -192,13 +191,13 @@
     background: linear-gradient(135deg, #1e40af 0%, #4f46e5 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    animation: title-reveal 1s ease-out forwards;
+    animation: title-reveal 1.2s ease-out forwards;
   }
   
   @keyframes title-reveal {
     from {
       opacity: 0;
-      transform: translateY(20px);
+      transform: translateY(30px);
     }
     to {
       opacity: 1;
@@ -221,7 +220,7 @@
   }
   
   .hero-btn {
-    @apply transition-all duration-300 transform hover:scale-105;
+    @apply transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg;
     animation: btn-reveal 1s ease-out 0.6s forwards;
     opacity: 0;
   }
@@ -232,9 +231,25 @@
     }
   }
   
+  /* Enhanced floating elements */
   .hero-bg-element {
-    @apply absolute w-96 h-96 bg-blue-500/10 dark:bg-blue-500/20 rounded-full filter blur-3xl;
-    animation: float 10s ease-in-out infinite alternate;
+    @apply absolute bg-gradient-to-br from-blue-500/10 to-indigo-500/10 dark:from-blue-500/15 dark:to-indigo-500/15 rounded-full filter blur-3xl;
+  }
+  
+  .animate-float {
+    animation: float 15s ease-in-out infinite alternate;
+  }
+  
+  .animate-float-delay-1 {
+    animation: float 20s ease-in-out 2s infinite alternate-reverse;
+  }
+  
+  .animate-float-delay-2 {
+    animation: float 18s ease-in-out 1s infinite alternate;
+  }
+  
+  .animate-float-delay-3 {
+    animation: float 22s ease-in-out 3s infinite alternate-reverse;
   }
   
   @keyframes float {
@@ -242,13 +257,33 @@
       transform: translate(0, 0) rotate(0deg);
     }
     100% {
-      transform: translate(50px, -20px) rotate(10deg);
+      transform: translate(50px, -30px) rotate(8deg);
     }
   }
   
-  /* Features section */
+  /* Animate on scroll */
+  .animate-on-scroll {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s ease-out;
+  }
+  
+  .animate-on-scroll.animate-in {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  
+  .delay-200 {
+    transition-delay: 0.2s;
+  }
+  
+  .delay-300 {
+    transition-delay: 0.3s;
+  }
+  
+  /* Enhanced Features section */
   .feature-card {
-    @apply bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm hover:shadow-md transition-all duration-300;
+    @apply relative bg-white dark:bg-gray-800/80 p-6 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm hover:shadow-md transition-all duration-300;
     animation: fade-in 0.6s ease-out forwards;
     opacity: 0;
   }
@@ -260,7 +295,7 @@
   }
   
   .feature-icon {
-    @apply w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center mb-4;
+    @apply w-12 h-12 bg-blue-100/80 dark:bg-blue-900/30 rounded-lg flex items-center justify-center mb-4 transition-all duration-300;
   }
   
   .feature-card:nth-child(2) {
@@ -271,7 +306,7 @@
     animation-delay: 0.4s;
   }
   
-  /* Partners section */
+  /* Updated Partners section */
   .partners-section {
     @apply py-16 bg-gray-50 dark:bg-gray-900;
     animation: bg-pulse 10s ease-in-out infinite alternate;
@@ -308,28 +343,38 @@
   }
   
   .partners-logo {
-    @apply transition-all duration-300 hover:opacity-80 max-h-16;
+    @apply transition-all duration-300 hover:opacity-80;
+  }
+
+  /* Slow pulse animation */
+  .animate-pulse-slow {
+    animation: pulse-slow 3s ease-in-out infinite alternate;
+  }
+  
+  @keyframes pulse-slow {
+    0% {
+      opacity: 0.4;
+      transform: scale(0.98);
+    }
+    100% {
+      opacity: 0.7;
+      transform: scale(1.02);
+    }
   }
 }
 
-@keyframes pulse {
-  0%, 100% {
-    opacity: 1;
+/* Fix for ChatButton to have transparent background */
+@layer utilities {
+  .hover\:animate-pulse:hover {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   }
-  50% {
-    opacity: 0.7;
-  }
+  
+  /* Apply staggered animations to concept cards */
+  .concept-card:nth-child(2) { animation-delay: 0.1s; }
+  .concept-card:nth-child(3) { animation-delay: 0.2s; }
+  .concept-card:nth-child(4) { animation-delay: 0.3s; }
+  .concept-card:nth-child(5) { animation-delay: 0.4s; }
+  .concept-card:nth-child(6) { animation-delay: 0.5s; }
+  .concept-card:nth-child(7) { animation-delay: 0.6s; }
+  .concept-card:nth-child(8) { animation-delay: 0.7s; }
 }
-
-.hover\:animate-pulse:hover {
-  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
-/* Apply staggered animations to concept cards */
-.concept-card:nth-child(2) { animation-delay: 0.1s; }
-.concept-card:nth-child(3) { animation-delay: 0.2s; }
-.concept-card:nth-child(4) { animation-delay: 0.3s; }
-.concept-card:nth-child(5) { animation-delay: 0.4s; }
-.concept-card:nth-child(6) { animation-delay: 0.5s; }
-.concept-card:nth-child(7) { animation-delay: 0.6s; }
-.concept-card:nth-child(8) { animation-delay: 0.7s; }
