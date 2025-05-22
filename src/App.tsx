@@ -9,6 +9,9 @@ import Index from "./pages/Index";
 import Foundations from "./pages/Foundations";
 import Mastery from "./pages/Mastery";
 import NotFound from "./pages/NotFound";
+import AuthPage from "./pages/AuthPage";
+import ProfilePage from "./pages/ProfilePage";
+import AdminPage from "./pages/AdminPage";
 import Navbar from "./components/Navbar";
 import ChatButton from "./components/ChatButton";
 import { AuthProvider } from "./components/AuthContext";
@@ -31,6 +34,9 @@ const App = () => (
                   <Route path="/" element={<Index />} />
                   <Route path="/foundations" element={<Foundations />} />
                   <Route path="/mastery" element={<Mastery />} />
+                  <Route path="/auth" element={<AuthPage />} />
+                  <Route path="/profile" element={<ProfilePage />} />
+                  <Route path="/admin" element={<AdminPage />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
                 <ChatButton />

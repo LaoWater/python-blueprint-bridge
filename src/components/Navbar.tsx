@@ -1,6 +1,7 @@
 
 import { Link, useLocation } from 'react-router-dom';
 import { ThemeToggle } from './theme-toggle';
+import NavbarAuth from './NavbarAuth';
 
 const Navbar = () => {
   const location = useLocation();
@@ -38,7 +39,10 @@ const Navbar = () => {
             >
               Mastery
             </Link>
-            <ThemeToggle />
+            <div className="ml-2 flex items-center space-x-2">
+              <ThemeToggle />
+              <NavbarAuth />
+            </div>
           </div>
         </div>
       </div>
