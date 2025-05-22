@@ -30,18 +30,27 @@ const EditableContent = ({ type, page, section, children, className, contentId }
   useEffect(() => {
     if (isEditing) {
       // Try to extract current content from the children
-      if (children && React.isValidElement(children)) {
-        const childElement = children as React.ReactElement;
-        if (childElement.props && childElement.props.children) {
-          const childContent = childElement.props.children;
-          if (typeof childContent === 'string') {
-            setContent(childContent);
-            setInitialContent(childContent);
-            return;
-          } else if (React.isValidElement(childContent) && childContent.props && typeof childContent.props.children === 'string') {
-            setContent(childContent.props.children);
-            setInitialContent(childContent.props.children);
-            return;
+      if (children) {
+        // Check if children is a valid React element
+        if (React.isValidElement(children)) {
+          const childElement = children as ReactElement;
+          // Check if the element has props and children
+          if (childElement.props && childElement.props.children) {
+            const childContent = childElement.props.children;
+            // Check if childContent is a string
+            if (typeof childContent === 'string') {
+              setContent(childContent);
+              setInitialContent(childContent);
+              return;
+            } 
+            // Check if childContent is a React element with string children
+            else if (React.isValidElement(childContent) && 
+                     childContent.props && 
+                     typeof childContent.props.children === 'string') {
+              setContent(childContent.props.children);
+              setInitialContent(childContent.props.children);
+              return;
+            }
           }
         }
       }
