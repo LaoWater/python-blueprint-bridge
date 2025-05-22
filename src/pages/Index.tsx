@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/components/AuthContext';
 import { useContent } from '@/components/ContentProvider';
@@ -5,13 +6,14 @@ import TableOfContents from '../components/TableOfContents';
 import CodeBlock from '../components/CodeBlock';
 import EditablePageHeader from '../components/EditablePageHeader';
 import EditableCodeBlock from '../components/EditableCodeBlock';
+import EditableContent from '../components/EditableContent';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
 import { seedInitialContent } from '@/migrations/initialContentData';
 
 const Index = () => {
   const { isAdmin } = useAuth();
-  const { content, loading } = useContent();
+  const { content, loading, getContent } = useContent();
   const [tocItems, setTocItems] = useState([
     { id: 'variables-basic-types', title: 'Variables & Basic Types' },
     { id: 'collections', title: 'Collections' },
@@ -67,8 +69,25 @@ const Index = () => {
         {/* Main content */}
         <div className="flex-grow max-w-4xl">
           <section id="variables-basic-types" className="concept-card">
-            <h2 className="concept-title">Variables & Basic Types</h2>
-            <p className="mb-4">Python uses dynamic typing - no type declarations needed.</p>
+            <EditableContent 
+              type="title" 
+              page="launchpad" 
+              section="variables-basic-types" 
+              contentId={getContent('launchpad', 'variables-basic-types')?.id}
+              className="concept-title"
+            >
+              <h2>Variables & Basic Types</h2>
+            </EditableContent>
+            
+            <EditableContent 
+              type="description" 
+              page="launchpad" 
+              section="variables-basic-types" 
+              contentId={getContent('launchpad', 'variables-basic-types')?.id}
+              className="mb-4"
+            >
+              <p>Python uses dynamic typing - no type declarations needed.</p>
+            </EditableContent>
             
             <EditableCodeBlock
               title="Variable Declaration" 
@@ -94,9 +113,26 @@ print(type(price)) # <class 'float'>`}
           </section>
           
           <section id="collections" className="concept-card">
-            <h2 className="concept-title">Collections</h2>
+            <EditableContent 
+              type="title" 
+              page="launchpad" 
+              section="collections" 
+              contentId={getContent('launchpad', 'collections')?.id}
+              className="concept-title"
+            >
+              <h2>Collections</h2>
+            </EditableContent>
             
-            <h3 className="text-lg font-medium mb-2 mt-4">Lists</h3>
+            <EditableContent 
+              type="title" 
+              page="launchpad" 
+              section="collections-lists" 
+              contentId={getContent('launchpad', 'collections-lists')?.id}
+              className="text-lg font-medium mb-2 mt-4"
+            >
+              <h3>Lists</h3>
+            </EditableContent>
+            
             <EditableCodeBlock
               title="Creating and Working with Lists"
               code={`# Creating lists
@@ -123,8 +159,17 @@ length = len(numbers)    # 5`}
             <div className="analogy-badge">Similar to: ArrayList in Java, vector in C++</div>
             <p className="use-case">Use for ordered collections of items that may change during program execution.</p>
 
-            <h3 className="text-lg font-medium mb-2 mt-4">Tuples</h3>
-            <CodeBlock
+            <EditableContent 
+              type="title" 
+              page="launchpad" 
+              section="collections-tuples" 
+              contentId={getContent('launchpad', 'collections-tuples')?.id}
+              className="text-lg font-medium mb-2 mt-4"
+            >
+              <h3>Tuples</h3>
+            </EditableContent>
+            
+            <EditableCodeBlock
               title="Creating and Working with Tuples"
               code={`# Creating tuples (immutable lists)
 point = (10, 20)
@@ -146,12 +191,23 @@ def get_dimensions():
     return (1920, 1080)  # Returns a tuple
     
 width, height = get_dimensions()`}
+              page="launchpad"
+              section="collections-tuples"
             />
             <div className="analogy-badge">Similar to: Immutable lists, std::tuple in C++</div>
             <p className="use-case">Use for immutable sequences, multiple return values, or when data shouldn't change.</p>
 
-            <h3 className="text-lg font-medium mb-2 mt-4">Dictionaries</h3>
-            <CodeBlock
+            <EditableContent 
+              type="title" 
+              page="launchpad" 
+              section="collections-dictionaries" 
+              contentId={getContent('launchpad', 'collections-dictionaries')?.id}
+              className="text-lg font-medium mb-2 mt-4"
+            >
+              <h3>Dictionaries</h3>
+            </EditableContent>
+            
+            <EditableCodeBlock
               title="Creating and Working with Dictionaries"
               code={`# Creating dictionaries (key-value pairs)
 user = {
@@ -179,12 +235,23 @@ items = user.items()        # dict_items([('name', 'Alice'), ('age', 29), ('emai
 
 # Dictionary comprehensions
 squares = {x: x*x for x in range(6)}  # {0:0, 1:1, 2:4, 3:9, 4:16, 5:25}`}
+              page="launchpad"
+              section="collections-dictionaries"
             />
             <div className="analogy-badge">Similar to: HashMap in Java, map in C++, Object in JavaScript</div>
             <p className="use-case">Use for key-value mappings, fast lookups, and representing structured data.</p>
 
-            <h3 className="text-lg font-medium mb-2 mt-4">Sets</h3>
-            <CodeBlock
+            <EditableContent 
+              type="title" 
+              page="launchpad" 
+              section="collections-sets" 
+              contentId={getContent('launchpad', 'collections-sets')?.id}
+              className="text-lg font-medium mb-2 mt-4"
+            >
+              <h3>Sets</h3>
+            </EditableContent>
+            
+            <EditableCodeBlock
               title="Creating and Working with Sets"
               code={`# Creating sets (unordered collections of unique elements)
 fruits = {"apple", "banana", "cherry"}
@@ -206,16 +273,35 @@ symmetric_diff = a ^ b      # {1, 2, 5, 6}
 
 # Testing membership
 is_present = "apple" in fruits  # True`}
+              page="launchpad"
+              section="collections-sets"
             />
             <div className="analogy-badge">Similar to: HashSet in Java, std::set in C++</div>
             <p className="use-case">Use for eliminating duplicates, membership testing, and mathematical set operations.</p>
           </section>
           
           <section id="control-flow" className="concept-card">
-            <h2 className="concept-title">Control Flow</h2>
+            <EditableContent 
+              type="title" 
+              page="launchpad" 
+              section="control-flow" 
+              contentId={getContent('launchpad', 'control-flow')?.id}
+              className="concept-title"
+            >
+              <h2>Control Flow</h2>
+            </EditableContent>
 
-            <h3 className="text-lg font-medium mb-2 mt-4">if/elif/else Statements</h3>
-            <CodeBlock
+            <EditableContent 
+              type="title" 
+              page="launchpad" 
+              section="control-flow-if" 
+              contentId={getContent('launchpad', 'control-flow-if')?.id}
+              className="text-lg font-medium mb-2 mt-4"
+            >
+              <h3>if/elif/else Statements</h3>
+            </EditableContent>
+            
+            <EditableCodeBlock
               title="Conditional Logic"
               code={`# Basic if-elif-else structure
 age = 20
@@ -243,12 +329,23 @@ a = [1, 2, 3]
 b = [1, 2, 3]
 print(a == b)  # True (equal content)
 print(a is b)  # False (different objects)`}
+              page="launchpad"
+              section="control-flow-if"
             />
             <div className="analogy-badge">Similar to: Conditional statements in most languages</div>
             <p className="use-case">Use for decision-making and branching logic in your program.</p>
 
-            <h3 className="text-lg font-medium mb-2 mt-4">For Loops</h3>
-            <CodeBlock
+            <EditableContent 
+              type="title" 
+              page="launchpad" 
+              section="control-flow-for" 
+              contentId={getContent('launchpad', 'control-flow-for')?.id}
+              className="text-lg font-medium mb-2 mt-4"
+            >
+              <h3>For Loops</h3>
+            </EditableContent>
+            
+            <EditableCodeBlock
               title="Iteration with For Loops"
               code={`# Iterating through a list
 fruits = ["apple", "banana", "cherry"]
@@ -277,12 +374,23 @@ for key in user:
 # More explicit dictionary iteration
 for key, value in user.items():
     print(f"{key}: {value}")`}
+              page="launchpad"
+              section="control-flow-for"
             />
             <div className="analogy-badge">Similar to: for-each loops, iterators in other languages</div>
             <p className="use-case">Use for iterating over sequences (lists, tuples, dictionaries, etc.).</p>
 
-            <h3 className="text-lg font-medium mb-2 mt-4">While Loops</h3>
-            <CodeBlock
+            <EditableContent 
+              type="title" 
+              page="launchpad" 
+              section="control-flow-while" 
+              contentId={getContent('launchpad', 'control-flow-while')?.id}
+              className="text-lg font-medium mb-2 mt-4"
+            >
+              <h3>While Loops</h3>
+            </EditableContent>
+            
+            <EditableCodeBlock
               title="While Loop Examples"
               code={`# Basic while loop
 count = 0
@@ -310,16 +418,35 @@ while attempts < 3:
     attempts += 1
 else:
     print("Access denied")`}
+              page="launchpad"
+              section="control-flow-while"
             />
             <div className="analogy-badge">Similar to: while loops in other languages</div>
             <p className="use-case">Use for repeated execution while a condition is true, especially when the number of iterations is unknown.</p>
           </section>
           
           <section id="functions" className="concept-card">
-            <h2 className="concept-title">Functions</h2>
+            <EditableContent 
+              type="title" 
+              page="launchpad" 
+              section="functions" 
+              contentId={getContent('launchpad', 'functions')?.id}
+              className="concept-title"
+            >
+              <h2>Functions</h2>
+            </EditableContent>
             
-            <h3 className="text-lg font-medium mb-2 mt-4">Basic Function Definition</h3>
-            <CodeBlock
+            <EditableContent 
+              type="title" 
+              page="launchpad" 
+              section="functions-basic" 
+              contentId={getContent('launchpad', 'functions-basic')?.id}
+              className="text-lg font-medium mb-2 mt-4"
+            >
+              <h3>Basic Function Definition</h3>
+            </EditableContent>
+            
+            <EditableCodeBlock
               title="Defining and Calling Functions"
               code={`# Basic function definition
 def greet(name):
@@ -357,12 +484,23 @@ def divide(a, b):
         ZeroDivisionError: If b is zero
     """
     return a / b`}
+              page="launchpad"
+              section="functions-basic"
             />
             <div className="analogy-badge">Similar to: Functions in most languages</div>
             <p className="use-case">Use for organizing code into reusable, named blocks.</p>
             
-            <h3 className="text-lg font-medium mb-2 mt-4">Arguments and Parameters</h3>
-            <CodeBlock
+            <EditableContent 
+              type="title" 
+              page="launchpad" 
+              section="functions-arguments" 
+              contentId={getContent('launchpad', 'functions-arguments')?.id}
+              className="text-lg font-medium mb-2 mt-4"
+            >
+              <h3>Arguments and Parameters</h3>
+            </EditableContent>
+            
+            <EditableCodeBlock
               title="Advanced Function Arguments"
               code={`# Positional vs. keyword arguments
 def create_profile(name, age, job):
@@ -404,16 +542,35 @@ user = setup_user(
     email="alice@example.com",
     location="New York"  # packed into profile dict
 )`}
+              page="launchpad"
+              section="functions-arguments"
             />
             <div className="analogy-badge">Similar to: rest parameters in JS, varargs in Java</div>
             <p className="use-case">Use for flexible function interfaces, especially when the number of arguments varies.</p>
           </section>
           
           <section id="string-manipulation" className="concept-card">
-            <h2 className="concept-title">String Manipulation</h2>
+            <EditableContent 
+              type="title" 
+              page="launchpad" 
+              section="string-manipulation" 
+              contentId={getContent('launchpad', 'string-manipulation')?.id}
+              className="concept-title"
+            >
+              <h2>String Manipulation</h2>
+            </EditableContent>
             
-            <h3 className="text-lg font-medium mb-2 mt-4">String Formatting</h3>
-            <CodeBlock
+            <EditableContent 
+              type="title" 
+              page="launchpad" 
+              section="string-formatting" 
+              contentId={getContent('launchpad', 'string-formatting')?.id}
+              className="text-lg font-medium mb-2 mt-4"
+            >
+              <h3>String Formatting</h3>
+            </EditableContent>
+            
+            <EditableCodeBlock
               title="String Formatting Options"
               code={`name = "Alice"
 age = 30
@@ -431,12 +588,23 @@ greeting3 = "Hello, {name}! You are {age} years old.".format(name=name, age=age)
 
 # %-formatting (older style)
 greeting4 = "Hello, %s! You are %d years old." % (name, age)`}
+              page="launchpad"
+              section="string-formatting"
             />
             <div className="analogy-badge">Similar to: template literals in JS, string.Format in C#</div>
             <p className="use-case">Use f-strings for readable string interpolation and formatting.</p>
 
-            <h3 className="text-lg font-medium mb-2 mt-4">Common String Methods</h3>
-            <CodeBlock
+            <EditableContent 
+              type="title" 
+              page="launchpad" 
+              section="string-methods" 
+              contentId={getContent('launchpad', 'string-methods')?.id}
+              className="text-lg font-medium mb-2 mt-4"
+            >
+              <h3>Common String Methods</h3>
+            </EditableContent>
+            
+            <EditableCodeBlock
               title="String Methods"
               code={`text = "  Hello, World!  "
 
@@ -458,14 +626,25 @@ position = text.find("World")            # 9 (index of first occurrence)
 
 # String methods don't modify the original string
 print(text)  # still "  Hello, World!  "`}
+              page="launchpad"
+              section="string-methods"
             />
             <div className="analogy-badge">Similar to: String methods in most languages</div>
             <p className="use-case">Use to manipulate and transform string content without modifying the original.</p>
           </section>
           
           <section id="file-handling" className="concept-card">
-            <h2 className="concept-title">File Handling</h2>
-            <CodeBlock
+            <EditableContent 
+              type="title" 
+              page="launchpad" 
+              section="file-handling" 
+              contentId={getContent('launchpad', 'file-handling')?.id}
+              className="concept-title"
+            >
+              <h2>File Handling</h2>
+            </EditableContent>
+            
+            <EditableCodeBlock
               title="Reading and Writing Files"
               code={`# Writing to a file
 with open("example.txt", "w") as file:
@@ -490,12 +669,23 @@ with open("example.txt", "r") as file:
 # Appending to a file
 with open("example.txt", "a") as file:
     file.write("\\nAppending new content.")`}
+              page="launchpad"
+              section="file-handling"
             />
             <div className="analogy-badge">Similar to: FileReader/FileWriter in Java, std::fstream in C++</div>
             <p className="use-case">Use the with statement for automatic resource management when working with files.</p>
 
-            <h3 className="text-lg font-medium mb-2 mt-4">Working with File Paths</h3>
-            <CodeBlock
+            <EditableContent 
+              type="title" 
+              page="launchpad" 
+              section="file-handling-paths" 
+              contentId={getContent('launchpad', 'file-handling-paths')?.id}
+              className="text-lg font-medium mb-2 mt-4"
+            >
+              <h3>Working with File Paths</h3>
+            </EditableContent>
+            
+            <EditableCodeBlock
               title="File Path Handling"
               code={`import os
 from pathlib import Path  # Modern approach (Python 3.4+)
@@ -515,14 +705,25 @@ parent_dir = path.parent             # Get parent directory
 file_name = path.name                # "config.json"
 stem = path.stem                     # "config"
 suffix = path.suffix                 # ".json"`}
+              page="launchpad"
+              section="file-handling-paths"
             />
             <div className="analogy-badge">Similar to: Path handling in Java, std::filesystem in C++17</div>
             <p className="use-case">Use pathlib for modern, object-oriented path manipulation in Python 3.4+.</p>
           </section>
           
           <section id="error-handling" className="concept-card">
-            <h2 className="concept-title">Error Handling</h2>
-            <CodeBlock
+            <EditableContent 
+              type="title" 
+              page="launchpad" 
+              section="error-handling" 
+              contentId={getContent('launchpad', 'error-handling')?.id}
+              className="concept-title"
+            >
+              <h2>Error Handling</h2>
+            </EditableContent>
+            
+            <EditableCodeBlock
               title="Try-Except Blocks"
               code={`# Basic try-except
 try:
@@ -559,14 +760,25 @@ else:
 finally:
     # Always runs, regardless of whether an exception occurred
     print("End of input processing")`}
+              page="launchpad"
+              section="error-handling"
             />
             <div className="analogy-badge">Similar to: try-catch blocks in many languages</div>
             <p className="use-case">Use to gracefully handle expected errors rather than letting programs crash.</p>
           </section>
           
           <section id="list-comprehensions" className="concept-card">
-            <h2 className="concept-title">List Comprehensions</h2>
-            <CodeBlock
+            <EditableContent 
+              type="title" 
+              page="launchpad" 
+              section="list-comprehensions" 
+              contentId={getContent('launchpad', 'list-comprehensions')?.id}
+              className="concept-title"
+            >
+              <h2>List Comprehensions</h2>
+            </EditableContent>
+            
+            <EditableCodeBlock
               title="List Comprehensions and Transformations"
               code={`# Basic list comprehension
 numbers = [1, 2, 3, 4, 5]
@@ -588,6 +800,8 @@ squares_alt = list(map(lambda x: x**2, numbers))
 
 # Alternative using filter() and map()
 even_squares_alt = list(map(lambda x: x**2, filter(lambda x: x % 2 == 0, numbers)))`}
+              page="launchpad"
+              section="list-comprehensions"
             />
             <div className="analogy-badge">Similar to: LINQ in C#, Stream API in Java, Array.map in JS</div>
             <p className="use-case">Use for concise, readable transformations and filtering of collections.</p>
