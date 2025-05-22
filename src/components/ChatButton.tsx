@@ -81,7 +81,7 @@ const ChatButton = () => {
   };
   
   return (
-    <div className="fixed bottom-8 right-8 z-50">
+    <div className="fixed bottom-12 right-8 z-999">
       {isOpen && (
         <div className="mb-4 w-96 h-[500px] bg-white dark:bg-gray-900 rounded-lg shadow-xl border border-border animate-fade-in overflow-hidden">
           <div className="p-4 bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-indigo-800 dark:to-blue-900 text-white dark:text-blue-100 flex justify-between items-center">

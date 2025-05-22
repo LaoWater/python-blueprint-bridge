@@ -73,7 +73,7 @@ const LandingPage = () => {
         </div>
         
         {/* Floating code snippets */}
-        <div className="absolute hidden md:block -right-10 top-1/3 transform rotate-6 animate-float-delay-3 opacity-70">
+        <div className="absolute hidden md:block right-10 top-1/3 transform rotate-6 animate-float-delay-3 opacity-70">
           <Card className="w-64 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm border-blue-200 dark:border-blue-900/50">
             <CardContent className="p-4 font-mono text-xs">
               <pre className="text-gray-800 dark:text-blue-300">
@@ -84,7 +84,7 @@ const LandingPage = () => {
         </div>
         
         <div className="absolute hidden md:block left-10 bottom-20 transform -rotate-3 animate-float-delay-2 opacity-70">
-          <Card className="w-56 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm border-indigo-200 dark:border-indigo-900/50">
+          <Card className="w-65 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm border-indigo-200 dark:border-indigo-900/50">
             <CardContent className="p-4 font-mono text-xs">
               <pre className="text-gray-800 dark:text-blue-300">
                 <code>{'import bluepigeon\nnew_project = bluepigeon.fly()'}</code>
