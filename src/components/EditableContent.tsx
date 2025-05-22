@@ -44,14 +44,17 @@ const EditableContent = ({ type, page, section, children, className, contentId }
               return;
             } 
             // Check if childContent is a React element with string children
-            else if (React.isValidElement(childContent) && 
-                     'props' in childContent &&
-                     childContent.props && 
-                     'children' in childContent.props &&
-                     typeof childContent.props.children === 'string') {
-              setContent(childContent.props.children);
-              setInitialContent(childContent.props.children);
-              return;
+            else if (React.isValidElement(childContent)) {
+              // Now childContent is a ReactElement, not unknown
+              const childContentElement = childContent as ReactElement;
+              if ('props' in childContentElement && 
+                  childContentElement.props && 
+                  'children' in childContentElement.props &&
+                  typeof childContentElement.props.children === 'string') {
+                setContent(childContentElement.props.children);
+                setInitialContent(childContentElement.props.children);
+                return;
+              }
             }
           }
         }
