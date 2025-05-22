@@ -10,6 +10,7 @@ import Foundations from "./pages/Foundations";
 import Mastery from "./pages/Mastery";
 import NotFound from "./pages/NotFound";
 import Navbar from "./components/Navbar";
+import ChatButton from "./components/ChatButton";
 
 const queryClient = new QueryClient();
 
@@ -28,6 +29,7 @@ const App = () => (
               <Route path="/mastery" element={<Mastery />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
+            <ChatButton />
           </div>
         </BrowserRouter>
       </TooltipProvider>

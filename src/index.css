@@ -147,6 +147,59 @@
   .bg-grid-small-white {
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 8 8'%3E%3Cg fill='%23FFFFFF' fill-opacity='0.1'%3E%3Cpath fill-rule='evenodd' d='M0 0h4v4H0V0zm4 4h4v4H4V4z'/%3E%3C/g%3E%3C/svg%3E");
   }
+  
+  /* Chat button styles */
+  .chat-button {
+    @apply fixed bottom-8 right-8 w-14 h-14 rounded-full bg-python-blue text-white shadow-lg flex items-center justify-center transition-all duration-300;
+    box-shadow: 0 0 15px rgba(48, 105, 152, 0.5); /* Python blue glow */
+    animation: pulse 3s infinite;
+  }
+  
+  .chat-button:hover {
+    @apply transform scale-110;
+    box-shadow: 0 0 20px rgba(48, 105, 152, 0.7);
+  }
+  
+  .dark .chat-button {
+    background: linear-gradient(135deg, #306998 0%, #1A2733 100%);
+    box-shadow: 0 0 15px rgba(255, 212, 59, 0.3); /* Python yellow glow in dark mode */
+  }
+  
+  .dark .chat-button:hover {
+    box-shadow: 0 0 20px rgba(255, 212, 59, 0.5);
+  }
+
+  @keyframes pulse {
+    0% {
+      box-shadow: 0 0 0 0 rgba(48, 105, 152, 0.7);
+    }
+    70% {
+      box-shadow: 0 0 0 10px rgba(48, 105, 152, 0);
+    }
+    100% {
+      box-shadow: 0 0 0 0 rgba(48, 105, 152, 0);
+    }
+  }
+  
+  .dark .chat-button {
+    @apply bg-python-dark text-python-yellow;
+  }
+  
+  .dark .pulse {
+    animation: darkPulse 3s infinite;
+  }
+  
+  @keyframes darkPulse {
+    0% {
+      box-shadow: 0 0 0 0 rgba(255, 212, 59, 0.4);
+    }
+    70% {
+      box-shadow: 0 0 0 10px rgba(255, 212, 59, 0);
+    }
+    100% {
+      box-shadow: 0 0 0 0 rgba(255, 212, 59, 0);
+    }
+  }
 }
 
 @keyframes pulse {

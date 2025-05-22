@@ -20,13 +20,13 @@ const CodeBlock = ({ title, language = 'python', code }: CodeBlockProps) => {
   return (
     <div className="code-block">
       <div className="flex justify-between mb-2">
-        {title && <span className="text-sm font-medium text-python-blue">{title}</span>}
+        {title && <span className="text-sm font-medium text-python-blue dark:text-python-yellow">{title}</span>}
         <div className="flex items-center gap-2">
-          <span className="text-xs px-2 py-1 bg-gray-100 rounded-full text-gray-600">{language}</span>
+          <span className="text-xs px-2 py-1 bg-gray-100 dark:bg-gray-800 rounded-full text-gray-600 dark:text-gray-300">{language}</span>
         </div>
       </div>
       
-      <pre className="p-4 bg-gray-50 rounded-md overflow-x-auto">
+      <pre className="p-4 bg-gray-50 dark:bg-gray-800 rounded-md overflow-x-auto">
         <code>{code}</code>
       </pre>
       
