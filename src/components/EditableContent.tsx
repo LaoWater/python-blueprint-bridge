@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect, ReactElement } from 'react';
+import React, { useState, useEffect, ReactElement, ReactNode } from 'react';
 import { useAuth } from './AuthContext';
 import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover';
 import { Textarea } from '@/components/ui/textarea';
@@ -35,7 +35,7 @@ const EditableContent = ({ type, page, section, children, className, contentId }
         if (React.isValidElement(children)) {
           const childElement = children as ReactElement;
           // Check if the element has props and children
-          if (childElement.props && childElement.props.children) {
+          if (childElement.props && 'children' in childElement.props) {
             const childContent = childElement.props.children;
             // Check if childContent is a string
             if (typeof childContent === 'string') {
@@ -45,7 +45,9 @@ const EditableContent = ({ type, page, section, children, className, contentId }
             } 
             // Check if childContent is a React element with string children
             else if (React.isValidElement(childContent) && 
+                     'props' in childContent &&
                      childContent.props && 
+                     'children' in childContent.props &&
                      typeof childContent.props.children === 'string') {
               setContent(childContent.props.children);
               setInitialContent(childContent.props.children);
