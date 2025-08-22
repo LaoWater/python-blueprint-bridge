@@ -3,7 +3,7 @@ import { X, Send, Bot, Loader2, ClipboardCopy, Check, Trash2 } from 'lucide-reac
 import { useTheme } from './theme-provider';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input'; // Assuming this is your custom ShadCN Input
-import OpenAI from 'openai';
+import { supabase } from '@/integrations/supabase/client';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
@@ -69,10 +69,6 @@ const ChatButton = () => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null); // Ref for the input field
 
-  const openai = new OpenAI({
-    apiKey: import.meta.env.VITE_OPENAI_API_KEY,
-    dangerouslyAllowBrowser: true,
-  });
 
   const toggleChat = () => setIsOpen(!isOpen);
 
@@ -111,28 +107,38 @@ const ChatButton = () => {
     setInputText(''); // Clear input field immediately
     setIsLoading(true); // Set loading for the button
 
-    // API call without memory
-    const apiMessages = [
-      { role: "system", content: SYSTEM_PROMPT },
-      { role: "user", content: currentInput } // Use the captured input
-    ];
-
     try {
-      const completion = await openai.chat.completions.create({
-        model: "o4-mini",
-        messages: apiMessages as any,
+      const { data, error } = await supabase.functions.invoke('chat-assistant', {
+        body: { message: currentInput }
       });
-      const assistantResponse = completion.choices[0]?.message?.content;
-      if (assistantResponse) {
-        setMessages(prev => [...prev, { content: assistantResponse, sender: 'assistant', timestamp: new Date() }]);
+
+      if (error) {
+        console.error("Error calling chat assistant:", error);
+        setMessages(prev => [...prev, { 
+          content: "Sorry, I encountered an error. Please try again.", 
+          sender: 'assistant', 
+          timestamp: new Date() 
+        }]);
+      } else if (data?.response) {
+        setMessages(prev => [...prev, { 
+          content: data.response, 
+          sender: 'assistant', 
+          timestamp: new Date() 
+        }]);
       } else {
-        setMessages(prev => [...prev, { content: "I received an empty response. Please try again.", sender: 'assistant', timestamp: new Date() }]);
+        setMessages(prev => [...prev, { 
+          content: "I received an empty response. Please try again.", 
+          sender: 'assistant', 
+          timestamp: new Date() 
+        }]);
       }
     } catch (error) {
-      console.error("Error calling OpenAI API:", error);
-      let errorMessage = "Sorry, I encountered an error. Please try again.";
-      if (error instanceof OpenAI.APIError) errorMessage = `API Error: ${error.status} ${error.name} - ${error.message}`;
-      setMessages(prev => [...prev, { content: errorMessage, sender: 'assistant', timestamp: new Date() }]);
+      console.error("Error calling chat assistant:", error);
+      setMessages(prev => [...prev, { 
+        content: "Sorry, I encountered an error. Please try again.", 
+        sender: 'assistant', 
+        timestamp: new Date() 
+      }]);
     } finally {
       setIsLoading(false); // Reset loading for the button
     }
@@ -188,11 +194,11 @@ const ChatButton = () => {
                         ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white dark:from-blue-700 dark:to-indigo-700'
                         : 'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-800 dark:text-gray-100'
                   }`}>
-                    <ReactMarkdown
-                      remarkPlugins={[remarkGfm]}
-                      components={{
-                        wrapper: ({children}) => (<div className={markdownProseClasses(message.sender)}>{children}</div>),
-                        pre: ({ node, children, ...props }) => {
+                    <div className={markdownProseClasses(message.sender)}>
+                      <ReactMarkdown
+                        remarkPlugins={[remarkGfm]}
+                        components={{
+                          pre: ({ node, children, ...props }) => {
                           const codeNode = node?.children?.[0];
                           const textToCopy = codeNode ? extractTextFromHastNode(codeNode) : '';
                           const [copied, setCopied] = useState(false);
@@ -215,9 +221,12 @@ const ChatButton = () => {
                               )}
                             </div>
                           );
-                        },
-                      }}
-                    >{message.content}</ReactMarkdown>
+                          },
+                        }}
+                      >
+                        {message.content}
+                      </ReactMarkdown>
+                    </div>
                     <p className={`text-xs mt-2 pt-1 border-t ${message.sender === 'user' ? 'border-white/20' : 'border-gray-200 dark:border-gray-700/50'} text-right ${
                       message.sender === 'user' ? 'text-blue-100 dark:text-indigo-200 opacity-75' : 'text-gray-400 dark:text-gray-500'
                     }`}>
@@ -257,10 +266,9 @@ const ChatButton = () => {
         </div>
       )}
 
-      <button onClick={toggleChat} className="relative flex items-center justify-center w-16 h-16 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group" aria-label="Open chat assistant">
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-500 to-indigo-600 dark:from-blue-600 dark:to-indigo-800 transition-transform duration-300 group-hover:scale-110"></div>
-        <div className="absolute inset-0 bg-gradient-to-tl from-blue-400 to-indigo-500 opacity-0 group-hover:opacity-40 transition-opacity duration-300"></div>
-        <div className="absolute inset-0 blue-pigeon-glow"></div>
+      <button onClick={toggleChat} className="relative flex items-center justify-center w-16 h-16 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 group" aria-label="Open chat assistant">
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-500 to-indigo-600 dark:from-blue-600 dark:to-indigo-800 rounded-full transition-transform duration-300 group-hover:scale-110"></div>
+        <div className="absolute inset-0 bg-gradient-to-tl from-blue-400 to-indigo-500 rounded-full opacity-0 group-hover:opacity-40 transition-opacity duration-300"></div>
         <Bot size={28} className="relative z-10 text-white transition-transform duration-300 group-hover:rotate-[-15deg] group-hover:scale-110" />
       </button>
     </div>
