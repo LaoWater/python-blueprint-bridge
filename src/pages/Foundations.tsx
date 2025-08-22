@@ -15,10 +15,9 @@ const Foundations = () => {
   
   const [tocItems] = useState([
     { id: 'getting-started', title: 'Getting Started' },
-    { id: 'python-basics', title: 'Python Basics' },
-    { id: 'core-concepts', title: 'Core Concepts' },
-    { id: 'fundamentals', title: 'Python Fundamentals' },
-    { id: 'advanced-topics', title: 'Advanced Topics' }
+    { id: 'weekly-sessions', title: 'Weekly Python Sessions' },
+    { id: 'oop-patterns', title: 'OOP & Design Patterns' },
+    { id: 'fundamentals', title: 'Advanced Fundamentals' }
   ]);
 
   // Scroll to top on page load
@@ -42,6 +41,17 @@ const Foundations = () => {
     gitMac: getContent('foundations', 'installation-git-mac'),
     verification: getContent('foundations', 'installation-verification'),
     devEnvironment: getContent('foundations', 'development-environment'),
+  };
+
+  const sessionContent = {
+    session1: getContent('foundations', 'session-1'),
+    session2: getContent('foundations', 'session-2'),
+    session3: getContent('foundations', 'session-3'),
+    session4: getContent('foundations', 'session-4'),
+    session5: getContent('foundations', 'session-5'),
+    session6: getContent('foundations', 'session-6'),
+    session7: getContent('foundations', 'session-7'),
+    session8: getContent('foundations', 'session-8'),
   };
 
   return (
@@ -260,77 +270,280 @@ const Foundations = () => {
             </Card>
           </section>
 
-          {/* Python Basics Section */}
-          <section id="python-basics" className="mb-12">
+          {/* Weekly Python Sessions */}
+          <section id="weekly-sessions" className="mb-12">
             <div className="flex items-center gap-3 mb-6">
               <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
-                <Code className="w-5 h-5 text-white" />
+                <Book className="w-5 h-5 text-white" />
               </div>
               <div>
-                <h2 className="text-2xl font-bold text-foreground">Python Basics</h2>
-                <p className="text-muted-foreground">Learn the fundamental building blocks</p>
+                <h2 className="text-2xl font-bold text-foreground">Weekly Python Sessions</h2>
+                <p className="text-muted-foreground">Complete Python curriculum with real-world examples</p>
               </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <Card className="hover:shadow-lg transition-shadow">
+              {/* Session 1 */}
+              <Card className="group hover:shadow-xl transition-all duration-300 border-l-4 border-l-green-500">
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    Variables & Data Types
-                    <ChevronRight className="w-4 h-4" />
+                  <div className="flex items-center justify-between">
+                    <Badge variant="secondary" className="mb-2">Session 1</Badge>
+                    <div className="w-8 h-8 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center">
+                      <Play className="w-4 h-4 text-green-600" />
+                    </div>
+                  </div>
+                  <CardTitle className="group-hover:text-green-600 transition-colors">
+                    {sessionContent.session1?.title}
                   </CardTitle>
                   <CardDescription>
-                    Strings, numbers, booleans, and basic operations
+                    {sessionContent.session1?.description}
                   </CardDescription>
                 </CardHeader>
+                <CardContent>
+                  <details className="cursor-pointer">
+                    <summary className="font-medium text-primary hover:text-primary/80 mb-3">
+                      View Code Examples
+                    </summary>
+                    <EditableCodeBlock
+                      page="foundations"
+                      section="session-1"
+                      code={sessionContent.session1?.code || "# Session 1 content"}
+                      language="python"
+                    />
+                  </details>
+                </CardContent>
               </Card>
-              
-              <Card className="hover:shadow-lg transition-shadow">
+
+              {/* Session 2 */}
+              <Card className="group hover:shadow-xl transition-all duration-300 border-l-4 border-l-orange-500">
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    Input & Output
-                    <ChevronRight className="w-4 h-4" />
+                  <div className="flex items-center justify-between">
+                    <Badge variant="secondary" className="mb-2">Session 2</Badge>
+                    <div className="w-8 h-8 bg-orange-100 dark:bg-orange-900 rounded-full flex items-center justify-center">
+                      <Lightbulb className="w-4 h-4 text-orange-600" />
+                    </div>
+                  </div>
+                  <CardTitle className="group-hover:text-orange-600 transition-colors">
+                    {sessionContent.session2?.title}
                   </CardTitle>
                   <CardDescription>
-                    Getting user input and displaying results
+                    {sessionContent.session2?.description}
                   </CardDescription>
                 </CardHeader>
+                <CardContent>
+                  <details className="cursor-pointer">
+                    <summary className="font-medium text-primary hover:text-primary/80 mb-3">
+                      View Code Examples
+                    </summary>
+                    <EditableCodeBlock
+                      page="foundations"
+                      section="session-2"
+                      code={sessionContent.session2?.code || "# Session 2 content"}
+                      language="python"
+                    />
+                  </details>
+                </CardContent>
+              </Card>
+
+              {/* Session 3 */}
+              <Card className="group hover:shadow-xl transition-all duration-300 border-l-4 border-l-purple-500">
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <Badge variant="secondary" className="mb-2">Session 3</Badge>
+                    <div className="w-8 h-8 bg-purple-100 dark:bg-purple-900 rounded-full flex items-center justify-center">
+                      <Code className="w-4 h-4 text-purple-600" />
+                    </div>
+                  </div>
+                  <CardTitle className="group-hover:text-purple-600 transition-colors">
+                    {sessionContent.session3?.title}
+                  </CardTitle>
+                  <CardDescription>
+                    {sessionContent.session3?.description}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <details className="cursor-pointer">
+                    <summary className="font-medium text-primary hover:text-primary/80 mb-3">
+                      View Code Examples
+                    </summary>
+                    <EditableCodeBlock
+                      page="foundations"
+                      section="session-3"
+                      code={sessionContent.session3?.code || "# Session 3 content"}
+                      language="python"
+                    />
+                  </details>
+                </CardContent>
+              </Card>
+
+              {/* Session 4 */}
+              <Card className="group hover:shadow-xl transition-all duration-300 border-l-4 border-l-blue-500">
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <Badge variant="secondary" className="mb-2">Session 4</Badge>
+                    <div className="w-8 h-8 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center">
+                      <Book className="w-4 h-4 text-blue-600" />
+                    </div>
+                  </div>
+                  <CardTitle className="group-hover:text-blue-600 transition-colors">
+                    {sessionContent.session4?.title}
+                  </CardTitle>
+                  <CardDescription>
+                    {sessionContent.session4?.description}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <details className="cursor-pointer">
+                    <summary className="font-medium text-primary hover:text-primary/80 mb-3">
+                      View Code Examples
+                    </summary>
+                    <EditableCodeBlock
+                      page="foundations"
+                      section="session-4"
+                      code={sessionContent.session4?.code || "# Session 4 content"}
+                      language="python"
+                    />
+                  </details>
+                </CardContent>
+              </Card>
+
+              {/* Session 5 */}
+              <Card className="group hover:shadow-xl transition-all duration-300 border-l-4 border-l-indigo-500">
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <Badge variant="secondary" className="mb-2">Session 5</Badge>
+                    <div className="w-8 h-8 bg-indigo-100 dark:bg-indigo-900 rounded-full flex items-center justify-center">
+                      <Wrench className="w-4 h-4 text-indigo-600" />
+                    </div>
+                  </div>
+                  <CardTitle className="group-hover:text-indigo-600 transition-colors">
+                    {sessionContent.session5?.title}
+                  </CardTitle>
+                  <CardDescription>
+                    {sessionContent.session5?.description}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <details className="cursor-pointer">
+                    <summary className="font-medium text-primary hover:text-primary/80 mb-3">
+                      View Code Examples
+                    </summary>
+                    <EditableCodeBlock
+                      page="foundations"
+                      section="session-5"
+                      code={sessionContent.session5?.code || "# Session 5 content"}
+                      language="python"
+                    />
+                  </details>
+                </CardContent>
               </Card>
             </div>
           </section>
 
-          {/* Core Concepts Section */}
-          <section id="core-concepts" className="mb-12">
+          {/* OOP & Design Patterns Section */}
+          <section id="oop-patterns" className="mb-12">
             <div className="flex items-center gap-3 mb-6">
-              <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg flex items-center justify-center">
+              <div className="w-10 h-10 bg-gradient-to-br from-violet-500 to-purple-600 rounded-lg flex items-center justify-center">
                 <Lightbulb className="w-5 h-5 text-white" />
               </div>
               <div>
-                <h2 className="text-2xl font-bold text-foreground">Core Concepts</h2>
-                <p className="text-muted-foreground">Essential programming concepts</p>
+                <h2 className="text-2xl font-bold text-foreground">OOP & Design Patterns</h2>
+                <p className="text-muted-foreground">Advanced programming concepts and professional patterns</p>
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <Card className="hover:shadow-lg transition-shadow">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              {/* Session 6 - OOP */}
+              <Card className="group hover:shadow-xl transition-all duration-300 border-l-4 border-l-violet-500">
                 <CardHeader>
-                  <CardTitle className="text-lg">Control Flow</CardTitle>
-                  <CardDescription>if/else, loops, and logic</CardDescription>
+                  <div className="flex items-center justify-between">
+                    <Badge variant="secondary" className="mb-2">Session 6</Badge>
+                    <div className="w-8 h-8 bg-violet-100 dark:bg-violet-900 rounded-full flex items-center justify-center">
+                      <Code className="w-4 h-4 text-violet-600" />
+                    </div>
+                  </div>
+                  <CardTitle className="group-hover:text-violet-600 transition-colors text-lg">
+                    {sessionContent.session6?.title}
+                  </CardTitle>
+                  <CardDescription>
+                    {sessionContent.session6?.description}
+                  </CardDescription>
                 </CardHeader>
+                <CardContent>
+                  <details className="cursor-pointer">
+                    <summary className="font-medium text-primary hover:text-primary/80 mb-3">
+                      View OOP Examples
+                    </summary>
+                    <EditableCodeBlock
+                      page="foundations"
+                      section="session-6"
+                      code={sessionContent.session6?.code || "# OOP content"}
+                      language="python"
+                    />
+                  </details>
+                </CardContent>
               </Card>
-              
-              <Card className="hover:shadow-lg transition-shadow">
+
+              {/* Session 7 - Complete Project */}
+              <Card className="group hover:shadow-xl transition-all duration-300 border-l-4 border-l-emerald-500">
                 <CardHeader>
-                  <CardTitle className="text-lg">Functions</CardTitle>
-                  <CardDescription>Reusable code blocks</CardDescription>
+                  <div className="flex items-center justify-between">
+                    <Badge variant="secondary" className="mb-2">Session 7</Badge>
+                    <div className="w-8 h-8 bg-emerald-100 dark:bg-emerald-900 rounded-full flex items-center justify-center">
+                      <Wrench className="w-4 h-4 text-emerald-600" />
+                    </div>
+                  </div>
+                  <CardTitle className="group-hover:text-emerald-600 transition-colors text-lg">
+                    {sessionContent.session7?.title}
+                  </CardTitle>
+                  <CardDescription>
+                    {sessionContent.session7?.description}
+                  </CardDescription>
                 </CardHeader>
+                <CardContent>
+                  <details className="cursor-pointer">
+                    <summary className="font-medium text-primary hover:text-primary/80 mb-3">
+                      View Complete Project
+                    </summary>
+                    <EditableCodeBlock
+                      page="foundations"
+                      section="session-7"
+                      code={sessionContent.session7?.code || "# Complete project"}
+                      language="python"
+                    />
+                  </details>
+                </CardContent>
               </Card>
-              
-              <Card className="hover:shadow-lg transition-shadow">
+
+              {/* Session 8 - Design Patterns */}
+              <Card className="group hover:shadow-xl transition-all duration-300 border-l-4 border-l-rose-500">
                 <CardHeader>
-                  <CardTitle className="text-lg">Collections</CardTitle>
-                  <CardDescription>Lists, dictionaries, sets</CardDescription>
+                  <div className="flex items-center justify-between">
+                    <Badge variant="secondary" className="mb-2">Session 8</Badge>
+                    <div className="w-8 h-8 bg-rose-100 dark:bg-rose-900 rounded-full flex items-center justify-center">
+                      <Lightbulb className="w-4 h-4 text-rose-600" />
+                    </div>
+                  </div>
+                  <CardTitle className="group-hover:text-rose-600 transition-colors text-lg">
+                    {sessionContent.session8?.title}
+                  </CardTitle>
+                  <CardDescription>
+                    {sessionContent.session8?.description}
+                  </CardDescription>
                 </CardHeader>
+                <CardContent>
+                  <details className="cursor-pointer">
+                    <summary className="font-medium text-primary hover:text-primary/80 mb-3">
+                      View Design Patterns
+                    </summary>
+                    <EditableCodeBlock
+                      page="foundations"
+                      section="session-8"
+                      code={sessionContent.session8?.code || "# Design patterns"}
+                      language="python"
+                    />
+                  </details>
+                </CardContent>
               </Card>
             </div>
           </section>
