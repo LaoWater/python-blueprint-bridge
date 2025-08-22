@@ -53,7 +53,7 @@ const LandingPage = () => {
             </div>
           </div>
           
-          <h1 className="hero-title text-6xl md:text-7xl mb-2">Blue Pigeon</h1>
+         <h1 className="hero-title text-6xl md:text-6xl leading-tight md:leading-[1.33] mb-2">Blue Pigeon</h1>
           <p className="hero-subtitle max-w-2xl mx-auto">
             Carrying the blueprints for Python developers, accessible anywhere in the world
           </p>
@@ -209,13 +209,16 @@ const LandingPage = () => {
           <h2 className="text-3xl font-bold text-center mb-12 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600">Partners</h2>
           
           <div className="flex justify-center">
-            <div className="bg-white dark:bg-gray-800/80 p-8 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700 backdrop-blur-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-              <img 
-                src="https://static.tildacdn.net/tild3865-3939-4866-b133-353966666137/skillbrain_-_logo.svg" 
-                alt="SkillBrain Logo" 
-                className="partners-logo h-20 w-auto"
-              />
-            </div>
+                <div className="bg-white dark:bg-gray-800/80 p-8 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700 backdrop-blur-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                  <a href="https://skillbrain.com/" target="_blank" rel="noopener noreferrer">
+                    <img
+                      src="https://static.tildacdn.net/tild3865-3939-4866-b133-353966666137/skillbrain_-_logo.svg"
+                      alt="SkillBrain Logo"
+                      className="partners-logo h-20 w-auto"
+                    />
+                  </a>
+                </div>
+
           </div>
         </div>
       </section>

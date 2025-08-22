@@ -1,0 +1,10 @@
+.gcloudignore
+.git
+.gitignore
+node_modules/
+dist/          # App Engine will build this, so no need to upload pre-built
+src/           # If you only need the build output for a static site
+public/        # If Vite processes 'public' into 'dist'
+*.DS_Store
+# Add any other local development files/folders
+.env
