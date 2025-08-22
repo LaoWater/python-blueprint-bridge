@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "@/components/theme-provider";
 import LandingPage from "./pages/LandingPage";
 import Index from "./pages/Index";
+import DataCalculus from "./pages/DataCalculus";
 import Foundations from "./pages/Foundations";
 import Mastery from "./pages/Mastery";
 import NotFound from "./pages/NotFound";
@@ -35,6 +36,7 @@ const App = () => (
                   <Route path="/" element={<LandingPage />} />
                   <Route path="/python" element={<Index />} />
                   <Route path="/foundations" element={<Foundations />} />
+                  <Route path="/data-calculus" element={<DataCalculus />} />
                   <Route path="/mastery" element={<Mastery />} />
                   <Route path="/auth" element={<AuthPage />} />
                   <Route path="/profile" element={<ProfilePage />} />
