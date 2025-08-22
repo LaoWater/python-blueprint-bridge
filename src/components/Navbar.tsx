@@ -50,6 +50,12 @@ const Navbar = () => {
                 Data: Visualizing
               </Link>
               <Link 
+                to="/machine-learning"
+                className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
+              >
+                Machine Learning
+              </Link>
+              <Link 
                 to="/mastery"
                 className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
               >
