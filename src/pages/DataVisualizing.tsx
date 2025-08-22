@@ -1,0 +1,444 @@
+import React, { useState } from 'react';
+import { Feather, BarChart, TrendingUp, Eye, Activity, Layers, Zap, Database, Cloud, Code } from 'lucide-react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import EditableContent from '@/components/EditableContent';
+import EditableCodeBlock from '@/components/EditableCodeBlock';
+import TableOfContents from '@/components/TableOfContents';
+
+const DataVisualizing = () => {
+  const [tocItems] = useState([
+    { id: 'overview', title: 'Journey Overview', level: 1 },
+    { id: 'data-visualization', title: 'Vizualizare de Date', level: 1 },
+    { id: 'session-18', title: 'Session 18: Matplotlib Fundamentals', level: 2 },
+    { id: 'session-19', title: 'Session 19: Advanced Matplotlib', level: 2 },
+    { id: 'session-20', title: 'Session 20: Statistical Visualization with Seaborn', level: 2 },
+    { id: 'session-21', title: 'Session 21: Advanced Seaborn', level: 2 },
+    { id: 'session-22', title: 'Session 22: Interactive Visualizations with Plotly', level: 2 },
+    { id: 'dashboards-apps', title: 'Dashboards & Apps cu Streamlit', level: 1 },
+    { id: 'session-23', title: 'Session 23: Interactive Dashboards with Streamlit', level: 2 },
+    { id: 'session-24', title: 'Session 24: Advanced Streamlit with ML', level: 2 },
+    { id: 'session-25', title: 'Session 25: Professional Dashboards', level: 2 },
+    { id: 'session-26', title: 'Session 26: Streamlit Integration & Deployment', level: 2 },
+    { id: 'session-27', title: 'Session 27: LeetCode Python Exercises', level: 2 },
+  ]);
+
+  const [sessionContent] = useState({
+    18: {
+      title: "Matplotlib Fundamentals: From Data Points to Visual Stories",
+      story: "In the digital age, data without visualization is like a book written in invisible ink. Every Fortune 500 company relies on visual storytelling to make million-dollar decisions. Today, we enter the world where pixels become insights, and charts become the language of business intelligence.",
+      realWorld: "Financial analysts at Goldman Sachs use Matplotlib to visualize market trends that guide billion-dollar investments. Netflix uses similar visualizations to understand viewing patterns and decide which shows to produce next.",
+      keyInsights: [
+        "Matplotlib is the foundation of Python's visualization ecosystem",
+        "Every chart tells a story - the question is whether it's the right story",
+        "Visual perception psychology drives effective chart design"
+      ]
+    },
+    19: {
+      title: "Advanced Matplotlib: Professional Visualization Techniques", 
+      story: "Beyond basic charts lies the realm of professional data visualization. Here, we learn the subtle art of visual communication - how color, typography, and layout can transform raw numbers into compelling narratives that drive business decisions.",
+      realWorld: "The New York Times' data visualization team uses advanced Matplotlib techniques to create award-winning infographics. NASA scientists visualize space mission data to detect patterns invisible to the naked eye.",
+      keyInsights: [
+        "Custom styling separates amateur from professional visualizations",
+        "Animation and interactivity enhance data storytelling",
+        "Mathematical precision in visual design builds trust"
+      ]
+    },
+    20: {
+      title: "Statistical Visualization with Seaborn: Beauty Meets Analytics",
+      story: "Where Matplotlib provides the canvas, Seaborn brings the artist's intuition. Built specifically for statistical visualization, it transforms complex statistical relationships into elegant, publication-ready graphics that reveal hidden patterns in data.",
+      realWorld: "Pharmaceutical companies use Seaborn to visualize clinical trial results. E-commerce giants like Amazon analyze customer behavior patterns using Seaborn's sophisticated statistical plots.",
+      keyInsights: [
+        "Statistical visualization requires domain-specific tools",
+        "Seaborn automates complex statistical plotting decisions",
+        "Beautiful defaults accelerate exploratory data analysis"
+      ]
+    },
+    21: {
+      title: "Advanced Seaborn: Statistical Mastery in Visualization",
+      story: "At this level, visualization becomes statistical storytelling. We explore advanced techniques that reveal correlation, causation, and prediction patterns - the holy grail of data science that separates insights from mere observations.",
+      realWorld: "Medical researchers use advanced Seaborn techniques to visualize treatment efficacy across different patient populations. Climate scientists visualize global temperature patterns to understand climate change impacts.",
+      keyInsights: [
+        "Multi-dimensional data requires sophisticated visualization strategies",
+        "Statistical significance can be communicated visually",
+        "Advanced plots bridge the gap between analysis and presentation"
+      ]
+    },
+    22: {
+      title: "Interactive Visualizations with Plotly: Web-Scale Data Stories",
+      story: "The web democratized information; interactive visualizations democratize data exploration. Plotly transforms static charts into dynamic, web-ready experiences where users become data explorers, not passive consumers.",
+      realWorld: "Tesla's engineers use interactive Plotly dashboards to monitor vehicle performance across their global fleet. Financial institutions create real-time trading dashboards that update every millisecond.",
+      keyInsights: [
+        "Interactivity transforms viewers into active data explorers",
+        "Web-based visualizations scale to global audiences",
+        "Real-time data requires responsive visualization frameworks"
+      ]
+    },
+    23: {
+      title: "Interactive Dashboards with Streamlit: From Code to Application",
+      story: "The boundary between data scientist and application developer dissolves here. Streamlit enables us to transform Python scripts into full-featured web applications, making our analyses accessible to non-technical stakeholders who drive business decisions.",
+      realWorld: "Startups use Streamlit to create investor-ready dashboards that showcase their business metrics. Healthcare organizations build patient monitoring dashboards that doctors can use without technical training.",
+      keyInsights: [
+        "Streamlit democratizes web application development for data scientists",
+        "Real-time dashboards enable immediate decision-making",
+        "User experience design principles apply to data applications"
+      ]
+    },
+    24: {
+      title: "Advanced Streamlit with Machine Learning: Predictive Applications",
+      story: "Here, visualization meets prediction. We build applications that don't just show what happened, but predict what will happen. This is where data science becomes artificial intelligence, and dashboards become crystal balls.",
+      realWorld: "Retail companies build demand forecasting applications that predict inventory needs. Healthcare systems create diagnostic assistance tools that help doctors make faster, more accurate decisions.",
+      keyInsights: [
+        "Machine learning models need intuitive interfaces for adoption",
+        "Real-time prediction requires optimized model deployment",
+        "Trust in AI systems depends on transparent visualization"
+      ]
+    },
+    25: {
+      title: "Professional Dashboards: Enterprise-Grade Data Applications",
+      story: "At the enterprise level, dashboards become mission-critical infrastructure. They must handle massive datasets, serve thousands of users, and maintain uptime that rivals banking systems. This is visualization at scale.",
+      realWorld: "Airlines use professional dashboards to manage flight operations across continents. Supply chain companies monitor global logistics in real-time to prevent disruptions that could cost millions.",
+      keyInsights: [
+        "Enterprise dashboards require robust architecture and scalability",
+        "Performance optimization becomes critical at scale",
+        "Security and access control are paramount in business applications"
+      ]
+    },
+    26: {
+      title: "Streamlit Integration & Cloud Deployment: Global Scale Solutions",
+      story: "The final step in our visualization journey: deploying our creations to the cloud where they can serve global audiences. We learn to integrate with databases, implement authentication, and ensure our applications can scale from startup to enterprise.",
+      realWorld: "Global consulting firms deploy Streamlit applications that serve clients across continents. Government agencies use cloud-deployed dashboards to provide transparent public services to millions of citizens.",
+      keyInsights: [
+        "Cloud deployment democratizes access to data applications",
+        "Database integration enables real-time data connectivity",
+        "Authentication and security protect sensitive business data"
+      ]
+    },
+    27: {
+      title: "LeetCode Python Exercises: Algorithmic Foundation for AI",
+      story: "As we prepare for the next chapter - Machine Learning - we must strengthen our algorithmic foundation. LeetCode problems aren't just coding exercises; they're the building blocks of the algorithms that power modern AI systems.",
+      realWorld: "FAANG companies use LeetCode-style problems to identify engineers who can optimize machine learning algorithms. The same problem-solving patterns appear in neural network optimization and data structure design for AI systems.",
+      keyInsights: [
+        "Algorithmic thinking is fundamental to machine learning implementation",
+        "Optimization techniques learned here apply to AI model performance",
+        "Problem-solving patterns bridge traditional programming and AI development"
+      ]
+    }
+  });
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-950 dark:via-blue-950 dark:to-indigo-950">
+      <div className="container mx-auto px-4 py-8">
+        <div className="flex gap-8">
+          {/* Table of Contents */}
+          <div className="hidden lg:block w-64 flex-shrink-0">
+            <div className="sticky top-24">
+              <TableOfContents items={tocItems} />
+            </div>
+          </div>
+
+          {/* Main Content */}
+          <div className="flex-1 max-w-4xl">
+            {/* Header */}
+            <div id="overview" className="mb-12">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-12 h-12 bg-gradient-to-br from-violet-500 to-purple-600 rounded-xl flex items-center justify-center">
+                  <BarChart className="text-white w-6 h-6" />
+                </div>
+                <div>
+                  <h1 className="text-4xl font-bold bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent">
+                    Data: Visualizing
+                  </h1>
+                  <p className="text-lg text-muted-foreground">From Data Points to Visual Intelligence</p>
+                </div>
+              </div>
+
+              <Card className="mb-8 border-violet-200 dark:border-violet-800 bg-gradient-to-r from-violet-50 to-purple-50 dark:from-violet-950 dark:to-purple-950">
+                <CardContent className="p-6">
+                  <div className="flex items-start gap-4">
+                    <Eye className="w-8 h-8 text-violet-600 mt-1" />
+                    <div>
+                      <h3 className="text-xl font-semibold mb-3 text-violet-800 dark:text-violet-200">The Visual Intelligence Journey</h3>
+                      <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
+                        "Data is the new oil, but visualization is the refinery." As we continue our Python mastery journey, 
+                        we enter the realm where numbers become narratives, patterns become predictions, and static data 
+                        transforms into dynamic intelligence. This chapter bridges pure computation with human insight, 
+                        preparing us for the AI revolution that follows.
+                      </p>
+                      <div className="mt-4 flex flex-wrap gap-2">
+                        <Badge variant="secondary" className="bg-violet-100 text-violet-800 dark:bg-violet-900 dark:text-violet-200">
+                          Visual Intelligence
+                        </Badge>
+                        <Badge variant="secondary" className="bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200">
+                          Interactive Dashboards
+                        </Badge>
+                        <Badge variant="secondary" className="bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200">
+                          Real-time Applications
+                        </Badge>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Data Visualization Section */}
+            <section id="data-visualization" className="mb-12">
+              <div className="flex items-center gap-3 mb-6">
+                <TrendingUp className="w-8 h-8 text-violet-600" />
+                <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100">Vizualizare de Date</h2>
+              </div>
+              
+              <p className="text-lg text-gray-700 dark:text-gray-300 mb-8 leading-relaxed">
+                The art and science of transforming raw data into compelling visual stories that drive decisions, 
+                reveal insights, and communicate complex patterns to both technical and non-technical audiences.
+              </p>
+
+              {/* Sessions 18-22 */}
+              <div className="grid gap-6">
+                {[18, 19, 20, 21, 22].map((sessionNum) => (
+                  <Card key={sessionNum} id={`session-${sessionNum}`} className="overflow-hidden hover:shadow-lg transition-all duration-300 border-violet-100 dark:border-violet-800">
+                    <CardHeader className="bg-gradient-to-r from-violet-50 to-purple-50 dark:from-violet-950 dark:to-purple-950">
+                      <div className="flex items-center justify-between">
+                        <CardTitle className="text-xl font-semibold text-violet-800 dark:text-violet-200">
+                          Sesiunea {sessionNum} – {sessionContent[sessionNum]?.title}
+                        </CardTitle>
+                        <Badge className="bg-violet-600 text-white">Published</Badge>
+                      </div>
+                    </CardHeader>
+                    <CardContent className="p-6">
+                      <Tabs defaultValue="story" className="w-full">
+                        <TabsList className="grid w-full grid-cols-4 mb-4">
+                          <TabsTrigger value="story">Story</TabsTrigger>
+                          <TabsTrigger value="real-world">Real World</TabsTrigger>
+                          <TabsTrigger value="code">Code</TabsTrigger>
+                          <TabsTrigger value="insights">Insights</TabsTrigger>
+                        </TabsList>
+                        
+                        <TabsContent value="story" className="space-y-4">
+                          <EditableContent
+                            type="description"
+                            page="data-visualizing"
+                            section={`session-${sessionNum}-story`}
+                          >
+                            <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
+                              {sessionContent[sessionNum]?.story || ""}
+                            </p>
+                          </EditableContent>
+                        </TabsContent>
+                        
+                        <TabsContent value="real-world" className="space-y-4">
+                          <div className="flex items-start gap-3">
+                            <Activity className="w-6 h-6 text-violet-600 mt-1" />
+                            <EditableContent
+                              type="description"
+                              page="data-visualizing"
+                              section={`session-${sessionNum}-real-world`}
+                            >
+                              <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
+                                {sessionContent[sessionNum]?.realWorld || ""}
+                              </p>
+                            </EditableContent>
+                          </div>
+                        </TabsContent>
+                        
+                        <TabsContent value="code" className="space-y-4">
+                          <EditableCodeBlock
+                            code={`# Session ${sessionNum} - ${sessionContent[sessionNum]?.title}
+import matplotlib.pyplot as plt
+import seaborn as sns
+import plotly.express as px
+import pandas as pd
+import numpy as np
+
+# Professional visualization example
+def create_professional_visualization():
+    # Generate sample data
+    data = pd.DataFrame({
+        'x': np.random.randn(1000),
+        'y': np.random.randn(1000),
+        'category': np.random.choice(['A', 'B', 'C'], 1000)
+    })
+    
+    # Create publication-ready plot
+    fig, ax = plt.subplots(figsize=(10, 6))
+    sns.scatterplot(data=data, x='x', y='y', hue='category', ax=ax)
+    plt.title('Professional Data Visualization', fontsize=16, fontweight='bold')
+    plt.show()
+
+create_professional_visualization()`}
+                            language="python"
+                            page="data-visualizing"
+                            section={`session-${sessionNum}-code`}
+                          />
+                        </TabsContent>
+                        
+                        <TabsContent value="insights" className="space-y-4">
+                          <div className="space-y-3">
+                            {sessionContent[sessionNum]?.keyInsights.map((insight, idx) => (
+                              <div key={idx} className="flex items-start gap-3">
+                                <Zap className="w-5 h-5 text-violet-600 mt-0.5" />
+                                <p className="text-gray-700 dark:text-gray-300">{insight}</p>
+                              </div>
+                            ))}
+                          </div>
+                        </TabsContent>
+                      </Tabs>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </section>
+
+            {/* Dashboards & Apps Section */}
+            <section id="dashboards-apps" className="mb-12">
+              <div className="flex items-center gap-3 mb-6">
+                <Layers className="w-8 h-8 text-purple-600" />
+                <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100">Dashboards & Apps cu Streamlit</h2>
+              </div>
+              
+              <p className="text-lg text-gray-700 dark:text-gray-300 mb-8 leading-relaxed">
+                Transform your data science code into production-ready web applications that serve real users, 
+                handle real-time data, and integrate with enterprise systems. This is where analysis becomes application.
+              </p>
+
+              {/* Sessions 23-27 */}
+              <div className="grid gap-6">
+                {[23, 24, 25, 26, 27].map((sessionNum) => (
+                  <Card key={sessionNum} id={`session-${sessionNum}`} className="overflow-hidden hover:shadow-lg transition-all duration-300 border-purple-100 dark:border-purple-800">
+                    <CardHeader className="bg-gradient-to-r from-purple-50 to-indigo-50 dark:from-purple-950 dark:to-indigo-950">
+                      <div className="flex items-center justify-between">
+                        <CardTitle className="text-xl font-semibold text-purple-800 dark:text-purple-200">
+                          Sesiunea {sessionNum} – {sessionContent[sessionNum]?.title}
+                        </CardTitle>
+                        <Badge className="bg-purple-600 text-white">Published</Badge>
+                      </div>
+                    </CardHeader>
+                    <CardContent className="p-6">
+                      <Tabs defaultValue="story" className="w-full">
+                        <TabsList className="grid w-full grid-cols-4 mb-4">
+                          <TabsTrigger value="story">Story</TabsTrigger>
+                          <TabsTrigger value="real-world">Real World</TabsTrigger>
+                          <TabsTrigger value="code">Code</TabsTrigger>
+                          <TabsTrigger value="insights">Insights</TabsTrigger>
+                        </TabsList>
+                        
+                        <TabsContent value="story" className="space-y-4">
+                          <EditableContent
+                            type="description"
+                            page="data-visualizing"
+                            section={`session-${sessionNum}-story`}
+                          >
+                            <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
+                              {sessionContent[sessionNum]?.story || ""}
+                            </p>
+                          </EditableContent>
+                        </TabsContent>
+                        
+                        <TabsContent value="real-world" className="space-y-4">
+                          <div className="flex items-start gap-3">
+                            <Database className="w-6 h-6 text-purple-600 mt-1" />
+                            <EditableContent
+                              type="description"
+                              page="data-visualizing"
+                              section={`session-${sessionNum}-real-world`}
+                            >
+                              <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
+                                {sessionContent[sessionNum]?.realWorld || ""}
+                              </p>
+                            </EditableContent>
+                          </div>
+                        </TabsContent>
+                        
+                        <TabsContent value="code" className="space-y-4">
+                          <EditableCodeBlock
+                            code={`# Session ${sessionNum} - ${sessionContent[sessionNum]?.title}
+import streamlit as st
+import pandas as pd
+import plotly.express as px
+import numpy as np
+
+# Professional Streamlit application example
+def main():
+    st.set_page_config(
+        page_title="Professional Dashboard",
+        page_icon="📊",
+        layout="wide"
+    )
+    
+    st.title("${sessionContent[sessionNum]?.title}")
+    
+    # Sample interactive dashboard
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        st.subheader("Real-time Data")
+        data = pd.DataFrame({
+            'timestamp': pd.date_range('2024-01-01', periods=100, freq='D'),
+            'value': np.random.randn(100).cumsum()
+        })
+        
+        fig = px.line(data, x='timestamp', y='value', 
+                     title='Live Data Stream')
+        st.plotly_chart(fig, use_container_width=True)
+    
+    with col2:
+        st.subheader("Interactive Controls")
+        threshold = st.slider("Threshold", 0.0, 10.0, 5.0)
+        filtered_data = data[data['value'] > threshold]
+        st.write(f"Data points above threshold: {len(filtered_data)}")
+
+if __name__ == "__main__":
+    main()`}
+                            language="python"
+                            page="data-visualizing"
+                            section={`session-${sessionNum}-code`}
+                          />
+                        </TabsContent>
+                        
+                        <TabsContent value="insights" className="space-y-4">
+                          <div className="space-y-3">
+                            {sessionContent[sessionNum]?.keyInsights.map((insight, idx) => (
+                              <div key={idx} className="flex items-start gap-3">
+                                <Cloud className="w-5 h-5 text-purple-600 mt-0.5" />
+                                <p className="text-gray-700 dark:text-gray-300">{insight}</p>
+                              </div>
+                            ))}
+                          </div>
+                        </TabsContent>
+                      </Tabs>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </section>
+
+            {/* Path Forward */}
+            <Card className="border-gradient-to-r from-violet-200 to-purple-200 dark:from-violet-800 dark:to-purple-800 bg-gradient-to-r from-violet-50 to-purple-50 dark:from-violet-950 dark:to-purple-950">
+              <CardContent className="p-8">
+                <div className="flex items-center gap-4 mb-6">
+                  <div className="w-12 h-12 bg-gradient-to-br from-violet-500 to-purple-600 rounded-xl flex items-center justify-center">
+                    <Code className="text-white w-6 h-6" />
+                  </div>
+                  <div>
+                    <h3 className="text-2xl font-bold text-violet-800 dark:text-violet-200">The Bridge to AI</h3>
+                    <p className="text-violet-600 dark:text-violet-400">Your Foundation for Machine Learning Mastery</p>
+                  </div>
+                </div>
+                <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
+                  With visualization mastery achieved, we've built the essential bridge between raw computation and human insight. 
+                  Every chart you create, every dashboard you build, and every interactive application you deploy strengthens 
+                  your foundation for the next chapter: <strong>Machine Learning</strong>. The patterns you've learned to visualize 
+                  will become the patterns you'll teach machines to recognize.
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default DataVisualizing;
