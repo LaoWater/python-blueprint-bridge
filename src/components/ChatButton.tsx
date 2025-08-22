@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { X, Send, Bot, Loader2, ClipboardCopy, Check, Trash2 } from 'lucide-react'; // Added Trash2
-import { useTheme } from './theme-provider';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input'; // Assuming this is your custom ShadCN Input
 import { supabase } from '@/integrations/supabase/client';

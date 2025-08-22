@@ -57,7 +57,7 @@ const AuthPage = () => {
     <div className="container flex items-center justify-center min-h-[calc(100vh-4rem)] py-10">
       <Card className="w-full max-w-md">
         <CardHeader>
-          <CardTitle className="text-2xl text-center">Welcome to Pythonic Transcriber</CardTitle>
+          <CardTitle className="text-2xl text-center">Welcome to Blue Pigeon</CardTitle>
           <CardDescription className="text-center">Sign in to your account or create a new one</CardDescription>
         </CardHeader>
         <CardContent>
