@@ -6,22 +6,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import EditableContent from '@/components/EditableContent';
 import EditableCodeBlock from '@/components/EditableCodeBlock';
 import TableOfContents from '@/components/TableOfContents';
+import CourseNavigation from '@/components/CourseNavigation';
 
 const DataVisualizing = () => {
   const [tocItems] = useState([
-    { id: 'overview', title: 'Journey Overview', level: 1 },
-    { id: 'data-visualization', title: 'Vizualizare de Date', level: 1 },
-    { id: 'session-18', title: 'Session 18: Matplotlib Fundamentals', level: 2 },
-    { id: 'session-19', title: 'Session 19: Advanced Matplotlib', level: 2 },
-    { id: 'session-20', title: 'Session 20: Statistical Visualization with Seaborn', level: 2 },
-    { id: 'session-21', title: 'Session 21: Advanced Seaborn', level: 2 },
-    { id: 'session-22', title: 'Session 22: Interactive Visualizations with Plotly', level: 2 },
-    { id: 'dashboards-apps', title: 'Dashboards & Apps cu Streamlit', level: 1 },
-    { id: 'session-23', title: 'Session 23: Interactive Dashboards with Streamlit', level: 2 },
-    { id: 'session-24', title: 'Session 24: Advanced Streamlit with ML', level: 2 },
-    { id: 'session-25', title: 'Session 25: Professional Dashboards', level: 2 },
-    { id: 'session-26', title: 'Session 26: Streamlit Integration & Deployment', level: 2 },
-    { id: 'session-27', title: 'Session 27: LeetCode Python Exercises', level: 2 },
+    { id: 'overview', title: 'Journey Overview', sessions: 'Introduction' },
+    { id: 'data-visualization', title: 'Data Visualization', sessions: 'Sessions 18-22' },
+    { id: 'dashboards-apps', title: 'Dashboards & Apps', sessions: 'Sessions 23-27' },
   ]);
 
   const [sessionContent] = useState({
@@ -434,6 +425,20 @@ if __name__ == "__main__":
                 </p>
               </CardContent>
             </Card>
+            
+            {/* Course Navigation */}
+            <CourseNavigation
+              previousCourse={{
+                path: "/data-calculus",
+                title: "Data: Calculus",
+                description: "From data structures to numerical computing - building the foundation for AI"
+              }}
+              nextCourse={{
+                path: "/machine-learning",
+                title: "Machine Learning",
+                description: "From algorithms to artificial intelligence - computer vision, NLP, and deep learning"
+              }}
+            />
           </div>
         </div>
       </div>

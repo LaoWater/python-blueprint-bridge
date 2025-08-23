@@ -4,6 +4,7 @@ import EditablePageHeader from '../components/EditablePageHeader';
 import EditableContent from '../components/EditableContent';
 import EditableCodeBlock from '../components/EditableCodeBlock';
 import TableOfContents from '../components/TableOfContents';
+import CourseNavigation from '../components/CourseNavigation';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -14,10 +15,10 @@ const DataCalculus = () => {
   const { getContent, loading } = useContent();
   
   const [tocItems] = useState([
-    { id: 'journey-begins', title: 'The Data Journey Begins' },
-    { id: 'data-structures', title: 'Data Structures & Algorithms' },
-    { id: 'numerical-computing', title: 'Numerical Computing & Analysis' },
-    { id: 'ai-foundations', title: 'Foundations for AI' }
+    { id: 'journey-begins', title: 'The Data Journey Begins', sessions: 'Introduction' },
+    { id: 'data-structures', title: 'Data Structures & Algorithms', sessions: 'Sessions 9-12' },
+    { id: 'numerical-computing', title: 'Numerical Computing & Analysis', sessions: 'Sessions 13-17' },
+    { id: 'ai-foundations', title: 'Foundations for AI', sessions: 'Theory & Practice' }
   ]);
 
   // Scroll to top on page load
@@ -1148,6 +1149,20 @@ print(f"Speedup: {time1/time2:.1f}x faster")`}
             <TableOfContents items={tocItems} />
           </div>
         </div>
+        
+        {/* Course Navigation */}
+        <CourseNavigation
+          previousCourse={{
+            path: "/foundations",
+            title: "Python Foundations",
+            description: "Master Python from the ground up - from installation to advanced concepts"
+          }}
+          nextCourse={{
+            path: "/data-visualizing",
+            title: "Data: Visualizing",
+            description: "From data points to visual intelligence - interactive dashboards and applications"
+          }}
+        />
       </div>
     </div>
   );

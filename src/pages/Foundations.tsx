@@ -4,6 +4,7 @@ import EditablePageHeader from '../components/EditablePageHeader';
 import EditableContent from '../components/EditableContent';
 import EditableCodeBlock from '../components/EditableCodeBlock';
 import TableOfContents from '../components/TableOfContents';
+import CourseNavigation from '../components/CourseNavigation';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -14,10 +15,10 @@ const Foundations = () => {
   const { getContent, loading } = useContent();
   
   const [tocItems] = useState([
-    { id: 'getting-started', title: 'Getting Started' },
-    { id: 'weekly-sessions', title: 'Weekly Python Sessions' },
-    { id: 'oop-patterns', title: 'OOP & Design Patterns' },
-    { id: 'fundamentals', title: 'Advanced Fundamentals' }
+    { id: 'getting-started', title: 'Getting Started', sessions: 'Setup & Environment' },
+    { id: 'weekly-sessions', title: 'Weekly Python Sessions', sessions: 'Sessions 1-8' },
+    { id: 'oop-patterns', title: 'OOP & Design Patterns', sessions: 'Advanced Sessions' },
+    { id: 'fundamentals', title: 'Advanced Fundamentals', sessions: 'Core Concepts' }
   ]);
 
   // Scroll to top on page load
@@ -791,6 +792,15 @@ print(f"Modified snapshot: {alice_snapshot}")`}
             
           </section>
         </div>
+
+        {/* Course Navigation */}
+        <CourseNavigation
+          nextCourse={{
+            path: "/data-calculus",
+            title: "Data: Calculus",
+            description: "From data structures to numerical computing - building the foundation for AI"
+          }}
+        />
 
         {/* Table of Contents Sidebar */}
         <div className="hidden lg:block lg:w-64 lg:flex-shrink-0">

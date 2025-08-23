@@ -3,6 +3,7 @@ import { useTheme } from 'next-themes';
 import EditablePageHeader from '@/components/EditablePageHeader';
 import EditableCodeBlock from '@/components/EditableCodeBlock';
 import TableOfContents from '@/components/TableOfContents';
+import CourseNavigation from '@/components/CourseNavigation';
 
 const MachineLearning = () => {
   const { theme } = useTheme();
@@ -933,6 +934,15 @@ if __name__ == "__main__":
                 </div>
               </div>
             </section>
+            
+            {/* Course Navigation */}
+            <CourseNavigation
+              previousCourse={{
+                path: "/data-visualizing",
+                title: "Data: Visualizing",
+                description: "From data points to visual intelligence - interactive dashboards and applications"
+              }}
+            />
           </div>
         </div>
       </div>

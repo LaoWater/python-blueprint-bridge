@@ -2,6 +2,7 @@
 interface TOCItem {
   id: string;
   title: string;
+  sessions?: string;
 }
 
 interface TableOfContentsProps {
@@ -31,9 +32,18 @@ const TableOfContents = ({ items }: TableOfContentsProps) => {
           <li key={item.id}>
             <button
               onClick={() => scrollToSection(item.id)}
-              className="text-gray-600 dark:text-gray-400 hover:text-python-blue dark:hover:text-python-yellow text-left w-full transition-colors"
+              className="text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary text-left w-full transition-colors group"
             >
-              {item.title}
+              <div className="flex flex-col">
+                <span className="group-hover:text-primary transition-colors">
+                  {item.title}
+                </span>
+                {item.sessions && (
+                  <span className="text-xs text-muted-foreground italic mt-1">
+                    {item.sessions}
+                  </span>
+                )}
+              </div>
             </button>
           </li>
         ))}
