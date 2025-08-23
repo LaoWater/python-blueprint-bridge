@@ -13,6 +13,7 @@ import Foundations from "./pages/Foundations";
 import Blueprints from "./pages/Blueprints";
 import BlueprintsMastery from "./pages/BlueprintsMastery";
 import MachineLearning from "./pages/MachineLearning";
+import AdvancedMachineLearning from "./pages/AdvancedMachineLearning";
 import NotFound from "./pages/NotFound";
 import AuthPage from "./pages/AuthPage";
 import ProfilePage from "./pages/ProfilePage";
@@ -44,6 +45,7 @@ const App = () => (
             <Route path="/data-calculus" element={<DataCalculus />} />
             <Route path="/data-visualizing" element={<DataVisualizing />} />
                   <Route path="/machine-learning" element={<MachineLearning />} />
+                  <Route path="/advanced-machine-learning" element={<AdvancedMachineLearning />} />
                   <Route path="/auth" element={<AuthPage />} />
                   <Route path="/profile" element={<ProfilePage />} />
                   <Route path="/admin" element={<AdminPage />} />
