@@ -399,8 +399,10 @@ def main():
     new_property = [2000, 7000, 2, 3, 2, 0, 3, 7, 8, 10, 0, 5, 450000, 425000]
     result = pricing_model.predict_price(new_property)
     
-    print(f"🏠 Predicted Price: ${{result['predicted_price']:,.0f}}")
-    print(f"📊 Confidence: {{result['confidence']:.1%}}")
+    print("🏠 Predicted Price:", result['predicted_price'])
+    print("📊 Confidence:", result['confidence'])
+    print("💰 Price Range:", result['price_range'])
+
 
 if __name__ == "__main__":
     main()`}
@@ -408,6 +410,8 @@ if __name__ == "__main__":
                       section="sklearn-production"
                     />
                   </div>
+
+                  
 
                   <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-lg p-6">
                     <h3 className="text-xl font-semibold mb-4 text-blue-800 dark:text-blue-200">

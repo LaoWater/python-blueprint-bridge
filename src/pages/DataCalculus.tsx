@@ -52,7 +52,7 @@ const DataCalculus = () => {
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
       <EditablePageHeader 
         page="data-calculus"
-        defaultTitle="Data & Calculus" 
+        defaultTitle="Data: Calculus" 
         defaultSubtitle="From data structures to numerical computing - building the foundation for AI"
       />
       

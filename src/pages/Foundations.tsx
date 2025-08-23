@@ -556,7 +556,6 @@ const Foundations = () => {
               </div>
               <div>
                 <h2 className="text-2xl font-bold text-foreground">Python Fundamentals</h2>
-                <p className="text-muted-foreground">"Learn the Language - and you will be able to speak it in your Homeland"</p>
               </div>
             </div>
 
@@ -592,7 +591,7 @@ const Foundations = () => {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Code className="w-5 h-5 text-purple-600" />
-                  Chapter 1: The Tale of Memory and Identity
+                  The Tale of Memory and Identity
                 </CardTitle>
                 <CardDescription>
                   Understanding mutability through the lens of real-world system architecture
