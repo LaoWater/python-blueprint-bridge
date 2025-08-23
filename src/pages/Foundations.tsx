@@ -8,7 +8,8 @@ import CourseNavigation from '../components/CourseNavigation';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Book, Code, Lightbulb, Wrench, ChevronRight, Play, CheckCircle2 } from 'lucide-react';
+import { Book, Code, Lightbulb, Wrench, ChevronRight, Play, CheckCircle2, Cpu, Zap } from 'lucide-react';
+import pythonFoundationsHero from '../assets/python-foundations-hero.jpg';
 import { Button } from '@/components/ui/button';
 
 const Foundations = () => {
@@ -17,6 +18,7 @@ const Foundations = () => {
   const [tocItems] = useState([
     { id: 'getting-started', title: 'Getting Started', sessions: 'Setup & Environment' },
     { id: 'weekly-sessions', title: 'Hello, World!', sessions: 'Sessions 1-5' },
+    { id: 'python-execution', title: 'How Python Executes', sessions: 'Core Understanding' },
     { id: 'oop-patterns', title: 'OOP & Design Patterns', sessions: 'Sessions 6-8' },
     { id: 'fundamentals', title: 'Advanced Fundamentals', sessions: 'Core Concepts' }
   ]);
@@ -57,11 +59,22 @@ const Foundations = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
-      <EditablePageHeader 
-        page="foundations"
-        defaultTitle="Python Foundations" 
-        defaultSubtitle="Master Python from the ground up - from installation to advanced concepts"
-      />
+      {/* Hero Section with Background */}
+      <div 
+        className="relative h-96 bg-cover bg-center bg-no-repeat"
+        style={{ backgroundImage: `url(${pythonFoundationsHero})` }}
+      >
+        <div className="absolute inset-0 bg-gradient-to-r from-background/90 via-background/60 to-background/90"></div>
+        <div className="relative z-10 h-full flex items-center justify-center text-center px-4">
+          <div>
+            <EditablePageHeader 
+              page="foundations"
+              defaultTitle="Python Foundations" 
+              defaultSubtitle="Master Python from the ground up - from installation to advanced concepts"
+            />
+          </div>
+        </div>
+      </div>
       
       <div className="max-w-7xl mx-auto px-4 py-8 flex gap-8">
         {/* Main content - Keep wide and clean */}
