@@ -9,11 +9,11 @@ const MachineLearning = () => {
   const { theme } = useTheme();
 
   const tocItems = [
-    { id: 'introduction', title: 'The Intelligence Revolution' },
-    { id: 'computer-vision', title: 'Computer Vision' },
-    { id: 'ml-classic', title: 'Classical Machine Learning & NLP' },
-    { id: 'deep-learning', title: 'Deep Learning with TensorFlow' },
-    { id: 'next-chapter', title: 'Towards Advanced ML & Deployment' }
+    { id: 'introduction', title: 'The Intelligence Revolution', sessions: 'Philosophy & Overview' },
+    { id: 'computer-vision', title: 'Computer Vision', sessions: 'Sessions 28-29' },
+    { id: 'ml-classic', title: 'Classical Machine Learning & NLP', sessions: 'Sessions 30-35' },
+    { id: 'deep-learning', title: 'Deep Learning with TensorFlow', sessions: 'Sessions 36-40' },
+    { id: 'next-chapter', title: 'Towards Advanced ML & Deployment', sessions: 'Future Directions' }
   ];
 
   return (
@@ -24,13 +24,9 @@ const MachineLearning = () => {
         defaultSubtitle="From Classical Algorithms to Deep Neural Networks - Building Intelligent Systems"
       />
       
-      <div className="container mx-auto px-4 py-8">
-        <div className="flex gap-8">
-          <div className="hidden lg:block w-64 flex-shrink-0">
-            <TableOfContents items={tocItems} />
-          </div>
-          
-          <div className="flex-1 max-w-4xl">
+      <div className="max-w-7xl mx-auto px-4 py-8 flex gap-8">
+        {/* Main content - Keep wide and clean */}
+        <div className="flex-grow min-w-0">
             {/* Introduction Section */}
             <section id="introduction" className="mb-16">
               <div className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-md rounded-xl p-8 border border-border shadow-lg animate-fade-in">
@@ -934,17 +930,22 @@ if __name__ == "__main__":
                 </div>
               </div>
             </section>
-            
-            {/* Course Navigation */}
-            <CourseNavigation
-              previousCourse={{
-                path: "/data-visualizing",
-                title: "Data: Visualizing",
-                description: "From data points to visual intelligence - interactive dashboards and applications"
-              }}
-            />
+          </div>
+
+          {/* Table of Contents - Simplified and positioned */}
+          <div className="hidden xl:block w-64 flex-shrink-0">
+            <TableOfContents items={tocItems} />
           </div>
         </div>
+
+      {/* Course Navigation - Simplified */}
+      <div className="max-w-7xl mx-auto px-4 pb-12">
+        <CourseNavigation
+          previousCourse={{
+            path: "/data-visualizing",
+            title: "Data: Visualizing"
+          }}
+        />
       </div>
     </div>
   );

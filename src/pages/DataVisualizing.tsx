@@ -430,13 +430,11 @@ if __name__ == "__main__":
             <CourseNavigation
               previousCourse={{
                 path: "/data-calculus",
-                title: "Data: Calculus",
-                description: "From data structures to numerical computing - building the foundation for AI"
+                title: "Data: Calculus"
               }}
               nextCourse={{
                 path: "/machine-learning",
-                title: "Machine Learning",
-                description: "From algorithms to artificial intelligence - computer vision, NLP, and deep learning"
+                title: "Machine Learning"
               }}
             />
           </div>

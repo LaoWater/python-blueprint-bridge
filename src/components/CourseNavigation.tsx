@@ -2,63 +2,54 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
 
 interface CourseNavigationProps {
   previousCourse?: {
     path: string;
     title: string;
-    description: string;
   };
   nextCourse?: {
     path: string;
     title: string;
-    description: string;
   };
 }
 
 const CourseNavigation = ({ previousCourse, nextCourse }: CourseNavigationProps) => {
   return (
-    <div className="mt-16 pt-8 border-t border-border">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div className="mt-12 pt-6 border-t border-border/50">
+      <div className="flex justify-between items-center max-w-4xl">
         {/* Previous Course */}
-        {previousCourse && (
-          <Card className="group hover:shadow-lg transition-all duration-300">
-            <CardContent className="p-6">
-              <Link to={previousCourse.path} className="block">
-                <div className="flex items-center gap-3 mb-3">
-                  <ChevronLeft className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors" />
-                  <span className="text-sm text-muted-foreground">Previous Course</span>
-                </div>
-                <h3 className="text-lg font-semibold text-foreground group-hover:text-primary transition-colors mb-2">
-                  {previousCourse.title}
-                </h3>
-                <p className="text-sm text-muted-foreground">
-                  {previousCourse.description}
-                </p>
-              </Link>
-            </CardContent>
-          </Card>
+        {previousCourse ? (
+          <Button asChild variant="ghost" className="group h-auto p-4 flex-col items-start">
+            <Link to={previousCourse.path}>
+              <div className="flex items-center gap-2 text-muted-foreground group-hover:text-primary transition-colors mb-1">
+                <ChevronLeft className="w-4 h-4" />
+                <span className="text-sm">Previous</span>
+              </div>
+              <span className="font-medium text-foreground group-hover:text-primary transition-colors">
+                {previousCourse.title}
+              </span>
+            </Link>
+          </Button>
+        ) : (
+          <div></div>
         )}
 
         {/* Next Course */}
-        {nextCourse && (
-          <Card className="group hover:shadow-lg transition-all duration-300">
-            <CardContent className="p-6">
-              <Link to={nextCourse.path} className="block">
-                <div className="flex items-center justify-end gap-3 mb-3">
-                  <span className="text-sm text-muted-foreground">Next Course</span>
-                  <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors" />
-                </div>
-                <h3 className="text-lg font-semibold text-foreground group-hover:text-primary transition-colors mb-2 text-right">
-                  {nextCourse.title}
-                </h3>
-                <p className="text-sm text-muted-foreground text-right">
-                  {nextCourse.description}
-                </p>
-              </Link>
-            </CardContent>
-          </Card>
+        {nextCourse ? (
+          <Button asChild variant="ghost" className="group h-auto p-4 flex-col items-end">
+            <Link to={nextCourse.path}>
+              <div className="flex items-center gap-2 text-muted-foreground group-hover:text-primary transition-colors mb-1">
+                <span className="text-sm">Next</span>
+                <ChevronRight className="w-4 h-4" />
+              </div>
+              <span className="font-medium text-foreground group-hover:text-primary transition-colors">
+                {nextCourse.title}
+              </span>
+            </Link>
+          </Button>
+        ) : (
+          <div></div>
         )}
       </div>
     </div>

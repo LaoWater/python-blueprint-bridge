@@ -58,8 +58,8 @@ const DataCalculus = () => {
       />
       
       <div className="max-w-7xl mx-auto px-4 py-8 flex gap-8">
-        {/* Main content */}
-        <div className="flex-grow max-w-4xl">
+        {/* Main content - Keep wide and clean */}
+        <div className="flex-grow min-w-0">
           
           {/* The Journey Continues */}
           <section id="journey-begins" className="mb-12">
@@ -1154,13 +1154,11 @@ print(f"Speedup: {time1/time2:.1f}x faster")`}
         <CourseNavigation
           previousCourse={{
             path: "/foundations",
-            title: "Python Foundations",
-            description: "Master Python from the ground up - from installation to advanced concepts"
+            title: "Python Foundations"
           }}
           nextCourse={{
             path: "/data-visualizing",
-            title: "Data: Visualizing",
-            description: "From data points to visual intelligence - interactive dashboards and applications"
+            title: "Data: Visualizing"
           }}
         />
       </div>

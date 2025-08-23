@@ -64,8 +64,8 @@ const Foundations = () => {
       />
       
       <div className="max-w-7xl mx-auto px-4 py-8 flex gap-8">
-        {/* Main content */}
-        <div className="flex-grow max-w-4xl">
+        {/* Main content - Keep wide and clean */}
+        <div className="flex-grow min-w-0">
           
           {/* Getting Started Section */}
           <section id="getting-started" className="mb-12">
@@ -797,8 +797,7 @@ print(f"Modified snapshot: {alice_snapshot}")`}
         <CourseNavigation
           nextCourse={{
             path: "/data-calculus",
-            title: "Data: Calculus",
-            description: "From data structures to numerical computing - building the foundation for AI"
+            title: "Data: Calculus"
           }}
         />
 
