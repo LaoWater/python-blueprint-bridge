@@ -1,4 +1,6 @@
 
+import React, { useState, useEffect } from 'react';
+
 interface TOCItem {
   id: string;
   title: string;
@@ -10,10 +12,33 @@ interface TableOfContentsProps {
 }
 
 const TableOfContents = ({ items }: TableOfContentsProps) => {
+  const [isSticky, setIsSticky] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      // Check if we've scrolled past the main content start
+      const mainContent = document.getElementById('getting-started') || 
+                         document.getElementById('journey-begins') || 
+                         document.getElementById('introduction') ||
+                         document.getElementById('overview');
+      
+      if (mainContent) {
+        const rect = mainContent.getBoundingClientRect();
+        const shouldBeSticky = rect.top <= 120; // Account for navbar height + padding
+        setIsSticky(shouldBeSticky);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    handleScroll(); // Check initial state
+    
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
     if (element) {
-      const headerOffset = 100;
+      const headerOffset = 120; // Increased for better spacing
       const elementPosition = element.getBoundingClientRect().top;
       const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
       
@@ -25,7 +50,16 @@ const TableOfContents = ({ items }: TableOfContentsProps) => {
   };
 
   return (
-    <div className="sticky top-28 max-h-[calc(100vh-8rem)] overflow-y-auto p-4 bg-white/50 dark:bg-gray-900/50 backdrop-blur-md border border-gray-200 dark:border-gray-800 rounded-md transition-all duration-300 animate-fade-in shadow-sm hover:shadow-md">
+    <div 
+      className={`
+        ${isSticky ? 'fixed top-24 z-40' : 'static'} 
+        max-h-[calc(100vh-8rem)] overflow-y-auto p-4 
+        bg-white/90 dark:bg-gray-900/90 backdrop-blur-md 
+        border border-gray-200 dark:border-gray-800 rounded-md 
+        transition-all duration-300 animate-fade-in shadow-sm hover:shadow-md
+        ${isSticky ? 'w-72' : 'w-full'}
+      `}
+    >
       <h3 className="text-sm font-medium text-gray-900 dark:text-white mb-3">On This Page</h3>
       <ul className="space-y-2 text-sm">
         {items.map((item) => (

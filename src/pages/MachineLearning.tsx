@@ -4,7 +4,7 @@ import EditablePageHeader from '@/components/EditablePageHeader';
 import EditableCodeBlock from '@/components/EditableCodeBlock';
 import TableOfContents from '@/components/TableOfContents';
 import CourseNavigation from '@/components/CourseNavigation';
-import mlHeroImage from '@/assets/ml-hero-landscape.jpg';
+import mlHeroImage from '@/assets/ml-hero-blue.jpg';
 
 const MachineLearning = () => {
   const { theme } = useTheme();
@@ -23,7 +23,7 @@ const MachineLearning = () => {
       <div 
         className="relative h-80 bg-cover bg-center bg-no-repeat flex items-center justify-center"
         style={{
-          backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)), url(${mlHeroImage})`
+          backgroundImage: `linear-gradient(rgba(0, 0, 50, 0.3), rgba(0, 20, 80, 0.5)), url(${mlHeroImage})`
         }}
       >
         <div className="text-center text-white z-10">
