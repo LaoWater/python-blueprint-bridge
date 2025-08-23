@@ -20,15 +20,10 @@ const CourseNavigation = ({ previousCourse, nextCourse }: CourseNavigationProps)
       <div className="flex justify-between items-center max-w-4xl">
         {/* Previous Course */}
         {previousCourse ? (
-          <Button asChild variant="ghost" className="group h-auto p-4 flex-col items-start">
-            <Link to={previousCourse.path}>
-              <div className="flex items-center gap-2 text-muted-foreground group-hover:text-primary transition-colors mb-1">
-                <ChevronLeft className="w-4 h-4" />
-                <span className="text-sm">Previous</span>
-              </div>
-              <span className="font-medium text-foreground group-hover:text-primary transition-colors">
-                {previousCourse.title}
-              </span>
+          <Button asChild variant="outline" size="sm" className="group">
+            <Link to={previousCourse.path} className="flex items-center gap-2">
+              <ChevronLeft className="w-4 h-4" />
+              <span>Previous: {previousCourse.title}</span>
             </Link>
           </Button>
         ) : (
@@ -37,15 +32,10 @@ const CourseNavigation = ({ previousCourse, nextCourse }: CourseNavigationProps)
 
         {/* Next Course */}
         {nextCourse ? (
-          <Button asChild variant="ghost" className="group h-auto p-4 flex-col items-end">
-            <Link to={nextCourse.path}>
-              <div className="flex items-center gap-2 text-muted-foreground group-hover:text-primary transition-colors mb-1">
-                <span className="text-sm">Next</span>
-                <ChevronRight className="w-4 h-4" />
-              </div>
-              <span className="font-medium text-foreground group-hover:text-primary transition-colors">
-                {nextCourse.title}
-              </span>
+          <Button asChild variant="outline" size="sm" className="group">
+            <Link to={nextCourse.path} className="flex items-center gap-2">
+              <span>Next: {nextCourse.title}</span>
+              <ChevronRight className="w-4 h-4" />
             </Link>
           </Button>
         ) : (

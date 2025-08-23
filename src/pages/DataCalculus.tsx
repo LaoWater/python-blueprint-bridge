@@ -59,7 +59,7 @@ const DataCalculus = () => {
       
       <div className="max-w-7xl mx-auto px-4 py-8 flex gap-8">
         {/* Main content - Keep wide and clean */}
-        <div className="flex-grow min-w-0">
+        <div className="flex-grow min-w-0 max-w-none">
           
           {/* The Journey Continues */}
           <section id="journey-begins" className="mb-12">
@@ -1143,24 +1143,23 @@ print(f"Speedup: {time1/time2:.1f}x faster")`}
           </section>
         </div>
 
-        {/* Table of Contents Sidebar */}
-        <div className="hidden lg:block lg:w-64 lg:flex-shrink-0">
-          <div className="sticky top-8">
+        {/* Navigation - Compact and positioned better */}
+        <div className="hidden lg:block w-72">
+          <div className="space-y-4">
+            <CourseNavigation 
+              previousCourse={{
+                path: "/foundations",
+                title: "Foundations"
+              }}
+              nextCourse={{
+                path: "/data-visualizing", 
+                title: "Data Visualizing"
+              }}
+            />
+            
             <TableOfContents items={tocItems} />
           </div>
         </div>
-        
-        {/* Course Navigation */}
-        <CourseNavigation
-          previousCourse={{
-            path: "/foundations",
-            title: "Python Foundations"
-          }}
-          nextCourse={{
-            path: "/data-visualizing",
-            title: "Data: Visualizing"
-          }}
-        />
       </div>
     </div>
   );

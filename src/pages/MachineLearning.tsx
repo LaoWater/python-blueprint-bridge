@@ -4,6 +4,7 @@ import EditablePageHeader from '@/components/EditablePageHeader';
 import EditableCodeBlock from '@/components/EditableCodeBlock';
 import TableOfContents from '@/components/TableOfContents';
 import CourseNavigation from '@/components/CourseNavigation';
+import mlHeroImage from '@/assets/ml-hero-landscape.jpg';
 
 const MachineLearning = () => {
   const { theme } = useTheme();
@@ -18,67 +19,78 @@ const MachineLearning = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
-      <EditablePageHeader
-        page="machine-learning"
-        defaultTitle="Machine Learning"
-        defaultSubtitle="From Classical Algorithms to Deep Neural Networks - Building Intelligent Systems"
-      />
+      {/* Hero Section with Background Image */}
+      <div 
+        className="relative h-80 bg-cover bg-center bg-no-repeat flex items-center justify-center"
+        style={{
+          backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)), url(${mlHeroImage})`
+        }}
+      >
+        <div className="text-center text-white z-10">
+          <h1 className="text-5xl font-bold mb-4 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+            Machine Learning
+          </h1>
+          <p className="text-xl opacity-90 max-w-2xl">
+            From Classical Algorithms to Deep Neural Networks - The Honor of Building Intelligent Systems
+          </p>
+        </div>
+      </div>
       
       <div className="max-w-7xl mx-auto px-4 py-8 flex gap-8">
         {/* Main content - Keep wide and clean */}
-        <div className="flex-grow min-w-0">
-            {/* Introduction Section */}
-            <section id="introduction" className="mb-16">
-              <div className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-md rounded-xl p-8 border border-border shadow-lg animate-fade-in">
-                <h2 className="text-3xl font-bold mb-6 bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-                  The Intelligence Revolution: From Algorithms to Awareness
-                </h2>
-                <div className="prose dark:prose-invert max-w-none">
-                  <p className="text-lg leading-relaxed mb-6">
-                    We stand at the threshold of the most profound technological revolution in human history. 
-                    After mastering the language of Python, understanding data structures, and wielding the power 
-                    of numerical computation and visualization, we now embark on the ultimate journey: teaching machines to think.
-                  </p>
-                  <p className="text-lg leading-relaxed mb-6">
-                    Machine Learning is not just about algorithms—it's about creating systems that can perceive, 
-                    understand, and make decisions. From enabling cars to see the road ahead, to understanding 
-                    human language, to recognizing patterns invisible to the human eye, we're building the 
-                    foundation of artificial intelligence.
-                  </p>
-                  <blockquote className="border-l-4 border-primary pl-6 italic text-xl text-muted-foreground">
-                    "The question is not whether machines think but whether men do. The mystery which surrounds 
-                    a thinking machine already surrounds a thinking man." - B.F. Skinner
-                  </blockquote>
-                </div>
-              </div>
-            </section>
-
-            {/* Computer Vision Section */}
-            <section id="computer-vision" className="mb-16">
-              <div className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-md rounded-xl p-8 border border-border shadow-lg animate-fade-in">
-                <h2 className="text-3xl font-bold mb-6 bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent">
-                  Computer Vision: Teaching Machines to See
-                </h2>
-                <p className="text-lg mb-8 text-muted-foreground">
-                  Before neural networks dominated the field, computer vision relied on carefully crafted algorithms 
-                  to detect edges, find contours, and recognize patterns. Understanding these fundamentals gives us 
-                  insight into how machines process visual information.
+        <div className="flex-grow min-w-0 max-w-none">
+          {/* Introduction Section */}
+          <section id="introduction" className="mb-16">
+            <div className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-md rounded-xl p-8 border border-border shadow-lg animate-fade-in">
+              <h2 className="text-3xl font-bold mb-6 bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+                The Intelligence Revolution: From Algorithms to Awareness
+              </h2>
+              <div className="prose dark:prose-invert max-w-none">
+                <p className="text-lg leading-relaxed mb-6">
+                  We stand at the threshold of the most profound technological revolution in human history. 
+                  After mastering the language of Python, understanding data structures, and wielding the power 
+                  of numerical computation and visualization, we now embark on the ultimate journey: teaching machines to think.
                 </p>
+                <p className="text-lg leading-relaxed mb-6">
+                  Machine Learning is not just about algorithms—it's about creating systems that can perceive, 
+                  understand, and make decisions. From enabling cars to see the road ahead, to understanding 
+                  human language, to recognizing patterns invisible to the human eye, we're building the 
+                  foundation of artificial intelligence.
+                </p>
+                <blockquote className="border-l-4 border-primary pl-6 italic text-xl text-muted-foreground">
+                  "The question is not whether machines think but whether men do. The mystery which surrounds 
+                  a thinking machine already surrounds a thinking man." - B.F. Skinner
+                </blockquote>
+              </div>
+            </div>
+          </section>
 
-                <div className="space-y-8">
-                  <div className="bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-900/20 dark:to-blue-900/20 rounded-lg p-6">
-                <h3 className="text-xl font-semibold mb-4 text-green-800 dark:text-green-200">
-                  Session 28 – Advanced OpenCV: Image Processing, Contours & Segmentation
-                </h3>
-                    <p className="mb-4 text-sm text-muted-foreground">
-                      In autonomous vehicles, computer vision processes thousands of frames per second to identify 
-                      lane markings, traffic signs, and obstacles. OpenCV provides the foundational tools for this 
-                      real-time visual processing.
-                    </p>
-                    <EditableCodeBlock
-                      title="Real-time Object Detection Pipeline"
-                      language="python"
-                      code={`import cv2
+          {/* Computer Vision Section */}
+          <section id="computer-vision" className="mb-16">
+            <div className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-md rounded-xl p-8 border border-border shadow-lg animate-fade-in">
+              <h2 className="text-3xl font-bold mb-6 bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent">
+                Computer Vision: Teaching Machines to See
+              </h2>
+              <p className="text-lg mb-8 text-muted-foreground">
+                Before neural networks dominated the field, computer vision relied on carefully crafted algorithms 
+                to detect edges, find contours, and recognize patterns. Understanding these fundamentals gives us 
+                insight into how machines process visual information.
+              </p>
+
+              <div className="space-y-8">
+                <div className="bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-900/20 dark:to-blue-900/20 rounded-lg p-6">
+                  <h3 className="text-xl font-semibold mb-4 text-green-800 dark:text-green-200">
+                    Session 28 – Advanced OpenCV: Image Processing, Contours & Segmentation
+                  </h3>
+                  <p className="mb-4 text-sm text-muted-foreground">
+                    In autonomous vehicles, computer vision processes thousands of frames per second to identify 
+                    lane markings, traffic signs, and obstacles. OpenCV provides the foundational tools for this 
+                    real-time visual processing.
+                  </p>
+                  <EditableCodeBlock
+                    title="Real-time Object Detection Pipeline"
+                    language="python"
+                    code={`import cv2
 import numpy as np
 
 # Initialize camera for real-time processing
@@ -138,23 +150,23 @@ while True:
 
 cap.release()
 cv2.destroyAllWindows()`}
-                      page="machine-learning"
-                      section="opencv-advanced"
-                    />
-                  </div>
+                    page="machine-learning"
+                    section="opencv-advanced"
+                  />
+                </div>
 
-                  <div className="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-lg p-6">
-                <h3 className="text-xl font-semibold mb-4 text-purple-800 dark:text-purple-200">
-                  Session 29 – Dlib: Advanced Facial Recognition & Tracking
-                </h3>
-                    <p className="mb-4 text-sm text-muted-foreground">
-                      Modern authentication systems use facial recognition for secure access control. 
-                      Dlib's pre-trained models enable production-ready face detection and landmark estimation.
-                    </p>
-                    <EditableCodeBlock
-                      title="Enterprise Face Recognition System"
-                      language="python"
-                      code={`import dlib
+                <div className="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-lg p-6">
+                  <h3 className="text-xl font-semibold mb-4 text-purple-800 dark:text-purple-200">
+                    Session 29 – Dlib: Advanced Facial Recognition & Tracking
+                  </h3>
+                  <p className="mb-4 text-sm text-muted-foreground">
+                    Modern authentication systems use facial recognition for secure access control. 
+                    Dlib's pre-trained models enable production-ready face detection and landmark estimation.
+                  </p>
+                  <EditableCodeBlock
+                    title="Enterprise Face Recognition System"
+                    language="python"
+                    code={`import dlib
 import cv2
 import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
@@ -281,40 +293,40 @@ def main():
 
 if __name__ == "__main__":
     main()`}
-                      page="machine-learning"
-                      section="dlib-face-recognition"
-                    />
-                  </div>
+                    page="machine-learning"
+                    section="dlib-face-recognition"
+                  />
                 </div>
               </div>
-            </section>
+            </div>
+          </section>
 
-            {/* Classical ML Section */}
-            <section id="ml-classic" className="mb-16">
-              <div className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-md rounded-xl p-8 border border-border shadow-lg animate-fade-in">
-                <h2 className="text-3xl font-bold mb-6 bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">
-                  Classical Machine Learning & NLP: The Foundation of Intelligence
-                </h2>
-                <p className="text-lg mb-8 text-muted-foreground">
-                  Before deep learning revolutionized AI, classical machine learning algorithms powered countless 
-                  real-world applications. Understanding these fundamentals is crucial for choosing the right 
-                  approach for each problem.
-                </p>
+          {/* Classical ML Section */}
+          <section id="ml-classic" className="mb-16">
+            <div className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-md rounded-xl p-8 border border-border shadow-lg animate-fade-in">
+              <h2 className="text-3xl font-bold mb-6 bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">
+                Classical Machine Learning & NLP: The Foundation of Intelligence
+              </h2>
+              <p className="text-lg mb-8 text-muted-foreground">
+                Before deep learning revolutionized AI, classical machine learning algorithms powered countless 
+                real-world applications. Understanding these fundamentals is crucial for choosing the right 
+                approach for each problem.
+              </p>
 
-                <div className="space-y-8">
-                  <div className="bg-gradient-to-r from-orange-50 to-yellow-50 dark:from-orange-900/20 dark:to-yellow-900/20 rounded-lg p-6">
-                <h3 className="text-xl font-semibold mb-4 text-orange-800 dark:text-orange-200">
-                  Sessions 30-33 – Scikit-learn: From Basics to Production
-                </h3>
-                    <p className="mb-4 text-sm text-muted-foreground">
-                      Netflix uses machine learning to predict which movies you'll enjoy. Banks use it to detect 
-                      fraudulent transactions. E-commerce platforms use it to optimize pricing. Scikit-learn 
-                      provides the tools to build these systems.
-                    </p>
-                    <EditableCodeBlock
-                      title="Production ML Pipeline - Real Estate Price Prediction"
-                      language="python"
-                      code={`import pandas as pd
+              <div className="space-y-8">
+                <div className="bg-gradient-to-r from-orange-50 to-yellow-50 dark:from-orange-900/20 dark:to-yellow-900/20 rounded-lg p-6">
+                  <h3 className="text-xl font-semibold mb-4 text-orange-800 dark:text-orange-200">
+                    Sessions 30-33 – Scikit-learn: From Basics to Production
+                  </h3>
+                  <p className="mb-4 text-sm text-muted-foreground">
+                    Netflix uses machine learning to predict which movies you'll enjoy. Banks use it to detect 
+                    fraudulent transactions. E-commerce platforms use it to optimize pricing. Scikit-learn 
+                    provides the tools to build these systems.
+                  </p>
+                  <EditableCodeBlock
+                    title="Production ML Pipeline - Real Estate Price Prediction"
+                    language="python"
+                    code={`import pandas as pd
 import numpy as np
 from sklearn.model_selection import train_test_split, GridSearchCV, cross_val_score
 from sklearn.preprocessing import StandardScaler, LabelEncoder
@@ -403,26 +415,24 @@ def main():
 
 if __name__ == "__main__":
     main()`}
-                      page="machine-learning"
-                      section="sklearn-production"
-                    />
-                  </div>
+                    page="machine-learning"
+                    section="sklearn-production"
+                  />
+                </div>
 
-                  
-
-                  <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-lg p-6">
-                    <h3 className="text-xl font-semibold mb-4 text-blue-800 dark:text-blue-200">
-                      Sesiunea 34-35 – NLP: Understanding Human Language
-                    </h3>
-                    <p className="mb-4 text-sm text-muted-foreground">
-                      Customer service chatbots, sentiment analysis for brand monitoring, and document 
-                      classification systems all rely on Natural Language Processing to understand and 
-                      respond to human language.
-                    </p>
-                    <EditableCodeBlock
-                      title="Enterprise Sentiment Analysis System"
-                      language="python"
-                      code={`import pandas as pd
+                <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-lg p-6">
+                  <h3 className="text-xl font-semibold mb-4 text-blue-800 dark:text-blue-200">
+                    Sesiunea 34-35 – NLP: Understanding Human Language
+                  </h3>
+                  <p className="mb-4 text-sm text-muted-foreground">
+                    Customer service chatbots, sentiment analysis for brand monitoring, and document 
+                    classification systems all rely on Natural Language Processing to understand and 
+                    respond to human language.
+                  </p>
+                  <EditableCodeBlock
+                    title="Enterprise Sentiment Analysis System"
+                    language="python"
+                    code={`import pandas as pd
 import numpy as np
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.model_selection import train_test_split
@@ -564,40 +574,40 @@ def main():
 
 if __name__ == "__main__":
     main()`}
-                      page="machine-learning"
-                      section="nlp-sentiment"
-                    />
-                  </div>
+                    page="machine-learning"
+                    section="nlp-sentiment"
+                  />
                 </div>
               </div>
-            </section>
+            </div>
+          </section>
 
-            {/* Deep Learning Section */}
-            <section id="deep-learning" className="mb-16">
-              <div className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-md rounded-xl p-8 border border-border shadow-lg animate-fade-in">
-                <h2 className="text-3xl font-bold mb-6 bg-gradient-to-r from-red-600 to-purple-600 bg-clip-text text-transparent">
-                  Deep Learning with TensorFlow: Neural Networks Revolution
-                </h2>
-                <p className="text-lg mb-8 text-muted-foreground">
-                  Deep learning has revolutionized computer vision, enabling systems that can diagnose diseases 
-                  from medical images, enable autonomous vehicles, and create art. TensorFlow provides the 
-                  infrastructure to build these powerful neural networks.
-                </p>
+          {/* Deep Learning Section */}
+          <section id="deep-learning" className="mb-16">
+            <div className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-md rounded-xl p-8 border border-border shadow-lg animate-fade-in">
+              <h2 className="text-3xl font-bold mb-6 bg-gradient-to-r from-red-600 to-purple-600 bg-clip-text text-transparent">
+                Deep Learning with TensorFlow: Neural Networks Revolution
+              </h2>
+              <p className="text-lg mb-8 text-muted-foreground">
+                Deep learning has revolutionized computer vision, enabling systems that can diagnose diseases 
+                from medical images, enable autonomous vehicles, and create art. TensorFlow provides the 
+                infrastructure to build these powerful neural networks.
+              </p>
 
-                <div className="space-y-8">
-                  <div className="bg-gradient-to-r from-red-50 to-pink-50 dark:from-red-900/20 dark:to-pink-900/20 rounded-lg p-6">
-                    <h3 className="text-xl font-semibold mb-4 text-red-800 dark:text-red-200">
-                      Sesiunea 36-38 – CNN & Transfer Learning
-                    </h3>
-                    <p className="mb-4 text-sm text-muted-foreground">
-                      Medical imaging AI systems use Convolutional Neural Networks to detect cancer, fractures, 
-                      and other conditions. Transfer learning allows us to leverage pre-trained models for 
-                      specialized applications.
-                    </p>
-                    <EditableCodeBlock
-                      title="Medical Image Classification with Transfer Learning"
-                      language="python"
-                      code={`import tensorflow as tf
+              <div className="space-y-8">
+                <div className="bg-gradient-to-r from-red-50 to-pink-50 dark:from-red-900/20 dark:to-pink-900/20 rounded-lg p-6">
+                  <h3 className="text-xl font-semibold mb-4 text-red-800 dark:text-red-200">
+                    Sesiunea 36-38 – CNN & Transfer Learning
+                  </h3>
+                  <p className="mb-4 text-sm text-muted-foreground">
+                    Medical imaging AI systems use Convolutional Neural Networks to detect cancer, fractures, 
+                    and other conditions. Transfer learning allows us to leverage pre-trained models for 
+                    specialized applications.
+                  </p>
+                  <EditableCodeBlock
+                    title="Medical Image Classification with Transfer Learning"
+                    language="python"
+                    code={`import tensorflow as tf
 from tensorflow.keras.applications import EfficientNetB0
 from tensorflow.keras.layers import Dense, GlobalAveragePooling2D, Dropout
 from tensorflow.keras.models import Model
@@ -747,24 +757,24 @@ def main():
 
 if __name__ == "__main__":
     main()`}
-                      page="machine-learning"
-                      section="tensorflow-medical"
-                    />
-                  </div>
+                    page="machine-learning"
+                    section="tensorflow-medical"
+                  />
+                </div>
 
-                  <div className="bg-gradient-to-r from-purple-50 to-indigo-50 dark:from-purple-900/20 dark:to-indigo-900/20 rounded-lg p-6">
-                    <h3 className="text-xl font-semibold mb-4 text-purple-800 dark:text-purple-200">
-                      Sesiunea 39-40 – YOLO: Real-time Object Detection
-                    </h3>
-                    <p className="mb-4 text-sm text-muted-foreground">
-                      Autonomous vehicles, security systems, and industrial automation rely on real-time 
-                      object detection. YOLO (You Only Look Once) enables processing thousands of frames 
-                      per second for critical applications.
-                    </p>
-                    <EditableCodeBlock
-                      title="Production YOLO Object Detection System"
-                      language="python"
-                      code={`import tensorflow as tf
+                <div className="bg-gradient-to-r from-purple-50 to-indigo-50 dark:from-purple-900/20 dark:to-indigo-900/20 rounded-lg p-6">
+                  <h3 className="text-xl font-semibold mb-4 text-purple-800 dark:text-purple-200">
+                    Sesiunea 39-40 – YOLO: Real-time Object Detection
+                  </h3>
+                  <p className="mb-4 text-sm text-muted-foreground">
+                    Autonomous vehicles, security systems, and industrial automation rely on real-time 
+                    object detection. YOLO (You Only Look Once) enables processing thousands of frames 
+                    per second for critical applications.
+                  </p>
+                  <EditableCodeBlock
+                    title="Production YOLO Object Detection System"
+                    language="python"
+                    code={`import tensorflow as tf
 import cv2
 import numpy as np
 from collections import defaultdict
@@ -885,67 +895,64 @@ def main():
 
 if __name__ == "__main__":
     main()`}
-                      page="machine-learning"
-                      section="yolo-detection"
-                    />
-                  </div>
+                    page="machine-learning"
+                    section="yolo-detection"
+                  />
                 </div>
               </div>
-            </section>
+            </div>
+          </section>
 
-            {/* Bridge to Next Chapter */}
-            <section id="next-chapter" className="mb-16">
-              <div className="bg-gradient-to-br from-violet-100 to-purple-100 dark:from-violet-900/30 dark:to-purple-900/30 rounded-xl p-8 border border-violet-200 dark:border-violet-800 shadow-lg animate-fade-in">
-                <h2 className="text-3xl font-bold mb-6 bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent">
-                  The Path Ahead: Advanced ML & Deployment
-                </h2>
-                <div className="prose dark:prose-invert max-w-none">
-                  <p className="text-lg leading-relaxed mb-6">
-                    You've journeyed from Python fundamentals through data manipulation, visualization, 
-                    and now machine learning. You've built systems that can see, understand language, 
-                    and make intelligent decisions. But the revolution is just beginning.
-                  </p>
-                  <p className="text-lg leading-relaxed mb-6">
-                    In our final chapter, we'll explore the cutting edge: deploying ML models at scale, 
-                    building production MLOps pipelines, and creating AI systems that can learn and 
-                    adapt in real-time. We'll cover distributed training, model optimization, edge 
-                    deployment, and the infrastructure that powers modern AI applications.
-                  </p>
-                  <div className="bg-white/60 dark:bg-gray-800/60 rounded-lg p-6 border border-violet-200 dark:border-violet-700">
-                    <h3 className="text-xl font-semibold mb-4 text-violet-800 dark:text-violet-200">
-                      What Awaits in Advanced ML & Deployment:
-                    </h3>
-                    <ul className="space-y-2 text-muted-foreground">
-                      <li>🚀 <strong>MLOps & Production Pipelines:</strong> From notebook to production at scale</li>
-                      <li>⚡ <strong>Model Optimization:</strong> Quantization, pruning, and edge deployment</li>
-                      <li>🌐 <strong>Distributed Training:</strong> Training models across multiple GPUs and machines</li>
-                      <li>📊 <strong>Model Monitoring:</strong> Detecting drift and maintaining performance</li>
-                      <li>🔄 <strong>Continuous Learning:</strong> Models that improve over time</li>
-                      <li>🏗️ <strong>AI Infrastructure:</strong> Building scalable AI systems</li>
-                    </ul>
-                  </div>
-                  <blockquote className="border-l-4 border-violet-500 pl-6 italic text-xl text-muted-foreground mt-8">
-                    "The goal is to turn data into information, and information into insight." - Carly Fiorina
-                  </blockquote>
+          {/* Bridge to Next Chapter */}
+          <section id="next-chapter" className="mb-16">
+            <div className="bg-gradient-to-br from-violet-100 to-purple-100 dark:from-violet-900/30 dark:to-purple-900/30 rounded-xl p-8 border border-violet-200 dark:border-violet-800 shadow-lg animate-fade-in">
+              <h2 className="text-3xl font-bold mb-6 bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent">
+                The Path Ahead: Advanced ML & Deployment
+              </h2>
+              <div className="prose dark:prose-invert max-w-none">
+                <p className="text-lg leading-relaxed mb-6">
+                  You've journeyed from Python fundamentals through data manipulation, visualization, 
+                  and now machine learning. You've built systems that can see, understand language, 
+                  and make intelligent decisions. But the revolution is just beginning.
+                </p>
+                <div className="bg-white/60 dark:bg-gray-800/60 rounded-lg p-6 border border-violet-200 dark:border-violet-700">
+                  <h3 className="text-xl font-semibold mb-4 text-violet-800 dark:text-violet-200">
+                    What Awaits in Advanced ML & Deployment:
+                  </h3>
+                  <ul className="space-y-2 text-muted-foreground">
+                    <li>🚀 <strong>MLOps & Production Pipelines:</strong> From notebook to production at scale</li>
+                    <li>⚡ <strong>Model Optimization:</strong> Quantization, pruning, and edge deployment</li>
+                    <li>🌐 <strong>Distributed Training:</strong> Training models across multiple GPUs and machines</li>
+                    <li>📊 <strong>Model Monitoring:</strong> Detecting drift and maintaining performance</li>
+                    <li>🔄 <strong>Continuous Learning:</strong> Models that improve over time</li>
+                    <li>🏗️ <strong>AI Infrastructure:</strong> Building scalable AI systems</li>
+                  </ul>
                 </div>
+                <blockquote className="border-l-4 border-violet-500 pl-6 italic text-xl text-muted-foreground mt-8">
+                  "The goal is to turn data into information, and information into insight." - Carly Fiorina
+                </blockquote>
               </div>
-            </section>
-          </div>
+            </div>
+          </section>
+        </div>
 
-          {/* Table of Contents - Simplified and positioned */}
-          <div className="hidden xl:block w-64 flex-shrink-0">
+        {/* Navigation - Compact and positioned better */}
+        <div className="hidden lg:block w-72">
+          <div className="space-y-4">
+            <CourseNavigation 
+              previousCourse={{
+                path: "/data-visualizing",
+                title: "Data Visualizing"
+              }}
+              nextCourse={{
+                path: "/mastery", 
+                title: "Mastery"
+              }}
+            />
+            
             <TableOfContents items={tocItems} />
           </div>
         </div>
-
-      {/* Course Navigation - Simplified */}
-      <div className="max-w-7xl mx-auto px-4 pb-12">
-        <CourseNavigation
-          previousCourse={{
-            path: "/data-visualizing",
-            title: "Data: Visualizing"
-          }}
-        />
       </div>
     </div>
   );
