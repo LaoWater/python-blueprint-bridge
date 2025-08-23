@@ -47,7 +47,7 @@ const Navbar = () => {
                 to="/machine-learning"
                 className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
               >
-                Machine Learning (Sessions 28-40)
+                Machine Learning
               </Link>
               <Link 
                 to="/blueprints"

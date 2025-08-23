@@ -32,7 +32,7 @@ const BlueprintsMastery = () => {
       <PageHeader 
         title="Advanced Development Blueprints" 
         subtitle="Master-level architectural patterns and techniques for building enterprise Python systems."
-      />
+      /> 
       
       {/* Hero Section */}
       <div className="relative overflow-hidden">
@@ -233,6 +233,7 @@ print(user.name)  # Alice
             <h2 className="concept-title">Advanced Decorator Blueprints</h2>
             
             <h3 className="text-lg font-medium mb-2 mt-4">Production Decorator Patterns</h3>
+
             <CodeBlock
               title="Enterprise-Level Decorators"
               code={`from functools import wraps, lru_cache
@@ -3454,10 +3455,9 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     
-    - name: Set up Python ${{ matrix.python-version }}
+    - name: Set up Python
       uses: actions/setup-python@v4
-      with:
-        python-version: ${{ matrix.python-version }}
+
     
     - name: Install dependencies
       run: |
@@ -3501,7 +3501,7 @@ jobs:
     - name: Upload to PyPI
       env:
         TWINE_USERNAME: __token__
-        TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+        TWINE_PASSWORD: __password__
       run: twine upload dist/*
 '''
 
