@@ -26,12 +26,6 @@ const Navbar = () => {
             
             <div className="hidden md:flex ml-10 space-x-6 text-sm">
               <Link 
-                to="/python"
-                className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
-              >
-                Python
-              </Link>
-              <Link 
                 to="/foundations"
                 className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
               >
@@ -53,13 +47,13 @@ const Navbar = () => {
                 to="/machine-learning"
                 className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
               >
-                Machine Learning
+                Machine Learning (Sessions 28-40)
               </Link>
               <Link 
-                to="/mastery"
+                to="/blueprints"
                 className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
               >
-                Mastery
+                Blueprints
               </Link>
               {isAdmin && (
                 <Link 

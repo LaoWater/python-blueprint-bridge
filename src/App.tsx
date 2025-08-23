@@ -10,7 +10,8 @@ import Index from "./pages/Index";
 import DataCalculus from "./pages/DataCalculus";
 import DataVisualizing from "./pages/DataVisualizing";
 import Foundations from "./pages/Foundations";
-import Mastery from "./pages/Mastery";
+import Blueprints from "./pages/Blueprints";
+import BlueprintsMastery from "./pages/BlueprintsMastery";
 import MachineLearning from "./pages/MachineLearning";
 import NotFound from "./pages/NotFound";
 import AuthPage from "./pages/AuthPage";
@@ -37,11 +38,12 @@ const App = () => (
                 <Routes>
                   <Route path="/" element={<LandingPage />} />
                   <Route path="/python" element={<Index />} />
+                  <Route path="/blueprints" element={<Blueprints />} />
+                  <Route path="/blueprints_mastery" element={<BlueprintsMastery />} />
                   <Route path="/foundations" element={<Foundations />} />
             <Route path="/data-calculus" element={<DataCalculus />} />
             <Route path="/data-visualizing" element={<DataVisualizing />} />
                   <Route path="/machine-learning" element={<MachineLearning />} />
-                  <Route path="/mastery" element={<Mastery />} />
                   <Route path="/auth" element={<AuthPage />} />
                   <Route path="/profile" element={<ProfilePage />} />
                   <Route path="/admin" element={<AdminPage />} />

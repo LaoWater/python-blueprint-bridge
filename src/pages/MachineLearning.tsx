@@ -70,9 +70,9 @@ const MachineLearning = () => {
 
                 <div className="space-y-8">
                   <div className="bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-900/20 dark:to-blue-900/20 rounded-lg p-6">
-                    <h3 className="text-xl font-semibold mb-4 text-green-800 dark:text-green-200">
-                      Sesiunea 28 – OpenCV Avansat: Prelucrare de Imagini, Contururi și Segmentare
-                    </h3>
+                <h3 className="text-xl font-semibold mb-4 text-green-800 dark:text-green-200">
+                  Session 28 – Advanced OpenCV: Image Processing, Contours & Segmentation
+                </h3>
                     <p className="mb-4 text-sm text-muted-foreground">
                       In autonomous vehicles, computer vision processes thousands of frames per second to identify 
                       lane markings, traffic signs, and obstacles. OpenCV provides the foundational tools for this 
@@ -147,9 +147,9 @@ cv2.destroyAllWindows()`}
                   </div>
 
                   <div className="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-lg p-6">
-                    <h3 className="text-xl font-semibold mb-4 text-purple-800 dark:text-purple-200">
-                      Sesiunea 29 – Dlib: Recunoaștere Facială Avansată și Tracking
-                    </h3>
+                <h3 className="text-xl font-semibold mb-4 text-purple-800 dark:text-purple-200">
+                  Session 29 – Dlib: Advanced Facial Recognition & Tracking
+                </h3>
                     <p className="mb-4 text-sm text-muted-foreground">
                       Modern authentication systems use facial recognition for secure access control. 
                       Dlib's pre-trained models enable production-ready face detection and landmark estimation.
@@ -306,9 +306,9 @@ if __name__ == "__main__":
 
                 <div className="space-y-8">
                   <div className="bg-gradient-to-r from-orange-50 to-yellow-50 dark:from-orange-900/20 dark:to-yellow-900/20 rounded-lg p-6">
-                    <h3 className="text-xl font-semibold mb-4 text-orange-800 dark:text-orange-200">
-                      Sesiunea 30-33 – Scikit-learn: From Basics to Production
-                    </h3>
+                <h3 className="text-xl font-semibold mb-4 text-orange-800 dark:text-orange-200">
+                  Sessions 30-33 – Scikit-learn: From Basics to Production
+                </h3>
                     <p className="mb-4 text-sm text-muted-foreground">
                       Netflix uses machine learning to predict which movies you'll enjoy. Banks use it to detect 
                       fraudulent transactions. E-commerce platforms use it to optimize pricing. Scikit-learn 
