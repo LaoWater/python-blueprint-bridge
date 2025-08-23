@@ -26,22 +26,34 @@ const Navbar = () => {
             
             <div className="hidden md:flex ml-10 space-x-6 text-sm">
               <Link 
-                to="/python"
-                className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
-              >
-                Python
-              </Link>
-              <Link 
                 to="/foundations"
                 className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
               >
                 Foundations
               </Link>
               <Link 
-                to="/mastery"
+                to="/data-calculus"
                 className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
               >
-                Mastery
+                Data: Calculus
+              </Link>
+              <Link 
+                to="/data-visualizing"
+                className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
+              >
+                Data: Visualizing
+              </Link>
+              <Link 
+                to="/machine-learning"
+                className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
+              >
+                Machine Learning
+              </Link>
+              <Link 
+                to="/blueprints"
+                className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
+              >
+                Blueprints
               </Link>
               {isAdmin && (
                 <Link 
