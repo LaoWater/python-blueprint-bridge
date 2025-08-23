@@ -16,8 +16,8 @@ const Foundations = () => {
   
   const [tocItems] = useState([
     { id: 'getting-started', title: 'Getting Started', sessions: 'Setup & Environment' },
-    { id: 'weekly-sessions', title: 'Weekly Python Sessions', sessions: 'Sessions 1-8' },
-    { id: 'oop-patterns', title: 'OOP & Design Patterns', sessions: 'Advanced Sessions' },
+    { id: 'weekly-sessions', title: 'Hello, World!', sessions: 'Sessions 1-5' },
+    { id: 'oop-patterns', title: 'OOP & Design Patterns', sessions: 'Sessions 6-8' },
     { id: 'fundamentals', title: 'Advanced Fundamentals', sessions: 'Core Concepts' }
   ]);
 
@@ -279,7 +279,7 @@ const Foundations = () => {
               </div>
               <div>
                 <h2 className="text-2xl font-bold text-foreground">Weekly Python Sessions</h2>
-                <p className="text-muted-foreground">Complete Python curriculum with real-world examples</p>
+                <p className="text-muted-foreground"></p>
               </div>
             </div>
 
