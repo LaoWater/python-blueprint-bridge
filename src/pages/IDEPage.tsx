@@ -134,6 +134,15 @@ const IDEPage: React.FC = () => {
     { file: 'algorithms.py', line: 23, match: 'sequence', context: 'return sequence' }
   ]);
   
+  // Get the proper sizes for explorer panel
+  const getExplorerSizes = () => {
+    if (explorerCollapsed) {
+      return { defaultSize: 3, minSize: 3, maxSize: 3 };
+    } else {
+      return { defaultSize: 25, minSize: 20, maxSize: 40 };
+    }
+  };
+  
   const [fileTree, setFileTree] = useState<FileTreeNode[]>([
     {
       name: 'project',
@@ -267,8 +276,14 @@ if __name__ == "__main__":
   const handleExplorerViewChange = (view: 'files' | 'search' | 'git' | 'debug') => {
     setExplorerActiveView(view);
     if (explorerCollapsed) {
-      setExplorerCollapsed(false);
+      // Use a small timeout to ensure smooth transition
+      setTimeout(() => setExplorerCollapsed(false), 50);
     }
+  };
+
+  const handleExplorerExpand = () => {
+    setExplorerCollapsed(false);
+    setExplorerActiveView('files');
   };
 
   const renderExplorerContent = () => {
@@ -459,24 +474,19 @@ if __name__ == "__main__":
           {/* Top Panel - Main Content */}
           <Panel defaultSize={bottomPanelVisible ? 70 : 100} minSize={30}>
             <div className="h-full flex overflow-hidden">
-              <PanelGroup direction="horizontal">
+              <PanelGroup direction="horizontal" key={`explorer-${explorerCollapsed}`}>
                 {/* Left Sidebar - File Explorer */}
                 <Panel 
-                  defaultSize={explorerCollapsed ? 3 : 18} 
-                  minSize={3} 
-                  maxSize={explorerCollapsed ? 3 : 35}
+                  {...getExplorerSizes()}
                   collapsible={true}
-                  className={`transition-all duration-300 ease-in-out ${explorerCollapsed ? 'opacity-100' : 'opacity-100'}`}
+                  className="transition-all duration-300 ease-in-out"
                 >
                   <div className="h-full bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700">
                     {explorerCollapsed ? (
                       /* Collapsed Explorer */
                       <div className="flex flex-col items-center py-2 space-y-4">
                         <button
-                          onClick={() => {
-                            setExplorerCollapsed(false);
-                            setExplorerActiveView('files');
-                          }}
+                          onClick={handleExplorerExpand}
                           className="p-2 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors"
                         >
                           <ChevronRight size={18} />
@@ -593,7 +603,7 @@ if __name__ == "__main__":
                 <PanelResizeHandle className="w-1 hover:w-2 bg-gray-200 dark:bg-gray-700 hover:bg-blue-400 transition-all" />
 
                 {/* Main Content Area */}
-                <Panel defaultSize={explorerCollapsed ? 97 : 80}>
+                <Panel defaultSize={explorerCollapsed ? 97 : 75}>
                   <div className="h-full flex flex-col">
                     {/* Editor Tabs */}
                     <div className="h-10 bg-gray-100 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 flex items-center">
