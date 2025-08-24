@@ -178,6 +178,7 @@ const IDEPage: React.FC = () => {
   const [runOutput, setRunOutput] = useState('');
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [lastSavedContent, setLastSavedContent] = useState<string>('');
   
   // Get the proper sizes for explorer panel
   const getExplorerSizes = () => {
@@ -316,7 +317,11 @@ Process finished with exit code 0
     try {
       setIsSaving(true);
       await updateFileContent(currentFile.id, code);
+      
+      // Update last saved content to reflect what we just saved
+      setLastSavedContent(code);
       setHasUnsavedChanges(false);
+      
       toast.success(`Saved ${currentFile.name}`);
     } catch (error) {
       console.error('Save failed:', error);
@@ -339,7 +344,7 @@ Process finished with exit code 0
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, [handleSave]);
 
-  // Handle currentFile changes (including auto-opened files)
+  // Handle currentFile changes (file switching only - NOT content editing)
   useEffect(() => {
     if (currentFile && currentFile.type === 'file') {
       // Check if this file is already open in tabs
@@ -350,13 +355,15 @@ Process finished with exit code 0
         setOpenTabs(prev => [...prev, currentFile]);
       }
       
-      // Load file content if not already loaded or different
-      const loadContent = async () => {
+      // Load file content ONLY when switching files
+      const loadContentFromDB = async () => {
         try {
           setIsLoadingFile(true);
           const content = await loadFileContent(currentFile.id);
           if (content !== null) {
             setCode(content);
+            setLastSavedContent(content); // Track what we loaded as the last saved state
+            setHasUnsavedChanges(false); // Reset unsaved state when loading new file
           }
         } catch (error) {
           console.error('Failed to load file content:', error);
@@ -366,24 +373,29 @@ Process finished with exit code 0
         }
       };
       
-      // Load content if it's not already in the currentFile or if it's different
-      if (!currentFile.content || currentFile.content !== code) {
-        loadContent();
-      } else {
+      // Only load if we don't have content or if file has stored content
+      if (currentFile.content !== undefined) {
+        // File has content in memory - use it
         setCode(currentFile.content);
-        setHasUnsavedChanges(false); // Reset unsaved changes when loading file
+        setLastSavedContent(currentFile.content); // Track current content as saved
+        setHasUnsavedChanges(false);
+      } else {
+        // File needs to be loaded from database
+        loadContentFromDB();
       }
     }
-  }, [currentFile, loadFileContent, openTabs, code]);
+  }, [currentFile?.id, loadFileContent, openTabs]); // REMOVED 'code' from dependencies!
 
-  // Track unsaved changes
+  // Track unsaved changes (compare with last saved content)
   useEffect(() => {
-    if (currentFile && currentFile.type === 'file' && code !== currentFile.content) {
-      setHasUnsavedChanges(true);
-    } else if (currentFile && currentFile.type === 'file' && code === currentFile.content) {
+    if (currentFile && currentFile.type === 'file') {
+      // Compare current editor content with the last saved version
+      const hasChanges = code !== lastSavedContent;
+      setHasUnsavedChanges(hasChanges);
+    } else {
       setHasUnsavedChanges(false);
     }
-  }, [code, currentFile]);
+  }, [code, currentFile, lastSavedContent]);
 
   // Auto-save functionality (10 seconds of inactivity)
   useEffect(() => {
@@ -392,7 +404,11 @@ Process finished with exit code 0
         try {
           setIsSaving(true);
           await updateFileContent(currentFile.id, code);
+          
+          // Update last saved content to reflect what we just saved
+          setLastSavedContent(code);
           setHasUnsavedChanges(false);
+          
           // Silently auto-save - no toast notification
         } catch (error) {
           console.error('Auto-save failed:', error);
