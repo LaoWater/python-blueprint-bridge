@@ -18,6 +18,8 @@ import {
   GitBranch,
   Bug,
   Package,
+  Save,
+  Circle,
   Monitor,
   PanelBottom,
   PanelBottomClose,
@@ -174,6 +176,8 @@ const IDEPage: React.FC = () => {
   const [code, setCode] = useState('');
   const [isLoadingFile, setIsLoadingFile] = useState(false);
   const [runOutput, setRunOutput] = useState('');
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
   
   // Get the proper sizes for explorer panel
   const getExplorerSizes = () => {
@@ -303,21 +307,103 @@ Process finished with exit code 0
     setBottomPanelVisible(!bottomPanelVisible);
   };
 
-  // Auto-save functionality
+  // Manual save function
+  const handleSave = useCallback(async () => {
+    if (!currentFile || currentFile.type !== 'file' || !hasUnsavedChanges || isSaving) {
+      return;
+    }
+
+    try {
+      setIsSaving(true);
+      await updateFileContent(currentFile.id, code);
+      setHasUnsavedChanges(false);
+      toast.success(`Saved ${currentFile.name}`);
+    } catch (error) {
+      console.error('Save failed:', error);
+      toast.error('Failed to save file');
+    } finally {
+      setIsSaving(false);
+    }
+  }, [currentFile, hasUnsavedChanges, isSaving, code, updateFileContent]);
+
+  // Keyboard shortcut for save (Ctrl+S / Cmd+S)
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if ((event.ctrlKey || event.metaKey) && event.key === 's') {
+        event.preventDefault();
+        handleSave();
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [handleSave]);
+
+  // Handle currentFile changes (including auto-opened files)
+  useEffect(() => {
+    if (currentFile && currentFile.type === 'file') {
+      // Check if this file is already open in tabs
+      const isAlreadyOpen = openTabs.some(tab => tab.id === currentFile.id);
+      
+      if (!isAlreadyOpen) {
+        // Add to tabs if not already there
+        setOpenTabs(prev => [...prev, currentFile]);
+      }
+      
+      // Load file content if not already loaded or different
+      const loadContent = async () => {
+        try {
+          setIsLoadingFile(true);
+          const content = await loadFileContent(currentFile.id);
+          if (content !== null) {
+            setCode(content);
+          }
+        } catch (error) {
+          console.error('Failed to load file content:', error);
+          toast.error('Failed to load file content');
+        } finally {
+          setIsLoadingFile(false);
+        }
+      };
+      
+      // Load content if it's not already in the currentFile or if it's different
+      if (!currentFile.content || currentFile.content !== code) {
+        loadContent();
+      } else {
+        setCode(currentFile.content);
+        setHasUnsavedChanges(false); // Reset unsaved changes when loading file
+      }
+    }
+  }, [currentFile, loadFileContent, openTabs, code]);
+
+  // Track unsaved changes
   useEffect(() => {
     if (currentFile && currentFile.type === 'file' && code !== currentFile.content) {
+      setHasUnsavedChanges(true);
+    } else if (currentFile && currentFile.type === 'file' && code === currentFile.content) {
+      setHasUnsavedChanges(false);
+    }
+  }, [code, currentFile]);
+
+  // Auto-save functionality (10 seconds of inactivity)
+  useEffect(() => {
+    if (currentFile && currentFile.type === 'file' && hasUnsavedChanges && !isSaving) {
       const timeoutId = setTimeout(async () => {
         try {
+          setIsSaving(true);
           await updateFileContent(currentFile.id, code);
-          // Silently save - no toast notification for auto-save
+          setHasUnsavedChanges(false);
+          // Silently auto-save - no toast notification
         } catch (error) {
           console.error('Auto-save failed:', error);
+        } finally {
+          setIsSaving(false);
         }
-      }, 2000); // Auto-save after 2 seconds of inactivity
+      }, 10000); // Auto-save after 10 seconds of inactivity
 
       return () => clearTimeout(timeoutId);
     }
-  }, [code, currentFile, updateFileContent]);
+  }, [code, currentFile, updateFileContent, hasUnsavedChanges, isSaving]);
 
   // Handle search
   const handleSearch = useCallback(async (query: string) => {
@@ -547,9 +633,33 @@ Process finished with exit code 0
               <TerminalIcon size={14} />
               <span>{isTerminalEnabled ? 'Terminal' : 'Terminal'}</span>
             </button>
+            <button
+              onClick={handleSave}
+              disabled={!hasUnsavedChanges || isSaving || !currentFile}
+              className={`flex items-center space-x-2 px-3 py-1.5 rounded text-sm font-medium transition-colors ${
+                hasUnsavedChanges && currentFile
+                  ? 'bg-orange-500 hover:bg-orange-600 text-white' 
+                  : 'bg-gray-200 hover:bg-gray-300 dark:bg-gray-600 dark:hover:bg-gray-500 text-gray-400 dark:text-gray-500 cursor-not-allowed'
+              }`}
+              title={hasUnsavedChanges ? 'Save file (Ctrl+S)' : 'No unsaved changes'}
+            >
+              {isSaving ? <Circle size={14} className="animate-spin" /> : <Save size={14} />}
+              <span>{isSaving ? 'Saving...' : 'Save'}</span>
+            </button>
           </div>
         </div>
         <div className="flex items-center space-x-3">
+          {/* File Status Indicator */}
+          <div className="flex items-center space-x-2 text-xs text-gray-500 dark:text-gray-400">
+            {currentFile && (
+              <>
+                <span>{currentFile.name}</span>
+                {hasUnsavedChanges && <span className="text-orange-500">• unsaved</span>}
+                {isSaving && <span className="text-blue-500">• saving...</span>}
+                <span className="text-green-500">• auto-save: 10s</span>
+              </>
+            )}
+          </div>
           <button
             onClick={handleToggleBottomPanel}
             className="flex items-center space-x-2 px-2 py-1 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 rounded"
@@ -716,6 +826,10 @@ Process finished with exit code 0
                         >
                           <FileText size={14} className="mr-2" />
                           <span className="text-sm" title={tab.path}>{tab.name}</span>
+                          {/* Unsaved changes indicator */}
+                          {currentFile?.id === tab.id && hasUnsavedChanges && (
+                            <Circle size={8} className="ml-2 fill-orange-500 text-orange-500" title="Unsaved changes" />
+                          )}
                           {openTabs.length > 1 && (
                             <button
                               onClick={(e) => {

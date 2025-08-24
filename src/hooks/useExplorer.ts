@@ -68,6 +68,32 @@ export const useExplorer = (): UseExplorerReturn => {
     });
   }, []);
 
+  // Helper function to find and auto-open main.py
+  const autoOpenMainFile = useCallback((tree: FileSystemItem[]) => {
+    // Look for main.py in the root level first
+    const findMainPy = (items: FileSystemItem[]): FileSystemItem | null => {
+      for (const item of items) {
+        if (item.type === 'file' && item.name === 'main.py') {
+          return item;
+        }
+        // If it's a folder, search in children
+        if (item.children && item.children.length > 0) {
+          const found = findMainPy(item.children);
+          if (found) return found;
+        }
+      }
+      return null;
+    };
+
+    const mainFile = findMainPy(tree);
+    if (mainFile && !currentFile) {
+      setCurrentFile(mainFile);
+      toast.success('Welcome! main.py is ready for you to start coding!', {
+        description: 'Your Python AI journey begins here 🐍🤖'
+      });
+    }
+  }, [currentFile]);
+
   // Load file tree
   const loadFileTree = useCallback(async () => {
     if (!user) return;
@@ -84,11 +110,14 @@ export const useExplorer = (): UseExplorerReturn => {
         // Get file tree
         const tree = await explorerService.getFileTree(project.id);
         setFileTree(tree);
+        
+        // Auto-open main.py for better UX
+        autoOpenMainFile(tree);
       } else {
         // No active project, create a default one
         const newProject = await explorerService.createProject(
           'My Blue Pigeon Project',
-          'A project for practicing algorithmic thinking'
+          'Learn Python & AI fundamentals'
         );
         setActiveProject(newProject);
         
@@ -96,14 +125,19 @@ export const useExplorer = (): UseExplorerReturn => {
         const tree = await explorerService.getFileTree(newProject.id);
         setFileTree(tree);
         
-        toast.success('Welcome! Created your first Blue Pigeon project.');
+        // Auto-open main.py for immediate coding experience
+        autoOpenMainFile(tree);
+        
+        toast.success('Welcome to Blue Pigeon IDE!', {
+          description: 'Your first Python AI project has been created 🚀'
+        });
       }
     } catch (err) {
       handleError(err, 'Failed to load file tree');
     } finally {
       setIsLoading(false);
     }
-  }, [user, handleError]);
+  }, [user, handleError, autoOpenMainFile]);
 
   // Load file content
   const loadFileContent = useCallback(async (fileId: string): Promise<string | null> => {
