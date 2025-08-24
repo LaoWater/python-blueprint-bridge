@@ -549,14 +549,13 @@ const AdvancedMachineLearning = () => {
         <div className="border-t border-border bg-muted/30">
           <div className="container mx-auto px-4 py-8">
             <CourseNavigation 
-              currentPage="Advanced Machine Learning"
-              previousPage={{ 
-                title: "Machine Learning", 
-                href: "/machine-learning" 
+              previousCourse={{ 
+                path: "/machine-learning", 
+                title: "Machine Learning" 
               }}
-              nextPage={{ 
-                title: "Blueprints", 
-                href: "/blueprints" 
+              nextCourse={{ 
+                path: "/blueprints", 
+                title: "Blueprints" 
               }}
             />
           </div>
