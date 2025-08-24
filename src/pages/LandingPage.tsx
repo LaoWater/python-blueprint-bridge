@@ -41,8 +41,8 @@ const LandingPage = () => {
 
   const philosophySlides = [
     {
-      title: "Understanding Over Syntax",
-      subtitle: "The Art of Programming isn't about memorizing code patterns",
+      title: "The Art of Programming",
+      subtitle: "Algorithms and Computational Thinking",
       description: "In the AI era, success comes from understanding algorithms, data structures, and computational thinking - not just syntax memorization.",
       icon: Brain,
       gradient: "from-blue-500 to-indigo-600"
@@ -295,7 +295,7 @@ const LandingPage = () => {
                         <BookOpen className="w-6 h-6 text-blue-600 mr-2" />
                         <Badge variant="outline">Foundation</Badge>
                       </div>
-                      <h3 className="text-xl font-bold mb-3">Essential Foundations</h3>
+                      <h3 className="text-xl font-bold mb-3">Python & AI Foundations</h3>
                       <p className="text-slate-600 dark:text-slate-300 mb-4">
                         Master the fundamental algorithms and data structures that form the backbone of all programming.
                       </p>
@@ -476,7 +476,7 @@ const LandingPage = () => {
                 </Button>
               </Link>
               <Link to="/foundations">
-                <Button size="lg" variant="outline" className="border-2 border-white text-white hover:bg-white/10 text-lg px-8 py-4">
+                <Button size="lg" variant="outline" className="border-2 border-white text-blue-600 hover:bg-white/10 text-lg px-8 py-4">
                   Learn Foundations
                 </Button>
               </Link>
