@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import Editor from '@monaco-editor/react';
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
 import { 
@@ -20,60 +20,78 @@ import {
   Package,
   Monitor,
   PanelBottom,
-  PanelBottomClose
+  PanelBottomClose,
+  Loader2,
+  RefreshCw
 } from 'lucide-react';
 import { useTheme } from '@/components/theme-provider';
-
-interface FileTreeNode {
-  name: string;
-  type: 'file' | 'folder';
-  path: string;
-  children?: FileTreeNode[];
-  expanded?: boolean;
-}
+import { useExplorer } from '@/hooks/useExplorer';
+import { FileSystemItem } from '@/services/explorerService';
+import { useAuth } from '@/components/AuthContext';
+import { toast } from 'sonner';
 
 const FileTreeItem: React.FC<{
-  node: FileTreeNode;
+  item: FileSystemItem;
   depth: number;
-  onFileSelect: (path: string) => void;
-  onToggleFolder: (path: string) => void;
-}> = ({ node, depth, onFileSelect, onToggleFolder }) => {
-  const isFolder = node.type === 'folder';
+  onFileSelect: (item: FileSystemItem) => void;
+  onToggleFolder: (itemId: string) => void;
+  currentFileId?: string;
+}> = ({ item, depth, onFileSelect, onToggleFolder, currentFileId }) => {
+  const isFolder = item.type === 'folder';
   const indent = depth * 12;
+  const isSelected = currentFileId === item.id;
 
   return (
     <div>
       <div 
-        className="flex items-center py-1 px-2 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer text-sm"
+        className={`flex items-center py-1 px-2 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer text-sm transition-colors ${
+          isSelected ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400' : ''
+        }`}
         style={{ paddingLeft: `${8 + indent}px` }}
-        onClick={() => isFolder ? onToggleFolder(node.path) : onFileSelect(node.path)}
+        onClick={() => isFolder ? onToggleFolder(item.id) : onFileSelect(item)}
+        title={item.path}
       >
         {isFolder ? (
-          node.expanded ? <ChevronDown size={14} /> : <ChevronRight size={14} />
+          item.expanded ? <ChevronDown size={14} /> : <ChevronRight size={14} />
         ) : null}
         {isFolder ? (
-          node.expanded ? <FolderOpen size={14} className="ml-1 mr-2 text-blue-500" /> 
+          item.expanded ? <FolderOpen size={14} className="ml-1 mr-2 text-blue-500" /> 
                        : <Folder size={14} className="ml-1 mr-2 text-blue-500" />
         ) : (
           <FileText size={14} className="ml-1 mr-2 text-gray-600 dark:text-gray-400" />
         )}
-        <span className="truncate">{node.name}</span>
+        <span className="truncate flex-1">{item.name}</span>
+        {!isFolder && item.size_bytes > 0 && (
+          <span className="text-xs text-gray-400 ml-2">
+            {formatFileSize(item.size_bytes)}
+          </span>
+        )}
       </div>
-      {isFolder && node.expanded && node.children && (
+      {isFolder && item.expanded && item.children && (
         <div>
-          {node.children.map((child, index) => (
+          {item.children.map((child) => (
             <FileTreeItem
-              key={`${child.path}-${index}`}
-              node={child}
+              key={child.id}
+              item={child}
               depth={depth + 1}
               onFileSelect={onFileSelect}
               onToggleFolder={onToggleFolder}
+              currentFileId={currentFileId}
             />
           ))}
         </div>
       )}
     </div>
   );
+};
+
+// Helper function to format file sizes
+const formatFileSize = (bytes: number): string => {
+  if (bytes === 0) return '0 B';
+  const k = 1024;
+  const sizes = ['B', 'KB', 'MB', 'GB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
 };
 
 const TerminalComponent: React.FC<{ isActive?: boolean }> = ({ isActive = false }) => {
@@ -119,8 +137,33 @@ const TerminalComponent: React.FC<{ isActive?: boolean }> = ({ isActive = false 
 
 const IDEPage: React.FC = () => {
   const { theme } = useTheme();
-  const [activeFile, setActiveFile] = useState<string>('main.py');
-  const [openTabs, setOpenTabs] = useState<string[]>(['main.py']);
+  const { user } = useAuth();
+  
+  // Use the Explorer hook for database integration
+  const {
+    fileTree,
+    activeProject,
+    currentFile,
+    recentFiles,
+    searchResults,
+    isLoading,
+    error,
+    loadFileContent,
+    updateFileContent,
+    createFile,
+    createFolder,
+    renameItem,
+    deleteItem,
+    moveItem,
+    searchFiles,
+    clearSearch,
+    toggleFolder,
+    selectFile,
+    loadRecentFiles
+  } = useExplorer();
+
+  // Local state for UI
+  const [openTabs, setOpenTabs] = useState<FileSystemItem[]>([]);
   const [isRunning, setIsRunning] = useState(false);
   const [isTerminalEnabled, setIsTerminalEnabled] = useState(true);
   const [explorerCollapsed, setExplorerCollapsed] = useState(true);
@@ -128,11 +171,9 @@ const IDEPage: React.FC = () => {
   const [bottomPanelVisible, setBottomPanelVisible] = useState(false);
   const [bottomActiveTab, setBottomActiveTab] = useState<'output' | 'terminal'>('output');
   const [searchQuery, setSearchQuery] = useState('');
-  const [searchResults] = useState([
-    { file: 'main.py', line: 15, match: 'fibonacci_sequence', context: 'def fibonacci_sequence(n):' },
-    { file: 'utils.py', line: 7, match: 'fibonacci', context: '# Helper for fibonacci calculations' },
-    { file: 'algorithms.py', line: 23, match: 'sequence', context: 'return sequence' }
-  ]);
+  const [code, setCode] = useState('');
+  const [isLoadingFile, setIsLoadingFile] = useState(false);
+  const [runOutput, setRunOutput] = useState('');
   
   // Get the proper sizes for explorer panel
   const getExplorerSizes = () => {
@@ -142,116 +183,105 @@ const IDEPage: React.FC = () => {
       return { defaultSize: 25, minSize: 20, maxSize: 40 };
     }
   };
-  
-  const [fileTree, setFileTree] = useState<FileTreeNode[]>([
-    {
-      name: 'project',
-      type: 'folder',
-      path: '/project',
-      expanded: false, // Collapsed by default
-      children: [
-        {
-          name: 'src',
-          type: 'folder',
-          path: '/project/src',
-          expanded: false, // Collapsed by default
-          children: [
-            { name: 'main.py', type: 'file', path: '/project/src/main.py' },
-            { name: 'utils.py', type: 'file', path: '/project/src/utils.py' },
-            { name: 'algorithms.py', type: 'file', path: '/project/src/algorithms.py' }
-          ]
-        },
-        {
-          name: 'tests',
-          type: 'folder',
-          path: '/project/tests',
-          children: [
-            { name: 'test_main.py', type: 'file', path: '/project/tests/test_main.py' }
-          ]
-        },
-        { name: 'requirements.txt', type: 'file', path: '/project/requirements.txt' },
-        { name: 'README.md', type: 'file', path: '/project/README.md' }
-      ]
+
+  // Handle file selection and loading
+  const handleFileSelect = useCallback(async (file: FileSystemItem) => {
+    try {
+      setIsLoadingFile(true);
+      
+      // Add to open tabs if not already open
+      if (!openTabs.find(tab => tab.id === file.id)) {
+        setOpenTabs(prev => [...prev, file]);
+      }
+      
+      // Select the file
+      selectFile(file);
+      
+      // Load file content if it's a file
+      if (file.type === 'file') {
+        const content = await loadFileContent(file.id);
+        setCode(content || '');
+      }
+    } catch (error) {
+      toast.error('Failed to open file');
+    } finally {
+      setIsLoadingFile(false);
     }
-  ]);
+  }, [openTabs, selectFile, loadFileContent]);
 
-  const [code, setCode] = useState(`# Welcome to Blue Pigeon IDE
-# The Art of Programming - Practice your algorithmic thinking
+  // Handle folder toggle
+  const handleToggleFolder = useCallback((folderId: string) => {
+    toggleFolder(folderId);
+  }, [toggleFolder]);
 
-def fibonacci_sequence(n):
-    """Generate fibonacci sequence up to n terms"""
-    if n <= 0:
-        return []
-    elif n == 1:
-        return [0]
-    elif n == 2:
-        return [0, 1]
-    
-    sequence = [0, 1]
-    for i in range(2, n):
-        next_num = sequence[i-1] + sequence[i-2]
-        sequence.append(next_num)
-    
-    return sequence
+  // Handle tab close
+  const handleCloseTab = useCallback((file: FileSystemItem) => {
+    setOpenTabs(prev => {
+      const newTabs = prev.filter(tab => tab.id !== file.id);
+      
+      // If closing the current file, switch to another tab
+      if (currentFile?.id === file.id && newTabs.length > 0) {
+        const nextFile = newTabs[newTabs.length - 1];
+        selectFile(nextFile);
+        loadFileContent(nextFile.id).then(content => {
+          setCode(content || '');
+        });
+      } else if (newTabs.length === 0) {
+        selectFile({} as FileSystemItem);
+        setCode('');
+      }
+      
+      return newTabs;
+    });
+  }, [currentFile, selectFile, loadFileContent]);
 
-def main():
-    print("Blue Pigeon IDE - Algorithmic Patterns")
-    print("=====================================")
-    
-    # Example: Generate first 10 fibonacci numbers
-    fib_numbers = fibonacci_sequence(10)
-    print(f"First 10 Fibonacci numbers: {fib_numbers}")
-    
-    # Pattern recognition: What pattern do you see?
-    print("\\nPattern Analysis:")
-    for i, num in enumerate(fib_numbers):
-        if i > 0:
-            ratio = num / fib_numbers[i-1] if fib_numbers[i-1] != 0 else 0
-            print(f"F({i}) = {num}, Ratio: {ratio:.4f}")
-
-if __name__ == "__main__":
-    main()
-`);
-
-  const handleFileSelect = (path: string) => {
-    const fileName = path.split('/').pop() || path;
-    setActiveFile(fileName);
-    if (!openTabs.includes(fileName)) {
-      setOpenTabs(prev => [...prev, fileName]);
+  // Handle code execution
+  const handleRunCode = useCallback(async () => {
+    if (!currentFile || currentFile.type !== 'file') {
+      toast.error('No file selected to run');
+      return;
     }
-  };
 
-  const handleToggleFolder = (path: string) => {
-    const toggleNode = (nodes: FileTreeNode[]): FileTreeNode[] => {
-      return nodes.map(node => {
-        if (node.path === path) {
-          return { ...node, expanded: !node.expanded };
-        }
-        if (node.children) {
-          return { ...node, children: toggleNode(node.children) };
-        }
-        return node;
-      });
-    };
-    setFileTree(toggleNode(fileTree));
-  };
-
-  const handleCloseTab = (fileName: string) => {
-    setOpenTabs(prev => prev.filter(tab => tab !== fileName));
-    if (activeFile === fileName && openTabs.length > 1) {
-      const index = openTabs.indexOf(fileName);
-      const newActive = index > 0 ? openTabs[index - 1] : openTabs[index + 1];
-      setActiveFile(newActive);
-    }
-  };
-
-  const handleRunCode = () => {
     setIsRunning(true);
     setBottomPanelVisible(true);
     setBottomActiveTab('output');
-    // Simulate code execution
-    setTimeout(() => setIsRunning(false), 2000);
-  };
+    
+    try {
+      // Save current changes first
+      if (currentFile && code !== currentFile.content) {
+        await updateFileContent(currentFile.id, code);
+      }
+
+      // Simulate code execution (in real implementation, this would be sent to the backend)
+      setRunOutput('Running ' + currentFile.name + '...\n');
+      
+      // Mock execution result
+      setTimeout(() => {
+        setRunOutput(prev => prev + `
+Blue Pigeon IDE - Algorithmic Patterns
+=====================================
+First 10 Fibonacci numbers: [0, 1, 1, 2, 3, 5, 8, 13, 21, 34]
+
+Pattern Analysis:
+F(1) = 1, Ratio: inf
+F(2) = 1, Ratio: 1.0000
+F(3) = 2, Ratio: 2.0000
+F(4) = 3, Ratio: 1.5000
+F(5) = 5, Ratio: 1.6667
+F(6) = 8, Ratio: 1.6000
+F(7) = 13, Ratio: 1.6250
+F(8) = 21, Ratio: 1.6154
+F(9) = 34, Ratio: 1.6190
+
+Process finished with exit code 0
+`);
+        setIsRunning(false);
+      }, 2000);
+    } catch (error) {
+      setRunOutput(prev => prev + '\nError: ' + error);
+      setIsRunning(false);
+    }
+  }, [currentFile, code, updateFileContent]);
 
   const handleToggleTerminal = () => {
     if (isTerminalEnabled) {
@@ -273,11 +303,43 @@ if __name__ == "__main__":
     setBottomPanelVisible(!bottomPanelVisible);
   };
 
+  // Auto-save functionality
+  useEffect(() => {
+    if (currentFile && currentFile.type === 'file' && code !== currentFile.content) {
+      const timeoutId = setTimeout(async () => {
+        try {
+          await updateFileContent(currentFile.id, code);
+          // Silently save - no toast notification for auto-save
+        } catch (error) {
+          console.error('Auto-save failed:', error);
+        }
+      }, 2000); // Auto-save after 2 seconds of inactivity
+
+      return () => clearTimeout(timeoutId);
+    }
+  }, [code, currentFile, updateFileContent]);
+
+  // Handle search
+  const handleSearch = useCallback(async (query: string) => {
+    setSearchQuery(query);
+    if (query.trim()) {
+      await searchFiles(query);
+    } else {
+      clearSearch();
+    }
+  }, [searchFiles, clearSearch]);
+
   const handleExplorerViewChange = (view: 'files' | 'search' | 'git' | 'debug') => {
     setExplorerActiveView(view);
     if (explorerCollapsed) {
       // Use a small timeout to ensure smooth transition
       setTimeout(() => setExplorerCollapsed(false), 50);
+    }
+    
+    // Clear search when switching views
+    if (view !== 'search') {
+      setSearchQuery('');
+      clearSearch();
     }
   };
 
@@ -295,30 +357,46 @@ if __name__ == "__main__":
               <input
                 type="text"
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={(e) => handleSearch(e.target.value)}
                 placeholder="Search files..."
                 className="w-full px-3 py-2 text-sm border border-gray-200 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
-            <div className="space-y-1">
-              <h4 className="text-xs uppercase text-gray-500 dark:text-gray-400 font-medium mb-2">
-                SEARCH RESULTS ({searchResults.length})
-              </h4>
-              {searchResults.map((result, index) => (
-                <div
-                  key={index}
-                  className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded cursor-pointer"
-                  onClick={() => handleFileSelect(`/project/src/${result.file}`)}
-                >
-                  <div className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                    {result.file}:{result.line}
+            {isLoading ? (
+              <div className="flex items-center justify-center py-4">
+                <Loader2 size={16} className="animate-spin text-gray-400" />
+                <span className="ml-2 text-sm text-gray-500">Searching...</span>
+              </div>
+            ) : (
+              <div className="space-y-1">
+                <h4 className="text-xs uppercase text-gray-500 dark:text-gray-400 font-medium mb-2">
+                  SEARCH RESULTS ({searchResults.length})
+                </h4>
+                {searchResults.length === 0 && searchQuery ? (
+                  <div className="text-sm text-gray-500 dark:text-gray-400 italic">
+                    No results found for "{searchQuery}"
                   </div>
-                  <div className="text-xs text-gray-500 dark:text-gray-400 font-mono mt-1">
-                    {result.context}
-                  </div>
-                </div>
-              ))}
-            </div>
+                ) : (
+                  searchResults.map((result) => (
+                    <div
+                      key={result.id}
+                      className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded cursor-pointer"
+                      onClick={() => handleFileSelect(result)}
+                    >
+                      <div className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                        {result.name}
+                      </div>
+                      <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                        {result.path}
+                      </div>
+                      <div className="text-xs text-gray-500 dark:text-gray-400 font-mono mt-1">
+                        {result.content?.substring(0, 100)}...
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+            )}
           </div>
         );
       
@@ -406,17 +484,36 @@ if __name__ == "__main__":
       default: // 'files'
         return (
           <div className="flex-1 overflow-auto">
-            <div className="py-2">
-              {fileTree.map((node, index) => (
-                <FileTreeItem
-                  key={`${node.path}-${index}`}
-                  node={node}
-                  depth={0}
-                  onFileSelect={handleFileSelect}
-                  onToggleFolder={handleToggleFolder}
-                />
-              ))}
-            </div>
+            {isLoading ? (
+              <div className="flex items-center justify-center py-8">
+                <Loader2 size={20} className="animate-spin text-gray-400" />
+                <span className="ml-2 text-sm text-gray-500">Loading files...</span>
+              </div>
+            ) : fileTree.length === 0 ? (
+              <div className="p-4 text-center">
+                <div className="text-gray-500 dark:text-gray-400 text-sm">
+                  {!user ? 'Please sign in to access your files' : 'No files found'}
+                </div>
+                {!activeProject && user && (
+                  <div className="mt-2 text-xs text-gray-400">
+                    Creating your first project...
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="py-2">
+                {fileTree.map((item) => (
+                  <FileTreeItem
+                    key={item.id}
+                    item={item}
+                    depth={0}
+                    onFileSelect={handleFileSelect}
+                    onToggleFolder={handleToggleFolder}
+                    currentFileId={currentFile?.id}
+                  />
+                ))}
+              </div>
+            )}
           </div>
         );
     }
@@ -609,16 +706,16 @@ if __name__ == "__main__":
                     <div className="h-10 bg-gray-100 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 flex items-center">
                       {openTabs.map(tab => (
                         <div
-                          key={tab}
-                          className={`flex items-center px-4 py-2 border-r border-gray-200 dark:border-gray-700 cursor-pointer ${
-                            activeFile === tab
+                          key={tab.id}
+                          className={`flex items-center px-4 py-2 border-r border-gray-200 dark:border-gray-700 cursor-pointer transition-colors ${
+                            currentFile?.id === tab.id
                               ? 'bg-white dark:bg-gray-900 text-blue-600 dark:text-blue-400'
                               : 'text-gray-600 dark:text-gray-400 hover:bg-white dark:hover:bg-gray-900'
                           }`}
-                          onClick={() => setActiveFile(tab)}
+                          onClick={() => handleFileSelect(tab)}
                         >
                           <FileText size={14} className="mr-2" />
-                          <span className="text-sm">{tab}</span>
+                          <span className="text-sm" title={tab.path}>{tab.name}</span>
                           {openTabs.length > 1 && (
                             <button
                               onClick={(e) => {
@@ -632,28 +729,63 @@ if __name__ == "__main__":
                           )}
                         </div>
                       ))}
-                      <div className="flex-1 bg-gray-100 dark:bg-gray-800"></div>
+                      <div className="flex-1 bg-gray-100 dark:bg-gray-800">
+                        {activeProject && (
+                          <div className="flex items-center justify-end px-2 h-full">
+                            <span className="text-xs text-gray-500 dark:text-gray-400">
+                              {activeProject.name}
+                            </span>
+                          </div>
+                        )}
+                      </div>
                     </div>
 
                     {/* Code Editor */}
-                    <div className="flex-1">
-                      <Editor
-                        height="100%"
-                        language="python"
-                        value={code}
-                        onChange={(value) => setCode(value || '')}
-                        theme={theme === 'dark' ? 'vs-dark' : 'light'}
-                        options={{
-                          minimap: { enabled: true },
-                          fontSize: 14,
-                          lineNumbers: 'on',
-                          scrollBeyondLastLine: false,
-                          automaticLayout: true,
-                          wordWrap: 'on',
-                          tabSize: 4,
-                          insertSpaces: true,
-                        }}
-                      />
+                    <div className="flex-1 relative">
+                      {isLoadingFile && (
+                        <div className="absolute inset-0 bg-white dark:bg-gray-900 bg-opacity-75 dark:bg-opacity-75 flex items-center justify-center z-10">
+                          <div className="flex items-center">
+                            <Loader2 size={20} className="animate-spin text-blue-500" />
+                            <span className="ml-2 text-sm text-gray-600 dark:text-gray-400">Loading file...</span>
+                          </div>
+                        </div>
+                      )}
+                      {currentFile ? (
+                        <Editor
+                          height="100%"
+                          language={currentFile.language || 'plaintext'}
+                          value={code}
+                          onChange={(value) => setCode(value || '')}
+                          theme={theme === 'dark' ? 'vs-dark' : 'light'}
+                          options={{
+                            minimap: { enabled: true },
+                            fontSize: 14,
+                            lineNumbers: 'on',
+                            scrollBeyondLastLine: false,
+                            automaticLayout: true,
+                            wordWrap: 'on',
+                            tabSize: 4,
+                            insertSpaces: true,
+                            readOnly: currentFile.is_readonly,
+                          }}
+                        />
+                      ) : (
+                        <div className="h-full flex items-center justify-center bg-gray-50 dark:bg-gray-900">
+                          <div className="text-center">
+                            <FileText size={48} className="mx-auto text-gray-400 mb-4" />
+                            <h3 className="text-lg font-medium text-gray-600 dark:text-gray-400 mb-2">
+                              Welcome to Blue Pigeon IDE
+                            </h3>
+                            <p className="text-sm text-gray-500 dark:text-gray-500">
+                              {user ? (
+                                fileTree.length === 0 ? 'Creating your project...' : 'Select a file from the Explorer to start coding'
+                              ) : (
+                                'Please sign in to access your projects'
+                              )}
+                            </p>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </Panel>
