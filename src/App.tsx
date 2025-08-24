@@ -18,6 +18,7 @@ import NotFound from "./pages/NotFound";
 import AuthPage from "./pages/AuthPage";
 import ProfilePage from "./pages/ProfilePage";
 import AdminPage from "./pages/AdminPage";
+import IDEPage from "./pages/IDEPage";
 import Navbar from "./components/Navbar";
 import ChatButton from "./components/ChatButton";
 import { AuthProvider } from "./components/AuthContext";
@@ -42,6 +43,7 @@ const App = () => (
                   <Route path="/blueprints" element={<Blueprints />} />
                   <Route path="/blueprints_mastery" element={<BlueprintsMastery />} />
                   <Route path="/foundations" element={<Foundations />} />
+                  <Route path="/ide" element={<IDEPage />} />
             <Route path="/data-calculus" element={<DataCalculus />} />
             <Route path="/data-visualizing" element={<DataVisualizing />} />
                   <Route path="/machine-learning" element={<MachineLearning />} />
