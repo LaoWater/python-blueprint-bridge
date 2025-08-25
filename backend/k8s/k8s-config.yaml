@@ -1,0 +1,83 @@
+# k8s-config.yaml - Ultra cost-optimized configuration
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: user-sessions
+  labels:
+    name: user-sessions
+---
+# VERY restrictive resource quota for cost control
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: user-quota
+  namespace: user-sessions
+spec:
+  hard:
+    pods: "5"                     # Start with max 5 concurrent users
+    requests.cpu: "500m"          # Max 0.5 CPU cores total (VERY cheap)
+    requests.memory: "1Gi"        # Max 1GB RAM total
+    limits.cpu: "2"               # Max 2 CPU cores burst
+    limits.memory: "4Gi"          # Max 4GB RAM burst
+    persistentvolumeclaims: "0"   # No persistent storage = $0
+---
+# Google Service Account for the backend controller
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: terminal-controller
+  namespace: user-sessions
+  annotations:
+    # This links to your Google Cloud Service Account
+    iam.gke.io/gcp-service-account: terminal-controller@blue-pigeon-460611.iam.gserviceaccount.com
+---
+# Minimal role with least privilege
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  namespace: user-sessions
+  name: terminal-manager
+rules:
+- apiGroups: [""]
+  resources: ["pods"]
+  verbs: ["create", "delete", "get", "list", "watch"]
+- apiGroups: [""]
+  resources: ["pods/exec"]
+  verbs: ["create"]
+- apiGroups: [""]
+  resources: ["pods/log"]
+  verbs: ["get"]
+---
+# Bind role to service account
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: terminal-manager-binding
+  namespace: user-sessions
+subjects:
+- kind: ServiceAccount
+  name: terminal-controller
+  namespace: user-sessions
+roleRef:
+  kind: Role
+  name: terminal-manager
+  apiGroup: rbac.authorization.k8s.io
+---
+# Network policy for extra security (optional)
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: user-session-isolation
+  namespace: user-sessions
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          name: user-sessions
+  egress:
+  - {} # Allow all egress for now (can restrict later)
