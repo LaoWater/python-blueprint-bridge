@@ -19,7 +19,8 @@ const DataCalculus = () => {
     { id: 'journey-begins', title: 'The Data Journey Begins', sessions: 'Introduction' },
     { id: 'data-structures', title: 'Data Structures & Algorithms', sessions: 'Sessions 9-12' },
     { id: 'numerical-computing', title: 'Numerical Computing & Analysis', sessions: 'Sessions 13-17' },
-    { id: 'ai-foundations', title: 'Foundations for AI', sessions: 'Theory & Practice' }
+    { id: 'ai-foundations', title: 'Foundations for AI', sessions: 'Theory & Practice' },
+    { id: 'newton-legacy', title: 'Newton\'s Legacy', sessions: 'Historical Perspective' }
   ]);
 
   // Scroll to top on page load
@@ -1137,6 +1138,91 @@ print(f"Speedup: {time1/time2:.1f}x faster")`}
                         and how the data structures you've learned become the backbone of machine learning pipelines.
                       </p>
                     </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </section>
+
+          {/* Newton's Legacy Section */}
+          <section id="newton-legacy" className="mb-12">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-10 h-10 bg-gradient-to-br from-amber-500 to-yellow-600 rounded-lg flex items-center justify-center">
+                <Target className="w-5 h-5 text-white" />
+              </div>
+              <div>
+                <h2 className="text-2xl font-bold text-foreground">On the Shoulders of Giants</h2>
+                <p className="text-muted-foreground">How calculus was born from solitude and collective wisdom</p>
+              </div>
+            </div>
+
+            <Card className="border-amber-200 dark:border-amber-800">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-amber-700 dark:text-amber-300">
+                  <Brain className="w-5 h-5" />
+                  Newton's Revolutionary Moment
+                </CardTitle>
+                <CardDescription className="text-lg">
+                  In 1665, during the plague years, Isaac Newton retreated to his family farm and revolutionized mathematics forever.
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="prose dark:prose-invert max-w-none">
+                  <p className="text-foreground leading-relaxed">
+                    In the quiet of Woolsthorpe Manor, far from the bustle of Cambridge, Newton gazed upon the mathematical foundations 
+                    laid by his predecessors. <strong className="text-amber-600 dark:text-amber-400">Euclid's geometry</strong>, 
+                    <strong className="text-amber-600 dark:text-amber-400"> Archimedes' method of exhaustion</strong>, and 
+                    <strong className="text-amber-600 dark:text-amber-400"> Descartes' coordinate system</strong> – all became stepping stones 
+                    to something unprecedented.
+                  </p>
+                  
+                  <blockquote className="border-l-4 border-amber-500 pl-4 italic text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/20 p-4 rounded-r-lg">
+                    "If I have seen further, it is by standing on the shoulders of giants."
+                    <footer className="text-sm mt-2 not-italic">— Isaac Newton</footer>
+                  </blockquote>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                    <div className="bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-950/20 dark:to-teal-950/20 p-6 rounded-lg border border-emerald-200 dark:border-emerald-800">
+                      <h4 className="font-semibold text-emerald-800 dark:text-emerald-200 mb-3">The Mathematical Lineage</h4>
+                      <ul className="text-sm text-emerald-700 dark:text-emerald-300 space-y-2">
+                        <li><strong>Euclid (300 BCE):</strong> Geometric foundations</li>
+                        <li><strong>Archimedes (287-212 BCE):</strong> Early integration concepts</li>
+                        <li><strong>Fermat (1601-1665):</strong> Analytic geometry</li>
+                        <li><strong>Descartes (1596-1650):</strong> Coordinate systems</li>
+                        <li><strong>Newton (1642-1727):</strong> Unified calculus</li>
+                      </ul>
+                    </div>
+                    
+                    <div className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950/20 dark:to-indigo-950/20 p-6 rounded-lg border border-blue-200 dark:border-blue-800">
+                      <h4 className="font-semibold text-blue-800 dark:text-blue-200 mb-3">Newton's Breakthroughs</h4>
+                      <ul className="text-sm text-blue-700 dark:text-blue-300 space-y-2">
+                        <li><strong>Method of Fluxions:</strong> Differential calculus</li>
+                        <li><strong>Inverse Method:</strong> Integral calculus</li>
+                        <li><strong>Fundamental Theorem:</strong> Connecting derivatives and integrals</li>
+                        <li><strong>Applications:</strong> Physics, astronomy, engineering</li>
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div className="mt-8 p-6 bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-950/20 dark:to-pink-950/20 rounded-lg border border-purple-200 dark:border-purple-800">
+                    <h4 className="font-semibold text-purple-800 dark:text-purple-200 mb-4">The Honor of Continuity</h4>
+                    <p className="text-purple-700 dark:text-purple-300 leading-relaxed">
+                      Today, as we write algorithms that process millions of data points and train neural networks with billions of parameters, 
+                      we continue this sacred mathematical lineage. Every <code className="bg-purple-100 dark:bg-purple-900 px-2 py-1 rounded text-sm">numpy.gradient()</code> call, 
+                      every optimization step in machine learning, every derivative computed by our AI systems – they all echo Newton's revolutionary insights.
+                    </p>
+                    
+                    <p className="text-purple-700 dark:text-purple-300 leading-relaxed mt-4">
+                      <strong>We stand on the shoulders of giants, and it is our honor to be the giants for those who come after us.</strong> 
+                      In our Python code, in our data structures, in our algorithms – we carry forward the torch of human mathematical achievement.
+                    </p>
+                  </div>
+
+                  <div className="text-center mt-8">
+                    <p className="text-muted-foreground italic">
+                      "In mathematics, there is no royal road to understanding, but there is a continuous path of discovery 
+                      that connects every learner to the greatest minds in history."
+                    </p>
                   </div>
                 </div>
               </CardContent>
