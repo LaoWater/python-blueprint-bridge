@@ -1,12 +1,4 @@
-# GKE Python Terminal Implementation Steps
-
-## Step 1: Set up Kubernetes Configuration
-
-### 1.1 Create Namespace and RBAC
-Create `k8s-config.yaml`:
-
-```yaml
-# Namespace for user sessions
+# k8s-config.yaml - Ultra cost-optimized configuration
 apiVersion: v1
 kind: Namespace
 metadata:
@@ -14,7 +6,7 @@ metadata:
   labels:
     name: user-sessions
 ---
-# Resource quota to control costs
+# VERY restrictive resource quota for cost control
 apiVersion: v1
 kind: ResourceQuota
 metadata:
@@ -22,21 +14,24 @@ metadata:
   namespace: user-sessions
 spec:
   hard:
-    pods: "20"                    # Max 20 concurrent users
-    requests.cpu: "5"             # Max 5 CPU cores total
-    requests.memory: "10Gi"       # Max 10GB RAM total
-    limits.cpu: "20"              # Max 20 CPU cores burst
-    limits.memory: "40Gi"         # Max 40GB RAM burst
-    persistentvolumeclaims: "0"   # No persistent storage
+    pods: "5"                     # Start with max 5 concurrent users
+    requests.cpu: "500m"          # Max 0.5 CPU cores total (VERY cheap)
+    requests.memory: "1Gi"        # Max 1GB RAM total
+    limits.cpu: "2"               # Max 2 CPU cores burst
+    limits.memory: "4Gi"          # Max 4GB RAM burst
+    persistentvolumeclaims: "0"   # No persistent storage = $0
 ---
-# Service account for the backend controller
+# Google Service Account for the backend controller
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: terminal-controller
   namespace: user-sessions
+  annotations:
+    # This links to your Google Cloud Service Account
+    iam.gke.io/gcp-service-account: terminal-controller@blue-pigeon-460611.iam.gserviceaccount.com
 ---
-# Role with minimal permissions
+# Minimal role with least privilege
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
@@ -49,6 +44,9 @@ rules:
 - apiGroups: [""]
   resources: ["pods/exec"]
   verbs: ["create"]
+- apiGroups: [""]
+  resources: ["pods/log"]
+  verbs: ["get"]
 ---
 # Bind role to service account
 apiVersion: rbac.authorization.k8s.io/v1
@@ -64,560 +62,22 @@ roleRef:
   kind: Role
   name: terminal-manager
   apiGroup: rbac.authorization.k8s.io
-```
-
-**Apply this:**
-```bash
-kubectl apply -f k8s-config.yaml
-```
-
-## Step 2: Create Docker Images
-
-### 2.1 Create Python Terminal Image
-Create `Dockerfile.python-terminal`:
-
-```dockerfile
-FROM python:3.11-slim
-
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
-    curl \
-    git \
-    nano \
-    vim \
-    tree \
-    wget \
-    && rm -rf /var/lib/apt/lists/*
-
-# Install common Python packages
-RUN pip install --no-cache-dir \
-    numpy \
-    pandas \
-    requests \
-    matplotlib \
-    seaborn
-
-# Create non-root user
-RUN useradd -m -s /bin/bash pythonuser
-USER pythonuser
-WORKDIR /home/pythonuser
-
-# Set up Python environment
-RUN echo 'export PS1="🐍 \w $ "' >> ~/.bashrc
-RUN echo 'alias ll="ls -la"' >> ~/.bashrc
-RUN echo 'alias python="python3"' >> ~/.bashrc
-
-CMD ["/bin/bash"]
-```
-
-### 2.2 Build and Push Images
-```bash
-# Set your project ID
-PROJECT_ID="blue-pigeon-460611"
-REGION="us-west3"
-
-# Build the image
-docker build -f Dockerfile.python-terminal -t ${REGION}-docker.pkg.dev/${PROJECT_ID}/terminal-images/python-terminal:v1 .
-
-# Push to Artifact Registry (create repo first if needed)
-gcloud artifacts repositories create terminal-images --repository-format=docker --location=${REGION}
-docker push ${REGION}-docker.pkg.dev/${PROJECT_ID}/terminal-images/python-terminal:v1
-```
-
-## Step 3: Create Backend Controller
-
-### 3.1 Initialize Node.js Project
-```bash
-mkdir terminal-backend
-cd terminal-backend
-npm init -y
-npm install express @kubernetes/client-node ws uuid cors dotenv
-npm install -D nodemon
-```
-
-### 3.2 Create Backend Controller (`server.js`)
-
-```javascript
-const express = require('express');
-const WebSocket = require('ws');
-const k8s = require('@kubernetes/client-node');
-const { v4: uuidv4 } = require('uuid');
-const cors = require('cors');
-
-const app = express();
-app.use(cors());
-app.use(express.json());
-
-// Kubernetes client setup
-const kc = new k8s.KubeConfig();
-kc.loadFromDefault();
-const k8sApi = kc.makeApiClient(k8s.CoreV1Api);
-const exec = new k8s.Exec(kc);
-
-const NAMESPACE = 'user-sessions';
-const IMAGE = 'us-west3-docker.pkg.dev/blue-pigeon-460611/terminal-images/python-terminal:v1';
-
-// Store active sessions
-const activeSessions = new Map();
-
-// Create a new Python terminal pod
-app.post('/api/terminal/create', async (req, res) => {
-    const sessionId = uuidv4();
-    
-    const podManifest = {
-        metadata: {
-            generateName: 'python-terminal-',
-            namespace: NAMESPACE,
-            labels: {
-                app: 'python-terminal',
-                session: sessionId
-            }
-        },
-        spec: {
-            restartPolicy: 'Never',
-            containers: [{
-                name: 'python-terminal',
-                image: IMAGE,
-                resources: {
-                    requests: {
-                        cpu: '100m',
-                        memory: '256Mi'
-                    },
-                    limits: {
-                        cpu: '1000m',
-                        memory: '1Gi'
-                    }
-                },
-                stdin: true,
-                stdinOnce: false,
-                tty: true,
-                command: ['/bin/bash']
-            }],
-            // Auto-cleanup after 1 hour
-            activeDeadlineSeconds: 3600
-        }
-    };
-
-    try {
-        const response = await k8sApi.createNamespacedPod(NAMESPACE, podManifest);
-        const podName = response.body.metadata.name;
-        
-        activeSessions.set(sessionId, {
-            podName,
-            created: new Date(),
-            status: 'Creating'
-        });
-
-        res.json({
-            sessionId,
-            podName,
-            status: 'Creating'
-        });
-    } catch (error) {
-        console.error('Error creating pod:', error);
-        res.status(500).json({ error: 'Failed to create terminal' });
-    }
-});
-
-// Get terminal status
-app.get('/api/terminal/:sessionId/status', async (req, res) => {
-    const { sessionId } = req.params;
-    const session = activeSessions.get(sessionId);
-    
-    if (!session) {
-        return res.status(404).json({ error: 'Session not found' });
-    }
-
-    try {
-        const podResponse = await k8sApi.readNamespacedPod(session.podName, NAMESPACE);
-        const pod = podResponse.body;
-        
-        const status = pod.status.phase;
-        session.status = status;
-        
-        res.json({
-            sessionId,
-            podName: session.podName,
-            status,
-            ready: status === 'Running'
-        });
-    } catch (error) {
-        console.error('Error getting pod status:', error);
-        res.status(500).json({ error: 'Failed to get status' });
-    }
-});
-
-// Delete terminal
-app.delete('/api/terminal/:sessionId', async (req, res) => {
-    const { sessionId } = req.params;
-    const session = activeSessions.get(sessionId);
-    
-    if (!session) {
-        return res.status(404).json({ error: 'Session not found' });
-    }
-
-    try {
-        await k8sApi.deleteNamespacedPod(session.podName, NAMESPACE);
-        activeSessions.delete(sessionId);
-        
-        res.json({ message: 'Terminal deleted successfully' });
-    } catch (error) {
-        console.error('Error deleting pod:', error);
-        res.status(500).json({ error: 'Failed to delete terminal' });
-    }
-});
-
-// WebSocket server for terminal streaming
-const wss = new WebSocket.Server({ port: 8080 });
-
-wss.on('connection', (ws, req) => {
-    const url = new URL(req.url, 'http://localhost:8080');
-    const sessionId = url.searchParams.get('sessionId');
-    
-    const session = activeSessions.get(sessionId);
-    if (!session) {
-        ws.close(1000, 'Session not found');
-        return;
-    }
-
-    console.log(`WebSocket connected for session ${sessionId}`);
-    
-    // Execute into the pod
-    exec.exec(
-        NAMESPACE,
-        session.podName,
-        'python-terminal',
-        ['/bin/bash'],
-        ws, // stdout
-        ws, // stderr  
-        ws, // stdin
-        true, // tty
-        (status) => {
-            console.log(`Terminal session ${sessionId} exited with status:`, status);
-            ws.close();
-        }
-    );
-    
-    ws.on('close', () => {
-        console.log(`WebSocket closed for session ${sessionId}`);
-    });
-});
-
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`Backend server running on port ${PORT}`);
-    console.log(`WebSocket server running on port 8080`);
-});
-```
-
-## Step 4: Create Frontend
-
-### 4.1 Create HTML Terminal Interface (`public/index.html`)
-
-```html
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Python Terminal</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xterm/4.19.0/xterm.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/xterm/4.19.0/xterm.min.css">
-    <style>
-        body {
-            margin: 0;
-            padding: 20px;
-            background: #1e1e1e;
-            color: white;
-            font-family: 'Courier New', monospace;
-        }
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        .controls {
-            margin-bottom: 20px;
-        }
-        button {
-            background: #007acc;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            margin-right: 10px;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        button:hover {
-            background: #005a9e;
-        }
-        button:disabled {
-            background: #666;
-            cursor: not-allowed;
-        }
-        .status {
-            margin-bottom: 20px;
-            padding: 10px;
-            background: #333;
-            border-radius: 4px;
-        }
-        #terminal {
-            width: 100%;
-            height: 600px;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>🐍 Python Terminal</h1>
-        
-        <div class="controls">
-            <button id="createBtn">Create Terminal</button>
-            <button id="connectBtn" disabled>Connect</button>
-            <button id="deleteBtn" disabled>Delete Terminal</button>
-        </div>
-        
-        <div class="status" id="status">
-            Ready to create a new Python terminal
-        </div>
-        
-        <div id="terminal"></div>
-    </div>
-
-    <script>
-        const API_BASE = 'http://localhost:3000/api';
-        const WS_BASE = 'ws://localhost:8080';
-        
-        let currentSession = null;
-        let terminal = null;
-        let websocket = null;
-        
-        // Initialize xterm terminal
-        terminal = new Terminal({
-            cursorBlink: true,
-            fontSize: 14,
-            fontFamily: '"Courier New", monospace',
-            theme: {
-                background: '#1e1e1e',
-                foreground: '#d4d4d4'
-            }
-        });
-        
-        terminal.open(document.getElementById('terminal'));
-        terminal.writeln('Click "Create Terminal" to start a new Python session');
-        
-        // UI elements
-        const createBtn = document.getElementById('createBtn');
-        const connectBtn = document.getElementById('connectBtn');
-        const deleteBtn = document.getElementById('deleteBtn');
-        const status = document.getElementById('status');
-        
-        // Create terminal
-        createBtn.addEventListener('click', async () => {
-            createBtn.disabled = true;
-            status.textContent = 'Creating terminal...';
-            
-            try {
-                const response = await fetch(`${API_BASE}/terminal/create`, {
-                    method: 'POST'
-                });
-                
-                const data = await response.json();
-                currentSession = data;
-                
-                status.textContent = `Terminal created: ${data.podName} (Status: ${data.status})`;
-                
-                // Poll for ready status
-                pollStatus();
-                
-            } catch (error) {
-                console.error('Error creating terminal:', error);
-                status.textContent = 'Failed to create terminal';
-                createBtn.disabled = false;
-            }
-        });
-        
-        // Connect to terminal
-        connectBtn.addEventListener('click', () => {
-            if (!currentSession) return;
-            
-            const wsUrl = `${WS_BASE}?sessionId=${currentSession.sessionId}`;
-            websocket = new WebSocket(wsUrl);
-            
-            websocket.onopen = () => {
-                status.textContent = 'Connected to terminal';
-                connectBtn.disabled = true;
-                deleteBtn.disabled = false;
-                terminal.clear();
-                
-                // Send data from terminal to websocket
-                terminal.onData((data) => {
-                    if (websocket.readyState === WebSocket.OPEN) {
-                        websocket.send(data);
-                    }
-                });
-            };
-            
-            // Receive data from websocket and display in terminal
-            websocket.onmessage = (event) => {
-                terminal.write(event.data);
-            };
-            
-            websocket.onclose = () => {
-                status.textContent = 'Terminal connection closed';
-                connectBtn.disabled = false;
-            };
-            
-            websocket.onerror = (error) => {
-                console.error('WebSocket error:', error);
-                status.textContent = 'Connection error';
-            };
-        });
-        
-        // Delete terminal
-        deleteBtn.addEventListener('click', async () => {
-            if (!currentSession) return;
-            
-            try {
-                if (websocket) {
-                    websocket.close();
-                }
-                
-                await fetch(`${API_BASE}/terminal/${currentSession.sessionId}`, {
-                    method: 'DELETE'
-                });
-                
-                currentSession = null;
-                status.textContent = 'Terminal deleted';
-                createBtn.disabled = false;
-                connectBtn.disabled = true;
-                deleteBtn.disabled = true;
-                terminal.clear();
-                terminal.writeln('Terminal deleted. Click "Create Terminal" to start a new session');
-                
-            } catch (error) {
-                console.error('Error deleting terminal:', error);
-                status.textContent = 'Failed to delete terminal';
-            }
-        });
-        
-        // Poll terminal status
-        function pollStatus() {
-            if (!currentSession) return;
-            
-            fetch(`${API_BASE}/terminal/${currentSession.sessionId}/status`)
-                .then(response => response.json())
-                .then(data => {
-                    status.textContent = `Terminal: ${data.podName} (Status: ${data.status})`;
-                    
-                    if (data.ready) {
-                        connectBtn.disabled = false;
-                        deleteBtn.disabled = false;
-                    } else {
-                        setTimeout(pollStatus, 2000);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error polling status:', error);
-                    createBtn.disabled = false;
-                });
-        }
-    </script>
-</body>
-</html>
-```
-
-## Step 5: Deploy and Test
-
-### 5.1 Add package.json scripts
-```json
-{
-  "scripts": {
-    "start": "node server.js",
-    "dev": "nodemon server.js"
-  }
-}
-```
-
-### 5.2 Test locally
-```bash
-# Terminal 1: Start the backend
-npm run dev
-
-# Terminal 2: Serve the frontend
-python -m http.server 8000 --directory public
-
-# Open http://localhost:8000 in your browser
-```
-
-### 5.3 Create Deployment for Production
-
-Create `backend-deployment.yaml`:
-
-```yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: terminal-backend
-  namespace: user-sessions
-spec:
-  replicas: 2
-  selector:
-    matchLabels:
-      app: terminal-backend
-  template:
-    metadata:
-      labels:
-        app: terminal-backend
-    spec:
-      serviceAccountName: terminal-controller
-      containers:
-      - name: backend
-        image: your-backend-image:latest
-        ports:
-        - containerPort: 3000
-        - containerPort: 8080
-        env:
-        - name: NODE_ENV
-          value: "production"
-        resources:
-          requests:
-            cpu: 100m
-            memory: 256Mi
-          limits:
-            cpu: 500m
-            memory: 512Mi
 ---
-apiVersion: v1
-kind: Service
+# Network policy for extra security (optional)
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
 metadata:
-  name: terminal-backend-service
+  name: user-session-isolation
   namespace: user-sessions
 spec:
-  selector:
-    app: terminal-backend
-  ports:
-  - name: http
-    port: 3000
-    targetPort: 3000
-  - name: websocket
-    port: 8080
-    targetPort: 8080
-  type: LoadBalancer
-```
-
-## Next Steps
-
-1. **Apply the Kubernetes configuration**: `kubectl apply -f k8s-config.yaml`
-2. **Build and push your Docker image**
-3. **Test the backend locally** with `npm run dev`
-4. **Open the frontend** at `http://localhost:8000`
-5. **Create → Connect → Test Python commands**
-6. **Deploy to production** when ready
-
-This gives you:
-- ✅ Cost-effective spot instances
-- ✅ Auto-scaling (pods created on demand)
-- ✅ Resource limits and quotas
-- ✅ Secure RBAC
-- ✅ 1-hour auto-cleanup
-- ✅ Real terminal experience with xterm.js
+  podSelector: {}
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          name: user-sessions
+  egress:
+  - {} # Allow all egress for now (can restrict later)
