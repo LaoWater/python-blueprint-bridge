@@ -10,7 +10,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Database, Calculator, Zap, TrendingUp, ChevronRight, Play, CheckCircle2, Brain, BarChart3, Target } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import dataCalculusHero from '@/assets/data-calculus-hero.jpg';
+import dataCalculusHero from '@/assets/data-calculus-landscape.jpg';
 
 const DataCalculus = () => {
   const { getContent, loading } = useContent();
