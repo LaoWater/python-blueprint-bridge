@@ -1,0 +1,31 @@
+FROM python:3.11-slim
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    curl \
+    git \
+    nano \
+    vim \
+    tree \
+    wget \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install common Python packages
+RUN pip install --no-cache-dir \
+    numpy \
+    pandas \
+    requests \
+    matplotlib \
+    seaborn
+
+# Create non-root user
+RUN useradd -m -s /bin/bash pythonuser
+USER pythonuser
+WORKDIR /home/pythonuser
+
+# Set up Python environment
+RUN echo 'export PS1="🐍 \w $ "' >> ~/.bashrc
+RUN echo 'alias ll="ls -la"' >> ~/.bashrc
+RUN echo 'alias python="python3"' >> ~/.bashrc
+
+CMD ["/bin/bash"]

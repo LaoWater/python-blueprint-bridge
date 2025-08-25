@@ -26,13 +26,15 @@ import {
   PanelBottom,
   PanelBottomClose,
   Loader2,
-  RefreshCw
+  RefreshCw,
+  Home
 } from 'lucide-react';
 import { useTheme } from '@/components/theme-provider';
 import { useExplorer } from '@/hooks/useExplorer';
 import { FileSystemItem } from '@/services/explorerService';
 import { useAuth } from '@/components/AuthContext';
 import { toast } from 'sonner';
+import { useNavigate } from 'react-router-dom';
 
 const FileTreeItem: React.FC<{
   item: FileSystemItem;
@@ -142,6 +144,7 @@ const TerminalComponent: React.FC<{ isActive?: boolean }> = ({ isActive = false 
 const IDEPage: React.FC = () => {
   const { theme } = useTheme();
   const { user } = useAuth();
+  const navigate = useNavigate();
   
   // Use the Explorer hook for database integration
   const {
@@ -182,7 +185,6 @@ const IDEPage: React.FC = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [lastSavedContent, setLastSavedContent] = useState<string>('');
   const [showSettings, setShowSettings] = useState(false);
-  const [focusMode, setFocusMode] = useState(false);
   
   // IDE Settings state
   const [ideSettings, setIdeSettings] = useState({
@@ -348,7 +350,7 @@ Process finished with exit code 0
     }
   }, [currentFile, hasUnsavedChanges, isSaving, code, updateFileContent]);
 
-  // Keyboard shortcuts (Ctrl+S / Cmd+S for save, Ctrl+, for settings)
+  // Keyboard shortcuts (Ctrl+S for save, Ctrl+, for settings, Escape to close/exit)
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       // Save shortcut
@@ -356,39 +358,26 @@ Process finished with exit code 0
         event.preventDefault();
         handleSave();
       }
-      // Settings shortcut (Ctrl+, or Cmd+,) - disabled in focus mode
-      if ((event.ctrlKey || event.metaKey) && event.key === ',' && !focusMode) {
+      // Settings shortcut (Ctrl+, or Cmd+,)
+      if ((event.ctrlKey || event.metaKey) && event.key === ',') {
         event.preventDefault();
         setShowSettings(!showSettings);
       }
-      // Focus Mode shortcut (F11)
-      if (event.key === 'F11') {
-        event.preventDefault();
-        const newFocusMode = !focusMode;
-        setFocusMode(newFocusMode);
-        if (newFocusMode) {
-          // Close settings panel when entering focus mode
-          setShowSettings(false);
-          toast.success('Focus Mode activated - Immersive coding experience enabled', {
-            description: 'Press F11 or Escape to exit'
-          });
-        } else {
-          toast.info('Focus Mode deactivated');
-        }
-      }
-      // Escape to close settings or exit focus mode
+      // Exit IDE shortcut (Escape key)
       if (event.key === 'Escape') {
         if (showSettings) {
           setShowSettings(false);
-        } else if (focusMode) {
-          setFocusMode(false);
+        } else {
+          // Exit IDE and return to home
+          navigate('/');
+          toast.info('Exited IDE - Returned to home');
         }
       }
     };
 
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [handleSave, showSettings, focusMode]);
+  }, [handleSave, showSettings, navigate]);
 
   // Handle currentFile changes (file switching only - NOT content editing)
   useEffect(() => {
@@ -713,14 +702,8 @@ Process finished with exit code 0
     }
   };
 
-  // Focus mode dynamic styles using CSS-in-JS approach
-  const focusModeStyles = focusMode ? {
-    position: 'fixed' as const,
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    zIndex: 50,
+  // IDE immersive glow styles (always applied)
+  const ideGlowStyles = {
     boxShadow: `
       inset 0 0 60px rgba(59, 130, 246, 0.18),
       inset 0 0 120px rgba(59, 130, 246, 0.12),
@@ -728,38 +711,36 @@ Process finished with exit code 0
       0 0 40px rgba(59, 130, 246, 0.22)
     `,
     border: '1px solid rgba(59, 130, 246, 0.3)',
-    animation: 'focus-pulse 6s ease-in-out infinite alternate'
-  } : { minHeight: '100vh' };
+    animation: 'ide-pulse 6s ease-in-out infinite alternate'
+  };
 
   return (
     <>
-      {/* Focus Mode Keyframes */}
-      {focusMode && (
-        <style dangerouslySetInnerHTML={{
-          __html: `
-            @keyframes focus-pulse {
-              0% {
-                box-shadow: 
-                  inset 0 0 60px rgba(59, 130, 246, 0.18),
-                  inset 0 0 120px rgba(59, 130, 246, 0.12),
-                  inset 0 0 180px rgba(59, 130, 246, 0.08),
-                  0 0 40px rgba(59, 130, 246, 0.22);
-              }
-              100% {
-                box-shadow: 
-                  inset 0 0 80px rgba(59, 130, 246, 0.25),
-                  inset 0 0 160px rgba(59, 130, 246, 0.18),
-                  inset 0 0 220px rgba(59, 130, 246, 0.12),
-                  0 0 60px rgba(59, 130, 246, 0.28);
-              }
+      {/* IDE Immersive Keyframes */}
+      <style dangerouslySetInnerHTML={{
+        __html: `
+          @keyframes ide-pulse {
+            0% {
+              box-shadow: 
+                inset 0 0 60px rgba(59, 130, 246, 0.18),
+                inset 0 0 120px rgba(59, 130, 246, 0.12),
+                inset 0 0 180px rgba(59, 130, 246, 0.08),
+                0 0 40px rgba(59, 130, 246, 0.22);
             }
-          `
-        }} />
-      )}
+            100% {
+              box-shadow: 
+                inset 0 0 80px rgba(59, 130, 246, 0.25),
+                inset 0 0 160px rgba(59, 130, 246, 0.18),
+                inset 0 0 220px rgba(59, 130, 246, 0.12),
+                0 0 60px rgba(59, 130, 246, 0.28);
+            }
+          }
+        `
+      }} />
       
       <div 
-        className={`bg-gray-50 dark:bg-gray-900 flex flex-col overflow-hidden transition-all duration-700 ease-out ${focusMode ? '' : ''}`}
-        style={focusModeStyles}
+        className="fixed inset-0 z-50 bg-gray-50 dark:bg-gray-900 flex flex-col overflow-hidden"
+        style={ideGlowStyles}
       >
       {/* Top Toolbar */}
       <div className="h-12 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 flex items-center px-4 justify-between">
@@ -802,27 +783,14 @@ Process finished with exit code 0
             </button>
             <button
               onClick={() => {
-                const newFocusMode = !focusMode;
-                setFocusMode(newFocusMode);
-                if (newFocusMode) {
-                  // Close settings panel when entering focus mode
-                  setShowSettings(false);
-                  toast.success('Focus Mode activated', {
-                    description: 'Immersive coding experience enabled'
-                  });
-                } else {
-                  toast.info('Focus Mode deactivated');
-                }
+                navigate('/');
+                toast.info('Exited IDE - Returned to home');
               }}
-              className={`flex items-center space-x-2 px-3 py-1.5 rounded text-sm font-medium transition-colors ${
-                focusMode
-                  ? 'bg-blue-500 hover:bg-blue-600 text-white shadow-md' 
-                  : 'bg-gray-200 hover:bg-gray-300 dark:bg-gray-600 dark:hover:bg-gray-500 text-gray-700 dark:text-gray-300'
-              }`}
-              title={focusMode ? 'Exit Focus Mode (F11)' : 'Enter Focus Mode (F11)'}
+              className="flex items-center space-x-2 px-3 py-1.5 bg-gray-200 hover:bg-gray-300 dark:bg-gray-600 dark:hover:bg-gray-500 text-gray-700 dark:text-gray-300 rounded text-sm font-medium transition-colors"
+              title="Exit IDE and return to home (Escape)"
             >
-              <Eye size={14} />
-              <span>{focusMode ? 'Exit Focus' : 'Focus Mode'}</span>
+              <Home size={14} />
+              <span>Exit IDE</span>
             </button>
           </div>
         </div>
@@ -839,9 +807,7 @@ Process finished with exit code 0
                 ) : (
                   <span className="text-gray-500">• auto-save: off</span>
                 )}
-                {focusMode && (
-                  <span className="text-blue-400 animate-pulse">• focus mode</span>
-                )}
+                <span className="text-blue-400 animate-pulse">• immersive mode</span>
               </>
             )}
           </div>
@@ -858,13 +824,9 @@ Process finished with exit code 0
           </div>
           <Settings 
             size={16} 
-            className={`${focusMode ? 'text-gray-400 cursor-not-allowed opacity-50' : 'text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 cursor-pointer'}`}
-            onClick={() => {
-              if (!focusMode) {
-                setShowSettings(!showSettings);
-              }
-            }}
-            title={focusMode ? "Settings disabled in Focus Mode" : "IDE Settings (Ctrl+,)"}
+            className="text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 cursor-pointer"
+            onClick={() => setShowSettings(!showSettings)}
+            title="IDE Settings (Ctrl+,)"
           />
         </div>
       </div>
@@ -1182,7 +1144,7 @@ Process finished with exit code 0
       </div>
 
       {/* Settings Panel */}
-      {showSettings && !focusMode && (
+      {showSettings && (
         <div className="fixed inset-y-0 right-0 w-96 bg-white dark:bg-gray-800 border-l border-gray-200 dark:border-gray-700 shadow-xl z-[60]">
           <div className="h-full flex flex-col">
             {/* Settings Header */}
@@ -1359,7 +1321,7 @@ Process finished with exit code 0
       )}
 
       {/* Settings Overlay */}
-      {showSettings && !focusMode && (
+      {showSettings && (
         <div 
           className="fixed inset-0 bg-black bg-opacity-25 z-[59]"
           onClick={() => setShowSettings(false)}
