@@ -1,73 +1,123 @@
-# Welcome to your Lovable project
+# Blue Pigeon - Programming Education Platform
 
-## Project info
+## Project Overview
+Blue Pigeon is an educational platform focused on teaching "The Art of Programming" through algorithmic thinking and pattern recognition. The project emphasizes understanding computational principles over syntax memorization, targeting developers who want to master algorithms, data structures, and essential programming patterns.
 
-**URL**: https://lovable.dev/projects/1d0024ce-1594-424b-8df2-d140f9cdcf16
+## Theme & Philosophy
+**"Like a pigeon carrying essential messages across vast distances, Blue Pigeon carries the core patterns and principles needed to master programming."**
 
-## How can I edit this code?
+### Core Educational Philosophy:
+- **Algorithmic Intuition**: Focus on understanding patterns and knowing where to look for solutions
+- **Blueprint Mastery**: Essential programming patterns that developers can apply anywhere
+- **Pattern Recognition**: Training developers to see underlying structures in any codebase
+- **AI-Era Programming**: Emphasizing conceptual understanding over memorization in an AI-driven world
 
-There are several ways of editing your application.
+## Tech Stack & Architecture
 
-**Use Lovable**
+### Frontend Stack
+- **Framework**: React 18 with TypeScript
+- **Build Tool**: Vite
+- **Styling**: Tailwind CSS with custom design system
+- **UI Components**: 
+  - Radix UI primitives for accessibility
+  - shadcn/ui component library
+  - Custom blueprint-themed components
+- **Routing**: React Router v6
+- **State Management**: React Context (Auth, Content)
+- **Data Fetching**: React Query (@tanstack/react-query)
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/1d0024ce-1594-424b-8df2-d140f9cdcf16) and start prompting.
+### Backend & Database
+- **Database**: Supabase (PostgreSQL)
+- **Authentication**: Supabase Auth
+- **Real-time**: Supabase subscriptions
+- **API**: Supabase Edge Functions
+- **File Storage**: Supabase Storage
 
-Changes made via Lovable will be committed automatically to this repo.
+### Key Features
+- **Content Management**: Editable content system for admins
+- **Code Visualization**: Interactive code blocks with syntax highlighting
+- **Progressive Learning**: Structured curriculum from foundations to mastery
+- **Theme Support**: Dark/light mode with custom pigeon branding
+- **Responsive Design**: Mobile-first approach
+- **Chat Assistant**: Integrated help system
 
-**Use your preferred IDE**
+## Project Structure
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+### Pages Architecture
+```
+/pages/
+├── LandingPage.tsx          # Main landing with philosophy carousel
+├── Foundations.tsx          # Python & AI Foundations
+├── Blueprints.tsx           # Core Blueprint Patterns  
+├── BlueprintsMastery.tsx    # Advanced Mastery
+├── DataCalculus.tsx         # Data Science focus
+├── DataVisualizing.tsx      # Visualization techniques
+├── MachineLearning.tsx      # ML fundamentals
+├── AdvancedMachineLearning.tsx # Advanced ML
+├── AuthPage.tsx             # Authentication
+├── ProfilePage.tsx          # User profiles
+└── AdminPage.tsx            # Admin content management
 ```
 
-**Edit a file directly in GitHub**
+### Component Architecture
+- **Editable System**: Content can be edited by admins in real-time
+- **Modular UI**: Reusable components following design system
+- **Context Providers**: Global state management for auth and content
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+### Database Schema
+```sql
+-- Content management
+content (id, page, section, title, description, code, created_by, timestamps)
 
-**Use GitHub Codespaces**
+-- User management  
+profiles (id, username, admin_level, timestamps)
+```
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## Design System
 
-## What technologies are used for this project?
+### Color Palette
+- **Python Colors**: Blue (#306998), Yellow (#FFD43B) 
+- **Brand Colors**: Blue Pigeon themes with blue/indigo gradients
+- **Semantic**: Standard shadcn/ui color tokens
 
-This project is built with:
+### Typography & Animations
+- **Fonts**: System fonts with careful hierarchy
+- **Animations**: Smooth transitions, scroll-triggered animations
+- **Layout**: Grid-based responsive design
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## Development Workflow
 
-## How can I deploy this project?
+### Available Scripts
+```bash
+npm run dev          # Development server
+npm run build        # Production build
+npm run build:dev    # Development build
+npm run lint         # ESLint checking
+npm run preview      # Preview production build
+```
 
-Simply open [Lovable](https://lovable.dev/projects/1d0024ce-1594-424b-8df2-d140f9cdcf16) and click on Share -> Publish.
+### Development Setup
+1. Clone repository
+2. Install dependencies: `npm install`
+3. Configure Supabase environment variables
+4. Start development server: `npm run dev`
 
-## Can I connect a custom domain to my Lovable project?
+## Key Learning Paths
 
-Yes, you can!
+1. **Foundations**: Python fundamentals with algorithmic thinking
+2. **Blueprint Patterns**: Essential coding patterns and algorithms  
+3. **Advanced Mastery**: Complex algorithms and system design
+4. **Data Track**: Calculus, visualization, and machine learning
+5. **Specialization**: Advanced ML and AI applications
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+## Content Management
+- Admins can edit all content in real-time
+- Content is stored in Supabase with version control
+- Seeding system for initial content population
+- Dynamic table of contents generation
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+## Partner Integration
+- **SkillBrain Partnership**: Educational collaboration
+- **Lovable Platform**: Built using Lovable development environment
+
+This platform combines modern web technologies with thoughtful educational design to create an engaging learning experience focused on algorithmic mastery rather than syntax memorization.
