@@ -1,0 +1,26 @@
+# Ultra-lightweight Python image for cost optimization
+FROM python:3.11-alpine
+
+# Install minimal system dependencies (Alpine = smaller)
+RUN apk add --no-cache \
+    bash \
+    curl \
+    git \
+    nano
+
+# Install only essential Python packages
+RUN pip install --no-cache-dir \
+    requests \
+    numpy
+
+# Create non-root user
+RUN adduser -D -s /bin/bash pythonuser
+USER pythonuser
+WORKDIR /home/pythonuser
+
+# Minimal shell setup
+RUN echo 'export PS1="🐍 \w $ "' >> ~/.bashrc && \
+    echo 'alias ll="ls -la"' >> ~/.bashrc && \
+    echo 'alias python="python3"' >> ~/.bashrc
+
+CMD ["/bin/bash"]

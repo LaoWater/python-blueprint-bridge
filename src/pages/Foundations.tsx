@@ -77,8 +77,8 @@ const Foundations = () => {
       </div>
       
       <div className="max-w-7xl mx-auto px-4 py-8 flex gap-8">
-        {/* Main content - Keep wide and clean */}
-        <div className="flex-grow min-w-0">
+        {/* Main content - Now much wider */}
+        <div className="flex-1 min-w-0">
           
           {/* Getting Started Section */}
           <section id="getting-started" className="mb-12">
@@ -669,6 +669,7 @@ print(f"Preferences: {config.user_preferences}")
 
 # What happens if we try to change the service_id?
 # config.service_id = "new-service"  # This would fail!`}
+                    language="python"
                   />
                 </div>
 
@@ -717,6 +718,7 @@ cache2 = dangerous_cache("user2", {"name": "Bob"})
 print(f"Cache1: {cache1}")  # Contains BOTH users!
 print(f"Cache2: {cache2}")  # Same object as cache1!
 print(f"Same cache object? {cache1 is cache2}")  # True - SURPRISE!`}
+                    language="python"
                   />
                 </div>
 
@@ -782,6 +784,7 @@ alice_snapshot["malicious_change"] = "hacker_was_here"  # This won't affect the 
 
 print(f"Real Alice session: {session_mgr.get_session_snapshot('alice')}")
 print(f"Modified snapshot: {alice_snapshot}")`}
+                    language="python"
                   />
                 </div>
 
@@ -877,6 +880,8 @@ print(f"User score: {result}")
 # Real-world implication: .pyc files
 # Python saves compiled bytecode in __pycache__ directories
 # This is why your app starts faster the second time!`}
+                    language="python"
+
                   />
                 </div>
 
@@ -939,6 +944,8 @@ def io_bound_task(url):
 
 # This WILL benefit from threading because threads can wait
 # while others work (I/O doesn't need the GIL constantly)`}
+                    language="python"
+
                   />
                 </div>
 
@@ -1007,6 +1014,8 @@ class UserActivityService:
 # - I/O bound? Use async/await or threading
 # - CPU bound? Use multiprocessing
 # - Mixed? Design your architecture accordingly`}
+                    
+                    language="python"
                   />
                 </div>
               </CardContent>
@@ -1029,25 +1038,25 @@ class UserActivityService:
             </div>
           </section>
         </div>
+        {/* Sidebar with Navigation and TOC */}
+        <div className="hidden lg:block lg:w-80 lg:flex-shrink-0">
+          <div className="sticky top-8 space-y-6">
+            {/* Course Navigation */}
+            <div className="bg-gradient-to-br from-primary/5 to-secondary/5 border border-primary/10 rounded-xl p-6">
+              <h3 className="text-lg font-semibold text-foreground mb-4">Continue Learning</h3>
+              <CourseNavigation
+                nextCourse={{
+                  path: "/data-calculus",
+                  title: "Data: Calculus"
+                }}
+              />
+            </div>
 
-        {/* Course Navigation and Table of Contents */}
-        <div className="max-w-7xl mx-auto px-4 flex gap-8">
-          {/* Course Navigation - Now Full Width */}
-          <div className="flex-grow">
-            <CourseNavigation
-              nextCourse={{
-                path: "/data-calculus",
-                title: "Data: Calculus"
-              }}
-            />
-          </div>
-        </div>
-
-        {/* Table of Contents Sidebar */}
-        <div className="hidden lg:block lg:w-64 lg:flex-shrink-0">
-          <div className="sticky top-8">
-            <h3 className="text-lg font-semibold text-foreground mb-4">On This Page</h3>
-            <TableOfContents items={tocItems} />
+            {/* Table of Contents */}
+            <div className="bg-background border rounded-xl p-6">
+              <h3 className="text-lg font-semibold text-foreground mb-4">On This Page</h3>
+              <TableOfContents items={tocItems} />
+            </div>
           </div>
         </div>
       </div>

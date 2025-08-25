@@ -21,16 +21,20 @@ import {
   Save,
   Circle,
   Monitor,
+  Focus,
+  Eye,
   PanelBottom,
   PanelBottomClose,
   Loader2,
-  RefreshCw
+  RefreshCw,
+  Home
 } from 'lucide-react';
 import { useTheme } from '@/components/theme-provider';
 import { useExplorer } from '@/hooks/useExplorer';
 import { FileSystemItem } from '@/services/explorerService';
 import { useAuth } from '@/components/AuthContext';
 import { toast } from 'sonner';
+import { useNavigate } from 'react-router-dom';
 
 const FileTreeItem: React.FC<{
   item: FileSystemItem;
@@ -140,6 +144,7 @@ const TerminalComponent: React.FC<{ isActive?: boolean }> = ({ isActive = false 
 const IDEPage: React.FC = () => {
   const { theme } = useTheme();
   const { user } = useAuth();
+  const navigate = useNavigate();
   
   // Use the Explorer hook for database integration
   const {
@@ -179,6 +184,20 @@ const IDEPage: React.FC = () => {
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [lastSavedContent, setLastSavedContent] = useState<string>('');
+  const [showSettings, setShowSettings] = useState(false);
+  
+  // IDE Settings state
+  const [ideSettings, setIdeSettings] = useState({
+    fontSize: 14,
+    fontFamily: 'Monaco, Menlo, "Ubuntu Mono", monospace',
+    autoSave: true,
+    autoSaveDelay: 10, // seconds
+    tabSize: 2,
+    wordWrap: false,
+    minimap: true,
+    lineNumbers: true,
+    theme: 'vs-dark',
+  });
   
   // Get the proper sizes for explorer panel
   const getExplorerSizes = () => {
@@ -331,18 +350,34 @@ Process finished with exit code 0
     }
   }, [currentFile, hasUnsavedChanges, isSaving, code, updateFileContent]);
 
-  // Keyboard shortcut for save (Ctrl+S / Cmd+S)
+  // Keyboard shortcuts (Ctrl+S for save, Ctrl+, for settings, Escape to close/exit)
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
+      // Save shortcut
       if ((event.ctrlKey || event.metaKey) && event.key === 's') {
         event.preventDefault();
         handleSave();
+      }
+      // Settings shortcut (Ctrl+, or Cmd+,)
+      if ((event.ctrlKey || event.metaKey) && event.key === ',') {
+        event.preventDefault();
+        setShowSettings(!showSettings);
+      }
+      // Exit IDE shortcut (Escape key)
+      if (event.key === 'Escape') {
+        if (showSettings) {
+          setShowSettings(false);
+        } else {
+          // Exit IDE and return to home
+          navigate('/');
+          toast.info('Exited IDE - Returned to home');
+        }
       }
     };
 
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [handleSave]);
+  }, [handleSave, showSettings, navigate]);
 
   // Handle currentFile changes (file switching only - NOT content editing)
   useEffect(() => {
@@ -397,9 +432,9 @@ Process finished with exit code 0
     }
   }, [code, currentFile, lastSavedContent]);
 
-  // Auto-save functionality (10 seconds of inactivity)
+  // Auto-save functionality (configurable delay)
   useEffect(() => {
-    if (currentFile && currentFile.type === 'file' && hasUnsavedChanges && !isSaving) {
+    if (currentFile && currentFile.type === 'file' && hasUnsavedChanges && !isSaving && ideSettings.autoSave) {
       const timeoutId = setTimeout(async () => {
         try {
           setIsSaving(true);
@@ -415,11 +450,11 @@ Process finished with exit code 0
         } finally {
           setIsSaving(false);
         }
-      }, 10000); // Auto-save after 10 seconds of inactivity
+      }, ideSettings.autoSaveDelay * 1000); // Convert seconds to milliseconds
 
       return () => clearTimeout(timeoutId);
     }
-  }, [code, currentFile, updateFileContent, hasUnsavedChanges, isSaving]);
+  }, [code, currentFile, updateFileContent, hasUnsavedChanges, isSaving, ideSettings.autoSave, ideSettings.autoSaveDelay]);
 
   // Handle search
   const handleSearch = useCallback(async (query: string) => {
@@ -430,6 +465,45 @@ Process finished with exit code 0
       clearSearch();
     }
   }, [searchFiles, clearSearch]);
+
+  // Function to highlight search matches in text with better context
+  const highlightSearchMatches = useCallback((text: string, query: string, maxLength: number = 200): React.ReactNode => {
+    if (!query.trim() || !text) return text;
+    
+    // Escape special regex characters
+    const escapedQuery = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const regex = new RegExp(`(${escapedQuery})`, 'gi');
+    
+    // Find the first match to show context around it
+    const firstMatchIndex = text.toLowerCase().indexOf(query.toLowerCase());
+    let displayText = text;
+    
+    // If text is too long, show context around the first match
+    if (text.length > maxLength && firstMatchIndex !== -1) {
+      const start = Math.max(0, firstMatchIndex - 50);
+      const end = Math.min(text.length, firstMatchIndex + maxLength - 50);
+      displayText = (start > 0 ? '...' : '') + text.substring(start, end) + (end < text.length ? '...' : '');
+    } else if (text.length > maxLength) {
+      displayText = text.substring(0, maxLength) + '...';
+    }
+    
+    const parts = displayText.split(regex);
+    
+    return parts.map((part, index) => {
+      // Check if this part matches the query (case-insensitive)
+      const isMatch = part.toLowerCase() === query.toLowerCase() && part.length > 0;
+      return isMatch ? (
+        <span 
+          key={index}
+          className="bg-yellow-300 dark:bg-yellow-600 text-black dark:text-white px-0.5 py-0.5 rounded font-semibold shadow-sm"
+        >
+          {part}
+        </span>
+      ) : (
+        part
+      );
+    });
+  }, []);
 
   const handleExplorerViewChange = (view: 'files' | 'search' | 'git' | 'debug') => {
     setExplorerActiveView(view);
@@ -471,9 +545,16 @@ Process finished with exit code 0
               </div>
             ) : (
               <div className="space-y-1">
-                <h4 className="text-xs uppercase text-gray-500 dark:text-gray-400 font-medium mb-2">
-                  SEARCH RESULTS ({searchResults.length})
-                </h4>
+                <div className="mb-3">
+                  <h4 className="text-xs uppercase text-gray-500 dark:text-gray-400 font-medium">
+                    SEARCH RESULTS ({searchResults.length})
+                  </h4>
+                  {searchQuery && (
+                    <div className="text-xs text-blue-600 dark:text-blue-400 mt-1 font-mono">
+                      Query: "{searchQuery}"
+                    </div>
+                  )}
+                </div>
                 {searchResults.length === 0 && searchQuery ? (
                   <div className="text-sm text-gray-500 dark:text-gray-400 italic">
                     No results found for "{searchQuery}"
@@ -486,13 +567,13 @@ Process finished with exit code 0
                       onClick={() => handleFileSelect(result)}
                     >
                       <div className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                        {result.name}
+                        {highlightSearchMatches(result.name, searchQuery)}
                       </div>
                       <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                         {result.path}
                       </div>
-                      <div className="text-xs text-gray-500 dark:text-gray-400 font-mono mt-1">
-                        {result.content?.substring(0, 100)}...
+                      <div className="text-xs text-gray-500 dark:text-gray-400 font-mono mt-1 leading-relaxed">
+                        {highlightSearchMatches(result.content || '', searchQuery, 150)}
                       </div>
                     </div>
                   ))
@@ -621,8 +702,46 @@ Process finished with exit code 0
     }
   };
 
+  // IDE immersive glow styles (always applied)
+  const ideGlowStyles = {
+    boxShadow: `
+      inset 0 0 60px rgba(59, 130, 246, 0.18),
+      inset 0 0 120px rgba(59, 130, 246, 0.12),
+      inset 0 0 180px rgba(59, 130, 246, 0.08),
+      0 0 40px rgba(59, 130, 246, 0.22)
+    `,
+    border: '1px solid rgba(59, 130, 246, 0.3)',
+    animation: 'ide-pulse 6s ease-in-out infinite alternate'
+  };
+
   return (
-    <div className="h-screen w-screen bg-gray-50 dark:bg-gray-900 flex flex-col overflow-hidden">
+    <>
+      {/* IDE Immersive Keyframes */}
+      <style dangerouslySetInnerHTML={{
+        __html: `
+          @keyframes ide-pulse {
+            0% {
+              box-shadow: 
+                inset 0 0 60px rgba(59, 130, 246, 0.18),
+                inset 0 0 120px rgba(59, 130, 246, 0.12),
+                inset 0 0 180px rgba(59, 130, 246, 0.08),
+                0 0 40px rgba(59, 130, 246, 0.22);
+            }
+            100% {
+              box-shadow: 
+                inset 0 0 80px rgba(59, 130, 246, 0.25),
+                inset 0 0 160px rgba(59, 130, 246, 0.18),
+                inset 0 0 220px rgba(59, 130, 246, 0.12),
+                0 0 60px rgba(59, 130, 246, 0.28);
+            }
+          }
+        `
+      }} />
+      
+      <div 
+        className="fixed inset-0 z-50 bg-gray-50 dark:bg-gray-900 flex flex-col overflow-hidden"
+        style={ideGlowStyles}
+      >
       {/* Top Toolbar */}
       <div className="h-12 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 flex items-center px-4 justify-between">
         <div className="flex items-center space-x-4">
@@ -662,6 +781,17 @@ Process finished with exit code 0
               {isSaving ? <Circle size={14} className="animate-spin" /> : <Save size={14} />}
               <span>{isSaving ? 'Saving...' : 'Save'}</span>
             </button>
+            <button
+              onClick={() => {
+                navigate('/');
+                toast.info('Exited IDE - Returned to home');
+              }}
+              className="flex items-center space-x-2 px-3 py-1.5 bg-gray-200 hover:bg-gray-300 dark:bg-gray-600 dark:hover:bg-gray-500 text-gray-700 dark:text-gray-300 rounded text-sm font-medium transition-colors"
+              title="Exit IDE and return to home (Escape)"
+            >
+              <Home size={14} />
+              <span>Exit IDE</span>
+            </button>
           </div>
         </div>
         <div className="flex items-center space-x-3">
@@ -672,7 +802,12 @@ Process finished with exit code 0
                 <span>{currentFile.name}</span>
                 {hasUnsavedChanges && <span className="text-orange-500">• unsaved</span>}
                 {isSaving && <span className="text-blue-500">• saving...</span>}
-                <span className="text-green-500">• auto-save: 10s</span>
+                {ideSettings.autoSave ? (
+                  <span className="text-green-500">• auto-save: {ideSettings.autoSaveDelay}s</span>
+                ) : (
+                  <span className="text-gray-500">• auto-save: off</span>
+                )}
+                <span className="text-blue-400 animate-pulse">• immersive mode</span>
               </>
             )}
           </div>
@@ -687,7 +822,12 @@ Process finished with exit code 0
             <GitBranch size={16} />
             <span className="text-sm">main</span>
           </div>
-          <Settings size={16} className="text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 cursor-pointer" />
+          <Settings 
+            size={16} 
+            className="text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 cursor-pointer"
+            onClick={() => setShowSettings(!showSettings)}
+            title="IDE Settings (Ctrl+,)"
+          />
         </div>
       </div>
 
@@ -888,15 +1028,21 @@ Process finished with exit code 0
                           onChange={(value) => setCode(value || '')}
                           theme={theme === 'dark' ? 'vs-dark' : 'light'}
                           options={{
-                            minimap: { enabled: true },
-                            fontSize: 14,
-                            lineNumbers: 'on',
+                            minimap: { enabled: ideSettings.minimap },
+                            fontSize: ideSettings.fontSize,
+                            fontFamily: ideSettings.fontFamily,
+                            lineNumbers: ideSettings.lineNumbers ? 'on' : 'off',
                             scrollBeyondLastLine: false,
                             automaticLayout: true,
-                            wordWrap: 'on',
-                            tabSize: 4,
+                            wordWrap: ideSettings.wordWrap ? 'on' : 'off',
+                            tabSize: ideSettings.tabSize,
                             insertSpaces: true,
                             readOnly: currentFile.is_readonly,
+                            renderWhitespace: 'selection',
+                            cursorBlinking: 'smooth',
+                            smoothScrolling: true,
+                            contextmenu: true,
+                            selectOnLineNumbers: true,
                           }}
                         />
                       ) : (
@@ -996,7 +1142,193 @@ Process finished with exit code 0
           )}
         </PanelGroup>
       </div>
+
+      {/* Settings Panel */}
+      {showSettings && (
+        <div className="fixed inset-y-0 right-0 w-96 bg-white dark:bg-gray-800 border-l border-gray-200 dark:border-gray-700 shadow-xl z-[60]">
+          <div className="h-full flex flex-col">
+            {/* Settings Header */}
+            <div className="h-12 px-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">IDE Settings</h2>
+              <button
+                onClick={() => setShowSettings(false)}
+                className="p-1 hover:bg-gray-200 dark:hover:bg-gray-600 rounded"
+              >
+                <X size={16} className="text-gray-500 dark:text-gray-400" />
+              </button>
+            </div>
+
+            {/* Settings Content */}
+            <div className="flex-1 overflow-y-auto p-4 space-y-6">
+              {/* Editor Settings */}
+              <div>
+                <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-4">Editor</h3>
+                
+                {/* Font Size */}
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Font Size: {ideSettings.fontSize}px
+                  </label>
+                  <input
+                    type="range"
+                    min="10"
+                    max="24"
+                    value={ideSettings.fontSize}
+                    onChange={(e) => setIdeSettings(prev => ({ ...prev, fontSize: parseInt(e.target.value) }))}
+                    className="w-full h-2 bg-gray-200 dark:bg-gray-600 rounded-lg appearance-none cursor-pointer"
+                  />
+                  <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400 mt-1">
+                    <span>10px</span>
+                    <span>24px</span>
+                  </div>
+                </div>
+
+                {/* Font Family */}
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Font Family</label>
+                  <select
+                    value={ideSettings.fontFamily}
+                    onChange={(e) => setIdeSettings(prev => ({ ...prev, fontFamily: e.target.value }))}
+                    className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="Monaco, Menlo, 'Ubuntu Mono', monospace">Monaco</option>
+                    <option value="'Fira Code', 'Cascadia Code', Consolas, monospace">Fira Code</option>
+                    <option value="'JetBrains Mono', monospace">JetBrains Mono</option>
+                    <option value="'Source Code Pro', monospace">Source Code Pro</option>
+                    <option value="Consolas, monospace">Consolas</option>
+                  </select>
+                </div>
+
+                {/* Tab Size */}
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Tab Size: {ideSettings.tabSize}
+                  </label>
+                  <select
+                    value={ideSettings.tabSize}
+                    onChange={(e) => setIdeSettings(prev => ({ ...prev, tabSize: parseInt(e.target.value) }))}
+                    className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value={2}>2 spaces</option>
+                    <option value={4}>4 spaces</option>
+                    <option value={8}>8 spaces</option>
+                  </select>
+                </div>
+
+                {/* Word Wrap */}
+                <div className="mb-4">
+                  <label className="flex items-center">
+                    <input
+                      type="checkbox"
+                      checked={ideSettings.wordWrap}
+                      onChange={(e) => setIdeSettings(prev => ({ ...prev, wordWrap: e.target.checked }))}
+                      className="mr-2 rounded border-gray-300 dark:border-gray-600 text-blue-600 focus:ring-blue-500"
+                    />
+                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Enable word wrap</span>
+                  </label>
+                </div>
+
+                {/* Line Numbers */}
+                <div className="mb-4">
+                  <label className="flex items-center">
+                    <input
+                      type="checkbox"
+                      checked={ideSettings.lineNumbers}
+                      onChange={(e) => setIdeSettings(prev => ({ ...prev, lineNumbers: e.target.checked }))}
+                      className="mr-2 rounded border-gray-300 dark:border-gray-600 text-blue-600 focus:ring-blue-500"
+                    />
+                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Show line numbers</span>
+                  </label>
+                </div>
+
+                {/* Minimap */}
+                <div className="mb-4">
+                  <label className="flex items-center">
+                    <input
+                      type="checkbox"
+                      checked={ideSettings.minimap}
+                      onChange={(e) => setIdeSettings(prev => ({ ...prev, minimap: e.target.checked }))}
+                      className="mr-2 rounded border-gray-300 dark:border-gray-600 text-blue-600 focus:ring-blue-500"
+                    />
+                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Show minimap</span>
+                  </label>
+                </div>
+              </div>
+
+              {/* Auto-Save Settings */}
+              <div>
+                <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-4">Auto-Save</h3>
+                
+                {/* Enable Auto-Save */}
+                <div className="mb-4">
+                  <label className="flex items-center">
+                    <input
+                      type="checkbox"
+                      checked={ideSettings.autoSave}
+                      onChange={(e) => setIdeSettings(prev => ({ ...prev, autoSave: e.target.checked }))}
+                      className="mr-2 rounded border-gray-300 dark:border-gray-600 text-blue-600 focus:ring-blue-500"
+                    />
+                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Enable auto-save</span>
+                  </label>
+                </div>
+
+                {/* Auto-Save Delay */}
+                {ideSettings.autoSave && (
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      Auto-save delay: {ideSettings.autoSaveDelay}s
+                    </label>
+                    <input
+                      type="range"
+                      min="5"
+                      max="30"
+                      value={ideSettings.autoSaveDelay}
+                      onChange={(e) => setIdeSettings(prev => ({ ...prev, autoSaveDelay: parseInt(e.target.value) }))}
+                      className="w-full h-2 bg-gray-200 dark:bg-gray-600 rounded-lg appearance-none cursor-pointer"
+                    />
+                    <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400 mt-1">
+                      <span>5s</span>
+                      <span>30s</span>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Reset to Defaults */}
+              <div className="pt-4 border-t border-gray-200 dark:border-gray-600">
+                <button
+                  onClick={() => {
+                    setIdeSettings({
+                      fontSize: 14,
+                      fontFamily: 'Monaco, Menlo, "Ubuntu Mono", monospace',
+                      autoSave: true,
+                      autoSaveDelay: 10,
+                      tabSize: 2,
+                      wordWrap: false,
+                      minimap: true,
+                      lineNumbers: true,
+                      theme: 'vs-dark',
+                    });
+                  }}
+                  className="w-full px-4 py-2 bg-gray-100 dark:bg-gray-600 text-gray-700 dark:text-gray-300 rounded hover:bg-gray-200 dark:hover:bg-gray-500 transition-colors text-sm font-medium"
+                >
+                  Reset to Defaults
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Settings Overlay */}
+      {showSettings && (
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-25 z-[59]"
+          onClick={() => setShowSettings(false)}
+        />
+      )}
     </div>
+    </>
   );
 };
 
