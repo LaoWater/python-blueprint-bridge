@@ -881,6 +881,7 @@ print(f"User score: {result}")
 # Python saves compiled bytecode in __pycache__ directories
 # This is why your app starts faster the second time!`}
                     language="python"
+
                   />
                 </div>
 
@@ -944,6 +945,7 @@ def io_bound_task(url):
 # This WILL benefit from threading because threads can wait
 # while others work (I/O doesn't need the GIL constantly)`}
                     language="python"
+
                   />
                 </div>
 
@@ -1012,6 +1014,7 @@ class UserActivityService:
 # - I/O bound? Use async/await or threading
 # - CPU bound? Use multiprocessing
 # - Mixed? Design your architecture accordingly`}
+                    
                     language="python"
                   />
                 </div>
@@ -1035,7 +1038,6 @@ class UserActivityService:
             </div>
           </section>
         </div>
-
         {/* Sidebar with Navigation and TOC */}
         <div className="hidden lg:block lg:w-80 lg:flex-shrink-0">
           <div className="sticky top-8 space-y-6">
