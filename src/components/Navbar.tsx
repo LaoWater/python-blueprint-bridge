@@ -32,12 +32,6 @@ const Navbar = () => {
                 Foundations
               </Link>
               <Link 
-                to="/ide"
-                className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 font-medium"
-              >
-                IDE
-              </Link>
-              <Link 
                 to="/data-calculus"
                 className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
               >
@@ -66,6 +60,12 @@ const Navbar = () => {
                 className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
               >
                 Blueprints
+              </Link>
+              <Link 
+                to="/ide"
+                className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 font-medium"
+              >
+                IDE
               </Link>
               {isAdmin && (
                 <Link 
