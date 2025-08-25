@@ -18,9 +18,9 @@ const Foundations = () => {
   const [tocItems] = useState([
     { id: 'getting-started', title: 'Getting Started', sessions: 'Setup & Environment' },
     { id: 'weekly-sessions', title: 'Hello, World!', sessions: 'Sessions 1-5' },
-    { id: 'python-execution', title: 'How Python Executes', sessions: 'Core Understanding' },
     { id: 'oop-patterns', title: 'OOP & Design Patterns', sessions: 'Sessions 6-8' },
-    { id: 'fundamentals', title: 'Advanced Fundamentals', sessions: 'Core Concepts' }
+    { id: 'fundamentals', title: 'Advanced Fundamentals', sessions: 'Core Concepts' },
+    { id: 'python-execution', title: 'How Python Executes', sessions: 'Performance & Parallelism' }
   ]);
 
   // Scroll to top on page load
@@ -804,19 +804,249 @@ print(f"Modified snapshot: {alice_snapshot}")`}
             </Card>
             
           </section>
+
+          {/* Python Execution: How Python Works Under the Hood */}
+          <section id="python-execution" className="mb-12">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-red-600 rounded-lg flex items-center justify-center">
+                <Cpu className="w-5 h-5 text-white" />
+              </div>
+              <div>
+                <h2 className="text-2xl font-bold text-foreground">How Python Executes Code</h2>
+                <p className="text-muted-foreground">Understanding the interpreter and performance implications</p>
+              </div>
+            </div>
+
+            {/* The Two-Step Dance */}
+            <Card className="border-orange-200 dark:border-orange-800 mb-6">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-orange-700 dark:text-orange-300">
+                  <Zap className="w-5 h-5" />
+                  The Two-Step Dance: Compile, Then Execute
+                </CardTitle>
+                <CardDescription className="text-lg">
+                  Python isn't as straightforward as it seems - there's a hidden compilation step that affects everything.
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="prose dark:prose-invert max-w-none">
+                  <p className="text-foreground leading-relaxed">
+                    Unlike languages like C++ that compile directly to machine code, Python follows a unique two-step process: 
+                    <strong>first compilation to bytecode</strong>, then <strong>interpretation by the Python Virtual Machine (PVM)</strong>.
+                  </p>
+                  
+                  <p className="text-muted-foreground">
+                    This design choice gives Python its flexibility and cross-platform nature, but also introduces specific 
+                    performance characteristics and limitations compared to fully compiled languages.
+                  </p>
+                </div>
+
+                {/* The Process Visualization */}
+                <div className="bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-950/20 dark:to-orange-950/20 p-6 rounded-lg border">
+                  <h4 className="font-semibold text-foreground mb-3">🔄 The Execution Pipeline</h4>
+                  <EditableCodeBlock
+                    title="What Happens When You Run Python Code"
+                    page="foundations"
+                    section="execution-pipeline"
+                    code={`# Step 1: Your Python source code
+def calculate_user_score(activities, weights):
+    """Calculate weighted score for user activities"""
+    total_score = 0
+    for activity, count in activities.items():
+        weight = weights.get(activity, 1.0)
+        total_score += count * weight
+    return total_score
+
+# Step 2: Python compiler creates bytecode (automatically)
+# You can see this with the dis module:
+
+import dis
+
+print("=== BYTECODE GENERATED ===")
+dis.dis(calculate_user_score)
+
+# Step 3: Python Virtual Machine executes bytecode
+# This is what actually runs when you call the function
+
+activities = {"login": 10, "post": 5, "comment": 20}
+weights = {"login": 1.0, "post": 2.5, "comment": 0.5}
+
+result = calculate_user_score(activities, weights)
+print(f"User score: {result}")
+
+# Real-world implication: .pyc files
+# Python saves compiled bytecode in __pycache__ directories
+# This is why your app starts faster the second time!`}
+                  />
+                </div>
+
+                {/* Performance Implications */}
+                <div className="bg-gradient-to-r from-red-50 to-pink-50 dark:from-red-950/20 dark:to-pink-950/20 p-6 rounded-lg border">
+                  <h4 className="font-semibold text-foreground mb-3">⚡ Performance Reality Check</h4>
+                  <EditableCodeBlock
+                    title="Why Python Has Parallelism Limitations"
+                    page="foundations"
+                    section="performance-reality"
+                    code={`# The Global Interpreter Lock (GIL) - Python's Double-Edged Sword
+
+import threading
+import time
+from concurrent.futures import ThreadPoolExecutor, ProcessPoolExecutor
+
+def cpu_intensive_task(n):
+    """A CPU-bound task that demonstrates GIL limitations"""
+    count = 0
+    for i in range(n):
+        count += i * i
+    return count
+
+def measure_execution_time(func, *args):
+    start = time.time()
+    result = func(*args)
+    end = time.time()
+    return result, end - start
+
+# Single-threaded execution
+print("=== SINGLE THREAD ===")
+result, time_taken = measure_execution_time(cpu_intensive_task, 1000000)
+print(f"Time: {time_taken:.3f}s")
+
+# Multi-threaded execution (limited by GIL for CPU tasks)
+print("=== MULTIPLE THREADS (GIL Limited) ===")
+start = time.time()
+with ThreadPoolExecutor(max_workers=4) as executor:
+    futures = [executor.submit(cpu_intensive_task, 250000) for _ in range(4)]
+    results = [f.result() for f in futures]
+end = time.time()
+print(f"Time: {end - start:.3f}s")  # Not much faster!
+
+# Multi-process execution (bypasses GIL)
+print("=== MULTIPLE PROCESSES (GIL Bypassed) ===")
+start = time.time()
+with ProcessPoolExecutor(max_workers=4) as executor:
+    futures = [executor.submit(cpu_intensive_task, 250000) for _ in range(4)]
+    results = [f.result() for f in futures]
+end = time.time()
+print(f"Time: {end - start:.3f}s")  # Actually faster!
+
+# Key Insight: Threading works great for I/O bound tasks!
+import requests
+
+def io_bound_task(url):
+    """I/O bound tasks benefit from threading"""
+    response = requests.get(url)
+    return len(response.content)
+
+# This WILL benefit from threading because threads can wait
+# while others work (I/O doesn't need the GIL constantly)`}
+                  />
+                </div>
+
+                {/* Real-World Applications */}
+                <div className="bg-gradient-to-r from-emerald-50 to-cyan-50 dark:from-emerald-950/20 dark:to-cyan-950/20 p-6 rounded-lg border">
+                  <h4 className="font-semibold text-foreground mb-3">🏗️ Real-World Applications</h4>
+                  <EditableCodeBlock
+                    title="Choosing the Right Concurrency Strategy"
+                    page="foundations"
+                    section="concurrency-strategy"
+                    code={`# Understanding when to use what in production systems
+
+# === WEB SERVERS ===
+# Python web frameworks like FastAPI and Django handle this well:
+
+async def handle_user_request(user_id: str):
+    """Async/await is perfect for I/O bound web operations"""
+    # Fetch user data (I/O bound - great for async)
+    user_data = await fetch_user_from_db(user_id)
+    
+    # Call external API (I/O bound - async shines here)
+    preferences = await fetch_user_preferences_api(user_id)
+    
+    # Generate response (CPU light - no GIL issues)
+    return build_response(user_data, preferences)
+
+# === DATA PROCESSING ===
+# For heavy computations, multiprocessing is your friend:
+
+from multiprocessing import Pool
+import pandas as pd
+
+def process_large_dataset(filename):
+    """CPU-intensive data processing"""
+    df = pd.read_csv(filename)
+    
+    # Split data into chunks for parallel processing
+    chunks = [df[i:i+1000] for i in range(0, len(df), 1000)]
+    
+    # Process chunks in parallel (bypasses GIL)
+    with Pool() as pool:
+        processed_chunks = pool.map(heavy_data_transformation, chunks)
+    
+    return pd.concat(processed_chunks)
+
+# === MICROSERVICES ARCHITECTURE ===
+# Python's strength: rapid development and deployment
+
+class UserActivityService:
+    """Microservice that leverages Python's strengths"""
+    
+    async def track_activity(self, user_id: str, activity: dict):
+        """I/O bound - perfect for Python async"""
+        await self.save_to_database(user_id, activity)
+        await self.update_real_time_analytics(activity)
+        await self.trigger_notifications(user_id, activity)
+    
+    def generate_insights(self, user_data: list):
+        """CPU intensive - use multiprocessing for large datasets"""
+        if len(user_data) > 10000:
+            return self.parallel_insight_generation(user_data)
+        else:
+            return self.single_process_insights(user_data)
+
+# Key Takeaway: Know your workload!
+# - I/O bound? Use async/await or threading
+# - CPU bound? Use multiprocessing
+# - Mixed? Design your architecture accordingly`}
+                  />
+                </div>
+              </CardContent>
+            </Card>
+
+            <div className="mt-6 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/20 dark:to-indigo-950/20 border border-blue-200 dark:border-blue-800 rounded-lg">
+              <div className="flex items-start gap-3">
+                <Cpu className="w-5 h-5 text-blue-600 mt-1 flex-shrink-0" />
+                <div>
+                  <h5 className="font-semibold text-blue-800 dark:text-blue-200 mb-2">
+                    The Bridge to Data Science
+                  </h5>
+                  <p className="text-blue-700 dark:text-blue-300 text-sm leading-relaxed">
+                    Understanding Python's execution model is crucial as we move into data analysis and calculus. 
+                    Libraries like NumPy and Pandas are optimized to work around Python's limitations, using compiled C code under the hood. 
+                    This knowledge prepares you for the next chapter: <strong>Data & Calculus</strong>, where performance matters.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </section>
         </div>
 
-        {/* Course Navigation */}
-        <CourseNavigation
-          nextCourse={{
-            path: "/data-calculus",
-            title: "Data: Calculus"
-          }}
-        />
+        {/* Course Navigation and Table of Contents */}
+        <div className="max-w-7xl mx-auto px-4 flex gap-8">
+          {/* Course Navigation - Now Full Width */}
+          <div className="flex-grow">
+            <CourseNavigation
+              nextCourse={{
+                path: "/data-calculus",
+                title: "Data: Calculus"
+              }}
+            />
+          </div>
+        </div>
 
         {/* Table of Contents Sidebar */}
         <div className="hidden lg:block lg:w-64 lg:flex-shrink-0">
           <div className="sticky top-8">
+            <h3 className="text-lg font-semibold text-foreground mb-4">On This Page</h3>
             <TableOfContents items={tocItems} />
           </div>
         </div>
