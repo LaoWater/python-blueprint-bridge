@@ -53,11 +53,32 @@ const DataCalculus = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
-      <EditablePageHeader 
-        page="data-calculus"
-        defaultTitle="Data: Calculus" 
-        defaultSubtitle="From data structures to numerical computing - building the foundation for AI"
-      />
+      {/* Hero Section with Background Image */}
+      <div className="relative overflow-hidden">
+        {/* Background Image with Overlay */}
+        <div 
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{ 
+            backgroundImage: `url(${dataCalculusHero})`,
+            filter: 'brightness(0.3) contrast(1.2)',
+          }}
+        />
+        
+        {/* Gradient Overlay for Better Text Readability */}
+        <div className="absolute inset-0 bg-gradient-to-br from-black/60 via-black/40 to-transparent dark:from-black/70 dark:via-black/50 dark:to-black/20" />
+        
+        {/* Additional overlay for theme adaptation */}
+        <div className="absolute inset-0 bg-background/10 dark:bg-background/5" />
+        
+        {/* Content with forced white text */}
+        <div className="relative z-10 [&_*]:!text-white [&_*]:!text-opacity-100">
+          <EditablePageHeader 
+            page="data-calculus"
+            defaultTitle="Data: Calculus" 
+            defaultSubtitle="From data structures to numerical computing - building the foundation for AI"
+          />
+        </div>
+      </div>
       
       <div className="max-w-7xl mx-auto px-4 py-8 flex gap-8">
         {/* Main content - Keep wide and clean */}

@@ -1008,7 +1008,7 @@ if __name__ == "__main__":
               }}
               nextCourse={{
                 path: "/advanced-machine-learning", 
-                title: "Advanced Machine Learning"
+                title: "Advanced ML"
               }}
             />
             
