@@ -21,9 +21,12 @@ RUN mkdir -p /workspace && \
 USER pythonuser
 WORKDIR /workspace
 
-# Minimal shell setup
-RUN echo 'export PS1="🐍 \w $ "' >> ~/.bashrc && \
+# Clean shell setup for terminal output
+RUN echo 'export PS1="🐍 \\w $ "' >> ~/.bashrc && \
     echo 'alias ll="ls -la"' >> ~/.bashrc && \
-    echo 'alias python="python3"' >> ~/.bashrc
+    echo 'alias python="python3"' >> ~/.bashrc && \
+    echo 'set +H' >> ~/.bashrc && \
+    echo 'bind "set enable-bracketed-paste off"' >> ~/.bashrc && \
+    echo 'bind "set show-mode-in-prompt off"' >> ~/.bashrc
 
 CMD ["/bin/bash"]

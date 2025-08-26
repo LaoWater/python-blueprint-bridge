@@ -130,8 +130,24 @@ export const usePythonTerminal = (): UsePythonTerminalReturn => {
 
       ws.onmessage = (event: MessageEvent) => {
         // Handle both string and binary data
-        const data = typeof event.data === 'string' ? event.data : new TextDecoder().decode(event.data);
-        appendOutput(data);
+        let data = typeof event.data === 'string' ? event.data : new TextDecoder().decode(event.data);
+        
+        // Strip ANSI escape sequences and control characters
+        data = data
+          // Remove ANSI escape sequences (ESC[...m, ESC[...H, etc.)
+          .replace(/\x1b\[[0-9;]*[a-zA-Z]/g, '')
+          // Remove bracketed paste mode sequences
+          .replace(/\x1b\[\?2004[lh]/g, '')
+          // Remove other control sequences
+          .replace(/\x1b\][0-9;]*[a-zA-Z]/g, '')
+          // Remove carriage returns that cause overwrites
+          .replace(/\r(?!\n)/g, '')
+          // Clean up multiple consecutive newlines
+          .replace(/\n{3,}/g, '\n\n');
+        
+        if (data.trim()) {
+          appendOutput(data);
+        }
       };
 
       ws.onclose = (event: CloseEvent) => {

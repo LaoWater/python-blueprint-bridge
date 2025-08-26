@@ -548,7 +548,7 @@ wss.on('connection', (ws, req) => {
             NAMESPACE,
             session.podName,
             'python-terminal',
-            ['/bin/bash', '-i'], // Interactive bash
+            ['/bin/bash', '--login'], // Login shell to load .bashrc settings
             stdout,
             stderr,
             stdinStream, // Use PassThrough stream for stdin
@@ -565,24 +565,18 @@ wss.on('connection', (ws, req) => {
         // Store the stdin stream for sending commands
         session.stdinStream = stdinStream;
         
-        // Send initial command to set up the environment
+        // Send initial setup - using -i flag for login shell to load .bashrc
         setTimeout(() => {
             if (stdinStream && !stdinStream.destroyed) {
+                // Simple welcome and setup
                 stdinStream.write('clear\n');
-                stdinStream.write('echo "┌─────────────────────────────────────────────┐"\n');
-                stdinStream.write('echo "│        🐍 Blue Pigeon Python Terminal        │"\n');
-                stdinStream.write('echo "└─────────────────────────────────────────────┘"\n');
-                stdinStream.write('echo "🔐 User: $(whoami)@$(hostname)"\n');
-                stdinStream.write('echo "📁 Workspace: $(pwd)"\n');
-                stdinStream.write('echo "🐍 Python: $(python3 --version)"\n');
-                stdinStream.write('echo "📦 Pre-installed: requests, numpy"\n');
-                stdinStream.write('echo "⚡ Commands: ls, mkdir, python3, pip, nano, cat"\n');
-                stdinStream.write('echo ""\n');
-                stdinStream.write('echo "Type \'help\' for available commands or start coding!"\n');
-                stdinStream.write('echo ""\n');
-                stdinStream.write('ls -la\n');
+                stdinStream.write('printf "┌─────────────────────────────────────────────┐\\n"\n');
+                stdinStream.write('printf "│        🐍 Blue Pigeon Python Terminal        │\\n"\n');
+                stdinStream.write('printf "└─────────────────────────────────────────────┘\\n"\n');
+                stdinStream.write('printf "Ready! Type commands below:\\n\\n"\n');
+                stdinStream.write('ls -la 2>/dev/null || echo "Workspace ready"\n');
             }
-        }, 1000);
+        }, 1500);
         
     } catch (error) {
         console.error(`❌ Failed to start exec session: ${error.message}`);
