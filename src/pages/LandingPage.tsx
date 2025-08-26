@@ -187,14 +187,14 @@ const LandingPage = () => {
         </div>
 
         {/* Floating Blueprint Cards */}
-        <div className="absolute hidden xl:block right-10 top-1/4 animate-float">
-          <Card className="w-80 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border border-blue-200 dark:border-blue-900/50 shadow-xl transform rotate-3 hover:rotate-0 transition-transform duration-500">
-            <CardContent className="p-6">
+        <div className="absolute hidden lg:block right-2 lg:right-10 top-1/4 animate-float z-20">
+          <Card className="w-64 lg:w-80 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border border-blue-200 dark:border-blue-900/50 shadow-xl transform rotate-3 hover:rotate-0 transition-transform duration-500 scale-75 lg:scale-100">
+            <CardContent className="p-4 lg:p-6">
               <div className="flex items-center mb-3">
-                <Brain className="w-6 h-6 text-blue-600 mr-2" />
-                <Badge variant="secondary">Algorithm Design</Badge>
+                <Brain className="w-5 h-5 lg:w-6 lg:h-6 text-blue-600 mr-2" />
+                <Badge variant="secondary" className="text-xs lg:text-sm">Algorithm Design</Badge>
               </div>
-              <pre className="text-sm font-mono text-slate-700 dark:text-slate-300">
+              <pre className="text-xs lg:text-sm font-mono text-slate-700 dark:text-slate-300 overflow-hidden">
 {`def merge_sort(arr):
     if len(arr) <= 1:
         return arr
@@ -209,14 +209,14 @@ const LandingPage = () => {
           </Card>
         </div>
         
-        <div className="absolute hidden xl:block left-10 bottom-1/4 animate-float" style={{animationDelay: '1s'}}>
-          <Card className="w-80 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border border-indigo-200 dark:border-indigo-900/50 shadow-xl transform -rotate-3 hover:rotate-0 transition-transform duration-500">
-            <CardContent className="p-6">
+        <div className="absolute hidden lg:block left-2 lg:left-10 bottom-1/4 animate-float z-20" style={{animationDelay: '1s'}}>
+          <Card className="w-64 lg:w-80 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border border-indigo-200 dark:border-indigo-900/50 shadow-xl transform -rotate-3 hover:rotate-0 transition-transform duration-500 scale-75 lg:scale-100">
+            <CardContent className="p-4 lg:p-6">
               <div className="flex items-center mb-3">
-                <Cpu className="w-6 h-6 text-indigo-600 mr-2" />
-                <Badge variant="secondary">Data Structures</Badge>
+                <Cpu className="w-5 h-5 lg:w-6 lg:h-6 text-indigo-600 mr-2" />
+                <Badge variant="secondary" className="text-xs lg:text-sm">Data Structures</Badge>
               </div>
-              <pre className="text-sm font-mono text-slate-700 dark:text-slate-300">
+              <pre className="text-xs lg:text-sm font-mono text-slate-700 dark:text-slate-300 overflow-hidden">
 {`class TreeNode:
     def __init__(self, val=0):
         self.val = val

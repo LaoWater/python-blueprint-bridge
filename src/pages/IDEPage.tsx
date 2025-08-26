@@ -30,6 +30,7 @@ import {
   Home
 } from 'lucide-react';
 import { useTheme } from '@/components/theme-provider';
+import { ThemeToggle } from '@/components/theme-toggle';
 import { useExplorer } from '@/hooks/useExplorer';
 import { FileSystemItem } from '@/services/explorerService';
 import { useAuth } from '@/components/AuthContext';
@@ -1022,6 +1023,7 @@ const IDEPage: React.FC = () => {
             <GitBranch size={16} />
             <span className="text-sm">main</span>
           </div>
+          <ThemeToggle />
           <Settings 
             size={16} 
             className="text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 cursor-pointer"
