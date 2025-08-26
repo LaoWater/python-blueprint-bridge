@@ -264,6 +264,60 @@ app.get('/api/session/:sessionId/status', async (req, res) => {
     });
 });
 
+// Sync filesystem structure to pod
+app.post('/api/session/:sessionId/sync', async (req, res) => {
+    const { sessionId } = req.params;
+    const { fileStructure } = req.body; // Array of {path, content, type} objects
+    
+    const session = activeSessions.get(sessionId);
+    if (!session) {
+        return res.status(404).json({ error: 'Session not found' });
+    }
+    
+    if (!session.ready) {
+        return res.status(400).json({ error: 'Session not ready' });
+    }
+    
+    try {
+        session.lastActivity = Date.now();
+        let syncResults = [];
+        
+        console.log(`🔄 Syncing ${fileStructure.length} items to session ${sessionId}`);
+        
+        for (const item of fileStructure) {
+            try {
+                if (item.type === 'folder') {
+                    // Create directory
+                    const createDirCmd = `mkdir -p '/tmp/${item.path}'`;
+                    await executeCommand(sessionId, createDirCmd, false);
+                    syncResults.push({ path: item.path, type: 'folder', success: true });
+                } else if (item.type === 'file') {
+                    // Create file with content
+                    const filePath = `/tmp/${item.path}`;
+                    const saveCommand = `cat > '${filePath}' << 'SYNCEOF'\n${item.content}\nSYNCEOF`;
+                    await executeCommand(sessionId, saveCommand, false);
+                    syncResults.push({ path: item.path, type: 'file', success: true });
+                }
+            } catch (error) {
+                console.error(`Error syncing ${item.path}:`, error);
+                syncResults.push({ path: item.path, type: item.type, success: false, error: error.message });
+            }
+        }
+        
+        const successCount = syncResults.filter(r => r.success).length;
+        console.log(`✅ Sync completed: ${successCount}/${fileStructure.length} items synced`);
+        
+        res.json({ 
+            success: true, 
+            message: `Synchronized ${successCount}/${fileStructure.length} items`,
+            results: syncResults
+        });
+    } catch (error) {
+        console.error(`Error syncing session ${sessionId}:`, error);
+        res.status(500).json({ error: 'Failed to sync filesystem', details: error.message });
+    }
+});
+
 // Save file to pod
 app.post('/api/session/:sessionId/file', async (req, res) => {
     const { sessionId } = req.params;
@@ -299,7 +353,51 @@ app.post('/api/session/:sessionId/file', async (req, res) => {
     }
 });
 
-// Run Python file
+// Execute Python file cleanly (for Run button)
+app.post('/api/session/:sessionId/execute', async (req, res) => {
+    const { sessionId } = req.params;
+    const { filePath } = req.body; // e.g., "projects/main.py"
+    
+    const session = activeSessions.get(sessionId);
+    if (!session) {
+        return res.status(404).json({ error: 'Session not found' });
+    }
+    
+    if (!session.ready) {
+        return res.status(400).json({ error: 'Session not ready' });
+    }
+    
+    try {
+        session.lastActivity = Date.now();
+        
+        console.log(`🏃 Executing ${filePath} in session ${sessionId}`);
+        
+        // Execute the Python file and capture output
+        const fullPath = `/tmp/${filePath}`;
+        const executeCommand = `cd /tmp && python3 '${fullPath}' 2>&1`;
+        
+        const output = await executeCommand(sessionId, executeCommand, true);
+        
+        console.log(`✅ Execution completed for ${filePath}`);
+        
+        res.json({ 
+            success: true, 
+            output: output || '',
+            filePath: filePath,
+            command: `python3 ${filePath}`
+        });
+    } catch (error) {
+        console.error(`Error executing ${filePath} in session ${sessionId}:`, error);
+        res.json({
+            success: false,
+            output: `Error executing file: ${error.message}`,
+            filePath: filePath,
+            error: error.message
+        });
+    }
+});
+
+// Run Python file (legacy)
 app.post('/api/session/:sessionId/run', async (req, res) => {
     const { sessionId } = req.params;
     const { filename } = req.body;
@@ -565,18 +663,21 @@ wss.on('connection', (ws, req) => {
         // Store the stdin stream for sending commands
         session.stdinStream = stdinStream;
         
-        // Send initial setup - using -i flag for login shell to load .bashrc
+        // Send welcome message and setup
         setTimeout(() => {
-            if (stdinStream && !stdinStream.destroyed) {
-                // Simple welcome and setup
-                stdinStream.write('clear\n');
-                stdinStream.write('printf "┌─────────────────────────────────────────────┐\\n"\n');
-                stdinStream.write('printf "│        🐍 Blue Pigeon Python Terminal        │\\n"\n');
-                stdinStream.write('printf "└─────────────────────────────────────────────┘\\n"\n');
-                stdinStream.write('printf "Ready! Type commands below:\\n\\n"\n');
-                stdinStream.write('ls -la 2>/dev/null || echo "Workspace ready"\n');
+            if (ws.readyState === 1) {
+                ws.send('\n┌─────────────────────────────────────────────┐\n');
+                ws.send('│        🐍 Blue Pigeon Python Terminal        │\n');
+                ws.send('└─────────────────────────────────────────────┘\n');
+                ws.send('🐍 Python 3.11 | Workspace: /tmp (full access)\n');
+                ws.send('Ready! Create files, directories, and run code.\n\n');
             }
-        }, 1500);
+            
+            // Ensure we're in /tmp directory
+            if (stdinStream && !stdinStream.destroyed) {
+                stdinStream.write('cd /tmp\n');
+            }
+        }, 1000);
         
     } catch (error) {
         console.error(`❌ Failed to start exec session: ${error.message}`);

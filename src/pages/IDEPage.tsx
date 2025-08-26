@@ -27,7 +27,8 @@ import {
   PanelBottomClose,
   Loader2,
   RefreshCw,
-  Home
+  Home,
+  Sync
 } from 'lucide-react';
 import { useTheme } from '@/components/theme-provider';
 import { ThemeToggle } from '@/components/theme-toggle';
@@ -129,10 +130,10 @@ const TerminalComponent: React.FC<{
   const outputRef = useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
-    if (isActive && inputRef.current) {
+    if (isActive && inputRef.current && isConnected) {
       inputRef.current.focus();
     }
-  }, [isActive]);
+  }, [isActive, isConnected]);
 
   // Auto-scroll to bottom when new output arrives
   React.useEffect(() => {
@@ -202,16 +203,16 @@ const TerminalComponent: React.FC<{
     <div className="h-full bg-black text-green-400 font-mono text-sm flex flex-col">
       <div 
         ref={outputRef}
-        className="flex-1 p-4 overflow-auto whitespace-pre-wrap"
+        className="flex-1 min-h-0 p-4 overflow-auto whitespace-pre-wrap"
       >
         {terminalOutput || 'Connecting to Python terminal...'}
       </div>
-      <div className="flex items-center p-4 pt-0">
+      <div className="flex items-center p-4 pt-0 flex-shrink-0 min-h-[3rem]">
         <span className="text-green-400">pythonuser</span>
         <span className="text-gray-400">@</span>
         <span className="text-blue-400">blue-pigeon</span>
         <span className="text-gray-400">:</span>
-        <span className="text-purple-400">/workspace</span>
+        <span className="text-purple-400">/tmp</span>
         <span className="text-green-400 font-bold">$ </span>
         <input
           ref={inputRef}
@@ -276,7 +277,9 @@ const IDEPage: React.FC = () => {
     saveAndRunFile,
     sendCommand,
     deleteSession,
-    clearOutput
+    clearOutput,
+    syncFileSystem,
+    executeFile
   } = usePythonTerminal();
 
   // Local state for UI
@@ -295,6 +298,8 @@ const IDEPage: React.FC = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [lastSavedContent, setLastSavedContent] = useState<string>('');
   const [showSettings, setShowSettings] = useState(false);
+  const [isSyncing, setIsSyncing] = useState(false);
+  const [isSynced, setIsSynced] = useState(false);
   
   // IDE Settings state
   const [ideSettings, setIdeSettings] = useState({
@@ -434,11 +439,76 @@ const IDEPage: React.FC = () => {
     }
   }, [createSession]);
 
+  // Handle filesystem sync
+  const handleSync = useCallback(async () => {
+    if (!sessionId || !isTerminalReady) {
+      toast.error('No active Python session. Create a session first.');
+      return;
+    }
+
+    setIsSyncing(true);
+    setIsSynced(false);
+    
+    try {
+      // Build file structure from the database file tree
+      const buildFileStructure = (items: FileSystemItem[], basePath = ''): any[] => {
+        const structure: any[] = [];
+        
+        for (const item of items) {
+          const itemPath = basePath ? `${basePath}/${item.name}` : item.name;
+          
+          if (item.type === 'folder') {
+            structure.push({
+              path: itemPath,
+              type: 'folder'
+            });
+            
+            if (item.children) {
+              structure.push(...buildFileStructure(item.children, itemPath));
+            }
+          } else if (item.type === 'file') {
+            structure.push({
+              path: itemPath,
+              type: 'file',
+              content: item.content || ''
+            });
+          }
+        }
+        
+        return structure;
+      };
+
+      const fileStructure = buildFileStructure(fileTree);
+      console.log('Syncing file structure:', fileStructure);
+      
+      const result = await syncFileSystem(fileStructure);
+      
+      const successCount = result.results.filter(r => r.success).length;
+      const totalCount = result.results.length;
+      
+      setIsSynced(true);
+      toast.success(`✅ Synced ${successCount}/${totalCount} items to Linux terminal`);
+      
+    } catch (error) {
+      console.error('Sync failed:', error);
+      toast.error('Failed to sync filesystem: ' + (error instanceof Error ? error.message : 'Unknown error'));
+    } finally {
+      setIsSyncing(false);
+    }
+  }, [sessionId, isTerminalReady, fileTree, syncFileSystem]);
+
   // Auto-switch to terminal when WebSocket connects
   useEffect(() => {
     window.autoSwitchToTerminal = () => {
       setBottomPanelVisible(true);
       setBottomActiveTab('terminal');
+      // Focus the terminal input after a short delay
+      setTimeout(() => {
+        const terminalInput = document.querySelector('input[placeholder*="Try: ls"]') as HTMLInputElement;
+        if (terminalInput) {
+          terminalInput.focus();
+        }
+      }, 100);
     };
     
     return () => {
@@ -446,37 +516,75 @@ const IDEPage: React.FC = () => {
     };
   }, []);
 
-  // Handle code execution - now uses real Python terminal
+  // Handle code execution - clean Run button
   const handleRunCode = useCallback(async () => {
     if (!currentFile || currentFile.type !== 'file') {
       toast.error('No file selected to run');
       return;
     }
 
-    // Check if we have a Python session and it's connected
-    if (!sessionId || !isConnected) {
-      toast.info('Starting Python session...');
-      setBottomPanelVisible(true);
-      setBottomActiveTab('terminal');
-      
-      try {
-        await createSession();
-        toast.success('Python session started! Running file...');
-        // Wait for connection, then execute
-        setTimeout(async () => {
-          if (sessionId && isConnected) {
-            await executeCurrentFile();
-          }
-        }, 3000);
-      } catch (error) {
-        toast.error('Failed to start Python session');
-        return;
-      }
+    // Check if we have a Python session
+    if (!sessionId || !isTerminalReady) {
+      toast.error('No active Python session. Create a session and sync files first.');
       return;
     }
 
-    await executeCurrentFile();
-  }, [currentFile, sessionId, isConnected, createSession, executeCurrentFile]);
+    // Check if files are synced
+    if (!isSynced) {
+      toast.error('Files not synced. Click Sync button first to sync your files to the Linux terminal.');
+      return;
+    }
+
+    setIsRunning(true);
+    setBottomPanelVisible(true);
+    setBottomActiveTab('output');
+    
+    try {
+      // Save current changes to database first
+      if (hasUnsavedChanges) {
+        await updateFileContent(currentFile.id, code);
+        setHasUnsavedChanges(false);
+        setLastSavedContent(code);
+      }
+
+      // Build file path from current file
+      const getFilePath = (file: FileSystemItem): string => {
+        // This is a simplified approach - you might need to build the full path
+        // based on your file tree structure
+        return file.name;
+      };
+
+      const filePath = getFilePath(currentFile);
+      
+      setRunOutput('🏃 Running ' + filePath + '...\n=====================================\n');
+      
+      // Execute the file cleanly
+      const result = await executeFile(filePath);
+      
+      if (result.success) {
+        setRunOutput(
+          `✅ Executed: ${result.command || `python3 ${filePath}`}\n` +
+          `=====================================\n` +
+          result.output
+        );
+        toast.success(`✅ ${currentFile.name} executed successfully`);
+      } else {
+        setRunOutput(
+          `❌ Execution failed: ${filePath}\n` +
+          `=====================================\n` +
+          result.output
+        );
+        toast.error(`❌ Failed to execute ${currentFile.name}`);
+      }
+      
+    } catch (error) {
+      const errorMsg = error instanceof Error ? error.message : 'Unknown error';
+      setRunOutput(`❌ Error: ${errorMsg}\n=====================================\n`);
+      toast.error('Execution failed: ' + errorMsg);
+    } finally {
+      setIsRunning(false);
+    }
+  }, [currentFile, sessionId, isTerminalReady, isSynced, hasUnsavedChanges, code, updateFileContent, executeFile]);
 
   const handleToggleTerminal = () => {
     if (sessionId && isConnected) {
@@ -936,13 +1044,33 @@ const IDEPage: React.FC = () => {
           <div className="flex items-center space-x-2">
             <button
               onClick={handleRunCode}
-              disabled={isRunning || !currentFile || currentFile.type !== 'file'}
+              disabled={isRunning || !currentFile || currentFile.type !== 'file' || !isSynced}
               className="flex items-center space-x-2 px-3 py-1.5 bg-green-500 hover:bg-green-600 disabled:bg-green-400 text-white rounded text-sm font-medium"
             >
               {isRunning ? <Square size={14} /> : <Play size={14} />}
               <span>
                 {isRunning ? 'Running...' : 'Run'}
               </span>
+            </button>
+            <button
+              onClick={handleSync}
+              disabled={isSyncing || !sessionId || !isTerminalReady}
+              className={`flex items-center space-x-2 px-3 py-1.5 rounded text-sm font-medium ${
+                isSynced
+                  ? 'bg-blue-500 hover:bg-blue-600 text-white'
+                  : isSyncing
+                  ? 'bg-orange-500 hover:bg-orange-600 text-white animate-pulse'
+                  : 'bg-gray-200 hover:bg-gray-300 dark:bg-gray-600 dark:hover:bg-gray-500 text-gray-700 dark:text-gray-300'
+              }`}
+              title={isSynced ? 'Files synced with Linux terminal' : 'Sync database files to Linux terminal'}
+            >
+              {isSyncing ? <RefreshCw size={14} className="animate-spin" /> : <Sync size={14} />}
+              <span>
+                {isSyncing ? 'Syncing...' : isSynced ? 'Synced' : 'Sync'}
+              </span>
+              {isSynced && (
+                <div className="w-2 h-2 bg-green-200 rounded-full animate-pulse" title="Files synced" />
+              )}
             </button>
             <button
               onClick={handleToggleTerminal}
@@ -1008,6 +1136,11 @@ const IDEPage: React.FC = () => {
                 {sessionId && (
                   <span className="text-green-400">• python: {terminalStatus}</span>
                 )}
+                {sessionId && (
+                  <span className={isSynced ? "text-blue-400" : "text-gray-500"}>
+                    • sync: {isSynced ? 'ready' : 'pending'}
+                  </span>
+                )}
                 <span className="text-blue-400 animate-pulse">• immersive mode</span>
               </>
             )}
@@ -1037,7 +1170,7 @@ const IDEPage: React.FC = () => {
       <div className="flex-1 flex flex-col overflow-hidden">
         <PanelGroup direction="vertical">
           {/* Top Panel - Main Content */}
-          <Panel defaultSize={bottomPanelVisible ? 70 : 100} minSize={30}>
+          <Panel defaultSize={bottomPanelVisible ? 65 : 100} minSize={40}>
             <div className="h-full flex overflow-hidden">
               <PanelGroup direction="horizontal" key={`explorer-${explorerCollapsed}`}>
                 {/* Left Sidebar - File Explorer */}
@@ -1275,10 +1408,10 @@ const IDEPage: React.FC = () => {
           {bottomPanelVisible && (
             <>
               <PanelResizeHandle className="h-1 hover:h-2 bg-gray-200 dark:bg-gray-700 hover:bg-blue-400 transition-all" />
-              <Panel defaultSize={30} minSize={15} maxSize={60}>
-                <div className="h-full bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700">
-                  {/* Bottom Panel Tabs */}
-                  <div className="h-8 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
+              <Panel defaultSize={35} minSize={20} maxSize={60}>
+                <div className="h-full bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 flex flex-col">
+                  {/* Bottom Panel Tabs - Fixed Height */}
+                  <div className="h-8 min-h-[2rem] max-h-[2rem] border-b border-gray-200 dark:border-gray-700 flex items-center justify-between flex-shrink-0">
                     <div className="flex">
                       <button
                         onClick={() => setBottomActiveTab('output')}
@@ -1313,8 +1446,8 @@ const IDEPage: React.FC = () => {
                     </button>
                   </div>
 
-                  {/* Panel Content */}
-                  <div className="flex-1 h-full">
+                  {/* Panel Content - Takes remaining space */}
+                  <div className="flex-1 min-h-0 overflow-hidden">
                     {bottomActiveTab === 'output' && (
                       <div className="h-full p-4 text-sm font-mono overflow-auto bg-gray-50 dark:bg-gray-900">
                         <div className="text-gray-600 dark:text-gray-400">

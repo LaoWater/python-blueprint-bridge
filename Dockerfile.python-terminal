@@ -13,13 +13,11 @@ RUN pip install --no-cache-dir \
     requests \
     numpy
 
-# Create workspace directory with proper permissions
-RUN mkdir -p /workspace && \
-    adduser -D -s /bin/bash pythonuser && \
-    chown -R pythonuser:pythonuser /workspace
+# Create user - use /tmp as workspace for write permissions  
+RUN adduser -D -s /bin/bash pythonuser
 
 USER pythonuser
-WORKDIR /workspace
+WORKDIR /tmp
 
 # Clean shell setup for terminal output
 RUN echo 'export PS1="🐍 \\w $ "' >> ~/.bashrc && \

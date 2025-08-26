@@ -2,7 +2,7 @@
 // TypeScript React hook for managing Python terminal sessions
 
 import { useState, useCallback, useRef, useEffect } from 'react';
-import pythonTerminalAPI, { SessionData, SessionStatus } from '../services/pythonTerminalAPI';
+import pythonTerminalAPI, { SessionData, SessionStatus, SyncItem, SyncResponse, ExecuteResponse } from '../services/pythonTerminalAPI';
 
 export type SessionStatusType = 'idle' | 'creating' | 'ready' | 'error';
 
@@ -28,6 +28,8 @@ export interface UsePythonTerminalReturn {
   deleteSession: () => Promise<void>;
   refreshStatus: () => Promise<SessionStatus | undefined>;
   connectWebSocket: () => void;
+  syncFileSystem: (fileStructure: SyncItem[]) => Promise<SyncResponse>;
+  executeFile: (filePath: string) => Promise<ExecuteResponse>;
   
   // Terminal management
   clearOutput: () => void;
@@ -120,7 +122,6 @@ export const usePythonTerminal = (): UsePythonTerminalReturn => {
       ws.onopen = () => {
         console.log('WebSocket connected');
         setIsConnected(true);
-        appendOutput('✅ Terminal connected!\n\n');
         
         // Trigger callback to auto-switch to terminal
         if (window.autoSwitchToTerminal) {
@@ -304,6 +305,38 @@ export const usePythonTerminal = (): UsePythonTerminalReturn => {
     }
   }, [sessionId]);
 
+  // Sync filesystem structure
+  const syncFileSystem = useCallback(async (fileStructure: SyncItem[]): Promise<SyncResponse> => {
+    if (!sessionId || !isReady) {
+      throw new Error('Session not ready');
+    }
+
+    try {
+      const response = await pythonTerminalAPI.syncFileSystem(sessionId, fileStructure);
+      return response;
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error';
+      console.error('Failed to sync filesystem:', err);
+      throw err;
+    }
+  }, [sessionId, isReady]);
+
+  // Execute file cleanly
+  const executeFile = useCallback(async (filePath: string): Promise<ExecuteResponse> => {
+    if (!sessionId || !isReady) {
+      throw new Error('Session not ready');
+    }
+
+    try {
+      const response = await pythonTerminalAPI.executeFile(sessionId, filePath);
+      return response;
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error';
+      console.error('Failed to execute file:', err);
+      throw err;
+    }
+  }, [sessionId, isReady]);
+
   return {
     // Session state
     sessionId,
@@ -326,6 +359,8 @@ export const usePythonTerminal = (): UsePythonTerminalReturn => {
     deleteSession,
     refreshStatus,
     connectWebSocket,
+    syncFileSystem,
+    executeFile,
     
     // Terminal management
     clearOutput,

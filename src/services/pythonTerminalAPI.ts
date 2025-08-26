@@ -32,6 +32,31 @@ export interface SessionData {
     success: boolean;
     message: string;
   }
+
+  export interface SyncItem {
+    path: string;
+    content?: string;
+    type: 'file' | 'folder';
+  }
+
+  export interface SyncResponse {
+    success: boolean;
+    message: string;
+    results: Array<{
+      path: string;
+      type: 'file' | 'folder';
+      success: boolean;
+      error?: string;
+    }>;
+  }
+
+  export interface ExecuteResponse {
+    success: boolean;
+    output: string;
+    filePath: string;
+    command?: string;
+    error?: string;
+  }
   
   export interface DeleteResponse {
     success: boolean;
@@ -161,6 +186,60 @@ export interface SessionData {
       }
     }
   
+    // Sync filesystem structure to pod
+    async syncFileSystem(sessionId: string, fileStructure: SyncItem[]): Promise<SyncResponse> {
+      try {
+        const response = await fetch(`${this.baseURL}/api/session/${sessionId}/sync`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            fileStructure,
+          }),
+        });
+
+        if (!response.ok) {
+          const errorData: APIError = await response.json().catch(() => ({ error: 'Unknown error' }));
+          throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+        }
+
+        const data: SyncResponse = await response.json();
+        console.log('Filesystem synced:', data);
+        return data;
+      } catch (error) {
+        console.error('Error syncing filesystem:', error);
+        throw error;
+      }
+    }
+
+    // Execute Python file cleanly
+    async executeFile(sessionId: string, filePath: string): Promise<ExecuteResponse> {
+      try {
+        const response = await fetch(`${this.baseURL}/api/session/${sessionId}/execute`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            filePath,
+          }),
+        });
+
+        if (!response.ok) {
+          const errorData: APIError = await response.json().catch(() => ({ error: 'Unknown error' }));
+          throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+        }
+
+        const data: ExecuteResponse = await response.json();
+        console.log('File executed:', data);
+        return data;
+      } catch (error) {
+        console.error('Error executing file:', error);
+        throw error;
+      }
+    }
+
     // Send terminal command
     async sendCommand(sessionId: string, command: string): Promise<CommandResponse> {
       try {
