@@ -28,12 +28,12 @@ import {
   Loader2,
   RefreshCw,
   Home,
-  Sync
+  RotateCw
 } from 'lucide-react';
 import { useTheme } from '@/components/theme-provider';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { useExplorer } from '@/hooks/useExplorer';
-import { FileSystemItem } from '@/services/explorerService';
+import type { FileSystemItem } from '@/hooks/useExplorer';
 import { useAuth } from '@/components/AuthContext';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
