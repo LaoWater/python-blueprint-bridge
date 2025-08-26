@@ -386,7 +386,8 @@ async function executeCommand(sessionId, command, returnOutput = true) {
 }
 
 // WebSocket server for terminal streaming
-const wss = new WebSocket.Server({ port: 8080 });
+const WS_PORT = process.env.WS_PORT || 8082;
+const wss = new WebSocket.Server({ port: WS_PORT });
 
 wss.on('connection', (ws, req) => {
     const url = new URL(req.url, 'http://localhost:8080');
@@ -483,7 +484,7 @@ process.on('SIGTERM', async () => {
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`🚀 Python Terminal Backend running on port ${PORT}`);
-    console.log(`📡 WebSocket server running on port 8080`);
+    console.log(`📡 WebSocket server running on port ${WS_PORT}`);
     console.log(`🐍 Using image: ${IMAGE}`);
     console.log(`☸️  Kubernetes namespace: ${NAMESPACE}`);
 });
