@@ -6,8 +6,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { LineChart as RechartsLineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area, BarChart as RechartsBarChart, Bar, PieChart as RechartsPieChart, Cell, Pie } from 'recharts';
 
 // Mock components for the course structure
-const EditableContent = ({ children }) => children;
-const EditableCodeBlock = ({ code, language }) => (
+const EditableContent = ({ children, type, page, section }: any) => <div>{children}</div>;
+const EditableCodeBlock = ({ code, language, page, section }: any) => (
   <div className="bg-gray-900 rounded-lg p-4 overflow-x-auto">
     <pre className="text-green-400 text-sm">
       <code>{code}</code>
@@ -541,8 +541,6 @@ def create_professional_visualization():
 
 create_professional_visualization()`}
                             language="python"
-                            page="data-visualizing"
-                            section={`session-${sessionNum}-code`}
                           />
                         </TabsContent>
                         
