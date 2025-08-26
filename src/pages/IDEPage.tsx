@@ -35,6 +35,14 @@ import { FileSystemItem } from '@/services/explorerService';
 import { useAuth } from '@/components/AuthContext';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
+import { usePythonTerminal } from '@/hooks/usePythonTerminal';
+
+// Extend Window interface for auto-switch callback
+declare global {
+  interface Window {
+    autoSwitchToTerminal?: () => void;
+  }
+}
 
 const FileTreeItem: React.FC<{
   item: FileSystemItem;
@@ -100,10 +108,24 @@ const formatFileSize = (bytes: number): string => {
   return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
 };
 
-const TerminalComponent: React.FC<{ isActive?: boolean }> = ({ isActive = false }) => {
-  const [output, setOutput] = useState(['Welcome to Blue Pigeon IDE Terminal', '$ ']);
+const TerminalComponent: React.FC<{ 
+  isActive?: boolean;
+  sessionId?: string | null;
+  isConnected?: boolean;
+  terminalOutput?: string;
+  onSendCommand?: (command: string) => void;
+  onCreateSession?: () => void;
+}> = ({ 
+  isActive = false, 
+  sessionId, 
+  isConnected, 
+  terminalOutput,
+  onSendCommand,
+  onCreateSession
+}) => {
   const [currentInput, setCurrentInput] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
+  const outputRef = useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
     if (isActive && inputRef.current) {
@@ -111,31 +133,100 @@ const TerminalComponent: React.FC<{ isActive?: boolean }> = ({ isActive = false 
     }
   }, [isActive]);
 
+  // Auto-scroll to bottom when new output arrives
+  React.useEffect(() => {
+    if (outputRef.current) {
+      outputRef.current.scrollTop = outputRef.current.scrollHeight;
+    }
+  }, [terminalOutput]);
+
   const handleCommand = (command: string) => {
-    setOutput(prev => [...prev, `$ ${command}`, 'Command executed (demo mode)', '']);
-    setCurrentInput('');
+    if (!command.trim()) return;
+    
+    if (onSendCommand && isConnected) {
+      onSendCommand(command + '\n');  // Add newline for proper command execution
+      setCurrentInput('');
+    } else {
+      toast.error('Terminal not connected. Please start a Python session first.');
+    }
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleCommand(currentInput);
+    } else if (e.key === 'Tab') {
+      e.preventDefault();
+      // Basic tab completion for common commands
+      const commonCommands = ['ls', 'cd', 'mkdir', 'python3', 'pip', 'nano', 'cat', 'touch', 'rm'];
+      const matching = commonCommands.filter(cmd => cmd.startsWith(currentInput));
+      if (matching.length === 1) {
+        setCurrentInput(matching[0] + ' ');
+      }
+    } else if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+      // TODO: Command history
+      e.preventDefault();
+    } else if (e.ctrlKey && e.key === 'c') {
+      e.preventDefault();
+      handleCommand('\u0003'); // Send Ctrl+C
+    } else if (e.ctrlKey && e.key === 'l') {
+      e.preventDefault();
+      handleCommand('clear');
+    }
+  };
+
+  if (!sessionId) {
+    return (
+      <div className="h-full bg-black text-green-400 font-mono text-sm p-4 flex flex-col items-center justify-center">
+        <div className="text-center mb-4">
+          <h3 className="text-lg text-blue-400 mb-2">🐍 Python Linux Terminal</h3>
+          <p className="text-gray-400 mb-2">Full access Linux terminal with Python environment</p>
+          <div className="text-gray-500 text-xs mb-4 space-y-1">
+            <p>• Create directories, run scripts, install packages</p>
+            <p>• Tab completion for common commands</p>
+            <p>• Ctrl+C to interrupt, Ctrl+L to clear</p>
+            <p>• Separate from "Run" button (executes current file)</p>
+          </div>
+          <button
+            onClick={onCreateSession}
+            className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded font-medium transition-colors"
+          >
+            🚀 Start Python Session
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="h-full bg-black text-green-400 font-mono text-sm p-4 overflow-auto">
-      {output.map((line, index) => (
-        <div key={index} className="mb-1">{line}</div>
-      ))}
-      <div className="flex">
-        <span className="text-blue-400">$ </span>
+    <div className="h-full bg-black text-green-400 font-mono text-sm flex flex-col">
+      <div 
+        ref={outputRef}
+        className="flex-1 p-4 overflow-auto whitespace-pre-wrap"
+      >
+        {terminalOutput || 'Connecting to Python terminal...'}
+      </div>
+      <div className="flex items-center p-4 pt-0">
+        <span className="text-green-400">pythonuser</span>
+        <span className="text-gray-400">@</span>
+        <span className="text-blue-400">blue-pigeon</span>
+        <span className="text-gray-400">:</span>
+        <span className="text-purple-400">/workspace</span>
+        <span className="text-green-400 font-bold">$ </span>
         <input
           ref={inputRef}
           type="text"
           value={currentInput}
           onChange={(e) => setCurrentInput(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter') {
-              handleCommand(currentInput);
-            }
-          }}
-          className="flex-1 bg-transparent border-none outline-none text-green-400 ml-2"
-          placeholder="Type your command..."
+          onKeyDown={handleKeyDown}
+          disabled={!isConnected}
+          className="flex-1 bg-transparent border-none outline-none text-green-400 ml-1 disabled:opacity-50 font-mono"
+          placeholder={isConnected ? "Try: ls, mkdir, python, pip install..." : "Connecting to terminal..."}
+          autoComplete="off"
+          spellCheck={false}
         />
+        {!isConnected && (
+          <Loader2 size={16} className="ml-2 animate-spin text-yellow-400" />
+        )}
       </div>
     </div>
   );
@@ -169,18 +260,36 @@ const IDEPage: React.FC = () => {
     loadRecentFiles
   } = useExplorer();
 
+  // Python Terminal Integration
+  const {
+    sessionId,
+    status: terminalStatus,
+    isReady: isTerminalReady,
+    error: terminalError,
+    isLoading: isTerminalLoading,
+    isConnected,
+    terminalOutput,
+    canRun,
+    canSendCommands,
+    createSession,
+    saveAndRunFile,
+    sendCommand,
+    deleteSession,
+    clearOutput
+  } = usePythonTerminal();
+
   // Local state for UI
   const [openTabs, setOpenTabs] = useState<FileSystemItem[]>([]);
   const [isRunning, setIsRunning] = useState(false);
   const [isTerminalEnabled, setIsTerminalEnabled] = useState(true);
   const [explorerCollapsed, setExplorerCollapsed] = useState(true);
   const [explorerActiveView, setExplorerActiveView] = useState<'files' | 'search' | 'git' | 'debug'>('files');
-  const [bottomPanelVisible, setBottomPanelVisible] = useState(false);
+  const [bottomPanelVisible, setBottomPanelVisible] = useState(true);
   const [bottomActiveTab, setBottomActiveTab] = useState<'output' | 'terminal'>('output');
   const [searchQuery, setSearchQuery] = useState('');
   const [code, setCode] = useState('');
   const [isLoadingFile, setIsLoadingFile] = useState(false);
-  const [runOutput, setRunOutput] = useState('');
+  const [runOutput, setRunOutput] = useState('Blue Pigeon IDE - Ready for Python execution\n=====================================\nRun a Python file to see output here.');
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [lastSavedContent, setLastSavedContent] = useState<string>('');
@@ -259,69 +368,144 @@ const IDEPage: React.FC = () => {
     });
   }, [currentFile, selectFile, loadFileContent]);
 
-  // Handle code execution
+  // Execute the current file
+  const executeCurrentFile = useCallback(async () => {
+    if (!currentFile || !sessionId || !isConnected) return;
+
+    setIsRunning(true);
+    setBottomPanelVisible(true);
+    setBottomActiveTab('terminal');
+    
+    try {
+      // Save current changes first
+      if (code !== currentFile.content) {
+        await updateFileContent(currentFile.id, code);
+      }
+
+      // Create the Python file in the terminal and run it
+      const fileName = currentFile.name;
+      
+      // Create file using echo method (more reliable than heredoc)
+      const codeLines = code.split('\n');
+      
+      // First, remove existing file and create new one
+      await sendCommand(`rm -f ${fileName} 2>/dev/null || true`);
+      await sendCommand(`echo "📝 Creating ${fileName}..."`);
+      
+      // Write each line individually (more reliable)
+      for (let i = 0; i < codeLines.length; i++) {
+        const line = codeLines[i];
+        const escapedLine = line.replace(/'/g, "'\"'\"'").replace(/"/g, '\\"');
+        if (i === 0) {
+          await sendCommand(`echo '${escapedLine}' > ${fileName}`);
+        } else {
+          await sendCommand(`echo '${escapedLine}' >> ${fileName}`);
+        }
+      }
+      
+      // Small delay to ensure file is written, then run it
+      setTimeout(async () => {
+        await sendCommand(`echo "✅ File created successfully"`);
+        await sendCommand(`echo "🏃 Executing: python3 ${fileName}"`);
+        await sendCommand(`echo "─────────────────────────────────────"`);
+        await sendCommand(`python3 ${fileName}`);
+        await sendCommand(`echo "─────────────────────────────────────"`);
+        await sendCommand(`echo "✅ Execution completed"`);
+      }, 1000);
+      
+      toast.success(`Running ${currentFile.name} in terminal`);
+    } catch (error) {
+      toast.error('Failed to execute file: ' + (error instanceof Error ? error.message : 'Unknown error'));
+    } finally {
+      setIsRunning(false);
+    }
+  }, [currentFile, code, updateFileContent, sessionId, isConnected, sendCommand]);
+
+  // Handle Python session creation
+  const handleCreatePythonSession = useCallback(async () => {
+    try {
+      await createSession();
+      setBottomPanelVisible(true);
+      setBottomActiveTab('terminal');
+      toast.success('Python session created! Terminal ready for use.');
+    } catch (error) {
+      toast.error('Failed to create Python session');
+    }
+  }, [createSession]);
+
+  // Auto-switch to terminal when WebSocket connects
+  useEffect(() => {
+    window.autoSwitchToTerminal = () => {
+      setBottomPanelVisible(true);
+      setBottomActiveTab('terminal');
+    };
+    
+    return () => {
+      delete window.autoSwitchToTerminal;
+    };
+  }, []);
+
+  // Handle code execution - now uses real Python terminal
   const handleRunCode = useCallback(async () => {
     if (!currentFile || currentFile.type !== 'file') {
       toast.error('No file selected to run');
       return;
     }
 
-    setIsRunning(true);
-    setBottomPanelVisible(true);
-    setBottomActiveTab('output');
-    
-    try {
-      // Save current changes first
-      if (currentFile && code !== currentFile.content) {
-        await updateFileContent(currentFile.id, code);
-      }
-
-      // Simulate code execution (in real implementation, this would be sent to the backend)
-      setRunOutput('Running ' + currentFile.name + '...\n');
-      
-      // Mock execution result
-      setTimeout(() => {
-        setRunOutput(prev => prev + `
-Blue Pigeon IDE - Algorithmic Patterns
-=====================================
-First 10 Fibonacci numbers: [0, 1, 1, 2, 3, 5, 8, 13, 21, 34]
-
-Pattern Analysis:
-F(1) = 1, Ratio: inf
-F(2) = 1, Ratio: 1.0000
-F(3) = 2, Ratio: 2.0000
-F(4) = 3, Ratio: 1.5000
-F(5) = 5, Ratio: 1.6667
-F(6) = 8, Ratio: 1.6000
-F(7) = 13, Ratio: 1.6250
-F(8) = 21, Ratio: 1.6154
-F(9) = 34, Ratio: 1.6190
-
-Process finished with exit code 0
-`);
-        setIsRunning(false);
-      }, 2000);
-    } catch (error) {
-      setRunOutput(prev => prev + '\nError: ' + error);
-      setIsRunning(false);
-    }
-  }, [currentFile, code, updateFileContent]);
-
-  const handleToggleTerminal = () => {
-    if (isTerminalEnabled) {
-      // Disable terminal
-      setIsTerminalEnabled(false);
-      if (bottomActiveTab === 'terminal') {
-        // If terminal was active, switch to output or hide panel
-        setBottomActiveTab('output');
-      }
-    } else {
-      // Enable terminal and show it
-      setIsTerminalEnabled(true);
+    // Check if we have a Python session and it's connected
+    if (!sessionId || !isConnected) {
+      toast.info('Starting Python session...');
       setBottomPanelVisible(true);
       setBottomActiveTab('terminal');
+      
+      try {
+        await createSession();
+        toast.success('Python session started! Running file...');
+        // Wait for connection, then execute
+        setTimeout(async () => {
+          if (sessionId && isConnected) {
+            await executeCurrentFile();
+          }
+        }, 3000);
+      } catch (error) {
+        toast.error('Failed to start Python session');
+        return;
+      }
+      return;
+    }
+
+    await executeCurrentFile();
+  }, [currentFile, sessionId, isConnected, createSession, executeCurrentFile]);
+
+  const handleToggleTerminal = () => {
+    if (sessionId && isConnected) {
+      // If we have an active session, switch to terminal or disconnect
+      if (bottomActiveTab === 'terminal') {
+        // If terminal is already active, disconnect session
+        deleteSession();
+        setBottomActiveTab('output');
+        toast.info('Python session disconnected');
+      } else {
+        // Switch to terminal tab
+        setBottomPanelVisible(true);
+        setBottomActiveTab('terminal');
+      }
+    } else {
+      // No session or not connected - create new session
+      setBottomPanelVisible(true);
+      setBottomActiveTab('terminal');
+      handleCreatePythonSession();
     }
   };
+
+  // Handle terminal command sending
+  const handleSendTerminalCommand = useCallback(async (command: string) => {
+    try {
+      await sendCommand(command);
+    } catch (error) {
+      toast.error('Failed to send command');
+    }
+  }, [sendCommand]);
 
   const handleToggleBottomPanel = () => {
     setBottomPanelVisible(!bottomPanelVisible);
@@ -751,22 +935,35 @@ Process finished with exit code 0
           <div className="flex items-center space-x-2">
             <button
               onClick={handleRunCode}
-              disabled={isRunning}
+              disabled={isRunning || !currentFile || currentFile.type !== 'file'}
               className="flex items-center space-x-2 px-3 py-1.5 bg-green-500 hover:bg-green-600 disabled:bg-green-400 text-white rounded text-sm font-medium"
             >
               {isRunning ? <Square size={14} /> : <Play size={14} />}
-              <span>{isRunning ? 'Running...' : 'Run'}</span>
+              <span>
+                {isRunning ? 'Running...' : 'Run'}
+              </span>
             </button>
             <button
               onClick={handleToggleTerminal}
               className={`flex items-center space-x-2 px-3 py-1.5 rounded text-sm font-medium ${
-                isTerminalEnabled 
-                  ? 'bg-blue-500 hover:bg-blue-600 text-white' 
+                sessionId && isConnected
+                  ? 'bg-green-500 hover:bg-green-600 text-white' 
+                  : isTerminalLoading
+                  ? 'bg-yellow-500 hover:bg-yellow-600 text-white animate-pulse'
                   : 'bg-gray-200 hover:bg-gray-300 dark:bg-gray-600 dark:hover:bg-gray-500 text-gray-700 dark:text-gray-300'
               }`}
+              title={sessionId ? `Python Session: ${sessionId.slice(0,8)}...` : 'Start Python Terminal'}
             >
               <TerminalIcon size={14} />
-              <span>{isTerminalEnabled ? 'Terminal' : 'Terminal'}</span>
+              <span>
+                {isTerminalLoading ? 'Starting...' : sessionId ? 'Python' : 'Terminal'}
+              </span>
+              {sessionId && isConnected && (
+                <div className="w-2 h-2 bg-green-200 rounded-full animate-pulse" title="Connected" />
+              )}
+              {isTerminalLoading && (
+                <Loader2 size={14} className="animate-spin" />
+              )}
             </button>
             <button
               onClick={handleSave}
@@ -806,6 +1003,9 @@ Process finished with exit code 0
                   <span className="text-green-500">• auto-save: {ideSettings.autoSaveDelay}s</span>
                 ) : (
                   <span className="text-gray-500">• auto-save: off</span>
+                )}
+                {sessionId && (
+                  <span className="text-green-400">• python: {terminalStatus}</span>
                 )}
                 <span className="text-blue-400 animate-pulse">• immersive mode</span>
               </>
@@ -1116,24 +1316,19 @@ Process finished with exit code 0
                     {bottomActiveTab === 'output' && (
                       <div className="h-full p-4 text-sm font-mono overflow-auto bg-gray-50 dark:bg-gray-900">
                         <div className="text-gray-600 dark:text-gray-400">
-                          Blue Pigeon IDE - Algorithmic Patterns<br/>
-                          =====================================<br/>
-                          First 10 Fibonacci numbers: [0, 1, 1, 2, 3, 5, 8, 13, 21, 34]<br/><br/>
-                          Pattern Analysis:<br/>
-                          F(1) = 1, Ratio: inf<br/>
-                          F(2) = 1, Ratio: 1.0000<br/>
-                          F(3) = 2, Ratio: 2.0000<br/>
-                          F(4) = 3, Ratio: 1.5000<br/>
-                          F(5) = 5, Ratio: 1.6667<br/>
-                          F(6) = 8, Ratio: 1.6000<br/>
-                          F(7) = 13, Ratio: 1.6250<br/>
-                          F(8) = 21, Ratio: 1.6154<br/>
-                          F(9) = 34, Ratio: 1.6190<br/>
+                          {runOutput || 'Blue Pigeon IDE - Ready for Python execution\n=====================================\nRun a Python file to see output here.'}
                         </div>
                       </div>
                     )}
                     {bottomActiveTab === 'terminal' && isTerminalEnabled && (
-                      <TerminalComponent isActive={bottomActiveTab === 'terminal'} />
+                      <TerminalComponent 
+                        isActive={bottomActiveTab === 'terminal'}
+                        sessionId={sessionId}
+                        isConnected={isConnected}
+                        terminalOutput={terminalOutput}
+                        onSendCommand={handleSendTerminalCommand}
+                        onCreateSession={handleCreatePythonSession}
+                      />
                     )}
                   </div>
                 </div>

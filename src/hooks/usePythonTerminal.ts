@@ -121,6 +121,11 @@ export const usePythonTerminal = (): UsePythonTerminalReturn => {
         console.log('WebSocket connected');
         setIsConnected(true);
         appendOutput('✅ Terminal connected!\n\n');
+        
+        // Trigger callback to auto-switch to terminal
+        if (window.autoSwitchToTerminal) {
+          window.autoSwitchToTerminal();
+        }
       };
 
       ws.onmessage = (event: MessageEvent) => {
@@ -186,15 +191,18 @@ export const usePythonTerminal = (): UsePythonTerminalReturn => {
     }
   }, [sessionId, isReady, appendOutput]);
 
-  // Send terminal command
+  // Send terminal command directly via WebSocket
   const sendCommand = useCallback(async (command: string): Promise<{ success: boolean }> => {
-    if (!sessionId || !isConnected) {
+    if (!wsRef.current || wsRef.current.readyState !== WebSocket.OPEN) {
       throw new Error('Terminal not connected');
     }
 
     try {
-      appendOutput(`$ ${command}\n`);
-      await pythonTerminalAPI.sendCommand(sessionId, command);
+      // Send command directly via WebSocket
+      wsRef.current.send(JSON.stringify({
+        type: 'terminal_input',
+        command: command
+      }));
       return { success: true };
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Unknown error';
@@ -202,7 +210,7 @@ export const usePythonTerminal = (): UsePythonTerminalReturn => {
       appendOutput(`❌ Command failed: ${errorMessage}\n`);
       throw err;
     }
-  }, [sessionId, isConnected, appendOutput]);
+  }, [appendOutput]);
 
   // Send raw input to WebSocket (for interactive commands)
   const sendInput = useCallback((input: string): void => {

@@ -59,7 +59,7 @@ export interface SessionData {
     private baseURL: string;
     private wsURL: string;
   
-    constructor(baseURL: string = 'http://localhost:3001', wsURL: string = 'ws://localhost:8082') {
+    constructor(baseURL: string = 'http://localhost:3000', wsURL: string = 'ws://localhost:8082') {
       this.baseURL = baseURL;
       this.wsURL = wsURL;
     }

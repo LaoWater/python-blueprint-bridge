@@ -2,6 +2,7 @@ const express = require('express');
 const WebSocket = require('ws');
 const k8s = require('@kubernetes/client-node');
 const { v4: uuidv4 } = require('uuid');
+const { PassThrough } = require('stream');
 const cors = require('cors');
 const fs = require('fs');
 const path = require('path');
@@ -10,16 +11,26 @@ const app = express();
 app.use(cors());
 app.use(express.json({ limit: '10mb' })); // Handle large file uploads
 
-// Kubernetes client setup
+// Kubernetes client setup with better error handling
 const kc = new k8s.KubeConfig();
-kc.loadFromDefault();
-const k8sApi = kc.makeApiClient(k8s.CoreV1Api);
-const exec = new k8s.Exec(kc);
+let k8sApi = null;
+let exec = null;
+
+try {
+  // Try to load from default kubeconfig
+  kc.loadFromDefault();
+  k8sApi = kc.makeApiClient(k8s.CoreV1Api);
+  exec = new k8s.Exec(kc);
+  console.log('✅ Kubernetes client initialized successfully');
+} catch (error) {
+  console.error('❌ Failed to initialize Kubernetes client:', error.message);
+  console.log('🔧 Make sure kubectl is configured and you have access to the cluster');
+}
 
 // Configuration
-const NAMESPACE = 'user-sessions';
-const IMAGE = 'us-west3-docker.pkg.dev/blue-pigeon-460611/terminal-images/python-terminal:v1';
-const SESSION_TIMEOUT = 1800; // 30 minutes
+const NAMESPACE = process.env.K8S_NAMESPACE || 'user-sessions';
+const IMAGE = process.env.K8S_IMAGE || 'us-west3-docker.pkg.dev/blue-pigeon-460611/terminal-images/python-terminal:v2';
+const SESSION_TIMEOUT = parseInt(process.env.SESSION_TIMEOUT) || 1800; // 30 minutes
 
 // Store active sessions
 const activeSessions = new Map();
@@ -41,10 +52,15 @@ async function cleanupSession(sessionId) {
     const session = activeSessions.get(sessionId);
     if (session) {
         try {
-            await k8sApi.deleteNamespacedPod(session.podName, NAMESPACE);
-            console.log(`Pod ${session.podName} deleted`);
+            if (k8sApi) {
+                console.log(`🧹 Deleting pod ${session.podName} for session ${sessionId}`);
+                await k8sApi.deleteNamespacedPod(session.podName, NAMESPACE);
+                console.log(`✅ Pod ${session.podName} deleted`);
+            } else {
+                console.log(`⚠️ Cannot delete pod - Kubernetes client unavailable`);
+            }
         } catch (error) {
-            console.error(`Error deleting pod: ${error.message}`);
+            console.error(`❌ Error deleting pod: ${error.message}`);
         }
         
         // Close WebSocket if exists
@@ -55,6 +71,7 @@ async function cleanupSession(sessionId) {
         }
         
         activeSessions.delete(sessionId);
+        console.log(`🗑️ Session ${sessionId} cleaned up`);
     }
 }
 
@@ -104,10 +121,23 @@ app.post('/api/session/create', async (req, res) => {
     const sessionId = uuidv4();
     console.log(`Creating new session: ${sessionId}`);
     
+    // Check if Kubernetes client is available
+    if (!k8sApi) {
+        console.error('❌ Kubernetes client not available');
+        return res.status(503).json({ 
+            error: 'Kubernetes service unavailable', 
+            details: 'Backend cannot connect to Kubernetes cluster. Please check cluster connectivity and authentication.' 
+        });
+    }
+    
     try {
         const podManifest = createPodManifest(sessionId);
+        console.log(`📦 Creating pod for session ${sessionId}...`);
+        
         const response = await k8sApi.createNamespacedPod(NAMESPACE, podManifest);
         const podName = response.body.metadata.name;
+        
+        console.log(`✅ Pod created successfully: ${podName}`);
         
         const session = {
             sessionId,
@@ -130,40 +160,66 @@ app.post('/api/session/create', async (req, res) => {
             status: 'Creating'
         });
     } catch (error) {
-        console.error('Error creating session:', error);
-        res.status(500).json({ error: 'Failed to create session', details: error.message });
+        console.error('❌ Error creating session:', error);
+        
+        // Provide more detailed error information
+        let errorDetails = error.message;
+        if (error.body) {
+            errorDetails = `${error.body.message || error.message} (Code: ${error.body.code || error.statusCode || 'unknown'})`;
+        }
+        
+        res.status(500).json({ 
+            error: 'Failed to create session', 
+            details: errorDetails,
+            troubleshooting: 'Check that the Kubernetes cluster is accessible and you have proper permissions.'
+        });
     }
 });
 
 // Monitor pod status until ready
 async function monitorPodStatus(sessionId) {
     const session = activeSessions.get(sessionId);
-    if (!session) return;
+    if (!session || !k8sApi) return;
     
     try {
+        console.log(`🔍 Monitoring pod status for session ${sessionId} (pod: ${session.podName})`);
+        
         const podResponse = await k8sApi.readNamespacedPod(session.podName, NAMESPACE);
         const pod = podResponse.body;
         const status = pod.status.phase;
+        
+        console.log(`📊 Pod ${session.podName} status: ${status}`);
         
         session.status = status;
         session.lastActivity = Date.now();
         
         if (status === 'Running' && !session.ready) {
             // Pod is running, set up workspace
+            console.log(`🚀 Pod is running, setting up workspace for ${sessionId}`);
             await setupWorkspace(sessionId);
             session.ready = true;
-            console.log(`Session ${sessionId} is ready`);
+            console.log(`✅ Session ${sessionId} is ready`);
         } else if (status === 'Failed' || status === 'Succeeded') {
-            console.log(`Session ${sessionId} ended with status: ${status}`);
+            console.log(`❌ Session ${sessionId} ended with status: ${status}`);
             activeSessions.delete(sessionId);
+        } else if (status === 'Pending') {
+            console.log(`⏳ Pod still pending, retrying in 2 seconds...`);
+            setTimeout(() => monitorPodStatus(sessionId), 2000);
         } else if (status !== 'Running') {
-            // Keep monitoring
+            console.log(`🔄 Pod status: ${status}, retrying in 2 seconds...`);
             setTimeout(() => monitorPodStatus(sessionId), 2000);
         }
     } catch (error) {
-        console.error(`Error monitoring pod ${session.podName}:`, error.message);
-        // Retry after delay
-        setTimeout(() => monitorPodStatus(sessionId), 5000);
+        console.error(`❌ Error monitoring pod ${session.podName}:`, error.message);
+        
+        // If it's a 404, the pod might not exist yet
+        if (error.statusCode === 404) {
+            console.log(`🔍 Pod not found yet, retrying in 2 seconds...`);
+            setTimeout(() => monitorPodStatus(sessionId), 2000);
+        } else {
+            console.log(`🔄 Retrying pod monitoring in 5 seconds...`);
+            setTimeout(() => monitorPodStatus(sessionId), 5000);
+        }
     }
 }
 
@@ -173,20 +229,17 @@ async function setupWorkspace(sessionId) {
     if (!session) return;
     
     try {
-        // Create workspace directory and setup basic environment
-        const setupCommands = [
-            'mkdir -p /workspace',
-            'cd /workspace',
-            'apk add --no-cache curl git nano',
-            'pip install --no-cache-dir requests pandas numpy matplotlib seaborn jupyter',
-            'echo "🐍 Python workspace ready!" > /workspace/README.txt'
-        ];
+        console.log(`🏗️ Setting up workspace for session ${sessionId}`);
         
-        for (const command of setupCommands) {
-            await executeCommand(sessionId, command, false);
-        }
+        // Simple workspace setup - just verify the pod is ready
+        const testCommand = 'echo "🐍 Python workspace ready!"';
+        await executeCommand(sessionId, testCommand, false);
+        
+        console.log(`✅ Workspace setup completed for session ${sessionId}`);
     } catch (error) {
-        console.error(`Error setting up workspace for ${sessionId}:`, error);
+        console.error(`❌ Error setting up workspace for ${sessionId}:`, error.message);
+        // Don't fail the whole setup if workspace setup fails
+        console.log(`⚠️ Continuing without full workspace setup...`);
     }
 }
 
@@ -351,37 +404,60 @@ app.get('/api/sessions', (req, res) => {
 // Helper function to execute commands in pod
 async function executeCommand(sessionId, command, returnOutput = true) {
     const session = activeSessions.get(sessionId);
-    if (!session) throw new Error('Session not found');
+    if (!session || !exec) throw new Error('Session not found or exec not available');
     
     return new Promise((resolve, reject) => {
         let output = '';
         let error = '';
         
-        const ws = {
-            send: (data) => {
-                if (returnOutput) output += data;
+        // Create proper stream handlers
+        const stdout = {
+            write: (data) => {
+                if (returnOutput) output += data.toString();
+                return true;
             },
-            close: () => {},
-            readyState: 1
+            end: () => {},
+            on: () => {},
+            once: () => {},
+            emit: () => {},
+            removeListener: () => {}
         };
         
-        exec.exec(
-            NAMESPACE,
-            session.podName,
-            'python-terminal',
-            ['/bin/sh', '-c', command],
-            ws, // stdout
-            ws, // stderr
-            null, // stdin (no input needed)
-            false, // tty
-            (status) => {
-                if (status.status === 'Success') {
-                    resolve(output);
-                } else {
-                    reject(new Error(error || 'Command failed'));
+        const stderr = {
+            write: (data) => {
+                error += data.toString();
+                return true;
+            },
+            end: () => {},
+            on: () => {},
+            once: () => {},
+            emit: () => {},
+            removeListener: () => {}
+        };
+        
+        const stdin = null; // No stdin needed for simple commands
+        
+        try {
+            exec.exec(
+                NAMESPACE,
+                session.podName,
+                'python-terminal',
+                ['/bin/sh', '-c', command],
+                stdout,
+                stderr,
+                stdin,
+                false, // tty
+                (status) => {
+                    if (status && status.status === 'Success') {
+                        resolve(output);
+                    } else {
+                        reject(new Error(error || `Command failed with status: ${status?.status || 'unknown'}`));
+                    }
                 }
-            }
-        );
+            );
+        } catch (err) {
+            reject(new Error(`Failed to execute command: ${err.message}`));
+        }
     });
 }
 
@@ -393,58 +469,153 @@ wss.on('connection', (ws, req) => {
     const url = new URL(req.url, 'http://localhost:8080');
     const sessionId = url.searchParams.get('sessionId');
     
+    console.log(`🔌 WebSocket connection attempt for session: ${sessionId}`);
+    
     if (!sessionId) {
+        console.log(`❌ No session ID provided`);
         ws.close(1000, 'Session ID required');
         return;
     }
     
     const session = activeSessions.get(sessionId);
     if (!session) {
+        console.log(`❌ Session ${sessionId} not found`);
         ws.close(1000, 'Session not found');
         return;
     }
     
     if (!session.ready) {
+        console.log(`❌ Session ${sessionId} not ready yet (status: ${session.status})`);
         ws.close(1000, 'Session not ready');
         return;
     }
     
-    console.log(`WebSocket connected for session ${sessionId}`);
+    console.log(`✅ WebSocket connected for session ${sessionId}`);
     activeConnections.set(sessionId, ws);
     
     // Update last activity
     session.lastActivity = Date.now();
     
-    // Execute into the pod with persistent shell
-    exec.exec(
-        NAMESPACE,
-        session.podName,
-        'python-terminal',
-        ['/bin/sh'],
-        ws, // stdout
-        ws, // stderr  
-        ws, // stdin
-        true, // tty
-        (status) => {
-            console.log(`Terminal session ${sessionId} exited with status:`, status);
-            activeConnections.delete(sessionId);
-            ws.close();
-        }
-    );
+    // Create stream bridges for the Kubernetes exec
+    const stdout = {
+        write: (data) => {
+            if (ws.readyState === 1) { // WebSocket.OPEN
+                ws.send(data.toString());
+            }
+            return true;
+        },
+        end: () => {},
+        on: () => {},
+        once: () => {},
+        emit: () => {},
+        removeListener: () => {}
+    };
     
-    // Handle messages from frontend
+    const stderr = {
+        write: (data) => {
+            if (ws.readyState === 1) { // WebSocket.OPEN
+                ws.send(`ERROR: ${data.toString()}`);
+            }
+            return true;
+        },
+        end: () => {},
+        on: () => {},
+        once: () => {},
+        emit: () => {},
+        removeListener: () => {}
+    };
+    
+    const stdin = {
+        write: (data) => {
+            // This will be used when we send commands to the pod
+            return true;
+        },
+        end: () => {},
+        on: () => {},
+        once: () => {},
+        emit: () => {},
+        removeListener: () => {}
+    };
+    
+    try {
+        // Execute into the pod with persistent shell
+        console.log(`🚀 Starting shell session in pod ${session.podName}`);
+        
+        // Create stdin stream that can receive commands
+        const stdinStream = new PassThrough();
+        
+        const execConnection = exec.exec(
+            NAMESPACE,
+            session.podName,
+            'python-terminal',
+            ['/bin/bash', '-i'], // Interactive bash
+            stdout,
+            stderr,
+            stdinStream, // Use PassThrough stream for stdin
+            true, // tty
+            (status) => {
+                console.log(`🔚 Terminal session ${sessionId} exited with status:`, status);
+                activeConnections.delete(sessionId);
+                if (ws.readyState === 1) {
+                    ws.close();
+                }
+            }
+        );
+        
+        // Store the stdin stream for sending commands
+        session.stdinStream = stdinStream;
+        
+        // Send initial command to set up the environment
+        setTimeout(() => {
+            if (stdinStream && !stdinStream.destroyed) {
+                stdinStream.write('clear\n');
+                stdinStream.write('echo "┌─────────────────────────────────────────────┐"\n');
+                stdinStream.write('echo "│        🐍 Blue Pigeon Python Terminal        │"\n');
+                stdinStream.write('echo "└─────────────────────────────────────────────┘"\n');
+                stdinStream.write('echo "🔐 User: $(whoami)@$(hostname)"\n');
+                stdinStream.write('echo "📁 Workspace: $(pwd)"\n');
+                stdinStream.write('echo "🐍 Python: $(python3 --version)"\n');
+                stdinStream.write('echo "📦 Pre-installed: requests, numpy"\n');
+                stdinStream.write('echo "⚡ Commands: ls, mkdir, python3, pip, nano, cat"\n');
+                stdinStream.write('echo ""\n');
+                stdinStream.write('echo "Type \'help\' for available commands or start coding!"\n');
+                stdinStream.write('echo ""\n');
+                stdinStream.write('ls -la\n');
+            }
+        }, 1000);
+        
+    } catch (error) {
+        console.error(`❌ Failed to start exec session: ${error.message}`);
+        ws.close(1000, `Exec failed: ${error.message}`);
+        return;
+    }
+    
+    // Handle messages from frontend (terminal input)
     ws.on('message', (message) => {
         try {
-            const data = JSON.parse(message);
             session.lastActivity = Date.now();
             
-            if (data.type === 'run_command' || data.type === 'terminal_command') {
-                // Command is already sent through the exec stream
-                // This handles special commands from the API
+            // Try to parse as JSON first
+            let command;
+            try {
+                const data = JSON.parse(message);
+                if (data.type === 'terminal_input' && data.command) {
+                    command = data.command;
+                } else {
+                    command = message.toString();
+                }
+            } catch {
+                // If not JSON, treat as raw terminal input
+                command = message.toString();
+            }
+            
+            // Send command directly to the bash session via stdin stream
+            if (session.stdinStream && !session.stdinStream.destroyed && command) {
+                console.log(`📤 Sending command to ${sessionId}:`, command.trim());
+                session.stdinStream.write(command);
             }
         } catch (error) {
-            // If it's not JSON, treat as raw terminal input
-            // The input goes directly to the shell via the exec stream
+            console.error(`❌ Error handling WebSocket message for ${sessionId}:`, error);
         }
     });
     
@@ -463,10 +634,74 @@ wss.on('connection', (ws, req) => {
 app.get('/health', (req, res) => {
     res.json({ 
         status: 'healthy', 
+        kubernetes: k8sApi ? 'connected' : 'disconnected',
         activeSessions: activeSessions.size,
         activeConnections: activeConnections.size,
+        namespace: NAMESPACE,
+        image: IMAGE,
         timestamp: new Date().toISOString()
     });
+});
+
+// Kubernetes diagnostics endpoint
+app.get('/api/k8s/status', async (req, res) => {
+    if (!k8sApi) {
+        return res.status(503).json({
+            status: 'error',
+            message: 'Kubernetes client not initialized',
+            troubleshooting: [
+                'Check if kubectl is configured: `kubectl cluster-info`',
+                'Verify kubeconfig file exists: `~/.kube/config`',
+                'Test cluster access: `kubectl get namespaces`',
+                'Ensure proper permissions for the user-sessions namespace'
+            ]
+        });
+    }
+
+    try {
+        // Test namespace access
+        const namespace = await k8sApi.readNamespace(NAMESPACE);
+        
+        // Test pod listing
+        const pods = await k8sApi.listNamespacedPod(NAMESPACE);
+        
+        // Test service account
+        const serviceAccount = await k8sApi.readNamespacedServiceAccount('terminal-controller', NAMESPACE);
+        
+        res.json({
+            status: 'success',
+            kubernetes: {
+                connected: true,
+                namespace: {
+                    name: NAMESPACE,
+                    status: namespace.body.status.phase || 'Active'
+                },
+                pods: {
+                    total: pods.body.items.length,
+                    running: pods.body.items.filter(p => p.status.phase === 'Running').length,
+                    pending: pods.body.items.filter(p => p.status.phase === 'Pending').length,
+                    failed: pods.body.items.filter(p => p.status.phase === 'Failed').length
+                },
+                serviceAccount: {
+                    name: serviceAccount.body.metadata.name,
+                    exists: true
+                },
+                image: IMAGE
+            }
+        });
+    } catch (error) {
+        res.status(500).json({
+            status: 'error',
+            message: `Kubernetes access failed: ${error.message}`,
+            errorCode: error.statusCode || 'unknown',
+            troubleshooting: [
+                'Verify cluster connection: `kubectl cluster-info`',
+                'Check namespace exists: `kubectl get namespace user-sessions`',
+                'Verify RBAC permissions: `kubectl get role,rolebinding -n user-sessions`',
+                'Check service account: `kubectl get serviceaccount -n user-sessions`'
+            ]
+        });
+    }
 });
 
 // Graceful shutdown
