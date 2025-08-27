@@ -109,6 +109,11 @@ const Blueprints = () => {
                     >
                       Explore Essentials
                     </Button>
+                    <Link to="/git-blueprints">
+                        <Button variant="outline" size="sm" className="bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400 hover:bg-orange-100 dark:hover:bg-orange-900/40">
+                          Git Commands <ArrowRight className="w-4 h-4 ml-1" />
+                        </Button>
+                      </Link>
                   </CardContent>
                 </Card>
                 

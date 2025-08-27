@@ -921,16 +921,11 @@ const IDEPage: React.FC = () => {
           try {
             setIsSyncing(true);
             
-            // Send clean sync status message
-            sendCommand('echo "📁 Syncing files from database to terminal..."');
-            
-            // Perform the sync
+            // Perform the sync quietly
             await handleSync();
             
-            // Success message
-            sendCommand('echo "✅ Sync complete! Files ready."');
-            sendCommand('echo "💡 Try: ls (see files) | python filename.py (run code)"');
-            sendCommand('pwd');
+            // Single clean completion message
+            sendCommand('echo "✅ Files synced. Ready to code!"');
             
           } catch (error) {
             console.error('Auto-sync failed:', error);

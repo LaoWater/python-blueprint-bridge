@@ -24,6 +24,9 @@ import ChatButton from "./components/ChatButton";
 import { AuthProvider } from "./components/AuthContext";
 import { ContentProvider } from "./components/ContentProvider";
 import PersonalFilesPage from "./pages/PersonalFilesPage";
+import GitBlueprints from "./pages/GitBlueprints";
+
+
 
 const queryClient = new QueryClient();
 
@@ -43,6 +46,7 @@ const App = () => (
                   <Route path="/python" element={<Index />} />
                   <Route path="/blueprints" element={<Blueprints />} />
                   <Route path="/blueprints_mastery" element={<BlueprintsMastery />} />
+                  <Route path="/git-blueprints" element={<GitBlueprints />} />
                   <Route path="/foundations" element={<Foundations />} />
                   <Route path="/ide" element={<IDEPage />} />
             <Route path="/data-calculus" element={<DataCalculus />} />

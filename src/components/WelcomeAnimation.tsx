@@ -9,8 +9,9 @@ export const WelcomeAnimation: React.FC<WelcomeAnimationProps> = ({
   isVisible, 
   onComplete 
 }) => {
-  const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
-  const [displayedText, setDisplayedText] = useState('');
+  const [displayedLines, setDisplayedLines] = useState<string[]>([]);
+  const [currentLineIndex, setCurrentLineIndex] = useState(0);
+  const [currentCharIndex, setCurrentCharIndex] = useState(0);
   const [showCursor, setShowCursor] = useState(true);
   const [isAnimating, setIsAnimating] = useState(false);
 
@@ -23,50 +24,56 @@ export const WelcomeAnimation: React.FC<WelcomeAnimationProps> = ({
 
   useEffect(() => {
     if (!isVisible) {
-      setCurrentMessageIndex(0);
-      setDisplayedText('');
+      setDisplayedLines([]);
+      setCurrentLineIndex(0);
+      setCurrentCharIndex(0);
       setShowCursor(true);
       setIsAnimating(false);
       return;
     }
 
     setIsAnimating(true);
-    let messageIndex = 0;
-    let charIndex = 0;
-
-    const typeMessage = () => {
-      const currentMessage = messages[messageIndex];
+    
+    const typeLines = async () => {
+      const newDisplayedLines: string[] = [];
       
-      if (!currentMessage) {
-        // All messages complete, hold briefly then finish
-        setTimeout(() => {
-          setIsAnimating(false);
-          setTimeout(onComplete, 500);
-        }, 800);
-        return;
-      }
-
-      if (charIndex < currentMessage.length) {
-        // Continue typing current message
-        setDisplayedText(currentMessage.slice(0, charIndex + 1));
-        charIndex++;
-        setTimeout(typeMessage, 50); // Typing speed
-      } else {
-        // Message complete, pause then move to next
+      // Type each message line by line
+      for (let lineIndex = 0; lineIndex < messages.length; lineIndex++) {
+        setCurrentLineIndex(lineIndex);
+        const currentMessage = messages[lineIndex];
+        
+        // Type current message character by character
+        for (let charIndex = 0; charIndex <= currentMessage.length; charIndex++) {
+          setCurrentCharIndex(charIndex);
+          const currentText = currentMessage.slice(0, charIndex);
+          
+          // Update the current line being typed
+          const updatedLines = [...newDisplayedLines];
+          updatedLines[lineIndex] = currentText;
+          setDisplayedLines(updatedLines);
+          
+          // Wait between characters
+          await new Promise(resolve => setTimeout(resolve, 60));
+        }
+        
+        // Line complete - add to permanent lines and pause
+        newDisplayedLines.push(currentMessage);
         setShowCursor(false);
-        setTimeout(() => {
-          messageIndex++;
-          charIndex = 0;
-          setCurrentMessageIndex(messageIndex);
-          setDisplayedText('');
-          setShowCursor(true);
-          setTimeout(typeMessage, 200);
-        }, 600); // Pause between messages
+        await new Promise(resolve => setTimeout(resolve, 400));
+        setShowCursor(true);
       }
+      
+      // All lines complete, hold for longer to be readable
+      setShowCursor(false);
+      await new Promise(resolve => setTimeout(resolve, 3000)); // Hold for 3 seconds
+      
+      // Fade out
+      setIsAnimating(false);
+      setTimeout(onComplete, 800);
     };
 
     // Start typing after brief delay
-    setTimeout(typeMessage, 300);
+    setTimeout(typeLines, 400);
   }, [isVisible, onComplete]);
 
   if (!isVisible) return null;
@@ -84,18 +91,28 @@ export const WelcomeAnimation: React.FC<WelcomeAnimationProps> = ({
         pointerEvents: 'none'
       }}
     >
-      <div className="bg-gray-900/40 backdrop-blur-sm border border-green-500/10 rounded-lg px-3 py-2 max-w-xs shadow-lg">
-        <div className="font-mono text-xs text-green-400/85 flex items-center min-h-[16px]">
-          <span className="flex-1">
-            {displayedText}
-          </span>
-          {showCursor && (
-            <span 
-              className="inline-block w-0.5 h-3 bg-green-400/60 ml-0.5"
-              style={{
-                animation: 'blink 0.8s infinite'
-              }}
-            />
+      <div className="bg-gray-900/50 backdrop-blur-md border border-green-500/15 rounded-lg px-4 py-3 max-w-sm shadow-xl">
+        <div className="font-mono text-xs text-green-400/90 space-y-1">
+          {displayedLines.map((line, index) => (
+            <div key={index} className="flex items-center min-h-[14px]">
+              <span className="flex-1">{line}</span>
+            </div>
+          ))}
+          {/* Current line being typed */}
+          {currentLineIndex < messages.length && (
+            <div className="flex items-center min-h-[14px]">
+              <span className="flex-1">
+                {displayedLines[currentLineIndex] || ''}
+              </span>
+              {showCursor && (
+                <span 
+                  className="inline-block w-0.5 h-3 bg-green-400/70 ml-1"
+                  style={{
+                    animation: 'blink 0.8s infinite'
+                  }}
+                />
+              )}
+            </div>
           )}
         </div>
       </div>
