@@ -11,6 +11,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import ReactMarkdown from 'react-markdown';
 
+// Sync
 interface PersonalFile {
   id: string;
   original_filename: string;
