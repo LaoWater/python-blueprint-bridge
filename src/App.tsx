@@ -23,6 +23,7 @@ import Navbar from "./components/Navbar";
 import ChatButton from "./components/ChatButton";
 import { AuthProvider } from "./components/AuthContext";
 import { ContentProvider } from "./components/ContentProvider";
+import PersonalFilesPage from "./pages/PersonalFilesPage";
 
 const queryClient = new QueryClient();
 
@@ -48,6 +49,8 @@ const App = () => (
             <Route path="/data-visualizing" element={<DataVisualizing />} />
                   <Route path="/machine-learning" element={<MachineLearning />} />
                   <Route path="/advanced-machine-learning" element={<AdvancedMachineLearning />} />
+
+                  <Route path="/personal-files" element={<PersonalFilesPage />} />
                   <Route path="/auth" element={<AuthPage />} />
                   <Route path="/profile" element={<ProfilePage />} />
                   <Route path="/admin" element={<AdminPage />} />

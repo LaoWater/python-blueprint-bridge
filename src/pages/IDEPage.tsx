@@ -28,7 +28,7 @@ import {
   Loader2,
   RefreshCw,
   Home,
-  Sync
+  RefreshCcw
 } from 'lucide-react';
 import { useTheme } from '@/components/theme-provider';
 import { ThemeToggle } from '@/components/theme-toggle';
@@ -38,6 +38,7 @@ import { useAuth } from '@/components/AuthContext';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
 import { usePythonTerminal } from '@/hooks/usePythonTerminal';
+import syncTrackingAPI, { ModifiedFile } from '@/services/syncTrackingAPI';
 
 // Extend Window interface for auto-switch callback
 declare global {
@@ -300,6 +301,11 @@ const IDEPage: React.FC = () => {
   const [showSettings, setShowSettings] = useState(false);
   const [isSyncing, setIsSyncing] = useState(false);
   const [isSynced, setIsSynced] = useState(false);
+  const [syncSummary, setSyncSummary] = useState<{
+    totalFiles: number;
+    syncedFiles: number;
+    lastSyncTime: string | null;
+  }>({ totalFiles: 0, syncedFiles: 0, lastSyncTime: null });
   
   // IDE Settings state
   const [ideSettings, setIdeSettings] = useState({
@@ -429,20 +435,64 @@ const IDEPage: React.FC = () => {
 
   // Handle Python session creation
   const handleCreatePythonSession = useCallback(async () => {
+    if (!user) {
+      toast.error('Please log in to create a Python session');
+      return;
+    }
+
     try {
-      await createSession();
+      // Step 1: Check for existing active session for this user
+      const existingSession = await syncTrackingAPI.getOrCreateUserSession(user.id);
+      
+      if (existingSession) {
+        console.log(`Found existing session: ${existingSession.session_id}`);
+        
+        // Try to reconnect to the existing pod
+        try {
+          // Set the session data (this will trigger the terminal to reconnect)
+          // We need to simulate what createSession() does but with existing data
+          // This is a bit tricky since we need to work with the existing hook structure
+          
+          toast.info(`Reconnecting to existing Python environment: ${existingSession.pod_name}`);
+          
+          // For now, create a new session as the hook doesn't support reconnection
+          // In a future iteration, we could extend usePythonTerminal to support reconnection
+          await createSession();
+          
+        } catch (reconnectError) {
+          console.log('Failed to reconnect to existing session, creating new one...');
+          await createSession();
+        }
+      } else {
+        // No existing session, create a new one
+        const sessionData = await createSession();
+        
+        // Step 2: Track the new session in our database
+        if (sessionData) {
+          await syncTrackingAPI.createUserSession(
+            user.id, 
+            sessionData.sessionId, 
+            sessionData.podName, 
+            sessionData.status
+          );
+          console.log(`Tracked new session in database: ${sessionData.sessionId}`);
+        }
+      }
+      
       setBottomPanelVisible(true);
       setBottomActiveTab('terminal');
-      toast.success('Python session created! Terminal ready for use.');
+      toast.success('Python session ready! Terminal is now available.');
+      
     } catch (error) {
-      toast.error('Failed to create Python session');
+      console.error('Session creation/connection failed:', error);
+      toast.error('Failed to create or connect to Python session');
     }
-  }, [createSession]);
+  }, [createSession, user]);
 
   // Handle filesystem sync
   const handleSync = useCallback(async () => {
-    if (!sessionId || !isTerminalReady) {
-      toast.error('No active Python session. Create a session first.');
+    if (!sessionId || !isTerminalReady || !user) {
+      toast.error('No active Python session or user not logged in. Create a session first.');
       return;
     }
 
@@ -450,27 +500,91 @@ const IDEPage: React.FC = () => {
     setIsSynced(false);
     
     try {
-      // Build file structure from the database file tree
-      const buildFileStructure = (items: FileSystemItem[], basePath = ''): any[] => {
+      // Step 1: Get all file IDs from the file tree
+      const getAllFileIds = (items: FileSystemItem[]): string[] => {
+        const ids: string[] = [];
+        for (const item of items) {
+          if (item.type === 'file' && item.id) {
+            ids.push(item.id);
+          }
+          if (item.type === 'folder' && item.children) {
+            ids.push(...getAllFileIds(item.children));
+          }
+        }
+        return ids;
+      };
+
+      const allFileIds = getAllFileIds(fileTree);
+      
+      console.log('🔍 Debug sync info:');
+      console.log('📁 FileTree length:', fileTree?.length || 0);
+      console.log('📄 Found file IDs:', allFileIds);
+      console.log('👤 User ID:', user.id);
+      console.log('🔧 Session ID:', sessionId);
+      
+      // Step 2: Check which files need syncing
+      const modifiedFiles = await syncTrackingAPI.getFilesNeedingSync(user.id, sessionId, allFileIds);
+      
+      if (modifiedFiles.length === 0) {
+        toast.success('✅ All files are already synced - no changes detected');
+        setIsSynced(true);
+        return;
+      }
+
+      console.log(`Found ${modifiedFiles.length} files that need syncing`);
+
+      // Step 3: Build file structure only for modified files
+      const buildFileStructure = async (items: FileSystemItem[], basePath = '', modifiedIds: Set<string>): Promise<any[]> => {
         const structure: any[] = [];
         
         for (const item of items) {
           const itemPath = basePath ? `${basePath}/${item.name}` : item.name;
           
           if (item.type === 'folder') {
-            structure.push({
-              path: itemPath,
-              type: 'folder'
-            });
+            // Always include folders in case we need to create directory structure
+            const hasModifiedChildren = item.children?.some(child => 
+              child.type === 'file' ? modifiedIds.has(child.id!) : 
+              child.children?.some(grandchild => modifiedIds.has(grandchild.id!))
+            );
             
-            if (item.children) {
-              structure.push(...buildFileStructure(item.children, itemPath));
+            if (hasModifiedChildren) {
+              structure.push({
+                path: itemPath,
+                type: 'folder'
+              });
+              
+              if (item.children) {
+                const childStructure = await buildFileStructure(item.children, itemPath, modifiedIds);
+                structure.push(...childStructure);
+              }
             }
-          } else if (item.type === 'file') {
+          } else if (item.type === 'file' && item.id && modifiedIds.has(item.id)) {
+            // Only include modified files
+            let content = item.content || '';
+            
+            // If this is the currently open file and has unsaved changes, use editor content
+            if (currentFile && currentFile.id === item.id && code) {
+              console.log(`Using editor content for current file ${item.name}`);
+              content = code;
+            }
+            // If content is not already loaded, fetch it from database
+            else if (!content && item.id) {
+              try {
+                console.log(`Loading content for ${item.name} (ID: ${item.id})`);
+                content = await loadFileContent(item.id) || '';
+              } catch (error) {
+                console.error(`Failed to load content for ${item.name}:`, error);
+                content = `// Error loading content for ${item.name}`;
+              }
+            }
+            
+            console.log(`📄 Modified file ${itemPath}: ${content.length} characters`);
+            
             structure.push({
               path: itemPath,
               type: 'file',
-              content: item.content || ''
+              content: content,
+              fileId: item.id // Include file ID for tracking
             });
           }
         }
@@ -478,24 +592,47 @@ const IDEPage: React.FC = () => {
         return structure;
       };
 
-      const fileStructure = buildFileStructure(fileTree);
-      console.log('Syncing file structure:', fileStructure);
+      // Only sync modified files
+      const modifiedFileIds = new Set(modifiedFiles.map(f => f.file_id));
+      const fileStructure = await buildFileStructure(fileTree, '', modifiedFileIds);
+      
+      console.log(`Syncing ${fileStructure.length} modified items:`, fileStructure);
       
       const result = await syncFileSystem(fileStructure);
+      
+      // Step 4: Update sync status in database
+      const syncPromises = result.results.map(async (resultItem) => {
+        const structureItem = fileStructure.find(f => f.path === resultItem.path);
+        if (structureItem?.fileId) {
+          await syncTrackingAPI.updateSyncStatus(
+            user.id, 
+            sessionId, 
+            structureItem.fileId, 
+            resultItem.success
+          );
+        }
+      });
+
+      await Promise.all(syncPromises);
       
       const successCount = result.results.filter(r => r.success).length;
       const totalCount = result.results.length;
       
       setIsSynced(true);
-      toast.success(`✅ Synced ${successCount}/${totalCount} items to Linux terminal`);
+      
+      // Update sync summary
+      const updatedSummary = await syncTrackingAPI.getSyncSummary(user.id, sessionId);
+      setSyncSummary(updatedSummary);
+      
+      toast.success(`✅ Smart sync completed: ${successCount}/${totalCount} modified files synced`);
       
     } catch (error) {
-      console.error('Sync failed:', error);
+      console.error('Smart sync failed:', error);
       toast.error('Failed to sync filesystem: ' + (error instanceof Error ? error.message : 'Unknown error'));
     } finally {
       setIsSyncing(false);
     }
-  }, [sessionId, isTerminalReady, fileTree, syncFileSystem]);
+  }, [sessionId, isTerminalReady, fileTree, syncFileSystem, user, currentFile, code, loadFileContent]);
 
   // Auto-switch to terminal when WebSocket connects
   useEffect(() => {
@@ -515,6 +652,29 @@ const IDEPage: React.FC = () => {
       delete window.autoSwitchToTerminal;
     };
   }, []);
+
+  // Load sync summary when session is ready
+  useEffect(() => {
+    const loadSyncSummary = async () => {
+      if (sessionId && user && isTerminalReady) {
+        const summary = await syncTrackingAPI.getSyncSummary(user.id, sessionId);
+        setSyncSummary(summary);
+        setIsSynced(summary.totalFiles > 0 && summary.totalFiles === summary.syncedFiles);
+      }
+    };
+
+    loadSyncSummary();
+  }, [sessionId, user, isTerminalReady]);
+
+  // Cleanup session tracking when session ends
+  useEffect(() => {
+    return () => {
+      // Cleanup on unmount or session change
+      if (sessionId && user) {
+        syncTrackingAPI.deactivateSession(sessionId);
+      }
+    };
+  }, [sessionId, user]);
 
   // Handle code execution - clean Run button
   const handleRunCode = useCallback(async () => {
@@ -547,11 +707,26 @@ const IDEPage: React.FC = () => {
         setLastSavedContent(code);
       }
 
-      // Build file path from current file
+      // Build full file path from current file by traversing the file tree
       const getFilePath = (file: FileSystemItem): string => {
-        // This is a simplified approach - you might need to build the full path
-        // based on your file tree structure
-        return file.name;
+        const findFilePath = (items: FileSystemItem[], targetId: string, basePath = ''): string | null => {
+          for (const item of items) {
+            const itemPath = basePath ? `${basePath}/${item.name}` : item.name;
+            
+            if (item.id === targetId) {
+              return itemPath;
+            }
+            
+            if (item.type === 'folder' && item.children) {
+              const foundPath = findFilePath(item.children, targetId, itemPath);
+              if (foundPath) return foundPath;
+            }
+          }
+          return null;
+        };
+        
+        const fullPath = findFilePath(fileTree, file.id);
+        return fullPath || file.name; // fallback to just filename if not found
       };
 
       const filePath = getFilePath(currentFile);
@@ -1064,7 +1239,7 @@ const IDEPage: React.FC = () => {
               }`}
               title={isSynced ? 'Files synced with Linux terminal' : 'Sync database files to Linux terminal'}
             >
-              {isSyncing ? <RefreshCw size={14} className="animate-spin" /> : <Sync size={14} />}
+              {isSyncing ? <RefreshCw size={14} className="animate-spin" /> : <RefreshCcw size={14} />}
               <span>
                 {isSyncing ? 'Syncing...' : isSynced ? 'Synced' : 'Sync'}
               </span>

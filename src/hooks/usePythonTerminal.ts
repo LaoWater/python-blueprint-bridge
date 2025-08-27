@@ -130,11 +130,40 @@ export const usePythonTerminal = (): UsePythonTerminalReturn => {
       };
 
       ws.onmessage = (event: MessageEvent) => {
-        // Handle both string and binary data
-        let data = typeof event.data === 'string' ? event.data : new TextDecoder().decode(event.data);
+        let rawData = typeof event.data === 'string' ? event.data : new TextDecoder().decode(event.data);
         
-        // Strip ANSI escape sequences and control characters
-        data = data
+        // Try to parse as JSON (new structured format)
+        try {
+          const parsed = JSON.parse(rawData);
+          if (parsed.type === 'terminal_output' || parsed.type === 'terminal_error') {
+            let data = parsed.data;
+            
+            // For error messages, add ERROR prefix for visual distinction
+            if (parsed.type === 'terminal_error') {
+              data = `ERROR: ${data}`;
+            }
+            
+            // Clean ANSI sequences while preserving newlines and whitespace
+            data = data
+              // Remove ANSI escape sequences (ESC[...m, ESC[...H, etc.)
+              .replace(/\x1b\[[0-9;]*[a-zA-Z]/g, '')
+              // Remove bracketed paste mode sequences
+              .replace(/\x1b\[\?2004[lh]/g, '')
+              // Remove other control sequences
+              .replace(/\x1b\][0-9;]*[a-zA-Z]/g, '')
+              // Clean carriage returns but preserve newlines
+              .replace(/\r(?!\n)/g, '');
+            
+            // Always append data (even empty) to preserve formatting
+            appendOutput(data);
+            return;
+          }
+        } catch (e) {
+          // Fallback to legacy string handling
+        }
+        
+        // Legacy string handling for backward compatibility
+        let data = rawData
           // Remove ANSI escape sequences (ESC[...m, ESC[...H, etc.)
           .replace(/\x1b\[[0-9;]*[a-zA-Z]/g, '')
           // Remove bracketed paste mode sequences

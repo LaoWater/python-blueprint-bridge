@@ -67,6 +67,12 @@ const Navbar = () => {
               >
                 IDE
               </Link>
+              <Link 
+                to="/personal-files"
+                className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 font-medium"
+              >
+                Personal Files
+              </Link>
               {isAdmin && (
                 <Link 
                   to="/admin"

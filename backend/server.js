@@ -294,9 +294,16 @@ app.post('/api/session/:sessionId/sync', async (req, res) => {
                 } else if (item.type === 'file') {
                     // Create file with content
                     const filePath = `/tmp/${item.path}`;
-                    const saveCommand = `cat > '${filePath}' << 'SYNCEOF'\n${item.content}\nSYNCEOF`;
+                    const content = item.content || '';
+                    console.log(`📝 Syncing file ${item.path} with ${content.length} characters`);
+                    
+                    if (content.length === 0) {
+                        console.warn(`⚠️ Warning: File ${item.path} has no content`);
+                    }
+                    
+                    const saveCommand = `cat > '${filePath}' << 'SYNCEOF'\n${content}\nSYNCEOF`;
                     await executeCommand(sessionId, saveCommand, false);
-                    syncResults.push({ path: item.path, type: 'file', success: true });
+                    syncResults.push({ path: item.path, type: 'file', success: true, contentLength: content.length });
                 }
             } catch (error) {
                 console.error(`Error syncing ${item.path}:`, error);
@@ -372,11 +379,12 @@ app.post('/api/session/:sessionId/execute', async (req, res) => {
         
         console.log(`🏃 Executing ${filePath} in session ${sessionId}`);
         
-        // Execute the Python file and capture output
-        const fullPath = `/tmp/${filePath}`;
-        const executeCommand = `cd /tmp && python3 '${fullPath}' 2>&1`;
+        // Execute the Python file and capture output (with full path from /tmp)
+        const command = `cd /tmp && python3 '${filePath}' 2>&1`;
         
-        const output = await executeCommand(sessionId, executeCommand, true);
+        console.log(`Command: ${command}`);
+        
+        const output = await executeCommand(sessionId, command, true);
         
         console.log(`✅ Execution completed for ${filePath}`);
         
@@ -598,7 +606,12 @@ wss.on('connection', (ws, req) => {
     const stdout = {
         write: (data) => {
             if (ws.readyState === 1) { // WebSocket.OPEN
-                ws.send(data.toString());
+                // Preserve all formatting, newlines and whitespace
+                const output = data.toString();
+                ws.send(JSON.stringify({
+                    type: 'terminal_output',
+                    data: output
+                }));
             }
             return true;
         },
@@ -612,7 +625,12 @@ wss.on('connection', (ws, req) => {
     const stderr = {
         write: (data) => {
             if (ws.readyState === 1) { // WebSocket.OPEN
-                ws.send(`ERROR: ${data.toString()}`);
+                // Preserve error formatting with proper structure
+                const errorOutput = data.toString();
+                ws.send(JSON.stringify({
+                    type: 'terminal_error',
+                    data: errorOutput
+                }));
             }
             return true;
         },
@@ -666,11 +684,11 @@ wss.on('connection', (ws, req) => {
         // Send welcome message and setup
         setTimeout(() => {
             if (ws.readyState === 1) {
-                ws.send('\n┌─────────────────────────────────────────────┐\n');
-                ws.send('│        🐍 Blue Pigeon Python Terminal        │\n');
-                ws.send('└─────────────────────────────────────────────┘\n');
-                ws.send('🐍 Python 3.11 | Workspace: /tmp (full access)\n');
-                ws.send('Ready! Create files, directories, and run code.\n\n');
+                const welcomeMessage = `\n┌─────────────────────────────────────────────┐\n│        🐍 Blue Pigeon Python Terminal        │\n└─────────────────────────────────────────────┘\n🐍 Python 3.11 | Workspace: /tmp (full access)\nReady! Create files, directories, and run code.\n\n`;
+                ws.send(JSON.stringify({
+                    type: 'terminal_output',
+                    data: welcomeMessage
+                }));
             }
             
             // Ensure we're in /tmp directory
