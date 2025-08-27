@@ -58,6 +58,12 @@ export const usePythonTerminal = (): UsePythonTerminalReturn => {
   
   // Session creation lock to prevent race conditions
   const sessionCreationLockRef = useRef<boolean>(false);
+  
+  // WebSocket reconnection management
+  const reconnectionAttempts = useRef<number>(0);
+  const maxReconnectionAttempts = 3;
+  const reconnectionTimeoutRef = useRef<NodeJS.Timeout>();
+  const lastConnectionAttempt = useRef<number>(0);
 
   // Terminal output management
   const appendOutput = useCallback((data: string): void => {
@@ -151,20 +157,46 @@ export const usePythonTerminal = (): UsePythonTerminalReturn => {
 
   // Connect WebSocket
   const connectWebSocket = useCallback((): void => {
-    if (!sessionId || !isReady || wsRef.current) {
+    if (!sessionId || !isReady) {
+      return;
+    }
+
+    // Prevent too frequent reconnection attempts (minimum 2 seconds apart)
+    const now = Date.now();
+    if (now - lastConnectionAttempt.current < 2000) {
+      console.log('⏳ Skipping connection attempt, too soon since last attempt');
+      return;
+    }
+
+    // Check if we've exceeded max reconnection attempts
+    if (reconnectionAttempts.current >= maxReconnectionAttempts) {
+      console.log('🛑 Max reconnection attempts reached, stopping');
+      appendOutput('❌ Unable to establish terminal connection after multiple attempts\n');
+      return;
+    }
+
+    // If WebSocket already exists and is connecting/open, don't create another
+    if (wsRef.current && wsRef.current.readyState <= WebSocket.OPEN) {
+      console.log('📡 WebSocket already exists and is active');
       return;
     }
 
     try {
-      console.log('Connecting WebSocket for session:', sessionId);
-      appendOutput('🔌 Connecting to terminal...\n');
+      lastConnectionAttempt.current = now;
+      reconnectionAttempts.current++;
+      
+      console.log(`Connecting WebSocket for session: ${sessionId} (attempt ${reconnectionAttempts.current})`);
+      appendOutput(`🔌 Connecting to terminal... (attempt ${reconnectionAttempts.current})\n`);
       
       const ws = pythonTerminalAPI.createWebSocket(sessionId);
       wsRef.current = ws;
 
       ws.onopen = () => {
-        console.log('WebSocket connected');
+        console.log('WebSocket connected successfully');
         setIsConnected(true);
+        
+        // Reset reconnection attempts on successful connection
+        reconnectionAttempts.current = 0;
         
         // Trigger callback to auto-switch to terminal
         if (window.autoSwitchToTerminal) {
@@ -182,7 +214,7 @@ export const usePythonTerminal = (): UsePythonTerminalReturn => {
             let data = parsed.data;
             
             // DEBUG: Log the raw data to understand formatting issues
-            // console.log('🐛 DEBUG: Raw data received:');
+            // console.log('🐛 FRONTEND DEBUG: Raw data received:');
             // console.log('📝 Raw string:', JSON.stringify(data));
             // console.log('📏 Length:', data.length);
             // console.log('🔍 Contains \\n:', data.includes('\n'));
@@ -204,9 +236,9 @@ export const usePythonTerminal = (): UsePythonTerminalReturn => {
               // Clean carriage returns but preserve newlines
               .replace(/\r(?!\n)/g, '');
             
-            console.log('🐛 DEBUG: After processing:');
-            console.log('📝 Processed string:', JSON.stringify(data));
-            console.log('📏 Length:', data.length);
+            // console.log('🐛 FRONTEND DEBUG: After processing:');
+            // console.log('📝 Processed string:', JSON.stringify(data));
+            // console.log('📏 Length:', data.length);
             
             // Always append data (even empty) to preserve formatting
             appendOutput(data);
@@ -239,8 +271,21 @@ export const usePythonTerminal = (): UsePythonTerminalReturn => {
         setIsConnected(false);
         wsRef.current = null;
         
-        if (event.code !== 1000) { // Not a normal closure
-          appendOutput(`\n❌ Terminal connection lost (${event.reason || 'Unknown reason'})\n`);
+        // Only show error and attempt reconnection if it wasn't a normal closure
+        if (event.code !== 1000 && event.code !== 1001) { // Not normal closure or going away
+          appendOutput(`\n❌ Terminal connection lost (${event.reason || 'Connection dropped'})\n`);
+          
+          // Attempt reconnection with exponential backoff if we haven't exceeded max attempts
+          if (reconnectionAttempts.current < maxReconnectionAttempts && isReady) {
+            const backoffDelay = Math.min(1000 * Math.pow(2, reconnectionAttempts.current), 10000); // Max 10 seconds
+            console.log(`🔄 Scheduling reconnection in ${backoffDelay}ms`);
+            
+            reconnectionTimeoutRef.current = setTimeout(() => {
+              if (isReady && !isConnected) {
+                connectWebSocket();
+              }
+            }, backoffDelay);
+          }
         }
       };
 
@@ -365,16 +410,23 @@ export const usePythonTerminal = (): UsePythonTerminalReturn => {
     }
   }, [sessionId, appendOutput]);
 
-  // Auto-connect WebSocket when session is ready
+  // Auto-connect WebSocket when session is ready (only once initially)
   useEffect(() => {
-    if (isReady && !isConnected && !wsRef.current) {
+    if (isReady && !isConnected && !wsRef.current && reconnectionAttempts.current === 0) {
+      console.log('🚀 Initial WebSocket connection for ready session');
       connectWebSocket();
     }
-  }, [isReady, isConnected, connectWebSocket]);
+  }, [isReady, connectWebSocket]); // Removed isConnected from deps to prevent reconnection loops
 
   // Cleanup on unmount
   useEffect(() => {
     return () => {
+      // Clear any pending reconnection timeout
+      if (reconnectionTimeoutRef.current) {
+        clearTimeout(reconnectionTimeoutRef.current);
+      }
+      
+      // Close WebSocket connection
       if (wsRef.current) {
         wsRef.current.close(1000, 'Component unmounted');
       }

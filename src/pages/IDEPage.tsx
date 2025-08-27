@@ -1611,7 +1611,7 @@ const IDEPage: React.FC = () => {
                   <div className="flex-1 min-h-0 overflow-hidden">
                     {bottomActiveTab === 'output' && (
                       <div className="h-full p-4 text-sm font-mono overflow-auto bg-gray-50 dark:bg-gray-900">
-                        <div className="text-gray-600 dark:text-gray-400">
+                        <div className="text-gray-600 dark:text-gray-400 whitespace-pre-wrap">
                           {runOutput || 'Blue Pigeon IDE - Ready for Python execution\n=====================================\nRun a Python file to see output here.'}
                         </div>
                       </div>
