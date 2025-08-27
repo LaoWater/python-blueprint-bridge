@@ -39,6 +39,7 @@ import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
 import { usePythonTerminal } from '@/hooks/usePythonTerminal';
 import syncTrackingAPI, { ModifiedFile } from '@/services/syncTrackingAPI';
+import { WelcomeAnimation } from '@/components/WelcomeAnimation';
 
 // Extend Window interface for auto-switch callback
 declare global {
@@ -128,6 +129,12 @@ const TerminalComponent: React.FC<{
 }) => {
   const [currentInput, setCurrentInput] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
+  
+  // Terminal enhancement state
+  const [commandHistory, setCommandHistory] = useState<string[]>([]);
+  const [historyIndex, setHistoryIndex] = useState(-1);
+  const [currentWorkingDir, setCurrentWorkingDir] = useState('/tmp');
+  const [isTabCompleting, setIsTabCompleting] = useState(false);
   const outputRef = useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
@@ -144,9 +151,24 @@ const TerminalComponent: React.FC<{
   }, [terminalOutput]);
 
   const handleCommand = (command: string) => {
-    if (!command.trim()) return;
+    const trimmedCommand = command.trim();
+    if (!trimmedCommand) return;
     
     if (onSendCommand && isConnected) {
+      // Add to command history (avoid duplicates of last command)
+      if (trimmedCommand !== commandHistory[commandHistory.length - 1]) {
+        setCommandHistory(prev => [...prev.slice(-49), trimmedCommand]); // Keep last 50 commands
+      }
+      
+      // Reset history navigation
+      setHistoryIndex(-1);
+      
+      // Track directory changes for tab completion
+      if (trimmedCommand.startsWith('cd ')) {
+        const dirPath = trimmedCommand.substring(3).trim();
+        updateCurrentDirectory(dirPath);
+      }
+      
       onSendCommand(command + '\n');  // Add newline for proper command execution
       setCurrentInput('');
     } else {
@@ -154,27 +176,240 @@ const TerminalComponent: React.FC<{
     }
   };
 
+  // Helper function to update current working directory
+  const updateCurrentDirectory = (dirPath: string) => {
+    if (!dirPath) return;
+    
+    if (dirPath.startsWith('/')) {
+      // Absolute path
+      setCurrentWorkingDir(dirPath);
+    } else if (dirPath === '..') {
+      // Go up one directory
+      const parts = currentWorkingDir.split('/').filter(Boolean);
+      parts.pop();
+      setCurrentWorkingDir('/' + parts.join('/'));
+    } else if (dirPath !== '.') {
+      // Relative path
+      const newPath = currentWorkingDir === '/' ? `/${dirPath}` : `${currentWorkingDir}/${dirPath}`;
+      setCurrentWorkingDir(newPath);
+    }
+  };
+
+  // Advanced tab completion system
+  const handleTabCompletion = async () => {
+    if (isTabCompleting) return; // Prevent multiple simultaneous completions
+    setIsTabCompleting(true);
+
+    try {
+      const input = currentInput;
+      const parts = input.split(' ');
+      
+      if (parts.length === 1) {
+        // Command completion
+        const commonCommands = [
+          'ls', 'cd', 'pwd', 'mkdir', 'rmdir', 'rm', 'cp', 'mv', 'cat', 'nano', 'vim',
+          'python3', 'pip', 'pip3', 'touch', 'chmod', 'grep', 'find', 'which', 'echo',
+          'clear', 'history', 'ps', 'kill', 'top', 'df', 'du', 'free', 'uptime'
+        ];
+        const matching = commonCommands.filter(cmd => cmd.startsWith(input));
+        
+        if (matching.length === 1) {
+          setCurrentInput(matching[0] + ' ');
+        } else if (matching.length > 1) {
+          // Show multiple matches in terminal output (simulate bash behavior)
+          const matches = matching.join('  ');
+          if (onSendCommand) {
+            onSendCommand(`echo "Available commands: ${matches}"\n`);
+          }
+        }
+      } else {
+        // File/directory completion - simulate with ls command
+        const command = parts[0];
+        const currentPath = parts[parts.length - 1];
+        
+        if (['ls', 'cd', 'cat', 'nano', 'vim', 'rm', 'cp', 'mv'].includes(command)) {
+          await handleFileTabCompletion(currentPath);
+        }
+      }
+    } finally {
+      setIsTabCompleting(false);
+    }
+  };
+
+  // File/directory tab completion - simplified version
+  const handleFileTabCompletion = async (partialPath: string) => {
+    if (!sessionId || !isConnected || !onSendCommand) return;
+    
+    const basePath = partialPath.includes('/') ? partialPath.substring(0, partialPath.lastIndexOf('/') + 1) : '';
+    const filename = partialPath.includes('/') ? partialPath.substring(partialPath.lastIndexOf('/') + 1) : partialPath;
+    
+    if (filename.length === 0) return;
+    
+    try {
+      // Simple approach: Send ls command and capture output via state
+      const lsPath = basePath || '.';
+      const command = `ls -1 "${lsPath}" | grep "^${filename}" 2>/dev/null`;
+      
+      // Store current output length to detect new output
+      const outputLengthBefore = terminalOutput.length;
+      
+      // Send the command
+      onSendCommand(command);
+      
+      // Wait a bit and check for new output
+      setTimeout(() => {
+        const newOutput = terminalOutput.slice(outputLengthBefore);
+        const lines = newOutput.split('\n').filter(line => 
+          line.trim() && 
+          !line.includes('$') && 
+          !line.includes(command) &&
+          line.startsWith(filename)
+        );
+        
+        if (lines.length === 1) {
+          // Single match - complete the input
+          const match = lines[0].trim();
+          const input = currentInput;
+          const parts = input.split(' ');
+          const lastPartIndex = parts.length - 1;
+          const completedPath = basePath + match;
+          parts[lastPartIndex] = completedPath;
+          setCurrentInput(parts.join(' ') + ' ');
+        } else if (lines.length > 1) {
+          // Multiple matches - show common prefix completion
+          const matches = lines.map(line => line.trim());
+          const commonPrefix = findCommonPrefix(matches);
+          if (commonPrefix.length > filename.length) {
+            const input = currentInput;
+            const parts = input.split(' ');
+            const lastPartIndex = parts.length - 1;
+            const completedPath = basePath + commonPrefix;
+            parts[lastPartIndex] = completedPath;
+            setCurrentInput(parts.join(' '));
+          }
+        }
+      }, 300); // Wait 300ms for output
+      
+    } catch (error) {
+      console.error('Tab completion error:', error);
+      // Fallback: just show the ls command output
+      if (filename.length > 0) {
+        const lsPath = basePath || '.';
+        onSendCommand(`ls -1 "${lsPath}" | grep "^${filename}"`);
+      }
+    }
+  };
+
+  // Helper function to find common prefix among strings
+  const findCommonPrefix = (strings: string[]): string => {
+    if (strings.length === 0) return '';
+    if (strings.length === 1) return strings[0];
+    
+    let prefix = strings[0];
+    for (let i = 1; i < strings.length; i++) {
+      while (strings[i].indexOf(prefix) !== 0) {
+        prefix = prefix.substring(0, prefix.length - 1);
+        if (prefix === '') break;
+      }
+    }
+    return prefix;
+  };
+
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
       handleCommand(currentInput);
     } else if (e.key === 'Tab') {
       e.preventDefault();
-      // Basic tab completion for common commands
-      const commonCommands = ['ls', 'cd', 'mkdir', 'python3', 'pip', 'nano', 'cat', 'touch', 'rm'];
-      const matching = commonCommands.filter(cmd => cmd.startsWith(currentInput));
-      if (matching.length === 1) {
-        setCurrentInput(matching[0] + ' ');
-      }
-    } else if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
-      // TODO: Command history
+      handleTabCompletion();
+    } else if (e.key === 'ArrowUp') {
       e.preventDefault();
+      // Navigate up in command history
+      if (commandHistory.length > 0) {
+        const newIndex = historyIndex === -1 ? commandHistory.length - 1 : Math.max(0, historyIndex - 1);
+        setHistoryIndex(newIndex);
+        setCurrentInput(commandHistory[newIndex]);
+      }
+    } else if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      // Navigate down in command history
+      if (historyIndex >= 0) {
+        const newIndex = historyIndex + 1;
+        if (newIndex >= commandHistory.length) {
+          setHistoryIndex(-1);
+          setCurrentInput('');
+        } else {
+          setHistoryIndex(newIndex);
+          setCurrentInput(commandHistory[newIndex]);
+        }
+      }
     } else if (e.ctrlKey && e.key === 'c') {
       e.preventDefault();
-      handleCommand('\u0003'); // Send Ctrl+C
+      handleCommand('\u0003'); // Send Ctrl+C (SIGINT)
     } else if (e.ctrlKey && e.key === 'l') {
       e.preventDefault();
       handleCommand('clear');
+    } else if (e.ctrlKey && e.key === 'd') {
+      e.preventDefault();
+      handleCommand('\u0004'); // Send Ctrl+D (EOF)
+    } else if (e.ctrlKey && e.key === 'z') {
+      e.preventDefault();
+      handleCommand('\u001a'); // Send Ctrl+Z (SIGTSTP)
+    } else if (e.ctrlKey && e.key === 'u') {
+      e.preventDefault();
+      setCurrentInput(''); // Clear line (like bash Ctrl+U)
+    } else if (e.ctrlKey && e.key === 'k') {
+      e.preventDefault();
+      // Clear from cursor to end of line (in our case, clear current input)
+      setCurrentInput('');
+    } else if (e.ctrlKey && e.key === 'a') {
+      e.preventDefault();
+      // Move cursor to beginning of line
+      if (inputRef.current) {
+        inputRef.current.setSelectionRange(0, 0);
+      }
+    } else if (e.ctrlKey && e.key === 'e') {
+      e.preventDefault();
+      // Move cursor to end of line
+      if (inputRef.current) {
+        const len = currentInput.length;
+        inputRef.current.setSelectionRange(len, len);
+      }
+    } else if (e.altKey && e.key === 'b') {
+      e.preventDefault();
+      // Move cursor back one word
+      moveWordBack();
+    } else if (e.altKey && e.key === 'f') {
+      e.preventDefault();
+      // Move cursor forward one word
+      moveWordForward();
     }
+  };
+
+  // Word movement helpers for Alt+B and Alt+F
+  const moveWordBack = () => {
+    if (!inputRef.current) return;
+    const input = currentInput;
+    const currentPos = inputRef.current.selectionStart || 0;
+    
+    // Find previous word boundary
+    let pos = currentPos - 1;
+    while (pos > 0 && /\s/.test(input[pos])) pos--; // Skip spaces
+    while (pos > 0 && !/\s/.test(input[pos - 1])) pos--; // Find word start
+    
+    inputRef.current.setSelectionRange(pos, pos);
+  };
+
+  const moveWordForward = () => {
+    if (!inputRef.current) return;
+    const input = currentInput;
+    const currentPos = inputRef.current.selectionStart || 0;
+    
+    // Find next word boundary
+    let pos = currentPos;
+    while (pos < input.length && !/\s/.test(input[pos])) pos++; // Skip current word
+    while (pos < input.length && /\s/.test(input[pos])) pos++; // Skip spaces
+    
+    inputRef.current.setSelectionRange(pos, pos);
   };
 
   if (!sessionId) {
@@ -184,10 +419,10 @@ const TerminalComponent: React.FC<{
           <h3 className="text-lg text-blue-400 mb-2">🐍 Python Linux Terminal</h3>
           <p className="text-gray-400 mb-2">Full access Linux terminal with Python environment</p>
           <div className="text-gray-500 text-xs mb-4 space-y-1">
-            <p>• Create directories, run scripts, install packages</p>
-            <p>• Tab completion for common commands</p>
-            <p>• Ctrl+C to interrupt, Ctrl+L to clear</p>
-            <p>• Separate from "Run" button (executes current file)</p>
+            <p>• 🚀 Full Linux terminal with command history (↑/↓ arrows)</p>
+            <p>• 📁 Tab completion for commands and files</p>
+            <p>• ⌨️  Linux shortcuts: Ctrl+C, Ctrl+L, Ctrl+U, Ctrl+A/E</p>
+            <p>• 🔍 Word navigation: Alt+B/F, line editing like bash</p>
           </div>
           <button
             onClick={onCreateSession}
@@ -661,6 +896,53 @@ const IDEPage: React.FC = () => {
       }
     };
   }, [sessionId, user]);
+
+  // Auto-sync on first terminal connection with inspiring message
+  const [hasAutoSyncedOnce, setHasAutoSyncedOnce] = useState(false);
+  const [showWelcomeAnimation, setShowWelcomeAnimation] = useState(false);
+
+  // Handle welcome animation completion
+  const handleWelcomeAnimationComplete = useCallback(() => {
+    setShowWelcomeAnimation(false);
+  }, []);
+  
+  useEffect(() => {
+    const performFirstConnectionSync = async () => {
+      if (isConnected && sessionId && user && !hasAutoSyncedOnce && fileTree.length > 0) {
+        console.log('🎬 Triggering welcome animation!', { isConnected, sessionId, user: !!user, hasAutoSyncedOnce, fileTreeLength: fileTree.length });
+        setHasAutoSyncedOnce(true);
+        
+        // Show the inspiring animation
+        setShowWelcomeAnimation(true);
+        console.log('🎭 Welcome animation state set to true');
+        
+        // Start sync process quickly while animation plays
+        setTimeout(async () => {
+          try {
+            setIsSyncing(true);
+            
+            // Send clean sync status message
+            sendCommand('echo "📁 Syncing files from database to terminal..."');
+            
+            // Perform the sync
+            await handleSync();
+            
+            // Success message
+            sendCommand('echo "✅ Sync complete! Files ready."');
+            sendCommand('echo "💡 Try: ls (see files) | python filename.py (run code)"');
+            sendCommand('pwd');
+            
+          } catch (error) {
+            console.error('Auto-sync failed:', error);
+            sendCommand(`echo "❌ Sync failed: ${error instanceof Error ? error.message : 'Unknown error'}"`);
+            sendCommand('echo "💡 You can manually sync anytime with the Sync button above."');
+          }
+        }, 200); // Quick start while animation shows briefly
+      }
+    };
+
+    performFirstConnectionSync();
+  }, [isConnected, sessionId, user, hasAutoSyncedOnce, fileTree.length, sendCommand, handleSync, setIsSyncing]);
 
   // Handle code execution - clean Run button
   const handleRunCode = useCallback(async () => {
@@ -1818,6 +2100,12 @@ const IDEPage: React.FC = () => {
           onClick={() => setShowSettings(false)}
         />
       )}
+
+      {/* Welcome Animation Overlay */}
+      <WelcomeAnimation
+        isVisible={showWelcomeAnimation}
+        onComplete={handleWelcomeAnimationComplete}
+      />
     </div>
     </>
   );
