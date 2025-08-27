@@ -5,6 +5,7 @@ export interface SessionData {
     sessionId: string;
     podName: string;
     status: string;
+    reconnected?: boolean;
   }
   
   export interface SessionStatus {
@@ -89,14 +90,18 @@ export interface SessionData {
       this.wsURL = wsURL;
     }
   
-    // Create a new Python session
-    async createSession(): Promise<SessionData> {
+    // Create a new Python session or reconnect to existing
+    async createSession(userId?: string, reconnect: boolean = false): Promise<SessionData> {
       try {
         const response = await fetch(`${this.baseURL}/api/session/create`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
+          body: JSON.stringify({
+            userId,
+            reconnect
+          }),
         });
   
         if (!response.ok) {

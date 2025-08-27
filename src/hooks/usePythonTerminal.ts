@@ -3,6 +3,7 @@
 
 import { useState, useCallback, useRef, useEffect } from 'react';
 import pythonTerminalAPI, { SessionData, SessionStatus, SyncItem, SyncResponse, ExecuteResponse } from '../services/pythonTerminalAPI';
+import syncTrackingAPI from '../services/syncTrackingAPI';
 
 export type SessionStatusType = 'idle' | 'creating' | 'ready' | 'error';
 
@@ -21,11 +22,11 @@ export interface UsePythonTerminalReturn {
   terminalOutput: string;
   
   // Actions
-  createSession: () => Promise<SessionData | undefined>;
+  createSession: (userId?: string, tryReconnect?: boolean) => Promise<SessionData | undefined>;
   saveAndRunFile: (filename: string, content: string) => Promise<{ success: boolean }>;
   sendCommand: (command: string) => Promise<{ success: boolean }>;
   sendInput: (input: string) => void;
-  deleteSession: () => Promise<void>;
+  deleteSession: (userId?: string) => Promise<void>;
   refreshStatus: () => Promise<SessionStatus | undefined>;
   connectWebSocket: () => void;
   syncFileSystem: (fileStructure: SyncItem[]) => Promise<SyncResponse>;
@@ -54,6 +55,9 @@ export const usePythonTerminal = (): UsePythonTerminalReturn => {
   const [isConnected, setIsConnected] = useState<boolean>(false);
   const [terminalOutput, setTerminalOutput] = useState<string>('');
   const wsRef = useRef<WebSocket | null>(null);
+  
+  // Session creation lock to prevent race conditions
+  const sessionCreationLockRef = useRef<boolean>(false);
 
   // Terminal output management
   const appendOutput = useCallback((data: string): void => {
@@ -64,24 +68,46 @@ export const usePythonTerminal = (): UsePythonTerminalReturn => {
     setTerminalOutput('');
   }, []);
 
-  // Create new session
-  const createSession = useCallback(async (): Promise<SessionData | undefined> => {
-    if (isLoading) return;
+  // Create new session or reconnect to existing
+  const createSession = useCallback(async (userId?: string, tryReconnect: boolean = false): Promise<SessionData | undefined> => {
+    // Prevent race conditions - only allow one session creation at a time
+    if (isLoading || sessionCreationLockRef.current) {
+      console.log('🔒 Session creation already in progress, skipping...');
+      return;
+    }
+    
+    sessionCreationLockRef.current = true;
     
     setIsLoading(true);
     setError(null);
     setStatus('creating');
     
     try {
-      console.log('Creating new Python session...');
-      const sessionData = await pythonTerminalAPI.createSession();
+      console.log('Creating/reconnecting session for user:', userId);
+      
+      if (tryReconnect) {
+        appendOutput('🔄 Checking for existing session...\n');
+      } else {
+        appendOutput('🚀 Creating new Python environment...\n');
+      }
+      
+      // Let the backend handle the reconnection logic
+      const sessionData = await pythonTerminalAPI.createSession(userId, tryReconnect);
+      
+      if (sessionData?.reconnected) {
+        console.log('Successfully reconnected to existing session');
+        appendOutput('✅ Reconnected to existing Python environment!\n');
+      } else {
+        console.log('Created new session');
+        appendOutput('✅ Created new Python environment!\n');
+      }
       
       setSessionId(sessionData.sessionId);
       setPodName(sessionData.podName);
       setStatus(sessionData.status as SessionStatusType);
       
       console.log('Waiting for session to be ready...');
-      appendOutput('🚀 Creating Python environment...\n');
+      appendOutput('⏳ Setting up Python environment...\n');
       
       // Wait for session to be ready
       const readyStatus = await pythonTerminalAPI.waitForSessionReady(sessionData.sessionId);
@@ -90,8 +116,24 @@ export const usePythonTerminal = (): UsePythonTerminalReturn => {
       setIsReady(readyStatus.ready);
       setCurrentFile(readyStatus.currentFile);
       
+      // Track user session in database if userId provided
+      if (userId && readyStatus.ready) {
+        try {
+          await syncTrackingAPI.createUserSession(
+            userId, 
+            sessionData.sessionId, 
+            sessionData.podName, 
+            'ready'
+          );
+          console.log(`User session tracked for ${userId}: ${sessionData.sessionId}`);
+        } catch (trackingError) {
+          console.warn('Failed to track user session:', trackingError);
+          // Don't fail the session creation if tracking fails
+        }
+      }
+      
       appendOutput('✅ Python environment ready!\n');
-      appendOutput('📁 Workspace: /workspace\n');
+      appendOutput('📁 Workspace: /tmp\n');
       appendOutput('🐍 Python 3.11 with pre-installed packages\n\n');
       
       return sessionData;
@@ -103,8 +145,9 @@ export const usePythonTerminal = (): UsePythonTerminalReturn => {
       appendOutput(`❌ Error: ${errorMessage}\n`);
     } finally {
       setIsLoading(false);
+      sessionCreationLockRef.current = false; // Always release lock
     }
-  }, [isLoading, appendOutput]);
+  }, [appendOutput]);
 
   // Connect WebSocket
   const connectWebSocket = useCallback((): void => {
@@ -138,6 +181,13 @@ export const usePythonTerminal = (): UsePythonTerminalReturn => {
           if (parsed.type === 'terminal_output' || parsed.type === 'terminal_error') {
             let data = parsed.data;
             
+            // DEBUG: Log the raw data to understand formatting issues
+            // console.log('🐛 DEBUG: Raw data received:');
+            // console.log('📝 Raw string:', JSON.stringify(data));
+            // console.log('📏 Length:', data.length);
+            // console.log('🔍 Contains \\n:', data.includes('\n'));
+            // console.log('🔍 Contains \\r:', data.includes('\r'));
+            
             // For error messages, add ERROR prefix for visual distinction
             if (parsed.type === 'terminal_error') {
               data = `ERROR: ${data}`;
@@ -153,6 +203,10 @@ export const usePythonTerminal = (): UsePythonTerminalReturn => {
               .replace(/\x1b\][0-9;]*[a-zA-Z]/g, '')
               // Clean carriage returns but preserve newlines
               .replace(/\r(?!\n)/g, '');
+            
+            console.log('🐛 DEBUG: After processing:');
+            console.log('📝 Processed string:', JSON.stringify(data));
+            console.log('📏 Length:', data.length);
             
             // Always append data (even empty) to preserve formatting
             appendOutput(data);
@@ -266,7 +320,7 @@ export const usePythonTerminal = (): UsePythonTerminalReturn => {
   }, []);
 
   // Delete session
-  const deleteSession = useCallback(async (): Promise<void> => {
+  const deleteSession = useCallback(async (userId?: string): Promise<void> => {
     if (!sessionId) return;
 
     setIsLoading(true);
@@ -276,6 +330,17 @@ export const usePythonTerminal = (): UsePythonTerminalReturn => {
       if (wsRef.current) {
         wsRef.current.close(1000, 'Session ended');
         wsRef.current = null;
+      }
+
+      // Deactivate user session in database if userId provided
+      if (userId) {
+        try {
+          await syncTrackingAPI.deactivateSession(sessionId);
+          console.log(`User session deactivated: ${sessionId}`);
+        } catch (trackingError) {
+          console.warn('Failed to deactivate user session:', trackingError);
+          // Don't fail deletion if tracking fails
+        }
       }
 
       await pythonTerminalAPI.deleteSession(sessionId);

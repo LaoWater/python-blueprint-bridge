@@ -204,9 +204,17 @@ const TerminalComponent: React.FC<{
     <div className="h-full bg-black text-green-400 font-mono text-sm flex flex-col">
       <div 
         ref={outputRef}
-        className="flex-1 min-h-0 p-4 overflow-auto whitespace-pre-wrap"
+        className="flex-1 min-h-0 p-4 overflow-auto"
       >
-        {terminalOutput || 'Connecting to Python terminal...'}
+        {terminalOutput ? (
+          terminalOutput.split('\n').map((line, index) => (
+            <div key={index} className="whitespace-pre">
+              {line || '\u00A0'} {/* Non-breaking space for empty lines */}
+            </div>
+          ))
+        ) : (
+          'Connecting to Python terminal...'
+        )}
       </div>
       <div className="flex items-center p-4 pt-0 flex-shrink-0 min-h-[3rem]">
         <span className="text-green-400">pythonuser</span>
@@ -440,43 +448,21 @@ const IDEPage: React.FC = () => {
       return;
     }
 
+    // Prevent multiple simultaneous session creation attempts
+    if (terminalStatus === 'creating' || isTerminalLoading) {
+      console.log('🔒 Session creation already in progress, ignoring request');
+      return;
+    }
+
     try {
-      // Step 1: Check for existing active session for this user
-      const existingSession = await syncTrackingAPI.getOrCreateUserSession(user.id);
+      console.log('Creating Python session for user:', user.id);
       
-      if (existingSession) {
-        console.log(`Found existing session: ${existingSession.session_id}`);
-        
-        // Try to reconnect to the existing pod
-        try {
-          // Set the session data (this will trigger the terminal to reconnect)
-          // We need to simulate what createSession() does but with existing data
-          // This is a bit tricky since we need to work with the existing hook structure
-          
-          toast.info(`Reconnecting to existing Python environment: ${existingSession.pod_name}`);
-          
-          // For now, create a new session as the hook doesn't support reconnection
-          // In a future iteration, we could extend usePythonTerminal to support reconnection
-          await createSession();
-          
-        } catch (reconnectError) {
-          console.log('Failed to reconnect to existing session, creating new one...');
-          await createSession();
-        }
-      } else {
-        // No existing session, create a new one
-        const sessionData = await createSession();
-        
-        // Step 2: Track the new session in our database
-        if (sessionData) {
-          await syncTrackingAPI.createUserSession(
-            user.id, 
-            sessionData.sessionId, 
-            sessionData.podName, 
-            sessionData.status
-          );
-          console.log(`Tracked new session in database: ${sessionData.sessionId}`);
-        }
+      // Simple approach: Just create/reconnect session for this user
+      // The backend will handle checking for existing pods and cleaning up properly
+      const sessionData = await createSession(user.id, true);
+      
+      if (sessionData) {
+        console.log('Session ready:', sessionData);
       }
       
       setBottomPanelVisible(true);
@@ -766,7 +752,7 @@ const IDEPage: React.FC = () => {
       // If we have an active session, switch to terminal or disconnect
       if (bottomActiveTab === 'terminal') {
         // If terminal is already active, disconnect session
-        deleteSession();
+        deleteSession(user?.id);
         setBottomActiveTab('output');
         toast.info('Python session disconnected');
       } else {

@@ -116,10 +116,55 @@ function createPodManifest(sessionId) {
 
 // API Routes
 
-// Create a new Python session
+// Create a new Python session or reconnect to existing one
 app.post('/api/session/create', async (req, res) => {
-    const sessionId = uuidv4();
-    console.log(`Creating new session: ${sessionId}`);
+    const { userId, reconnect = false } = req.body; // Accept userId and reconnect flag
+    let sessionId = uuidv4();
+    
+    console.log(`${reconnect ? 'Reconnecting to' : 'Creating new'} session for user: ${userId || 'anonymous'}`);
+    
+    // If reconnecting and userId provided, try to find existing session
+    if (reconnect && userId) {
+        console.log(`🔍 Looking for existing session for user ${userId}`);
+        console.log(`📊 Current active sessions: ${activeSessions.size}`);
+        
+        for (const [existingSessionId, session] of activeSessions.entries()) {
+            console.log(`🔍 Checking session ${existingSessionId} for user ${session.userId}`);
+            
+            if (session.userId === userId) {
+                console.log(`🔄 Found existing backend session for user ${userId}: ${existingSessionId}`);
+                
+                // Verify pod is still running
+                try {
+                    if (k8sApi) {
+                        console.log(`🔍 Checking pod status for ${session.podName}`);
+                        const podStatus = await k8sApi.readNamespacedPodStatus(session.podName, NAMESPACE);
+                        
+                        if (podStatus.body.status.phase === 'Running') {
+                            console.log(`✅ Pod ${session.podName} still running, reconnecting to existing session`);
+                            session.lastActivity = Date.now();
+                            return res.json({
+                                sessionId: existingSessionId,
+                                podName: session.podName,
+                                status: 'ready',
+                                reconnected: true
+                            });
+                        } else {
+                            console.log(`⚠️ Pod ${session.podName} not running (${podStatus.body.status.phase}), cleaning up and creating new session`);
+                            activeSessions.delete(existingSessionId);
+                        }
+                    }
+                } catch (error) {
+                    console.log(`❌ Error checking pod status: ${error.message}, cleaning up and creating new session`);
+                    activeSessions.delete(existingSessionId);
+                }
+                break;
+            }
+        }
+        
+        // If we get here, no valid existing session was found
+        console.log(`ℹ️ No valid existing backend session found for user ${userId}, will create new session`);
+    }
     
     // Check if Kubernetes client is available
     if (!k8sApi) {
@@ -130,9 +175,22 @@ app.post('/api/session/create', async (req, res) => {
         });
     }
     
+    // FIRST: Clean up any existing sessions for this user BEFORE creating new pod
+    if (userId) {
+        console.log(`🧹 Cleaning up any existing sessions for user ${userId} before creating new one`);
+        for (const [existingSessionId, existingSession] of activeSessions.entries()) {
+            if (existingSession.userId === userId) {
+                console.log(`🗑️ Cleaning up existing session ${existingSessionId} for user ${userId}`);
+                await cleanupSession(existingSessionId);
+            }
+        }
+        console.log(`✅ Cleanup completed for user ${userId}`);
+    }
+    
+    // THEN: Create exactly one new pod
     try {
         const podManifest = createPodManifest(sessionId);
-        console.log(`📦 Creating pod for session ${sessionId}...`);
+        console.log(`📦 Creating single pod for session ${sessionId} (user: ${userId || 'anonymous'})...`);
         
         const response = await k8sApi.createNamespacedPod(NAMESPACE, podManifest);
         const podName = response.body.metadata.name;
@@ -141,6 +199,7 @@ app.post('/api/session/create', async (req, res) => {
         
         const session = {
             sessionId,
+            userId: userId || null, // Store userId for session persistence
             podName,
             created: new Date(),
             lastActivity: Date.now(),
@@ -602,16 +661,56 @@ wss.on('connection', (ws, req) => {
     // Update last activity
     session.lastActivity = Date.now();
     
+    // Line buffer to ensure complete lines are sent
+    let outputBuffer = '';
+    
     // Create stream bridges for the Kubernetes exec
     const stdout = {
         write: (data) => {
             if (ws.readyState === 1) { // WebSocket.OPEN
-                // Preserve all formatting, newlines and whitespace
                 const output = data.toString();
-                ws.send(JSON.stringify({
-                    type: 'terminal_output',
-                    data: output
-                }));
+                
+                // DEBUG: Log what we're receiving to understand formatting
+                // console.log('🐛 BACKEND DEBUG: Received chunk:');
+                // console.log('📝 Raw chunk string:', JSON.stringify(output));
+                // console.log('📏 Length:', output.length);
+                // console.log('🔍 Contains \\n:', output.includes('\n'));
+                // console.log('🔍 Contains \\r:', output.includes('\r'));
+                
+                // Add to buffer
+                outputBuffer += output;
+                
+                // Process complete lines
+                const lines = outputBuffer.split('\n');
+                
+                // Keep the last incomplete line in buffer
+                outputBuffer = lines.pop() || '';
+                
+                // Send complete lines
+                for (const line of lines) {
+                    const lineWithNewline = line + '\n';
+                    console.log('🐛 BACKEND DEBUG: Sending complete line:', JSON.stringify(lineWithNewline));
+                    
+                    ws.send(JSON.stringify({
+                        type: 'terminal_output',
+                        data: lineWithNewline
+                    }));
+                }
+                
+                // If there's remaining content without newline, send it after a small delay
+                // This handles cases where output doesn't end with newline
+                if (outputBuffer && !output.endsWith('\n')) {
+                    setTimeout(() => {
+                        if (outputBuffer && ws.readyState === 1) {
+                            console.log('🐛 BACKEND DEBUG: Sending remaining buffer:', JSON.stringify(outputBuffer));
+                            ws.send(JSON.stringify({
+                                type: 'terminal_output',
+                                data: outputBuffer
+                            }));
+                            outputBuffer = '';
+                        }
+                    }, 100); // 100ms delay to collect more data
+                }
             }
             return true;
         },
@@ -664,7 +763,7 @@ wss.on('connection', (ws, req) => {
             NAMESPACE,
             session.podName,
             'python-terminal',
-            ['/bin/bash', '--login'], // Login shell to load .bashrc settings
+            ['/bin/bash', '--login', '-c', 'export PYTHONUNBUFFERED=1; exec /bin/bash'], // Unbuffered Python output
             stdout,
             stderr,
             stdinStream, // Use PassThrough stream for stdin
