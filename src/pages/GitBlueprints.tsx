@@ -1,10 +1,14 @@
 import { useState } from 'react';
-import { Copy, Check, GitBranch, GitCommit, GitMerge, Terminal, FileText, Users, Shield } from 'lucide-react';
+import { Copy, Check, GitBranch, GitCommit, GitMerge, Terminal, FileText, Users, Shield, AlertTriangle, ArrowRight, Zap } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Separator } from '@/components/ui/separator';
 import { toast } from '@/components/ui/use-toast';
+import gitWorkflowImage from '@/assets/git-workflow-clean.jpg';
+import gitBranchingImage from '@/assets/git-branching-clean.jpg';
+import gitConflictsImage from '@/assets/git-conflicts.jpg';
 
 interface GitCommandProps {
   command: string;
@@ -89,52 +93,218 @@ const GitCommand = ({ command, description, example, level }: GitCommandProps) =
 
 const GitWorkflowDiagram = () => {
   return (
-    <Card className="mb-8">
+    <div className="mb-12 space-y-8">
+      {/* Visual Workflow */}
+      <Card className="overflow-hidden">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <GitBranch className="h-5 w-5" />
+            Git Workflow Visualization
+          </CardTitle>
+          <CardDescription>
+            Understanding the Git workflow and how commands interact with different areas
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="p-0">
+          <div className="relative">
+            <img 
+              src={gitWorkflowImage} 
+              alt="Git Workflow Diagram"
+              className="w-full h-64 object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-background/80 to-transparent" />
+            <div className="absolute inset-0 flex items-center justify-around p-8">
+              <div className="text-center bg-white/90 dark:bg-gray-900/90 rounded-lg p-4 backdrop-blur-sm">
+                <FileText className="h-8 w-8 mx-auto text-red-600 mb-2" />
+                <h3 className="font-semibold mb-1">Working Directory</h3>
+                <code className="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">git add .</code>
+              </div>
+              <ArrowRight className="h-6 w-6 text-muted-foreground" />
+              <div className="text-center bg-white/90 dark:bg-gray-900/90 rounded-lg p-4 backdrop-blur-sm">
+                <Terminal className="h-8 w-8 mx-auto text-yellow-600 mb-2" />
+                <h3 className="font-semibold mb-1">Staging Area</h3>
+                <code className="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">git commit</code>
+              </div>
+              <ArrowRight className="h-6 w-6 text-muted-foreground" />
+              <div className="text-center bg-white/90 dark:bg-gray-900/90 rounded-lg p-4 backdrop-blur-sm">
+                <GitCommit className="h-8 w-8 mx-auto text-green-600 mb-2" />
+                <h3 className="font-semibold mb-1">Repository</h3>
+                <code className="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">git push</code>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Branching Strategy */}
+      <Card className="overflow-hidden">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <GitMerge className="h-5 w-5" />
+            Branching Strategy
+          </CardTitle>
+          <CardDescription>
+            How branches work together in a collaborative environment
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="p-0">
+          <div className="relative">
+            <img 
+              src={gitBranchingImage} 
+              alt="Git Branching Strategy"
+              className="w-full h-64 object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent" />
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+};
+
+const GitWorkflowScenarios = () => {
+  const scenarios = [
+    {
+      title: "Solo Developer",
+      icon: Users,
+      description: "Working alone on personal projects",
+      workflow: ["git init", "git add .", "git commit -m 'Initial commit'", "git push origin main"],
+      challenge: "Keeping a clean commit history",
+      solution: "Use descriptive commit messages and squash related commits"
+    },
+    {
+      title: "Small Team Collaboration",
+      icon: GitBranch,
+      description: "2-5 developers working together",
+      workflow: ["git checkout -b feature/login", "git add .", "git commit -m 'Add login form'", "git push origin feature/login", "Create Pull Request"],
+      challenge: "Merge conflicts when multiple people edit same files",
+      solution: "Communicate changes, pull frequently, use feature branches"
+    },
+    {
+      title: "Corporate Environment",
+      icon: Shield,
+      description: "Large teams with strict processes",
+      workflow: ["git flow init", "git flow feature start new-feature", "git add .", "git commit -m 'Implement feature'", "git flow feature finish new-feature"],
+      challenge: "Complex branching strategies and code reviews",
+      solution: "Follow Git Flow, automated testing, protected branches"
+    },
+    {
+      title: "Fixing Mistakes",
+      icon: AlertTriangle,
+      description: "Undoing changes and recovering work",
+      workflow: ["git log --oneline", "git reset --soft HEAD~1", "git stash", "git checkout -- file.js"],
+      challenge: "Accidentally committed to wrong branch",
+      solution: "Use git cherry-pick, git reset, or git revert appropriately"
+    },
+    {
+      title: "Working with AI Assistants",
+      icon: Zap,
+      description: "Integrating AI-generated code changes",
+      workflow: ["git add -p", "git commit -m 'AI: Optimize performance'", "git push", "Test changes thoroughly"],
+      challenge: "Managing AI-suggested changes responsibly",
+      solution: "Review all AI changes, test thoroughly, commit incrementally"
+    },
+    {
+      title: "Rebasing & History Cleanup",
+      icon: GitCommit,
+      description: "Maintaining a clean project history",
+      workflow: ["git rebase -i HEAD~3", "squash commits", "git push --force-with-lease"],
+      challenge: "Rewriting history safely without breaking others' work",
+      solution: "Only rebase unpushed commits, use --force-with-lease"
+    }
+  ];
+
+  return (
+    <div className="mb-12">
+      <div className="text-center mb-8">
+        <h2 className="text-3xl font-bold mb-4">Real-World Git Scenarios</h2>
+        <p className="text-muted-foreground max-w-2xl mx-auto">
+          Master Git by understanding common workflows and challenges faced by developers in different environments
+        </p>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {scenarios.map((scenario, index) => (
+          <Card key={index} className="h-full hover:shadow-lg transition-shadow">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-lg">
+                <scenario.icon className="h-5 w-5 text-primary" />
+                {scenario.title}
+              </CardTitle>
+              <CardDescription>{scenario.description}</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div>
+                <h4 className="font-semibold mb-2 text-sm">Typical Workflow:</h4>
+                <div className="space-y-1">
+                  {scenario.workflow.map((step, i) => (
+                    <code key={i} className="block text-xs bg-muted p-2 rounded font-mono">
+                      {step}
+                    </code>
+                  ))}
+                </div>
+              </div>
+              
+              <Separator />
+              
+              <div>
+                <h4 className="font-semibold mb-1 text-sm text-orange-600">Challenge:</h4>
+                <p className="text-xs text-muted-foreground">{scenario.challenge}</p>
+              </div>
+              
+              <div>
+                <h4 className="font-semibold mb-1 text-sm text-green-600">Solution:</h4>
+                <p className="text-xs text-muted-foreground">{scenario.solution}</p>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+const GitConflictResolution = () => {
+  return (
+    <Card className="mb-12 overflow-hidden">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <GitBranch className="h-5 w-5" />
-          Git Workflow Visualization
+          <AlertTriangle className="h-5 w-5 text-orange-500" />
+          Understanding Git Conflicts
         </CardTitle>
         <CardDescription>
-          Understanding the Git workflow and how commands interact with different areas
+          How to handle merge conflicts like a pro
         </CardDescription>
       </CardHeader>
-      <CardContent>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="text-center">
-            <div className="bg-red-100 dark:bg-red-900/20 rounded-lg p-4 mb-3">
-              <FileText className="h-8 w-8 mx-auto text-red-600" />
+      <CardContent className="p-0">
+        <div className="relative">
+          <img 
+            src={gitConflictsImage} 
+            alt="Git Conflict Resolution"
+            className="w-full h-48 object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-background/90 to-transparent" />
+        </div>
+        <div className="p-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <h3 className="font-semibold mb-3 text-red-600">When Conflicts Occur:</h3>
+              <ul className="space-y-2 text-sm">
+                <li>• Multiple people edit the same lines</li>
+                <li>• Merging branches with different changes</li>
+                <li>• Rebasing with conflicting modifications</li>
+                <li>• Cherry-picking commits with overlaps</li>
+              </ul>
             </div>
-            <h3 className="font-semibold mb-2">Working Directory</h3>
-            <p className="text-sm text-muted-foreground">
-              Your local files where you make changes
-            </p>
-            <div className="mt-2 text-xs font-mono bg-gray-100 dark:bg-gray-800 p-2 rounded">
-              git add .
-            </div>
-          </div>
-          <div className="text-center">
-            <div className="bg-yellow-100 dark:bg-yellow-900/20 rounded-lg p-4 mb-3">
-              <Terminal className="h-8 w-8 mx-auto text-yellow-600" />
-            </div>
-            <h3 className="font-semibold mb-2">Staging Area</h3>
-            <p className="text-sm text-muted-foreground">
-              Files ready to be committed
-            </p>
-            <div className="mt-2 text-xs font-mono bg-gray-100 dark:bg-gray-800 p-2 rounded">
-              git commit -m
-            </div>
-          </div>
-          <div className="text-center">
-            <div className="bg-green-100 dark:bg-green-900/20 rounded-lg p-4 mb-3">
-              <GitCommit className="h-8 w-8 mx-auto text-green-600" />
-            </div>
-            <h3 className="font-semibold mb-2">Repository</h3>
-            <p className="text-sm text-muted-foreground">
-              Permanent storage of your project history
-            </p>
-            <div className="mt-2 text-xs font-mono bg-gray-100 dark:bg-gray-800 p-2 rounded">
-              git push
+            <div>
+              <h3 className="font-semibold mb-3 text-green-600">Resolution Steps:</h3>
+              <div className="space-y-2">
+                <code className="block text-xs bg-muted p-2 rounded">git status</code>
+                <code className="block text-xs bg-muted p-2 rounded">git diff</code>
+                <code className="block text-xs bg-muted p-2 rounded"># Edit conflicted files</code>
+                <code className="block text-xs bg-muted p-2 rounded">git add .</code>
+                <code className="block text-xs bg-muted p-2 rounded">git commit</code>
+              </div>
             </div>
           </div>
         </div>
@@ -341,6 +511,8 @@ const GitBlueprints = () => {
 
       <div className="max-w-7xl mx-auto px-4 py-8">
         <GitWorkflowDiagram />
+        <GitWorkflowScenarios />
+        <GitConflictResolution />
 
         <Tabs defaultValue="basic" className="w-full">
           <TabsList className="grid w-full grid-cols-3 mb-8">
@@ -439,6 +611,71 @@ const GitBlueprints = () => {
                   <li>• Ignore merge conflicts</li>
                 </ul>
               </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Embedded Learning Resources */}
+        <Card className="mt-12 bg-gradient-to-br from-primary/5 to-secondary/5 border-2 border-primary/20">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Zap className="h-5 w-5 text-primary" />
+              Interactive Git Learning
+            </CardTitle>
+            <CardDescription>
+              Practice Git commands in a safe, interactive environment
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-4">
+                <h3 className="font-semibold">🎮 Git Game: Learn Git Branching</h3>
+                <p className="text-sm text-muted-foreground">
+                  Visual and interactive way to learn Git. Practice branching, merging, and rebasing with immediate visual feedback.
+                </p>
+                <iframe 
+                  src="https://learngitbranching.js.org/?NODEMO" 
+                  className="w-full h-96 border rounded-lg"
+                  title="Learn Git Branching"
+                />
+              </div>
+              <div className="space-y-4">
+                <h3 className="font-semibold">📚 Quick Reference</h3>
+                <div className="bg-muted rounded-lg p-4 space-y-3">
+                  <div>
+                    <h4 className="font-medium text-sm mb-2">Emergency Commands:</h4>
+                    <div className="space-y-1">
+                      <code className="block text-xs bg-background p-2 rounded">git reflog</code>
+                      <code className="block text-xs bg-background p-2 rounded">git reset --hard HEAD~1</code>
+                      <code className="block text-xs bg-background p-2 rounded">git checkout -</code>
+                    </div>
+                  </div>
+                  <div>
+                    <h4 className="font-medium text-sm mb-2">Daily Workflow:</h4>
+                    <div className="space-y-1">
+                      <code className="block text-xs bg-background p-2 rounded">git status</code>
+                      <code className="block text-xs bg-background p-2 rounded">git add .</code>
+                      <code className="block text-xs bg-background p-2 rounded">git commit -m "message"</code>
+                      <code className="block text-xs bg-background p-2 rounded">git push</code>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <Separator className="my-6" />
+            
+            <div className="text-center">
+              <h3 className="font-semibold mb-4">🚀 Ready to Practice?</h3>
+              <p className="text-muted-foreground mb-4">
+                Try these commands in your terminal or use our Python Terminal to experiment safely
+              </p>
+              <Button asChild>
+                <a href="/ide" className="inline-flex items-center gap-2">
+                  <Terminal className="h-4 w-4" />
+                  Open Python Terminal
+                </a>
+              </Button>
             </div>
           </CardContent>
         </Card>

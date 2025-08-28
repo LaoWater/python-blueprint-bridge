@@ -308,11 +308,12 @@ class SyncTrackingAPI {
       const totalFiles = data?.length || 0;
       const syncedFiles = data?.filter(item => item.is_synced).length || 0;
       const lastSyncTime = data && data.length > 0 
-        ? data.reduce((latest, item) => {
-            const itemTime = new Date(item.last_synced_at || 0).getTime();
-            const latestTime = new Date(latest || 0).getTime();
+        ? data.reduce((latest: string | null, item: any) => {
+            if (!item.last_synced_at) return latest;
+            const itemTime = new Date(item.last_synced_at).getTime();
+            const latestTime = latest ? new Date(latest).getTime() : 0;
             return itemTime > latestTime ? item.last_synced_at : latest;
-          }, null)
+          }, null as string | null)
         : null;
 
       return { totalFiles, syncedFiles, lastSyncTime };

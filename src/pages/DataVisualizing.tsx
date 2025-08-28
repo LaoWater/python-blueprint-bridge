@@ -488,12 +488,8 @@ const DataVisualizing = () => {
                           <TabsTrigger value="insights">Insights</TabsTrigger>
                         </TabsList>
                         
-                        <TabsContent value="story" className="space-y-4">
-                          <EditableContent
-                            type="description"
-                            page="data-visualizing"
-                            section={`session-${sessionNum}-story`}
-                          >
+                         <TabsContent value="story" className="space-y-4">
+                           <EditableContent>
                             <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
                               {sessionContent[sessionNum]?.story || ""}
                             </p>
@@ -503,11 +499,7 @@ const DataVisualizing = () => {
                         <TabsContent value="real-world" className="space-y-4">
                           <div className="flex items-start gap-3">
                             <Activity className="w-6 h-6 text-violet-600 mt-1" />
-                            <EditableContent
-                              type="description"
-                              page="data-visualizing"
-                              section={`session-${sessionNum}-real-world`}
-                            >
+                             <EditableContent>
                               <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
                                 {sessionContent[sessionNum]?.realWorld || ""}
                               </p>
@@ -517,7 +509,7 @@ const DataVisualizing = () => {
                         
                         <TabsContent value="code" className="space-y-4">
                           <EditableCodeBlock
-                            code={`# Session ${sessionNum} - ${sessionContent[sessionNum]?.title}
+                             code={`# Session ${sessionNum} - ${sessionContent[sessionNum]?.title}
 import matplotlib.pyplot as plt
 import seaborn as sns
 import plotly.express as px
@@ -540,9 +532,7 @@ def create_professional_visualization():
     plt.show()
 
 create_professional_visualization()`}
-                            language="python"
-                            page="data-visualizing"
-                            section={`session-${sessionNum}-code`}
+                             language="python"
                           />
                         </TabsContent>
                         
@@ -620,11 +610,7 @@ create_professional_visualization()`}
                         </TabsList>
                         
                         <TabsContent value="story" className="space-y-4">
-                          <EditableContent
-                            type="description"
-                            page="data-visualizing"
-                            section={`session-${sessionNum}-story`}
-                          >
+                           <EditableContent>
                             <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
                               {sessionContent[sessionNum]?.story || ""}
                             </p>
@@ -634,11 +620,7 @@ create_professional_visualization()`}
                         <TabsContent value="real-world" className="space-y-4">
                           <div className="flex items-start gap-3">
                             <Database className="w-6 h-6 text-purple-600 mt-1" />
-                            <EditableContent
-                              type="description"
-                              page="data-visualizing"
-                              section={`session-${sessionNum}-real-world`}
-                            >
+                             <EditableContent>
                               <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
                                 {sessionContent[sessionNum]?.realWorld || ""}
                               </p>
@@ -648,7 +630,7 @@ create_professional_visualization()`}
                         
                         <TabsContent value="code" className="space-y-4">
                           <EditableCodeBlock
-                            code={`# Session ${sessionNum} - ${sessionContent[sessionNum]?.title}
+                             code={`# Session ${sessionNum} - ${sessionContent[sessionNum]?.title}
 import streamlit as st
 import pandas as pd
 import plotly.express as px
@@ -686,9 +668,7 @@ def main():
 
 if __name__ == "__main__":
     main()`}
-                            language="python"
-                            page="data-visualizing"
-                            section={`session-${sessionNum}-code`}
+                             language="python"
                           />
                         </TabsContent>
                         
