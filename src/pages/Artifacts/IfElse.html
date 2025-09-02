@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gândirea Condițională - De la Minte la Cod</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 60px 20px;
+            color: white;
+            position: relative;
+        }
+
+        .hero h1 {
+            font-size: 3.5em;
+            margin-bottom: 20px;
+            animation: fadeInUp 0.8s ease;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .hero .subtitle {
+            font-size: 1.4em;
+            opacity: 0.95;
+            animation: fadeInUp 0.8s ease 0.2s both;
+            line-height: 1.6;
+        }
+
+        .brain-icon {
+            font-size: 80px;
+            margin: 30px 0;
+            animation: pulse 2s infinite;
+        }
+
+        /* Content Cards */
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            margin: 30px 0;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            animation: slideIn 0.6s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+        }
+
+        .card h2 {
+            color: #667eea;
+            font-size: 2em;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .card h3 {
+            color: #764ba2;
+            margin: 30px 0 15px;
+            font-size: 1.3em;
+        }
+
+        /* Thought Bubbles */
+        .thought-process {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+            position: relative;
+            font-style: italic;
+        }
+
+        .thought-process::before {
+            content: '💭';
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            font-size: 30px;
+        }
+
+        /* Code Examples */
+        .code-example {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            position: relative;
+            overflow-x: auto;
+            white-space: pre;
+            line-height: 1.5;
+        }
+
+        .code-example::before {
+            content: 'Python';
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #667eea;
+            color: white;
+            padding: 3px 10px;
+            border-radius: 5px;
+            font-size: 12px;
+        }
+
+        .keyword {
+            color: #66d9ef;
+            font-weight: bold;
+        }
+
+        .string {
+            color: #a6e22e;
+        }
+
+        .number {
+            color: #ae81ff;
+        }
+
+        .comment {
+            color: #75715e;
+            font-style: italic;
+        }
+
+        /* Real World Examples */
+        .real-world {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .example-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            transform: translateY(0);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .example-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .example-card .icon {
+            font-size: 40px;
+            margin-bottom: 15px;
+        }
+
+        .example-card h4 {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+
+        /* Interactive Elements */
+        .interactive-demo {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+
+        .demo-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            margin: 10px;
+        }
+
+        .demo-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .result-box {
+            background: white;
+            border: 2px solid #667eea;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 20px;
+            min-height: 50px;
+            display: none;
+        }
+
+        .result-box.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        /* Flow Diagram */
+        .flow-diagram {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 30px 0;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .flow-node {
+            background: white;
+            border: 3px solid #667eea;
+            padding: 15px 25px;
+            border-radius: 10px;
+            position: relative;
+            font-weight: bold;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .flow-arrow {
+            color: #667eea;
+            font-size: 30px;
+            animation: slideRight 1s ease infinite;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideRight {
+            0%, 100% {
+                transform: translateX(0);
+            }
+            50% {
+                transform: translateX(10px);
+            }
+        }
+
+        /* Tips and Highlights */
+        .tip {
+            background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+            border-left: 4px solid #fdcb6e;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .tip::before {
+            content: '💡';
+            position: absolute;
+            left: -15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: white;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-size: 20px;
+        }
+
+        /* Progress indicators */
+        .progress-section {
+            margin: 40px 0;
+        }
+
+        .progress-bar {
+            background: #e0e0e0;
+            height: 10px;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            height: 100%;
+            width: 0%;
+            animation: fillProgress 2s ease forwards;
+        }
+
+        @keyframes fillProgress {
+            to {
+                width: 75%;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5em;
+            }
+            
+            .card {
+                padding: 25px;
+            }
+            
+            .real-world {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Hero Section -->
+        <div class="hero">
+            <div class="brain-icon">🧠</div>
+            <h1>Gândirea Condițională</h1>
+            <p class="subtitle">
+                Mintea ta ia sute de decizii pe zi. Acum învățăm să le traducem în cod.<br>
+                <strong>If-else nu e nimic nou - deja știi să gândești așa!</strong>
+            </p>
+        </div>
+
+        <!-- Introduction Card -->
+        <div class="card">
+            <h2>🌅 O Dimineață Obișnuită</h2>
+            
+            <div class="thought-process">
+                Te trezești. Prima decizie: <strong>DACĂ</strong> e însorit, porți ochelari de soare, <strong>ALTFEL</strong> iei umbrela.<br>
+                Ajungi la bucătărie: <strong>DACĂ</strong> ai cafea, o prepari, <strong>ALTFEL DACĂ</strong> ai ceai, faci ceai, <strong>ALTFEL</strong> bei apă.<br>
+                Verifici telefonul: <strong>DACĂ</strong> ai notificări importante <strong>ȘI</strong> ai timp, le citești.
+            </div>
+
+            <p style="margin-top: 20px; font-size: 1.1em;">
+                <strong>Felicitări!</strong> Tocmai ai executat 3 structuri if-else-elif în primele 5 minute ale zilei. 
+                Programarea nu face decât să dea nume acestor procese mentale naturale.
+            </p>
+        </div>
+
+        <!-- Mental Model Card -->
+        <div class="card">
+            <h2>🎭 Modelul Mental vs Cod</h2>
+            
+            <h3>Cum gândești tu:</h3>
+            <div class="thought-process">
+                "Hmm, plouă? Da... atunci iau umbrela. Ah, stai, e și frig? Iau și geaca."
+            </div>
+
+            <h3>Cum scrii în Python:</h3>
+            <div class="code-example">
+<span class="keyword">if</span> ploua:
+    print(<span class="string">"Iau umbrela"</span>)
+    <span class="keyword">if</span> temperatura < <span class="number">15</span>:
+        print(<span class="string">"Iau și geaca"</span>)
+            </div>
+
+            <div class="flow-diagram">
+                <div class="flow-node">Gând</div>
+                <span class="flow-arrow">→</span>
+                <div class="flow-node">Condiție</div>
+                <span class="flow-arrow">→</span>
+                <div class="flow-node">Decizie</div>
+                <span class="flow-arrow">→</span>
+                <div class="flow-node">Acțiune</div>
+            </div>
+        </div>
+
+        <!-- Real World Applications -->
+        <div class="card">
+            <h2>🌍 Unde Trăiesc Aceste Decizii</h2>
+            
+            <div class="real-world">
+                <div class="example-card">
+                    <div class="icon">📱</div>
+                    <h4>Instagram</h4>
+                    <p>DACĂ ai > 1000 followers, afișează badge-ul "Popular"<br>
+                    ALTFEL DACĂ ai > 100, afișează "Active"<br>
+                    ALTFEL afișează "New Member"</p>
+                </div>
+
+                <div class="example-card">
+                    <div class="icon">🎬</div>
+                    <h4>Netflix</h4>
+                    <p>DACĂ ai văzut > 3 comedii ȘI e weekend,<br>
+                    recomandă alte comedii<br>
+                    ALTFEL recomandă trending</p>
+                </div>
+
+                <div class="example-card">
+                    <div class="icon">🛒</div>
+                    <h4>Amazon</h4>
+                    <p>DACĂ produs în coș > 100 lei ȘI ești Prime,<br>
+                    livrare gratuită<br>
+                    ALTFEL calculează taxa livrare</p>
+                </div>
+
+                <div class="example-card">
+                    <div class="icon">🚗</div>
+                    <h4>Uber</h4>
+                    <p>DACĂ e ora de vârf SAU plouă,<br>
+                    aplică tarif dinamic<br>
+                    ALTFEL preț standard</p>
+                </div>
+
+                <div class="example-card">
+                    <div class="icon">🎮</div>
+                    <h4>Spotify</h4>
+                    <p>DACĂ asculți > 5 piese dintr-un artist,<br>
+                    ȘI NU îl urmărești,<br>
+                    sugerează să-l urmărești</p>
+                </div>
+
+                <div class="example-card">
+                    <div class="icon">✈️</div>
+                    <h4>Booking.com</h4>
+                    <p>DACĂ caută > 3 ori același hotel<br>
+                    ȘI nu a rezervat,<br>
+                    trimite notificare reducere 10%</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Interactive Demo -->
+        <div class="card">
+            <h2>🎯 Încearcă Tu - Sistemul de Recomandări</h2>
+            
+            <div class="interactive-demo">
+                <p style="margin-bottom: 20px;">Simulează algoritmul de recomandare al unei aplicații de streaming:</p>
+                
+                <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 20px;">
+                    <label>
+                        Ore vizionate săptămâna asta:
+                        <input type="number" id="hours" value="5" min="0" max="100" style="margin-left: 10px; padding: 5px;">
+                    </label>
+                    <label>
+                        Gen preferat:
+                        <select id="genre" style="margin-left: 10px; padding: 5px;">
+                            <option value="action">Acțiune</option>
+                            <option value="comedy">Comedie</option>
+                            <option value="drama">Dramă</option>
+                        </select>
+                    </label>
+                </div>
+                
+                <button class="demo-button" onclick="runRecommendation()">Rulează Algoritmul</button>
+                
+                <div id="recommendationResult" class="result-box">
+                    <strong>Decizia algoritmului:</strong>
+                    <div id="recommendationText"></div>
+                </div>
+            </div>
+
+            <h3>Codul din spate:</h3>
+            <div class="code-example">
+ore_vizionate = <span class="number">5</span>
+gen_preferat = <span class="string">"action"</span>
+
+<span class="keyword">if</span> ore_vizionate > <span class="number">10</span>:
+    <span class="comment"># Utilizator foarte activ</span>
+    <span class="keyword">if</span> gen_preferat == <span class="string">"action"</span>:
+        recomandare = <span class="string">"Top 10 filme de acțiune exclusive"</span>
+    <span class="keyword">elif</span> gen_preferat == <span class="string">"comedy"</span>:
+        recomandare = <span class="string">"Stand-up comedy specials noi"</span>
+    <span class="keyword">else</span>:
+        recomandare = <span class="string">"Seriale premiate recent"</span>
+<span class="keyword">elif</span> ore_vizionate > <span class="number">3</span>:
+    <span class="comment"># Utilizator moderat</span>
+    recomandare = <span class="string">f"Continuă să vezi {gen_preferat}"</span>
+<span class="keyword">else</span>:
+    <span class="comment"># Utilizator nou/inactiv</span>
+    recomandare = <span class="string">"Top 5 trending acum"</span>
+            </div>
+        </div>
+
+        <!-- Patterns Card -->
+        <div class="card">
+            <h2>🎨 Tipare de Gândire în Cod</h2>
+
+            <h3>1. Validarea (Portar la club)</h3>
+            <div class="code-example">
+<span class="comment"># Gândirea: "Poate intra doar dacă..."</span>
+<span class="keyword">if</span> varsta >= <span class="number">18</span> <span class="keyword">and</span> are_bilet <span class="keyword">and not</span> e_plin:
+    print(<span class="string">"Bun venit!"</span>)
+<span class="keyword">else</span>:
+    print(<span class="string">"Nu poți intra"</span>)
+            </div>
+
+            <h3>2. Clasificarea (Sortator automat)</h3>
+            <div class="code-example">
+<span class="comment"># Gândirea: "În ce categorie se încadrează?"</span>
+<span class="keyword">if</span> scor >= <span class="number">90</span>:
+    nivel = <span class="string">"Expert"</span>
+<span class="keyword">elif</span> scor >= <span class="number">70</span>:
+    nivel = <span class="string">"Avansat"</span>
+<span class="keyword">elif</span> scor >= <span class="number">50</span>:
+    nivel = <span class="string">"Intermediar"</span>
+<span class="keyword">else</span>:
+    nivel = <span class="string">"Începător"</span>
+            </div>
+
+            <h3>3. Fallback (Plan B, C, D...)</h3>
+            <div class="code-example">
+<span class="comment"># Gândirea: "Încearcă asta, dacă nu merge, încearcă altceva"</span>
+<span class="keyword">if</span> metoda_plata == <span class="string">"card"</span> <span class="keyword">and</span> card_valid:
+    procesare_card()
+<span class="keyword">elif</span> metoda_plata == <span class="string">"paypal"</span> <span class="keyword">and</span> paypal_conectat:
+    procesare_paypal()
+<span class="keyword">elif</span> are_credit_magazin:
+    foloseste_credit()
+<span class="keyword">else</span>:
+    print(<span class="string">"Adaugă metodă de plată"</span>)
+            </div>
+        </div>
+
+        <!-- Mental Exercises -->
+        <div class="card">
+            <h2>🧩 Exerciții Mentale</h2>
+            
+            <div class="tip">
+                <strong>Secretul:</strong> Înainte să scrii cod, gândește-te cum ai explica decizia unui prieten.
+            </div>
+
+            <h3>Transformă gândurile în cod:</h3>
+            
+            <div style="display: grid; gap: 20px; margin-top: 20px;">
+                <div style="background: #f8f9fa; padding: 20px; border-radius: 10px;">
+                    <p><strong>Gând:</strong> "Dacă e weekend și am terminat treaba, mă uit la un film, altfel lucrez."</p>
+                    <button class="demo-button" onclick="toggleCode('code1')">Vezi Codul</button>
+                    <div id="code1" class="code-example" style="display: none; margin-top: 15px;">
+<span class="keyword">if</span> e_weekend <span class="keyword">and</span> treaba_terminata:
+    print(<span class="string">"Film time! 🎬"</span>)
+<span class="keyword">else</span>:
+    print(<span class="string">"La muncă! 💼"</span>)
+                    </div>
+                </div>
+
+                <div style="background: #f8f9fa; padding: 20px; border-radius: 10px;">
+                    <p><strong>Gând:</strong> "Comanda e gratis dacă: e peste 100 lei SAU sunt client premium SAU e prima comandă."</p>
+                    <button class="demo-button" onclick="toggleCode('code2')">Vezi Codul</button>
+                    <div id="code2" class="code-example" style="display: none; margin-top: 15px;">
+<span class="keyword">if</span> total > <span class="number">100</span> <span class="keyword">or</span> client_premium <span class="keyword">or</span> prima_comanda:
+    transport = <span class="number">0</span>
+    print(<span class="string">"Transport gratuit! 🚚"</span>)
+<span class="keyword">else</span>:
+    transport = <span class="number">15</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Common Patterns -->
+        <div class="card">
+            <h2>⚡ Super-Puteri ale Deciziilor</h2>
+
+            <h3>🔒 Guard Clauses (Bodyguard-ul codului)</h3>
+            <div class="code-example">
+<span class="comment"># În loc de piramida de if-uri, verifică erorile primul</span>
+<span class="keyword">def</span> procesare_comanda(user, produs, card):
+    <span class="keyword">if not</span> user:
+        <span class="keyword">return</span> <span class="string">"Trebuie să fii logat"</span>
+    <span class="keyword">if not</span> produs.in_stoc:
+        <span class="keyword">return</span> <span class="string">"Produsul nu e în stoc"</span>
+    <span class="keyword">if not</span> card.valid:
+        <span class="keyword">return</span> <span class="string">"Card invalid"</span>
+    
+    <span class="comment"># Acum procesează comanda normală</span>
+    procesare_normala()
+            </div>
+
+            <h3>🎯 Ternary (One-liner magic)</h3>
+            <div class="code-example">
+<span class="comment"># Gândirea rapidă în cod rapid</span>
+mesaj = <span class="string">"Bună dimineața!"</span> <span class="keyword">if</span> ora < <span class="number">12</span> <span class="keyword">else</span> <span class="string">"Bună ziua!"</span>
+status = <span class="string">"Online"</span> <span class="keyword">if</span> activ <span class="keyword">else</span> <span class="string">"Offline"</span>
+discount = pret * <span class="number">0.9</span> <span class="keyword">if</span> membru_vip <span class="keyword">else</span> pret
+            </div>
+        </div>
+
+        <!-- Progress Section -->
+        <div class="card">
+            <h2>📈 Progresul Tău</h2>
+            
+            <div class="progress-section">
+                <p style="margin-bottom: 10px;">Ai înțeles <strong>75%</strong> din puterea deciziilor!</p>
+                <div class="progress-bar">
+                    <div class="progress-fill"></div>
+                </div>
+            </div>
+
+            <h3>Ce urmează:</h3>
+            <div style="display: grid; gap: 15px; margin-top: 20px;">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <span style="font-size: 24px;">🔄</span>
+                    <div>
+                        <strong>Bucle (Loops)</strong> - Cum să repeți decizii de 1000 de ori fără să scrii 1000 de if-uri
+                    </div>
+                </div>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <span style="font-size: 24px;">📦</span>
+                    <div>
+                        <strong>Funcții</strong> - Cum să împachetezi deciziile pentru a le refolosi
+                    </div>
+                </div>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <span style="font-size: 24px;">🎲</span>
+                    <div>
+                        <strong>Structuri de Date</strong> - Cum să iei decizii despre liste întregi de lucruri
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Final Inspiration -->
+        <div class="card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+            <h2 style="color: white;">✨ Gândește-te la Asta</h2>
+            
+            <p style="font-size: 1.2em; line-height: 1.8; margin-top: 20px;">
+                Fiecare aplicație pe care o folosești - de la alarma de dimineață până la ultima verificare a Instagram-ului seara - 
+                e construită din mii de decizii if-else care lucrează împreună.
+            </p>
+            
+            <p style="font-size: 1.2em; line-height: 1.8; margin-top: 20px;">
+                <strong>Tu deja știi să gândești algoritmic.</strong> Acum doar înveți să vorbești limba calculatorului.
+            </p>
+            
+            <div style="text-align: center; margin-top: 30px; font-size: 40px;">
+                🧠 + 💻 = 🚀
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Define functions before they're used
+        function runRecommendation() {
+            const hours = parseInt(document.getElementById('hours').value);
+            const genre = document.getElementById('genre').value;
+            const resultBox = document.getElementById('recommendationResult');
+            const resultText = document.getElementById('recommendationText');
+            
+            let recommendation = '';
+            let explanation = '';
+            
+            if (hours > 10) {
+                explanation = '🔥 Utilizator foarte activ (>10 ore)<br>';
+                if (genre === 'action') {
+                    recommendation = 'Top 10 filme de acțiune exclusive pentru tine!';
+                } else if (genre === 'comedy') {
+                    recommendation = 'Stand-up comedy specials noi disponibile!';
+                } else {
+                    recommendation = 'Seriale premiate recent - perfect pentru marathon!';
+                }
+            } else if (hours > 3) {
+                explanation = '👍 Utilizator moderat (3-10 ore)<br>';
+                recommendation = `Continuă să vezi mai multe din categoria ${genre}`;
+            } else {
+                explanation = '🆕 Utilizator nou/inactiv (<3 ore)<br>';
+                recommendation = 'Descoperă Top 5 trending acum pe platformă!';
+            }
+            
+            resultText.innerHTML = explanation + '<strong>Recomandare:</strong> ' + recommendation;
+            resultBox.classList.add('show');
+        }
+        
+        function toggleCode(id) {
+            const codeBlock = document.getElementById(id);
+            if (codeBlock.style.display === 'none' || codeBlock.style.display === '') {
+                codeBlock.style.display = 'block';
+            } else {
+                codeBlock.style.display = 'none';
+            }
+        }
+        
+        // Add some interactive animations on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.card').forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(card);
+            });
+            
+            // Fun easter egg - make brain pulse on click
+            const brainIcon = document.querySelector('.brain-icon');
+            if (brainIcon) {
+                brainIcon.addEventListener('click', function() {
+                    this.style.animation = 'none';
+                    setTimeout(() => {
+                        this.style.animation = 'pulse 0.5s ease 3';
+                    }, 10);
+                });
+            }
+        });
+        
+        // Add some randomized floating particles for visual appeal
+        function createParticle() {
+            const particle = document.createElement('div');
+            particle.style.position = 'fixed';
+            particle.style.pointerEvents = 'none';
+            particle.style.width = '4px';
+            particle.style.height = '4px';
+            particle.style.background = 'rgba(255, 255, 255, 0.5)';
+            particle.style.borderRadius = '50%';
+            particle.style.left = Math.random() * window.innerWidth + 'px';
+            particle.style.top = window.innerHeight + 'px';
+            document.body.appendChild(particle);
+            
+            let position = window.innerHeight;
+            const speed = 1 + Math.random() * 2;
+            const horizontalDrift = (Math.random() - 0.5) * 2;
+            
+            const animate = () => {
+                position -= speed;
+                particle.style.top = position + 'px';
+                particle.style.left = parseFloat(particle.style.left) + horizontalDrift + 'px';
+                
+                if (position < -10) {
+                    particle.remove();
+                } else {
+                    requestAnimationFrame(animate);
+                }
+            };
+            
+            animate();
+        }
+        
+        // Create particles occasionally
+        setInterval(createParticle, 2000);
+    </script>
+</body>
+</html>

@@ -25,6 +25,7 @@ import { AuthProvider } from "./components/AuthContext";
 import { ContentProvider } from "./components/ContentProvider";
 import PersonalFilesPage from "./pages/PersonalFilesPage";
 import GitBlueprints from "./pages/GitBlueprints";
+import IfElseArtifact from "./pages/Artifacts/IfElseArtifact";
 
 
 
@@ -55,6 +56,7 @@ const App = () => (
                   <Route path="/advanced-machine-learning" element={<AdvancedMachineLearning />} />
 
                   <Route path="/personal-files" element={<PersonalFilesPage />} />
+                  <Route path="/artifacts/ifelse" element={<IfElseArtifact />} />
                   <Route path="/auth" element={<AuthPage />} />
                   <Route path="/profile" element={<ProfilePage />} />
                   <Route path="/admin" element={<AdminPage />} />

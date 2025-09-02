@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useContent } from '../components/ContentProvider';
+import { useNavigate } from 'react-router-dom';
 import EditablePageHeader from '../components/EditablePageHeader';
 import EditableContent from '../components/EditableContent';
 import EditableCodeBlock from '../components/EditableCodeBlock';
@@ -14,6 +15,7 @@ import { Button } from '@/components/ui/button';
 
 const Foundations = () => {
   const { getContent, loading } = useContent();
+  const navigate = useNavigate();
   
   const [tocItems] = useState([
     { id: 'getting-started', title: 'Getting Started', sessions: 'Setup & Environment' },
@@ -338,24 +340,36 @@ const Foundations = () => {
                     </div>
                   </div>
                   <CardTitle className="group-hover:text-orange-600 transition-colors">
-                    {sessionContent.session2?.title}
+                    Decisions and Alternative Paths
                   </CardTitle>
                   <CardDescription>
-                    {sessionContent.session2?.description}
+                    Master if/else statements with real-world decision making
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <details className="cursor-pointer">
+                  <details className="cursor-pointer mb-4">
                     <summary className="font-medium text-primary hover:text-primary/80 mb-3">
                       View Code Examples
                     </summary>
                     <EditableCodeBlock
                       page="foundations"
                       section="session-2"
-                      code={sessionContent.session2?.code || "# Session 2 content"}
+                      code={sessionContent.session2?.code || "# Session 2: if/else statements\nage = 18\nif age >= 18:\n    print('You can vote!')\nelse:\n    print('You cannot vote yet.')"}
                       language="python"
                     />
                   </details>
+                  
+                  <div className="flex gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => navigate('/artifacts/ifelse')}
+                      className="text-orange-600 border-orange-600 hover:bg-orange-50 dark:hover:bg-orange-950/20"
+                    >
+                      <ChevronRight className="w-4 h-4 mr-1" />
+                      Open Artifact
+                    </Button>
+                  </div>
                 </CardContent>
               </Card>
 
