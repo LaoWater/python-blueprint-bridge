@@ -26,6 +26,8 @@ import { ContentProvider } from "./components/ContentProvider";
 import PersonalFilesPage from "./pages/PersonalFilesPage";
 import GitBlueprints from "./pages/GitBlueprints";
 import IfElseArtifact from "./pages/Artifacts/IfElseArtifact";
+import LoopsArtifact from "./pages/Artifacts/LoopsArtifact";
+import CollectionsArtifact from "./pages/Artifacts/CollectionsArtifact";
 
 
 
@@ -57,6 +59,8 @@ const App = () => (
 
                   <Route path="/personal-files" element={<PersonalFilesPage />} />
                   <Route path="/artifacts/ifelse" element={<IfElseArtifact />} />
+                  <Route path="/artifacts/loops" element={<LoopsArtifact />} />
+                  <Route path="/artifacts/collections" element={<CollectionsArtifact />} />
                   <Route path="/auth" element={<AuthPage />} />
                   <Route path="/profile" element={<ProfilePage />} />
                   <Route path="/admin" element={<AdminPage />} />

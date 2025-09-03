@@ -383,24 +383,36 @@ const Foundations = () => {
                     </div>
                   </div>
                   <CardTitle className="group-hover:text-purple-600 transition-colors">
-                    {sessionContent.session3?.title}
+                    Loops - Repetition & Magic
                   </CardTitle>
                   <CardDescription>
-                    {sessionContent.session3?.description}
+                    Master while and for loops - your first taste of computational magic
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <details className="cursor-pointer">
+                  <details className="cursor-pointer mb-4">
                     <summary className="font-medium text-primary hover:text-primary/80 mb-3">
                       View Code Examples
                     </summary>
                     <EditableCodeBlock
                       page="foundations"
                       section="session-3"
-                      code={sessionContent.session3?.code || "# Session 3 content"}
+                      code={sessionContent.session3?.code || "# Session 3: Loops - The First Taste of Magic\n\n# WHILE Loop - \"Cât timp condiția e adevărată\"\ncountdown = 5\nwhile countdown > 0:\n    print(f\"Lansare în {countdown}...\")\n    countdown -= 1\nprint(\"Lansare! 🚀\")\n\n# FOR Loop - \"Pentru fiecare element\"\nfruits = ['🍎', '🍌', '🍊', '🍓']\nfor fruit in fruits:\n    print(f\"Procesez {fruit}\")\n\n# Pattern Generation\nfor i in range(1, 6):\n    print('*' * i)\n\n# Real-world: User Authentication\nattempts = 0\nmax_attempts = 3\n\nwhile attempts < max_attempts:\n    password = input(\"Enter password: \")\n    if password == \"secret123\":\n        print(\"Access granted!\")\n        break\n    else:\n        attempts += 1\n        print(f\"Wrong password. {max_attempts - attempts} attempts left.\")\n\nif attempts == max_attempts:\n    print(\"Account locked!\")\n\n# The Magic: 1 million repetitions in milliseconds!\nfor i in range(1000000):\n    pass  # Computer does this instantly!"}
                       language="python"
                     />
                   </details>
+                  
+                  <div className="flex gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => navigate('/artifacts/loops')}
+                      className="text-purple-600 border-purple-600 hover:bg-purple-50 dark:hover:bg-purple-950/20"
+                    >
+                      <ChevronRight className="w-4 h-4 mr-1" />
+                      Open Artifact
+                    </Button>
+                  </div>
                 </CardContent>
               </Card>
 
@@ -414,24 +426,36 @@ const Foundations = () => {
                     </div>
                   </div>
                   <CardTitle className="group-hover:text-blue-600 transition-colors">
-                    {sessionContent.session4?.title}
+                    Colecții în Python
                   </CardTitle>
                   <CardDescription>
-                    {sessionContent.session4?.description}
+                    Organizarea lumii prin structuri de date - liste, tupluri, seturi, dicționare
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <details className="cursor-pointer">
+                  <details className="cursor-pointer mb-4">
                     <summary className="font-medium text-primary hover:text-primary/80 mb-3">
                       View Code Examples
                     </summary>
                     <EditableCodeBlock
                       page="foundations"
                       section="session-4"
-                      code={sessionContent.session4?.code || "# Session 4 content"}
+                      code={sessionContent.session4?.code || "# Session 4: Colecții în Python - Organizarea Lumii\n\n# LISTE - Cutii flexibile\nlista_cumparaturi = ['🍎 Mere', '🥛 Lapte', '🍞 Pâine']\nlista_cumparaturi.append('🧀 Brânză')  # Adaugă la final\nprima_cumparatura = lista_cumparaturi[0]  # Accesează primul element\nprint(f'Am {len(lista_cumparaturi)} produse în listă')\n\n# TUPLURI - Cutii sigilate (date fixe)\ncoordonate_casa = (44.4268, 26.1025)  # Nu se pot modifica!\nlatitudine, longitudine = coordonate_casa  # Destructurare\nprint(f'Casa mea: {latitudine}, {longitudine}')\n\n# SETURI - Mulțimi fără duplicate\nraspunsuri_brute = ['Da', 'Nu', 'Da', 'Poate', 'Da', 'Nu']\nraspunsuri_unice = set(raspunsuri_brute)\nprint(f'Răspunsuri unice: {raspunsuri_unice}')  # {'Da', 'Nu', 'Poate'}\n\n# DICȚIONARE - Tabele cu sens (cheie → valoare)\nstudent = {\n    'nume': 'Ana Popescu',\n    'clasa': '10A',\n    'note': [9, 8, 10, 9]\n}\n\n# Accesare și modificare\nprint(f\"Student: {student['nume']} din clasa {student['clasa']}\")\nmedie = sum(student['note']) / len(student['note'])\nprint(f'Media: {medie:.1f}')\n\n# Catalog complet de studenți\ncatalog = {\n    'Ana123': {'nume': 'Ana Popescu', 'note': [9, 8, 10]},\n    'Ion456': {'nume': 'Ion Marinescu', 'note': [7, 9, 8]}\n}\n\n# Parcurgerea catalogului\nfor id_student, date in catalog.items():\n    medie = sum(date['note']) / len(date['note'])\n    print(f\"{date['nume']}: {medie:.1f}\")\n\n# Colecțiile în lumea reală:\n# Liste → playlist Spotify, coș de cumpărături\n# Tupluri → coordonate GPS, date de naștere\n# Seturi → hashtag-uri unice, categorii\n# Dicționare → profiluri utilizatori, configurări"}
                       language="python"
                     />
                   </details>
+                  
+                  <div className="flex gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => navigate('/artifacts/collections')}
+                      className="text-blue-600 border-blue-600 hover:bg-blue-50 dark:hover:bg-blue-950/20"
+                    >
+                      <ChevronRight className="w-4 h-4 mr-1" />
+                      Open Artifact
+                    </Button>
+                  </div>
                 </CardContent>
               </Card>
 
