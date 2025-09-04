@@ -598,7 +598,7 @@ const CollectionsArtifact = () => {
                 tuple: "Durata și artistul unei melodii",
                 set: "Genurile muzicale unice",
                 dict: "Informații despre artist (nume, țară, albume)",
-                color: "green"
+                color: "emerald"
               },
               {
                 icon: "📱",
@@ -607,7 +607,7 @@ const CollectionsArtifact = () => {
                 tuple: "Coordonatele unei fotografii",
                 set: "Hashtag-urile unice",
                 dict: "Profilul utilizatorului (followers, posts, bio)",
-                color: "pink"
+                color: "rose"
               },
               {
                 icon: "🎮",
@@ -619,30 +619,34 @@ const CollectionsArtifact = () => {
                 color: "purple"
               }
             ].map((app, index) => (
-              <div key={index} className={`bg-gradient-to-br from-${app.color}-500 to-${app.color}-600 text-white p-6 rounded-2xl`}>
+              <div key={index} className={`${
+                app.title === 'Instagram' 
+                  ? 'bg-gradient-to-br from-pink-100 to-purple-100 text-purple-800' 
+                  : `bg-gradient-to-br from-${app.color}-500 to-${app.color}-600 text-white`
+              } p-6 rounded-2xl`}>
                 <div className="text-3xl mb-4 text-center">{app.icon}</div>
                 <h4 className="text-xl font-bold mb-4 text-center">{app.title}</h4>
                 <div className="space-y-3 text-sm">
                   <div className="flex items-start gap-2">
-                    <span className="text-yellow-300">📝</span>
+                    <span className={app.title === 'Instagram' ? 'text-pink-600' : 'text-yellow-300'}>📝</span>
                     <div>
                       <strong>Liste:</strong> {app.list}
                     </div>
                   </div>
                   <div className="flex items-start gap-2">
-                    <span className="text-yellow-300">📍</span>
+                    <span className={app.title === 'Instagram' ? 'text-pink-600' : 'text-yellow-300'}>📍</span>
                     <div>
                       <strong>Tupluri:</strong> {app.tuple}
                     </div>
                   </div>
                   <div className="flex items-start gap-2">
-                    <span className="text-yellow-300">🎯</span>
+                    <span className={app.title === 'Instagram' ? 'text-pink-600' : 'text-yellow-300'}>🎯</span>
                     <div>
                       <strong>Seturi:</strong> {app.set}
                     </div>
                   </div>
                   <div className="flex items-start gap-2">
-                    <span className="text-yellow-300">📚</span>
+                    <span className={app.title === 'Instagram' ? 'text-pink-600' : 'text-yellow-300'}>📚</span>
                     <div>
                       <strong>Dicționare:</strong> {app.dict}
                     </div>

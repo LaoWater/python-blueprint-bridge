@@ -248,7 +248,7 @@ const LoopsArtifact = () => {
               </div>
               <div>
                 <strong>FOR:</strong> parcurge un drum deja trasat<br/>
-                <em>(știi exact câte pași vor fi)</em>
+                <em>(știi exact cati pași vor fi)</em>
               </div>
             </div>
           </div>
@@ -744,6 +744,182 @@ const LoopsArtifact = () => {
           </div>
         </div>
 
+        {/* Trade-offs and Big O Section */}
+        <div className="artifact-card bg-white rounded-3xl p-8 md:p-12 mb-8 shadow-2xl animate-slideIn">
+          <h2 className="text-2xl md:text-3xl font-bold text-amber-600 mb-6 flex items-center gap-3">
+            ⚖️ Trade-offs
+          </h2>
+          
+          <div className="bg-gradient-to-r from-amber-50 to-orange-50 p-6 rounded-2xl mb-6">
+            <p className="text-lg text-gray-700 leading-relaxed mb-4">
+              Ca în toate aspectele vieții, și în programare avem <strong>trade-off-uri</strong> (compromisuri).
+              În fiecare secundă când calculatorul execută operațiile noastre binare pe care le vedem ca bucle,
+              <strong> el consumă energie</strong> care se exprimă ca <strong>"Compute"</strong>.
+            </p>
+            
+            <div className="bg-white rounded-xl p-4 border-l-4 border-amber-500">
+              <h4 className="font-semibold text-amber-800 mb-2">🔋 Fiecare linie de cod = Energie consumată</h4>
+              <p className="text-gray-700 text-sm">
+                Când scrii <code>for i in range(1000000)</code>, calculatorul va executa un milion de pași.
+                Fiecare pas consumă o cantitate mică de energie, dar la scară mare, aceasta devine semnificativă.
+              </p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-6">
+            <div className="bg-gradient-to-br from-blue-100 to-cyan-100 p-6 rounded-xl">
+              <h3 className="text-xl font-semibold text-blue-800 mb-4">🐌 Algoritmul Lent</h3>
+              <div className="bg-white p-4 rounded-lg mb-3 font-mono text-sm">
+                <span className="text-blue-600">for</span> i <span className="text-blue-600">in</span> range(n):<br/>
+                &nbsp;&nbsp;<span className="text-blue-600">for</span> j <span className="text-blue-600">in</span> range(n):<br/>
+                &nbsp;&nbsp;&nbsp;&nbsp;print(i, j)
+              </div>
+              <p className="text-blue-700 text-sm">
+                <strong>Pași executați:</strong> n × n = n²<br/>
+                <strong>Pentru 1000 elemente:</strong> 1,000,000 pași<br/>
+                <strong>Timp:</strong> Mult mai lent
+              </p>
+            </div>
+
+            <div className="bg-gradient-to-br from-green-100 to-emerald-100 p-6 rounded-xl">
+              <h3 className="text-xl font-semibold text-green-800 mb-4">⚡ Algoritmul Rapid</h3>
+              <div className="bg-white p-4 rounded-lg mb-3 font-mono text-sm">
+                <span className="text-blue-600">for</span> i <span className="text-blue-600">in</span> range(n):<br/>
+                &nbsp;&nbsp;print(i)
+              </div>
+              <p className="text-green-700 text-sm">
+                <strong>Pași executați:</strong> n<br/>
+                <strong>Pentru 1000 elemente:</strong> 1,000 pași<br/>
+                <strong>Timp:</strong> De 1000 de ori mai rapid!
+              </p>
+            </div>
+          </div>
+
+          <div className="bg-gradient-to-r from-purple-500 to-indigo-600 text-white p-6 rounded-2xl mb-6">
+            <h3 className="text-2xl font-bold mb-4 flex items-center gap-2">
+              📊 Introducere în O(n) - Limbajul Eficienței
+            </h3>
+            <p className="text-lg mb-4">
+              <strong>O(n)</strong> (citit "Big O de n") este modul în care măsurăm <strong>eficiența unui algoritm</strong>.
+              Este ca o <em>amprentă energetică</em> a codului tău.
+            </p>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+              <div className="bg-white/10 p-3 rounded-lg">
+                <div className="font-bold text-green-300">O(1) - Constant</div>
+                <div>print("Hello") - mereu la fel de rapid</div>
+              </div>
+              <div className="bg-white/10 p-3 rounded-lg">
+                <div className="font-bold text-yellow-300">O(n) - Linear</div>
+                <div>for i in range(n) - proporțional cu n</div>
+              </div>
+              <div className="bg-white/10 p-3 rounded-lg">
+                <div className="font-bold text-red-300">O(n²) - Pătratic</div>
+                <div>bucle imbricate - foarte lent pentru n mare</div>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-blue-50 p-6 rounded-2xl">
+            <h4 className="text-lg font-semibold text-blue-800 mb-3">🎯 De ce e important să știi asta?</h4>
+            <div className="space-y-3 text-blue-700">
+              <p>• <strong>La scală mică:</strong> Diferențele sunt neglijabile - calculatorul tău face față ușor</p>
+              <p>• <strong>La scară mare:</strong> (milioane de utilizatori, big data) - diferențele devin dramatice</p>
+              <p>• <strong>În AI/ML:</strong> Algoritmii ineficienți pot dura ore în loc de minute</p>
+              <p>• <strong>În producție:</strong> Diferența între o aplicație rapidă și una lentă</p>
+            </div>
+          </div>
+
+          <div className="mt-6">
+            <Button
+              onClick={() => toggleCode('big-o-examples')}
+              className="bg-amber-600 hover:bg-amber-700 text-white"
+            >
+              🔍 Vezi Exemple Practice de O(n)
+            </Button>
+            
+            <div id="big-o-examples" className="mt-6 hidden">
+              <div className="bg-gray-900 text-white rounded-2xl p-6">
+                <h5 className="text-xl font-bold text-amber-400 mb-4">⚡ Comparație Practică: Căutare în Listă</h5>
+                
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  <div>
+                    <h6 className="text-lg font-semibold text-red-400 mb-3">❌ Algoritmul Ineficient - O(n²)</h6>
+                    <div className="bg-black p-4 rounded-lg font-mono text-sm mb-3">
+                      <span className="text-gray-400"># Găsește toate perechile care se adună la 10</span><br/>
+                      numere = [1, 2, 3, 4, 5, 6, 7, 8, 9]<br/><br/>
+                      
+                      <span className="text-blue-400">for</span> i <span className="text-blue-400">in</span> numere:&nbsp;&nbsp;&nbsp;<span className="text-gray-400"># n pași</span><br/>
+                      &nbsp;&nbsp;<span className="text-blue-400">for</span> j <span className="text-blue-400">in</span> numere:&nbsp;<span className="text-gray-400"># n pași pentru fiecare i</span><br/>
+                      &nbsp;&nbsp;&nbsp;&nbsp;<span className="text-blue-400">if</span> i + j == 10:<br/>
+                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print(<span className="text-yellow-300">f"</span>{'{'}i{'}'} + {'{'}j{'}'} = 10<span className="text-yellow-300">"</span>)
+                    </div>
+                    <div className="text-red-300 text-sm">
+                      <strong>Complexitate:</strong> O(n²)<br/>
+                      <strong>Pentru 1000 numere:</strong> 1,000,000 de verificări<br/>
+                      <strong>Timp:</strong> ~10 secunde
+                    </div>
+                  </div>
+
+                  <div>
+                    <h6 className="text-lg font-semibold text-green-400 mb-3">✅ Algoritmul Eficient - O(n)</h6>
+                    <div className="bg-black p-4 rounded-lg font-mono text-sm mb-3">
+                      <span className="text-gray-400"># Același rezultat, mult mai rapid</span><br/>
+                      numere = [1, 2, 3, 4, 5, 6, 7, 8, 9]<br/>
+                      vazute = set()<br/><br/>
+                      
+                      <span className="text-blue-400">for</span> num <span className="text-blue-400">in</span> numere:&nbsp;&nbsp;<span className="text-gray-400"># n pași</span><br/>
+                      &nbsp;&nbsp;complement = 10 - num<br/>
+                      &nbsp;&nbsp;<span className="text-blue-400">if</span> complement <span className="text-blue-400">in</span> vazute:<br/>
+                      &nbsp;&nbsp;&nbsp;&nbsp;print(<span className="text-yellow-300">f"</span>{'{'}complement{'}'} + {'{'}num{'}'} = 10<span className="text-yellow-300">"</span>)<br/>
+                      &nbsp;&nbsp;vazute.add(num)
+                    </div>
+                    <div className="text-green-300 text-sm">
+                      <strong>Complexitate:</strong> O(n)<br/>
+                      <strong>Pentru 1000 numere:</strong> 1,000 de verificări<br/>
+                      <strong>Timp:</strong> ~0.01 secunde
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-6 p-4 bg-amber-900 rounded-lg">
+                  <h6 className="text-amber-300 font-semibold mb-2">📈 Diferența la Scară:</h6>
+                  <div className="grid grid-cols-3 gap-4 text-xs">
+                    <div>
+                      <strong>100 elemente:</strong><br/>
+                      O(n²): 10,000 pași<br/>
+                      O(n): 100 pași<br/>
+                      <span className="text-green-400">Diferența: 100x</span>
+                    </div>
+                    <div>
+                      <strong>1,000 elemente:</strong><br/>
+                      O(n²): 1,000,000 pași<br/>
+                      O(n): 1,000 pași<br/>
+                      <span className="text-yellow-400">Diferența: 1,000x</span>
+                    </div>
+                    <div>
+                      <strong>10,000 elemente:</strong><br/>
+                      O(n²): 100,000,000 pași<br/>
+                      O(n): 10,000 pași<br/>
+                      <span className="text-red-400">Diferența: 10,000x</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-6 p-4 bg-blue-900 rounded-lg">
+                  <h6 className="text-blue-300 font-semibold mb-2">🌍 Aplicații în Lumea Reală:</h6>
+                  <div className="space-y-2 text-sm">
+                    <p>• <strong>Google Search:</strong> Algoritmi O(log n) pentru a căuta prin miliarde de pagini în millisecunde</p>
+                    <p>• <strong>Facebook Feed:</strong> Algoritmi O(n log n) pentru a sorta postările pentru miliarde de utilizatori</p>
+                    <p>• <strong>Netflix Recommendations:</strong> Algoritmi optimizați pentru a procesa terabytes de date</p>
+                    <p>• <strong>ChatGPT:</strong> Transformers cu complexitate O(n²) pentru secvențe, optimizați masiv</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* Final Inspiration */}
         <div className="artifact-card bg-gradient-to-br from-cyan-600 to-blue-700 text-white rounded-3xl p-8 md:p-12 shadow-2xl animate-slideIn">
           <h2 className="text-2xl md:text-3xl font-bold mb-6 flex items-center gap-3">
@@ -757,8 +933,13 @@ const LoopsArtifact = () => {
             <p className="mb-4">
               <strong>Capacitatea de a executa milioane de repetări perfecte, fără greșeală, fără oboseală.</strong>
             </p>
+            <p className="mb-4">
+              Dar ai învățat și că <strong>puterea vine cu responsabilitate</strong>: fiecare buclă consumă energie,
+              și modul în care o scrii poate face diferența între un algoritm rapid și unul lent.
+            </p>
             <p className="mb-6">
-              Asta nu e doar programare - e <em>prima colaborare</em> între mintea ta creativă și o mașină care poate accelera infinit orice idee repetitivă.
+              Asta nu e doar programare - e <em>prima colaborare</em> între mintea ta creativă și o mașină care poate 
+              accelera infinit orice idee repetitivă, <strong>cu condiția să gândești eficient</strong>.
             </p>
           </div>
           
@@ -767,15 +948,20 @@ const LoopsArtifact = () => {
             <ul className="space-y-2 text-sm">
               <li>✅ <strong>WHILE</strong> = repetiție cât timp condiția e adevărată</li>
               <li>✅ <strong>FOR</strong> = repetiție pe o secvență sau colecție</li>
+              <li>✅ <strong>Trade-offs</strong> = fiecare buclă consumă energie și timp</li>
+              <li>✅ <strong>O(n)</strong> = limbajul pentru a măsura eficiența algoritmilor</li>
               <li>✅ Atenție la buclele infinite (energia irosită fără final)</li>
-              <li>✅ Puterea reală: combinarea buclelor cu condiții și variabile → comportamente inteligente</li>
+              <li>✅ Puterea reală: combinarea buclelor eficiente cu gândire algoritmică</li>
             </ul>
           </div>
           
           <div className="text-center">
-            <div className="text-4xl mb-4">🧠 × 🔁 × ⚡ = 🪄</div>
+            <div className="text-4xl mb-4">🧠 × 🔁 × ⚡ × ⚖️ = 🪄</div>
             <p className="text-xl font-bold">
-              Gândire × Repetiție × Viteză = Magie
+              Gândire × Repetiție × Viteză × Eficiență = Magie Adevărată
+            </p>
+            <p className="text-sm mt-2 opacity-90">
+              La baza tuturor algoritmilor și sistemelor AI moderne
             </p>
           </div>
         </div>

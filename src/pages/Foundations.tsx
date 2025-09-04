@@ -476,6 +476,18 @@ const Foundations = () => {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
+                  <div className="flex gap-2 mb-4">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => navigate('/artifacts/functions')}
+                      className="text-indigo-600 border-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-950/20"
+                    >
+                      <ChevronRight className="w-4 h-4 mr-1" />
+                      Open Artifact
+                    </Button>
+                  </div>
+                  
                   <details className="cursor-pointer">
                     <summary className="font-medium text-primary hover:text-primary/80 mb-3">
                       View Code Examples
@@ -522,6 +534,18 @@ const Foundations = () => {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
+                  <div className="flex gap-2 mb-4">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => navigate('/artifacts/oop')}
+                      className="text-violet-600 border-violet-600 hover:bg-violet-50 dark:hover:bg-violet-950/20"
+                    >
+                      <ChevronRight className="w-4 h-4 mr-1" />
+                      Open Artifact
+                    </Button>
+                  </div>
+                  
                   <details className="cursor-pointer">
                     <summary className="font-medium text-primary hover:text-primary/80 mb-3">
                       View OOP Examples
@@ -584,6 +608,18 @@ const Foundations = () => {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
+                  <div className="flex gap-2 mb-4">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => navigate('/artifacts/design-patterns')}
+                      className="text-rose-600 border-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/20"
+                    >
+                      <ChevronRight className="w-4 h-4 mr-1" />
+                      Open Artifact
+                    </Button>
+                  </div>
+                  
                   <details className="cursor-pointer">
                     <summary className="font-medium text-primary hover:text-primary/80 mb-3">
                       View Design Patterns

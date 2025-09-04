@@ -28,6 +28,9 @@ import GitBlueprints from "./pages/GitBlueprints";
 import IfElseArtifact from "./pages/Artifacts/IfElseArtifact";
 import LoopsArtifact from "./pages/Artifacts/LoopsArtifact";
 import CollectionsArtifact from "./pages/Artifacts/CollectionsArtifact";
+import FunctionsArtifact from "./pages/Artifacts/FunctionsArtifact";
+import OOPArtifact from "./pages/Artifacts/OOPArtifact";
+import DesignPatternsArtifact from "./pages/Artifacts/DesignPatternsArtifact";
 
 
 
@@ -61,6 +64,9 @@ const App = () => (
                   <Route path="/artifacts/ifelse" element={<IfElseArtifact />} />
                   <Route path="/artifacts/loops" element={<LoopsArtifact />} />
                   <Route path="/artifacts/collections" element={<CollectionsArtifact />} />
+                  <Route path="/artifacts/functions" element={<FunctionsArtifact />} />
+                  <Route path="/artifacts/oop" element={<OOPArtifact />} />
+                  <Route path="/artifacts/design-patterns" element={<DesignPatternsArtifact />} />
                   <Route path="/auth" element={<AuthPage />} />
                   <Route path="/profile" element={<ProfilePage />} />
                   <Route path="/admin" element={<AdminPage />} />
