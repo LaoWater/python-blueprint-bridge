@@ -857,7 +857,7 @@ def add_product(category, product, qty):
                           onClick={analyzeText}
                           className="w-full"
                         >
-                          📝 Analizează Text Românesc
+                          📝 Analizează Text Pagina Curenta
                         </Button>
 
                         {Object.keys(wordsAnalysis).length > 0 && (
@@ -1054,7 +1054,7 @@ word_count = Counter(words)
                         </div>
                         <div>
                           <h5 className="font-bold text-blue-700">🛒 Amazon Catalog</h5>
-                          <p className="text-gray-600">Product lookup în <1ms din milioane produse</p>
+                          <p className="text-gray-600">Product lookup în mai putin de 1ms din milioane produse</p>
                         </div>
                         <div>
                           <h5 className="font-bold text-blue-700">🎵 Spotify Playlists</h5>

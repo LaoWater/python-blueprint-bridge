@@ -34,6 +34,7 @@ import DesignPatternsArtifact from "./pages/Artifacts/DesignPatternsArtifact";
 import DataStructuresArtifact from "./pages/Artifacts/DataStructuresArtifact";
 import AdvancedAlgorithmsArtifact from "./pages/Artifacts/AdvancedAlgorithmsArtifact";
 import HashingArtifact from "./pages/Artifacts/HashingArtifact";
+import MemoryOptimizationArtifact from "./pages/Artifacts/MemoryOptimizationArtifact";
 
 
 
@@ -73,6 +74,7 @@ const App = () => (
                   <Route path="/artifacts/data-structures" element={<DataStructuresArtifact />} />
                   <Route path="/artifacts/advanced-algorithms" element={<AdvancedAlgorithmsArtifact />} />
                   <Route path="/artifacts/hashing" element={<HashingArtifact />} />
+                  <Route path="/artifacts/memory-optimization" element={<MemoryOptimizationArtifact />} />
                   <Route path="/auth" element={<AuthPage />} />
                   <Route path="/profile" element={<ProfilePage />} />
                   <Route path="/admin" element={<AdminPage />} />

@@ -368,7 +368,7 @@ const DataStructuresArtifact = () => {
                   <strong>Acces instant</strong>
                 </p>
                 <div className="mt-4 bg-white/50 rounded-lg p-3">
-                  <code className="text-xs">menu = {'pizza': 45}</code>
+                  <code className="text-xs">menu = {`{'Pizza': 45}`}</code>
                 </div>
               </div>
               
@@ -779,43 +779,43 @@ const DataStructuresArtifact = () => {
                   <div className="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm">
                     <div className="text-yellow-300 mb-2"># Bubble Sort - Algoritm educațional O(n²)</div>
                     <pre>
-{`def bubble_sort(comenzi, key):
-    n = len(comenzi)
-    for i in range(n):
-        for j in range(0, n-i-1):
-            if comenzi[j][key] > comenzi[j+1][key]:
-                comenzi[j], comenzi[j+1] = comenzi[j+1], comenzi[j]
-    return comenzi`}
+      {`def bubble_sort(comenzi, key):
+          n = len(comenzi)
+          for i in range(n):
+              for j in range(0, n-i-1):
+                  if comenzi[j][key] > comenzi[j+1][key]:
+                      comenzi[j], comenzi[j+1] = comenzi[j+1], comenzi[j]
+          return comenzi`}
                     </pre>
                   </div>
                   
                   <div className="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm">
                     <div className="text-yellow-300 mb-2"># Quick Sort - Algoritm eficient O(n log n)</div>
                     <pre>
-{`def quick_sort(comenzi, key):
-    if len(comenzi) <= 1:
-        return comenzi
-    
-    pivot = comenzi[len(comenzi) // 2]
-    left = [x for x in comenzi if x[key] < pivot[key]]
-    middle = [x for x in comenzi if x[key] == pivot[key]]
-    right = [x for x in comenzi if x[key] > pivot[key]]
-    
-    return quick_sort(left, key) + middle + quick_sort(right, key)`}
+        {`def quick_sort(comenzi, key):
+            if len(comenzi) <= 1:
+                return comenzi
+            
+            pivot = comenzi[len(comenzi) // 2]
+            left = [x for x in comenzi if x[key] < pivot[key]]
+            middle = [x for x in comenzi if x[key] == pivot[key]]
+            right = [x for x in comenzi if x[key] > pivot[key]]
+            
+            return quick_sort(left, key) + middle + quick_sort(right, key)`}
                     </pre>
                   </div>
                   
                   <div className="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm">
                     <div className="text-yellow-300 mb-2"># Python Built-in - TimSort O(n log n), optimizat</div>
                     <pre>
-{`# Sortare simplă
-comenzi.sort(key=lambda x: x['${sortBy}'])
+            {`# Sortare simplă
+            comenzi.sort(key=lambda x: x['${sortBy}'])
 
-# Sortare cu mai multe criterii
-comenzi.sort(key=lambda x: (x['priority'], x['time']))
+            # Sortare cu mai multe criterii
+            comenzi.sort(key=lambda x: (x['priority'], x['time']))
 
-# Sortare descrescătoare
-comenzi.sort(key=lambda x: x['${sortBy}'], reverse=True)`}
+            # Sortare descrescătoare
+            comenzi.sort(key=lambda x: x['${sortBy}'], reverse=True)`}
                     </pre>
                   </div>
                 </div>
@@ -917,62 +917,62 @@ comenzi.sort(key=lambda x: x['${sortBy}'], reverse=True)`}
                   <div className="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm">
                     <div className="text-yellow-300 mb-2"># Linear Search - Căutare secvențială O(n)</div>
                     <pre>
-{`def linear_search(comenzi, termen):
-    rezultate = []
-    pasi = 0
-    
-    for comanda in comenzi:  # Verific fiecare element
-        pasi += 1
-        if termen.lower() in comanda['restaurant'].lower():
-            rezultate.append(comanda)
-    
-    return rezultate, pasi
+        {`def linear_search(comenzi, termen):
+            rezultate = []
+            pasi = 0
+            
+            for comanda in comenzi:  # Verific fiecare element
+                pasi += 1
+                if termen.lower() in comanda['restaurant'].lower():
+                    rezultate.append(comanda)
+            
+            return rezultate, pasi
 
-# Timp: O(n) - Trebuie să verific toată lista
-# Avantaj: Funcționează pe orice listă
-# Dezavantaj: Lent pentru liste mari`}
+        # Timp: O(n) - Trebuie să verific toată lista
+        # Avantaj: Funcționează pe orice listă
+        # Dezavantaj: Lent pentru liste mari`}
                     </pre>
                   </div>
                   
                   <div className="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm">
                     <div className="text-yellow-300 mb-2"># Binary Search - Căutare binară O(log n)</div>
                     <pre>
-{`def binary_search(comenzi_sortate, termen):
-    left, right = 0, len(comenzi_sortate) - 1
-    pasi = 0
-    
-    while left <= right:
-        pasi += 1
-        mid = (left + right) // 2
-        
-        if termen in comenzi_sortate[mid]['restaurant']:
-            return comenzi_sortate[mid], pasi
-        elif termen < comenzi_sortate[mid]['restaurant']:
-            right = mid - 1
-        else:
-            left = mid + 1
-    
-    return None, pasi
+            {`def binary_search(comenzi_sortate, termen):
+                left, right = 0, len(comenzi_sortate) - 1
+                pasi = 0
+                
+                while left <= right:
+                    pasi += 1
+                    mid = (left + right) // 2
+                    
+                    if termen in comenzi_sortate[mid]['restaurant']:
+                        return comenzi_sortate[mid], pasi
+                    elif termen < comenzi_sortate[mid]['restaurant']:
+                        right = mid - 1
+                    else:
+                        left = mid + 1
+                
+                return None, pasi
 
-# Timp: O(log n) - Înjumătățesc zona de căutare
-# Avantaj: Foarte rapid pentru liste mari
-# Dezavantaj: Lista TREBUIE să fie sortată`}
+            # Timp: O(log n) - Înjumătățesc zona de căutare
+            # Avantaj: Foarte rapid pentru liste mari
+            # Dezavantaj: Lista TREBUIE să fie sortată`}
                     </pre>
                   </div>
                   
                   <div className="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm">
                     <div className="text-yellow-300 mb-2"># Căutări optimizate în Python</div>
                     <pre>
-{`# Folosind built-in functions
-rezultate = [c for c in comenzi if termen in c['restaurant']]
+          {`# Folosind built-in functions
+          rezultate = [c for c in comenzi if termen in c['restaurant']]
 
-# Căutare cu bisect (pentru liste sortate)
-import bisect
-index = bisect.bisect_left(comenzi_sortate, termen)
+          # Căutare cu bisect (pentru liste sortate)
+          import bisect
+          index = bisect.bisect_left(comenzi_sortate, termen)
 
-# Set lookup O(1) - pentru verificări de existență
-restaurante_set = set(c['restaurant'] for c in comenzi)
-existe = termen in restaurante_set  # Instant!`}
+          # Set lookup O(1) - pentru verificări de existență
+          restaurante_set = set(c['restaurant'] for c in comenzi)
+          existe = termen in restaurante_set  # Instant!`}
                     </pre>
                   </div>
                 </div>
@@ -980,8 +980,8 @@ existe = termen in restaurante_set  # Instant!`}
                 <div className="mt-4 p-4 bg-blue-50 rounded-lg">
                   <h5 className="font-semibold text-blue-800 mb-2">🎯 Când să Folosești Fiecare</h5>
                   <div className="space-y-2 text-sm">
-                    <div><strong>Linear Search:</strong> Liste nesortate, căutări rare, < 1000 elemente</div>
-                    <div><strong>Binary Search:</strong> Liste sortate, căutări frecvente, > 1000 elemente</div>
+                    <div><strong>Linear Search:</strong> Liste nesortate, căutări rare, mai putin de 1000 elemente</div>
+                    <div><strong>Binary Search:</strong> Liste sortate, căutări frecvente, mai mult de 1000 elemente</div>
                     <div><strong>Hash/Set Lookup:</strong> Verificări de existență, performanță maximă</div>
                   </div>
                 </div>
@@ -1114,8 +1114,8 @@ existe = termen in restaurante_set  # Instant!`}
                 <div className="mt-4 p-4 bg-purple-50 rounded-lg">
                   <h5 className="font-semibold text-purple-800 mb-2">🧠 Regula de Aur</h5>
                   <p className="text-sm text-purple-700">
-                    Pentru < 100 elemente, diferențele sunt neglijabile. 
-                    Pentru > 10,000, diferențele devin dramatice. 
+                    Pentru mai putin de 100 elemente, diferențele sunt neglijabile. 
+                    Pentru mai mult de 10,000, diferențele devin dramatice. 
                     În producție, alege întotdeauna algoritmul cu complexitatea cea mai mică!
                   </p>
                 </div>

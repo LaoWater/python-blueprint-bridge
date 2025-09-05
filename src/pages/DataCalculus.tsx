@@ -753,6 +753,18 @@ for i in range(6):  # Try 6 failed logins
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
+                  <div className="flex gap-2 mb-4">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => navigate('/artifacts/memory-optimization')}
+                      className="text-orange-600 border-orange-600 hover:bg-orange-50 dark:hover:bg-orange-950/20"
+                    >
+                      <ChevronRight className="w-4 h-4 mr-1" />
+                      Open Artifact
+                    </Button>
+                  </div>
+                  
                   <details className="cursor-pointer">
                     <summary className="font-medium text-primary hover:text-primary/80 mb-3">
                       Real-World Scenario: CDN Cache System

@@ -1343,7 +1343,7 @@ def fibonacci_memo(n, memo={}):
         {/* Final Message */}
         <div className="artifact-card bg-gradient-to-br from-indigo-600 to-purple-700 text-white rounded-3xl p-8 md:p-12 shadow-2xl animate-slideIn">
           <h2 className="text-2xl md:text-3xl font-bold mb-6 flex items-center gap-3">
-            🎓 Acum Gândești ca un Algoritmist
+            🎓 Incepi sa Gândești ca un Arhitect
           </h2>
           
           <div className="text-lg leading-relaxed mb-8">
