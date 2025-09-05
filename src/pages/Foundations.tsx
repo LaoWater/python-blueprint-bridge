@@ -426,10 +426,10 @@ const Foundations = () => {
                     </div>
                   </div>
                   <CardTitle className="group-hover:text-blue-600 transition-colors">
-                    Colecții în Python
+                   Collections in Python
                   </CardTitle>
                   <CardDescription>
-                    Organizarea lumii prin structuri de date - liste, tupluri, seturi, dicționare
+                    Organizing the world through data structures – lists, tuples, sets, dictionaries
                   </CardDescription>
                 </CardHeader>
                 <CardContent>

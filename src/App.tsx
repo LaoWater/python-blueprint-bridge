@@ -31,6 +31,9 @@ import CollectionsArtifact from "./pages/Artifacts/CollectionsArtifact";
 import FunctionsArtifact from "./pages/Artifacts/FunctionsArtifact";
 import OOPArtifact from "./pages/Artifacts/OOPArtifact";
 import DesignPatternsArtifact from "./pages/Artifacts/DesignPatternsArtifact";
+import DataStructuresArtifact from "./pages/Artifacts/DataStructuresArtifact";
+import AdvancedAlgorithmsArtifact from "./pages/Artifacts/AdvancedAlgorithmsArtifact";
+import HashingArtifact from "./pages/Artifacts/HashingArtifact";
 
 
 
@@ -67,6 +70,9 @@ const App = () => (
                   <Route path="/artifacts/functions" element={<FunctionsArtifact />} />
                   <Route path="/artifacts/oop" element={<OOPArtifact />} />
                   <Route path="/artifacts/design-patterns" element={<DesignPatternsArtifact />} />
+                  <Route path="/artifacts/data-structures" element={<DataStructuresArtifact />} />
+                  <Route path="/artifacts/advanced-algorithms" element={<AdvancedAlgorithmsArtifact />} />
+                  <Route path="/artifacts/hashing" element={<HashingArtifact />} />
                   <Route path="/auth" element={<AuthPage />} />
                   <Route path="/profile" element={<ProfilePage />} />
                   <Route path="/admin" element={<AdminPage />} />

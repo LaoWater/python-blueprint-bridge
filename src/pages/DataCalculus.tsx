@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useContent } from '../components/ContentProvider';
+import { useNavigate } from 'react-router-dom';
 import EditablePageHeader from '../components/EditablePageHeader';
 import EditableContent from '../components/EditableContent';
 import EditableCodeBlock from '../components/EditableCodeBlock';
@@ -8,12 +9,13 @@ import CourseNavigation from '../components/CourseNavigation';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Database, Calculator, Zap, TrendingUp, ChevronRight, Play, CheckCircle2, Brain, BarChart3, Target } from 'lucide-react';
+import { Database, Calculator, Zap, TrendingUp, ChevronRight, Play, CheckCircle2, Brain, BarChart3, Target, Hash } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import dataCalculusHero from '@/assets/data-calculus-landscape.jpg';
 
 const DataCalculus = () => {
   const { getContent, loading } = useContent();
+  const navigate = useNavigate();
   
   const [tocItems] = useState([
     { id: 'journey-begins', title: 'The Data Journey Begins', sessions: 'Introduction' },
@@ -174,6 +176,18 @@ const DataCalculus = () => {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
+                  <div className="flex gap-2 mb-4">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => navigate('/artifacts/data-structures')}
+                      className="text-blue-600 border-blue-600 hover:bg-blue-50 dark:hover:bg-blue-950/20"
+                    >
+                      <ChevronRight className="w-4 h-4 mr-1" />
+                      Open Artifact
+                    </Button>
+                  </div>
+                  
                   <details className="cursor-pointer">
                     <summary className="font-medium text-primary hover:text-primary/80 mb-3">
                       Real-World Scenario: Social Media Feed
@@ -314,6 +328,18 @@ print(f"Alice and Bob have {len(mutual)} mutual friends")`}
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
+                  <div className="flex gap-2 mb-4">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => navigate('/artifacts/advanced-algorithms')}
+                      className="text-purple-600 border-purple-600 hover:bg-purple-50 dark:hover:bg-purple-950/20"
+                    >
+                      <ChevronRight className="w-4 h-4 mr-1" />
+                      Open Artifact
+                    </Button>
+                  </div>
+                  
                   <details className="cursor-pointer">
                     <summary className="font-medium text-primary hover:text-primary/80 mb-3">
                       Real-World Scenario: Delivery Route Optimization
@@ -509,6 +535,18 @@ print(f"Average time per stop: {analysis['avg_time_per_stop']:.2f} units")`}
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
+                  <div className="flex gap-2 mb-4">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => navigate('/artifacts/hashing')}
+                      className="text-green-600 border-green-600 hover:bg-green-50 dark:hover:bg-green-950/20"
+                    >
+                      <ChevronRight className="w-4 h-4 mr-1" />
+                      Open Artifact
+                    </Button>
+                  </div>
+                  
                   <details className="cursor-pointer">
                     <summary className="font-medium text-primary hover:text-primary/80 mb-3">
                       Real-World Scenario: User Authentication System
