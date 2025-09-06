@@ -1051,13 +1051,13 @@ print(f"Speedup: {time1/time2:.1f}x faster")`}
                 <Card className="group hover:shadow-xl transition-all duration-300 border-l-4 border-l-indigo-500">
                   <CardHeader>
                     <div className="flex items-center justify-between">
-                      <Badge variant="secondary" className="mb-2">Session 13</Badge>
+                      <Badge variant="secondary" className="mb-2">Session 13-14</Badge>
                       <div className="w-8 h-8 bg-indigo-100 dark:bg-indigo-900 rounded-full flex items-center justify-center">
                         <Calculator className="w-4 h-4 text-indigo-600" />
                       </div>
                     </div>
                     <CardTitle className="group-hover:text-indigo-600 transition-colors">
-                      NumPy for Beginners
+                      NumPy: Intro
                     </CardTitle>
                     <CardDescription>
                       Complete guide to numerical computing - arrays, operations, and performance
@@ -1066,39 +1066,434 @@ print(f"Speedup: {time1/time2:.1f}x faster")`}
                   <CardContent>
                     <details className="cursor-pointer">
                       <summary className="font-medium text-primary hover:text-primary/80 mb-3">
-                        Real-World Scenario: Image Processing
+                        🌌 Session 13: Gateway către NumPy - De la liste naive la calcule care mișcă lumea
                       </summary>
-                      <div className="text-sm text-muted-foreground mb-3">
-                        Understanding how NumPy powers computer vision and image processing
-                      </div>
-                    </details>
-                  </CardContent>
-                </Card>
+                      <EditableCodeBlock
+                        title="Povestea Originilor și Prima Întâlnire cu NumPy"
+                        page="data-calculus"
+                        section="session-13"
+                        code={`"""
+🧠 1. POVESTEA ORIGINILOR - Anul 2000: Când Python întâlnește știința
 
-                <Card className="group hover:shadow-xl transition-all duration-300 border-l-4 border-l-cyan-500">
-                  <CardHeader>
-                    <div className="flex items-center justify-between">
-                      <Badge variant="secondary" className="mb-2">Session 14</Badge>
-                      <div className="w-8 h-8 bg-cyan-100 dark:bg-cyan-900 rounded-full flex items-center justify-center">
-                        <BarChart3 className="w-4 h-4 text-cyan-600" />
-                      </div>
-                    </div>
-                    <CardTitle className="group-hover:text-cyan-600 transition-colors">
-                      Advanced NumPy: Operations & Broadcasting
-                    </CardTitle>
-                    <CardDescription>
-                      Mathematical operations, broadcasting, and complex indexing for massive datasets
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <details className="cursor-pointer">
-                      <summary className="font-medium text-primary hover:text-primary/80 mb-3">
-                        Real-World Scenario: Financial Analytics
-                      </summary>
-                      <div className="text-sm text-muted-foreground mb-3">
-                        How investment firms process millions of stock prices in real-time
-                      </div>
+Imaginează-te în anul 2000: biologii analizează secvențe ADN, fizicienii 
+studiază date de la telescoape, economiștii procesează piețe financiare...
+Toți folosesc Python pentru că e simplu și intuitiv.
+
+Dar când trebuie să analizeze MILIOANE de puncte de date?
+→ Listele Python explodează în slow motion! 🐌
+
+Travis Oliphant și comunitatea vin cu un hack genial: un singur tip de 
+cutie pentru date numerice, stocate compact, cu operații vectorizate 
+scrise în C.
+
+Rezultatul? NumPy — nervul central al întregii științe în Python.
+"""
+
+# Să demonstrăm problema: Lista Python vs. realitatea științei
+import time
+import sys
+
+print("=== PROBLEMA LISTELOR PYTHON CU DATE MASIVE ===")
+
+# Simularea unor date astronomice - poziții de stele
+stars_python_list = []
+for i in range(100000):  # 100k stele (versiune redusă pentru demo)
+    x = i * 0.1
+    y = i * 0.2  
+    z = i * 0.3
+    stars_python_list.append([x, y, z])
+
+# Încercăm să calculăm distanța medie de la centrul galaxiei
+start_time = time.time()
+
+total_distance = 0
+for star in stars_python_list:
+    # Distanța euclidiană: sqrt(x² + y² + z²)
+    distance = (star[0]**2 + star[1]**2 + star[2]**2) ** 0.5
+    total_distance += distance
+
+avg_distance_list = total_distance / len(stars_python_list)
+list_time = time.time() - start_time
+
+print(f"Lista Python:")
+print(f"  Timpul de calcul: {list_time:.3f} secunde")
+print(f"  Memoria: {sys.getsizeof(stars_python_list) / 1024 / 1024:.1f} MB")
+print(f"  Distanța medie: {avg_distance_list:.2f}")
+
+"""
+💡 CONEXIUNEA REALĂ: 
+Fiecare imagine medicală (CT, RMN) = matrice de milioane de pixeli
+Fiecare rețea neuronală = milioane/miliarde de parametri  
+Fiecare analiză de Big Data = datasets cu terabytes
+
+Diferența dintre secunde și millisecunde = 
+ani de viață salvați într-un laborator medical!
+"""
+
+print("\\n=== SALVAREA: NUMPY INTRĂ ÎN SCENĂ ===")
+
+import numpy as np
+
+# Același calcul cu NumPy
+stars_numpy = np.random.rand(100000, 3) * [1000, 2000, 3000]
+
+start_time = time.time()
+
+# O singură linie face ceea ce bucla Python făcea în 100000 de pași!
+distances = np.sqrt(np.sum(stars_numpy**2, axis=1))
+avg_distance_numpy = np.mean(distances)
+
+numpy_time = time.time() - start_time
+
+print(f"NumPy:")
+print(f"  Timpul de calcul: {numpy_time:.3f} secunde")
+print(f"  Memoria: {stars_numpy.nbytes / 1024 / 1024:.1f} MB")  
+print(f"  Distanța medie: {avg_distance_numpy:.2f}")
+print(f"  SPEEDUP: {list_time/numpy_time:.1f}x mai rapid!")
+
+"""
+🧭 2. DE LA LISTE LA REALITATE - Ce face NumPy special?
+
+Un array NumPy nu e doar "o listă mai rapidă". Este:
+- COMPACT ca un fișier .zip (date stocate eficient)
+- RIGID ca o matrice matematică (un singur tip de date)  
+- MALEABIL ca plastilina (reshape, slice, broadcast)
+- VECTORIZAT (operațiile se aplică pe întreg array-ul odată)
+"""
+
+print("\\n=== ANATOMIA UNUI ARRAY NUMPY ===")
+
+# Lista Python - fiecare element e un obiect separat
+python_list = [1, 2, 3, 4, 5]
+print(f"Lista Python: {python_list}")
+print(f"  Fiecare element e un obiect Python separat")
+print(f"  Tip: {type(python_list[0])}")
+
+# Array NumPy - date continue în memorie  
+numpy_array = np.array([1, 2, 3, 4, 5])
+print(f"\\nArray NumPy: {numpy_array}")
+print(f"  Tipul de date: {numpy_array.dtype}")
+print(f"  Forma: {numpy_array.shape}")
+print(f"  Dimensiuni: {numpy_array.ndim}D")
+print(f"  Total bytes: {numpy_array.nbytes}")
+
+"""
+🔬 3. PRIMUL CONTACT CU DIMENSIUNI
+
+1D = semnal audio (vector de amplitudini în timp)
+2D = imagine alb-negru (matrice de pixeli)  
+3D = imagine color (RGB - 3 canale de culoare)
+4D = batch de imagini pentru AI (multe imagini simultan)
+"""
+
+print("\\n=== DIMENSIUNILE NUMPY ===")
+
+# 1D: Semnalul cardiac al unui pacient
+heartbeat = np.array([72, 75, 78, 74, 71, 73, 76, 79])
+print(f"1D - Puls cardiac: {heartbeat} BPM")
+print(f"     Forma: {heartbeat.shape}")
+
+# 2D: Temperatura într-o cameră (senzori pe grilă 4x4)
+room_temp = np.array([
+    [22.5, 23.1, 22.8, 22.9],
+    [22.7, 24.2, 23.5, 23.1], 
+    [22.4, 23.8, 24.1, 23.6],
+    [22.1, 23.2, 23.4, 22.8]
+])
+print(f"\\n2D - Temperaturi cameră:")
+print(room_temp)
+print(f"     Forma: {room_temp.shape}")
+print(f"     Media: {np.mean(room_temp):.1f}°C")
+
+# 3D: Imagine RGB
+rgb_image = np.random.randint(0, 256, (8, 8, 3))  # 8x8 mini-imagine
+print(f"\\n3D - Imagine RGB: {rgb_image.shape}")
+print(f"     8x8 pixeli, fiecare cu 3 culori (R,G,B)")
+
+# 4D: Batch pentru AI
+batch_images = np.random.rand(4, 8, 8, 3)  # 4 imagini mici
+print(f"\\n4D - Batch AI: {batch_images.shape}")
+print(f"     4 imagini pentru antrenarea unei rețele neuronale")
+
+"""
+⚡ 4. OPERAȚII CARE SCHIMBĂ SCARA
+
+NumPy oferă funcții specializate pentru domenii întregi:
+- np.fft → transformate Fourier (audio, telecomunicații)
+- np.linalg → algebra liniară (baza AI-ului)  
+- np.random → simulări Monte Carlo
+"""
+
+print("\\n=== OPERAȚII CARE MIȘCĂ LUMEA ===")
+
+# FFT: Analiza frecvențelor
+sample_rate = 100
+time = np.linspace(0, 1, sample_rate)
+# Semnal cu două frecvențe
+signal = np.sin(2 * np.pi * 5 * time) + 0.5 * np.sin(2 * np.pi * 12 * time)
+
+fft_result = np.fft.fft(signal)
+frequencies = np.fft.fftfreq(len(signal), 1/sample_rate)
+
+print("FFT - Analiza frecvențelor:")
+print(f"  Puncte semnal: {len(signal)}")
+print(f"  Frecvențe detectate în top 5: {frequencies[1:6]} Hz")
+print(f"  → Folosit în: compresia MP3, detectarea vocii")
+
+# Algebra liniară: Sistem de ecuații
+A = np.array([[2, 1], [1, 3]])
+b = np.array([3, 4])
+x = np.linalg.solve(A, b)
+
+print(f"\\nAlgebra liniară:")
+print(f"  Sistem Ax = b rezolvat: x = {x}")
+print(f"  Verificare: Ax = {np.dot(A, x)} (= b)")
+print(f"  → Baza pentru: rețele neuronale, grafică 3D")
+
+# Monte Carlo: Estimarea π
+n_points = 10000
+points = np.random.uniform(-1, 1, (n_points, 2))
+inside_circle = np.sum(points[:, 0]**2 + points[:, 1]**2 <= 1)
+pi_estimate = 4 * inside_circle / n_points
+
+print(f"\\nMonte Carlo - Estimarea π:")
+print(f"  π estimat: {pi_estimate:.4f}")
+print(f"  π real: {np.pi:.4f}")
+print(f"  → Folosit în: modelarea riscurilor financiare")
+
+print("\\n" + "="*50)
+print("🎓 Session 13 - NumPy Gateway completată!")
+print("="*50)
+print("\\n💡 AI urmează: cu aceste fundamente NumPy,")
+print("   ești gata să construiești rețele neuronale!")
+`}
+                        language="python"
+                      />
                     </details>
+                    
+                    <div className="mt-4">
+                      <details className="cursor-pointer">
+                        <summary className="font-medium text-primary hover:text-primary/80 mb-3">
+                          🌀 Broadcasting și Exerciții Practice - Aplicații în lumea reală
+                        </summary>
+                        <EditableCodeBlock
+                          title="Broadcasting Magic și Scenarii Practice"
+                          page="data-calculus"
+                          section="session-13-advanced"
+                          code={`"""
+🌀 5. BROADCASTING CA SUPERPUTERE
+
+Broadcasting = capacitatea NumPy de a efectua operații între array-uri
+de forme diferite, fără să copieze datele.
+
+Este motivul pentru care poți:
+- Adăuga un vector la fiecare imagine într-un batch
+- Ajusta luminozitatea unei poze cu arr + 50
+- Simula simultan mii de traiectorii de particule
+"""
+
+import numpy as np
+
+print("=== BROADCASTING - MAGIA NUMPY ===")
+
+# Exemplu 1: Procesarea batch-ului de imagini pentru AI
+print("1. PROCESARE BATCH IMAGINI PENTRU AI")
+batch = np.random.rand(32, 64, 64, 3)  # 32 imagini 64x64 RGB
+mean = np.array([0.485, 0.456, 0.406])  # Media RGB din ImageNet
+std = np.array([0.229, 0.224, 0.225])   # Deviația RGB
+
+# Broadcasting magic: normalizăm toate imaginile simultan
+normalized = (batch - mean) / std
+print(f"  Batch: {batch.shape}")
+print(f"  Media RGB: {mean.shape}")
+print(f"  → Toate cele 32 imagini normalizate într-o operație!")
+
+# Exemplu 2: Simularea particulelor în spațiu 3D
+print("\\n2. SIMULAREA FIZICII PARTICULELOR")
+n_particles = 1000
+positions = np.random.rand(n_particles, 3) * 100  # Poziții 3D
+velocities = np.random.randn(n_particles, 3)      # Viteze aleatoare
+acceleration = np.array([0, 0, -9.81])           # Gravitația
+
+dt = 0.01  # Pas de timp
+# Actualizăm toate pozițiile simultan (legile lui Newton)
+new_positions = positions + velocities * dt + 0.5 * acceleration * dt**2
+new_velocities = velocities + acceleration * dt
+
+print(f"  Particule: {n_particles}")
+print(f"  Gravitație aplicată: {acceleration}")
+print(f"  → Toate particulele actualizate simultan în dt={dt}s")
+
+"""
+📊 6. EXERCIȚII PRACTICE - POVEȘTI DIN LUMEA REALĂ
+
+Aplicăm NumPy pe scenarii concrete din:
+astronomie, medicină, economie, arte digitale
+"""
+
+print("\\n=== EXERCIȚII PRACTICE ===")
+
+# ASTRONOMIE: Calculul orbitelor planetare
+print("🌌 ASTRONOMIE - Orbitele planetelor")
+planets = np.array([
+    [0.39, "Mercur"],   [0.72, "Venus"],    [1.00, "Terra"],
+    [1.52, "Marte"],    [5.20, "Jupiter"],  [9.58, "Saturn"]
+], dtype=object)
+
+distances = planets[:, 0].astype(float)  # Distanțe în AU
+# Legea a III-a a lui Kepler: T² ∝ a³
+orbital_periods = np.sqrt(distances**3)  # Ani
+
+print(f"  Calculul perioadelor orbitale:")
+for i, planet in enumerate(planets[:4]):
+    print(f"    {planet[1]}: {orbital_periods[i]:.2f} ani")
+
+# MEDICINĂ: Analiza semnalului cardiac EKG
+print("\\n🏥 MEDICINĂ - Analiza EKG")
+time = np.linspace(0, 5, 500)  # 5 secunde
+heart_rate = 72  # bătăi pe minut
+
+# Semnal cardiac simulat
+heartbeat = np.sin(2 * np.pi * heart_rate/60 * time)
+noise = np.random.normal(0, 0.1, len(time))
+ekg_signal = heartbeat + noise
+
+# Detectarea anomaliilor (arhitmii)
+signal_power = np.abs(np.fft.fft(ekg_signal))**2
+dominant_freq = np.argmax(signal_power[1:len(signal_power)//2]) + 1
+detected_hr = dominant_freq * 60 / 5  # conversie la BPM
+
+print(f"  Durată analiză: 5 secunde")
+print(f"  HR real: {heart_rate} BPM")
+print(f"  HR detectat: {detected_hr:.0f} BPM")
+print(f"  Precizie: {100-abs(detected_hr-heart_rate)/heart_rate*100:.1f}%")
+
+# ECONOMIE: Optimizarea portofoliului Markowitz
+print("\\n💰 ECONOMIE - Portfolio Optimization")
+n_assets = 5
+returns = np.random.normal(0.08, 0.15, n_assets)  # Randamente așteptate
+risks = np.random.uniform(0.1, 0.3, n_assets)     # Riscuri (volatilități)
+
+# Calculăm raportul Sharpe pentru fiecare activ
+risk_free_rate = 0.03
+sharpe_ratios = (returns - risk_free_rate) / risks
+
+# Portofoliul optimal (simplified)
+optimal_weights = sharpe_ratios / np.sum(sharpe_ratios)
+portfolio_return = np.dot(optimal_weights, returns)
+portfolio_risk = np.sqrt(np.dot(optimal_weights**2, risks**2))
+
+print(f"  Active analizate: {n_assets}")
+print(f"  Randament portofoliu: {portfolio_return*100:.2f}%")
+print(f"  Risc portofoliu: {portfolio_risk*100:.2f}%")
+print(f"  Sharpe ratio: {(portfolio_return-risk_free_rate)/portfolio_risk:.3f}")
+
+# ARTĂ: Generarea unui fractal Julia
+print("\\n🎨 ARTĂ - Fractal Julia Set")
+size = 80
+c = -0.7 + 0.27015j  # Parametrul pentru setul Julia
+
+x = np.linspace(-1.5, 1.5, size)
+y = np.linspace(-1.5, 1.5, size)
+X, Y = np.meshgrid(x, y)
+Z = X + 1j * Y
+
+# Algoritmul Julia vectorizat
+julia_set = np.zeros((size, size))
+for i in range(30):
+    mask = np.abs(Z) <= 2
+    Z[mask] = Z[mask]**2 + c
+    julia_set[mask] = i
+
+fractal_density = np.sum(julia_set > 0) / (size**2) * 100
+print(f"  Dimensiune: {size}x{size}")
+print(f"  Parametru c: {c}")
+print(f"  Densitate fractală: {fractal_density:.1f}%")
+
+# METEOROLOGIE: Simularea propagării unui nor
+print("\\n🌤️  METEOROLOGIE - Simularea norilor")
+grid_size = 40
+# Inițializăm norul cu densitatea vaporilor
+cloud_density = np.zeros((grid_size, grid_size))
+cloud_density[18:22, 18:22] = 1.0  # Nor inițial în centru
+
+# Simulăm difuzia vaporilor (ecuația căldurii simplificată)
+diffusion_rate = 0.1
+time_steps = 50
+
+for t in range(time_steps):
+    # Aplicăm difuzia în toate direcțiile
+    new_density = cloud_density.copy()
+    # Difuzie în direcțiile N, S, E, W
+    new_density[1:-1, 1:-1] = (cloud_density[1:-1, 1:-1] + 
+                               diffusion_rate * (
+                                   cloud_density[:-2, 1:-1] +   # Nord
+                                   cloud_density[2:, 1:-1] +    # Sud  
+                                   cloud_density[1:-1, :-2] +   # Vest
+                                   cloud_density[1:-1, 2:] -    # Est
+                                   4 * cloud_density[1:-1, 1:-1]))
+    cloud_density = new_density
+
+total_water = np.sum(cloud_density)
+max_density = np.max(cloud_density)
+print(f"  Grilă simulare: {grid_size}x{grid_size}")
+print(f"  Pași temporali: {time_steps}")
+print(f"  Apă rămasă în nor: {total_water:.3f}")
+print(f"  Densitate maximă: {max_density:.3f}")
+
+"""
+🌍 CONCLUZIE - DE CE NUMPY E GATEWAY-UL
+
+Fără NumPy → n-ai TensorFlow, PyTorch, scikit-learn
+Cu NumPy → intri în lumea unde o linie de cod 
+           poate procesa milioane de date
+
+Fiecare array NumPy te conectează la:
+🔬 Cercetarea științifică
+💊 Descoperirea medicamentelor  
+📈 Analiza financiară
+🎨 Arta generativă
+🚀 Explorarea spațiului
+🤖 Inteligența artificială
+
+BUN VENIT ÎN LUMEA ȘTIINȚEI COMPUTAȚIONALE! 🌟
+"""
+
+print("\\n" + "🎯"*20)
+print("🏆 SESSION 13 COMPLETĂ!")
+print("🎯"*20)
+
+print("\\n📚 URMĂTOAREA AVENTURĂ:")
+print("  Session 14: Operații avansate NumPy")
+print("  Session 15: Linear Algebra pentru AI")
+print("  Sessions 16-17: Pandas - Big Data Analysis")
+
+print("\\n💪 CHALLENGE PENTRU ACASĂ:")
+print("  1. 🌍 Simulează schimbările climatice")
+print("  2. 💹 Analizează bursa de pe o lună")
+print("  3. 🧬 Procesează secvențe ADN")
+print("  4. 🎵 Analizează un fișier MP3")
+print("\\n  → Toate cu NumPy! Tu poți! 🚀")
+`}
+                          language="python"
+                        />
+                      </details>
+                    </div>
+                    
+                    <div className="mt-6 pt-4 border-t border-gray-200">
+                      <Button
+                        onClick={() => window.open('/artifacts/numpy', '_blank')}
+                        className="w-full bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-semibold py-3 text-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
+                      >
+                        <div className="flex items-center justify-center gap-3">
+                          <span className="text-2xl">🌌</span>
+                          <span>Open NumPy Interactive Artifact</span>
+                        </div>
+                      </Button>
+                      <p className="text-center text-sm text-gray-600 mt-2">
+                        Explorează lumea NumPy într-o experiență interactivă completă!
+                      </p>
+                    </div>
                   </CardContent>
                 </Card>
               </div>
@@ -1123,12 +1518,52 @@ print(f"Speedup: {time1/time2:.1f}x faster")`}
                   <CardContent>
                     <details className="cursor-pointer">
                       <summary className="font-medium text-primary hover:text-primary/80 mb-3">
-                        Real-World Scenario: Neural Networks
+                        ✨ Momentul Revelației: Când Matematica Devine Conștiință
                       </summary>
-                      <div className="text-sm text-muted-foreground mb-3">
-                        Building the mathematical foundation for deep learning
+                      <div className="text-sm text-muted-foreground mb-4">
+                        Descoperă cum algebra liniară din secolului XVIII devine inteligența artificială modernă. 
+                        De la matrici simple la ChatGPT, Tesla, și face recognition - totul este algebră liniară aplicată magistral!
+                      </div>
+                      
+                      <div className="space-y-3">
+                        <div className="bg-pink-50 rounded-lg p-3 border border-pink-200">
+                          <h4 className="font-semibold text-pink-700 mb-2">🧠 Interactive Experiences:</h4>
+                          <ul className="text-sm text-pink-600 space-y-1">
+                            <li>• <strong>Matrix Calculator:</strong> Operații live cu matrici</li>
+                            <li>• <strong>Neural Network Simulator:</strong> Forward pass în timp real</li>
+                            <li>• <strong>Computer Vision Lab:</strong> Edge detection interactiv</li>
+                            <li>• <strong>3D Transformations:</strong> Rotații și scalări ca în jocuri</li>
+                            <li>• <strong>Eigenvalue Analyzer:</strong> Sufletul matricilor dezvăluit</li>
+                          </ul>
+                        </div>
+                        
+                        <div className="bg-blue-50 rounded-lg p-3 border border-blue-200">
+                          <h4 className="font-semibold text-blue-700 mb-2">🌍 Real-World Connections:</h4>
+                          <ul className="text-sm text-blue-600 space-y-1">
+                            <li>• <strong>ChatGPT & AI:</strong> Miliarde de înmulțiri matriceale</li>
+                            <li>• <strong>Face ID:</strong> Eigenfaces și PCA</li>
+                            <li>• <strong>Tesla Autopilot:</strong> Computer vision live</li>
+                            <li>• <strong>Spotify:</strong> Matrix factorization pentru recomandări</li>
+                            <li>• <strong>Jocuri 3D:</strong> Transformări în timp real</li>
+                          </ul>
+                        </div>
                       </div>
                     </details>
+                    
+                    <div className="mt-6 pt-4 border-t border-gray-200">
+                      <Button
+                        onClick={() => window.open('/artifacts/linear-algebra', '_blank')}
+                        className="w-full bg-gradient-to-r from-pink-500 to-violet-600 hover:from-pink-600 hover:to-violet-700 text-white font-semibold py-3 text-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
+                      >
+                        <div className="flex items-center justify-center gap-3">
+                          <span className="text-2xl">🧠</span>
+                          <span>Linear Algebra Interactive Artifact</span>
+                        </div>
+                      </Button>
+                      <p className="text-center text-sm text-gray-600 mt-2">
+                        Călătoria epică de la Gauss și Euler până la ChatGPT și Tesla!
+                      </p>
+                    </div>
                   </CardContent>
                 </Card>
 
@@ -1141,21 +1576,47 @@ print(f"Speedup: {time1/time2:.1f}x faster")`}
                       </div>
                     </div>
                     <CardTitle className="group-hover:text-emerald-600 transition-colors">
-                      Pandas: Data Analysis & Cleaning
+                      Pandas: De la haosul datelor brute la insight-uri curate
                     </CardTitle>
                     <CardDescription>
-                      Master data manipulation, analysis, and preparation like an expert
+                      Povestea lui Wes McKinney și cum a revolutionat analiza datelor în Python
                     </CardDescription>
                   </CardHeader>
-                  <CardContent>
+                  <CardContent className="space-y-4">
                     <details className="cursor-pointer">
                       <summary className="font-medium text-primary hover:text-primary/80 mb-3">
-                        Real-World Scenario: Business Intelligence
+                        🏦 Povestea: De ce s-a născut Pandas?
                       </summary>
-                      <div className="text-sm text-muted-foreground mb-3">
-                        How companies transform raw data into business insights
+                      <div className="text-sm text-muted-foreground space-y-2">
+                        <p><strong>Anul 2008:</strong> Wes McKinney, analist quantitative la AQR Capital Management, se confrunta cu milioane de tranzacții financiare care nu puteau fi procesate în Excel.</p>
+                        <p><strong>Problema:</strong> Excel - limitare la ~1M rânduri, calcule lente, analize complexe imposibile</p>
+                        <p><strong>Soluția:</strong> Pandas - Panel Data Analysis născut din nevoi reale, nu din teorie</p>
                       </div>
                     </details>
+                    
+                    <details className="cursor-pointer">
+                      <summary className="font-medium text-primary hover:text-primary/80 mb-3">
+                        🛍️ Exemplu real: E-commerce Intelligence
+                      </summary>
+                      <div className="text-sm text-muted-foreground space-y-2">
+                        <p>• <strong>Data Cleaning:</strong> Completarea valorilor lipsă, eliminarea duplicatelor</p>
+                        <p>• <strong>Filtrare & Grupare:</strong> Comenzi peste 100 lei, vânzări pe orașe</p>
+                        <p>• <strong>Time Series:</strong> Analiza trendurilor lunare și sezoniere</p>
+                        <p>• <strong>Pivot Tables:</strong> Rapoarte executive din CSV-uri brute</p>
+                        <p>• <strong>Pipeline-uri:</strong> Automatizarea procesului de curățare</p>
+                      </div>
+                    </details>
+
+                    <Button
+                      onClick={() => window.open('/artifacts/pandas', '_blank')}
+                      className="w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-semibold py-3 text-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
+                    >
+                      <div className="flex items-center justify-center gap-3">
+                        <span className="text-2xl">🐼</span>
+                        <span>Open Pandas Interactive Artifact</span>
+                        <span className="text-2xl">📊</span>
+                      </div>
+                    </Button>
                   </CardContent>
                 </Card>
               </div>
@@ -1285,14 +1746,14 @@ print(f"Speedup: {time1/time2:.1f}x faster")`}
                     
                     <p className="text-purple-700 dark:text-purple-300 leading-relaxed mt-4">
                       <strong>We stand on the shoulders of giants, and it is our honor to be the giants for those who come after us.</strong> 
-                      In our Python code, in our data structures, in our algorithms – we carry forward the torch of human mathematical achievement.
+                      <br></br>In our Python code, in our data structures, in our algorithms – we carry forward the torch of human mathematical achievement.
                     </p>
                   </div>
 
                   <div className="text-center mt-8">
                     <p className="text-muted-foreground italic">
                       "In mathematics, there is no royal road to understanding, but there is a continuous path of discovery 
-                      that connects every learner to the greatest minds in history."
+                      that connects every Learner to the greatest Minds in History."
                     </p>
                   </div>
                 </div>
