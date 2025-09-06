@@ -9,9 +9,10 @@ import CourseNavigation from '../components/CourseNavigation';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Book, Code, Lightbulb, Wrench, ChevronRight, Play, CheckCircle2, Cpu, Zap } from 'lucide-react';
+import { Book, Code, Lightbulb, Wrench, ChevronRight, Play, CheckCircle2, Cpu, Zap, Lock, Unlock } from 'lucide-react';
 import pythonFoundationsHero from '../assets/python-foundations-hero.jpg';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 
 const Foundations = () => {
   const { getContent, loading } = useContent();
@@ -24,6 +25,19 @@ const Foundations = () => {
     { id: 'fundamentals', title: 'Advanced Fundamentals', sessions: 'Core Concepts' },
     { id: 'python-execution', title: 'How Python Executes', sessions: 'Performance & Parallelism' }
   ]);
+
+  // Secret code state for Session 7
+  const [session7SecretCode, setSession7SecretCode] = useState('');
+  const [session7Unlocked, setSession7Unlocked] = useState(false);
+
+  const handleSession7CodeSubmit = () => {
+    if (session7SecretCode.toLowerCase() === 'hope') {
+      setSession7Unlocked(true);
+    } else {
+      setSession7Unlocked(false);
+      // Optional: Add some feedback for incorrect code
+    }
+  };
 
   // Scroll to top on page load
   useEffect(() => {
@@ -129,7 +143,10 @@ const Foundations = () => {
                       </EditableContent>
                       
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <Card className="border-blue-200 dark:border-blue-800">
+                        <Card 
+                          className="border-blue-200 dark:border-blue-800 cursor-pointer hover:shadow-lg transition-all duration-300 hover:scale-105"
+                          onClick={() => navigate('/blueprints')}
+                        >
                           <CardHeader className="pb-3">
                             <CardTitle className="text-lg flex items-center gap-2">
                               <Code className="w-4 h-4 text-blue-600" />
@@ -142,7 +159,10 @@ const Foundations = () => {
                           </CardContent>
                         </Card>
                         
-                        <Card className="border-purple-200 dark:border-purple-800">
+                        <Card 
+                          className="border-purple-200 dark:border-purple-800 cursor-pointer hover:shadow-lg transition-all duration-300 hover:scale-105"
+                          onClick={() => navigate('/git-blueprints')}
+                        >
                           <CardHeader className="pb-3">
                             <CardTitle className="text-lg flex items-center gap-2">
                               <Book className="w-4 h-4 text-purple-600" />
@@ -577,17 +597,52 @@ const Foundations = () => {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <details className="cursor-pointer">
-                    <summary className="font-medium text-primary hover:text-primary/80 mb-3">
-                      View Complete Project
-                    </summary>
-                    <EditableCodeBlock
-                      page="foundations"
-                      section="session-7"
-                      code={sessionContent.session7?.code || "# Complete project"}
-                      language="python"
-                    />
-                  </details>
+                  {!session7Unlocked ? (
+                    <div className="space-y-4">
+                      <div className="flex items-center gap-2 p-4 bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 rounded-lg">
+                        <Lock className="w-5 h-5 text-amber-600" />
+                        <span className="text-amber-800 dark:text-amber-200 font-medium">
+                          This complete project requires a secret code to unlock
+                        </span>
+                      </div>
+                      <div className="flex gap-2">
+                        <Input
+                          type="password"
+                          placeholder="Enter secret code..."
+                          value={session7SecretCode}
+                          onChange={(e) => setSession7SecretCode(e.target.value)}
+                          onKeyDown={(e) => e.key === 'Enter' && handleSession7CodeSubmit()}
+                          className="flex-1"
+                        />
+                        <Button onClick={handleSession7CodeSubmit} variant="outline">
+                          Unlock
+                        </Button>
+                      </div>
+                      {session7SecretCode && session7SecretCode.toLowerCase() !== 'hope' && (
+                        <p className="text-sm text-destructive">Incorrect code. Try again!</p>
+                      )}
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      <div className="flex items-center gap-2 p-4 bg-green-50 dark:bg-green-950/20 border border-green-200 dark:border-green-800 rounded-lg">
+                        <Unlock className="w-5 h-5 text-green-600" />
+                        <span className="text-green-800 dark:text-green-200 font-medium">
+                          Project unlocked! Full code available below.
+                        </span>
+                      </div>
+                      <details className="cursor-pointer">
+                        <summary className="font-medium text-primary hover:text-primary/80 mb-3">
+                          View Complete Project
+                        </summary>
+                        <EditableCodeBlock
+                          page="foundations"
+                          section="session-7"
+                          code={sessionContent.session7?.code || "# Complete project"}
+                          language="python"
+                        />
+                      </details>
+                    </div>
+                  )}
                 </CardContent>
               </Card>
 
