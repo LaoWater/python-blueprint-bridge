@@ -726,7 +726,7 @@ const NumPyArtifact = () => {
                   risk_free_rate = <span className="text-purple-400">0.03</span><br/>
                   sharpe_ratios = (mean_returns - risk_free_rate) / volatility<br/><br/>
                   
-                  print(<span className="text-yellow-300">f"Cel mai bun Sharpe ratio: {'{'}np.max(sharpe_ratios){'}'}:.</span><span className="text-yellow-300">3f}"</span>)
+                  print(<span className="text-yellow-300">f"Cel mai bun Sharpe ratio: {'{'}np.max(sharpe_ratios){'}'}:.</span><span className="text-yellow-300">3f"</span>)
                 </div>
               </div>
             )}
