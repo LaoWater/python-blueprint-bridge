@@ -35,7 +35,11 @@ import DataStructuresArtifact from "./pages/Artifacts/DataStructuresArtifact";
 import AdvancedAlgorithmsArtifact from "./pages/Artifacts/AdvancedAlgorithmsArtifact";
 import HashingArtifact from "./pages/Artifacts/HashingArtifact";
 import MemoryOptimizationArtifact from "./pages/Artifacts/MemoryOptimizationArtifact";
-
+import NumPyArtifact from "./pages/Artifacts/NumPyArtifact";
+import LinearAlgebraArtifact from "./pages/Artifacts/LinearAlgebraArtifact";
+import PandasArtifact from "./pages/Artifacts/PandasArtifact";
+import MatplotlibMasteryArtifact from "./pages/Artifacts/MatplotlibMasteryArtifact";
+import SeabornMasteryArtifact from "./pages/Artifacts/SeabornMasteryArtifact";
 
 
 const queryClient = new QueryClient();
@@ -75,6 +79,11 @@ const App = () => (
                   <Route path="/artifacts/advanced-algorithms" element={<AdvancedAlgorithmsArtifact />} />
                   <Route path="/artifacts/hashing" element={<HashingArtifact />} />
                   <Route path="/artifacts/memory-optimization" element={<MemoryOptimizationArtifact />} />
+                  <Route path="/artifacts/numpy" element={<NumPyArtifact />} />
+                  <Route path="/artifacts/linear-algebra" element={<LinearAlgebraArtifact />} />
+                  <Route path="/artifacts/pandas" element={<PandasArtifact />} />
+                  <Route path="/artifacts/matplotlib-mastery" element={<MatplotlibMasteryArtifact />} />
+                  <Route path="/artifacts/seaborn-mastery" element={<SeabornMasteryArtifact />} />
                   <Route path="/auth" element={<AuthPage />} />
                   <Route path="/profile" element={<ProfilePage />} />
                   <Route path="/admin" element={<AdminPage />} />

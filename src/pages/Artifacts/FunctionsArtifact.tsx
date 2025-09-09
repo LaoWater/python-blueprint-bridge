@@ -195,8 +195,7 @@ const FunctionsArtifact = () => {
             </h2>
             <p className="text-lg text-gray-600 leading-relaxed">
               Dacă buclele ne-au arătat <strong>repetiția</strong>, funcțiile ne dau puterea <strong>organizării</strong>.
-              Ele sunt ca niște asistenți personali: tu spui ce să facă, iar ei execută perfect de fiecare dată.
-              Prin funcții, programatorul devine arhitect, nu doar constructor.
+              <br></br>Ele sunt ca niște asistenți personali: Tu spui ce să facă, iar ei execută perfect de fiecare dată.
             </p>
           </div>
         </div>
@@ -936,9 +935,9 @@ student = proceseaza_student(
 
         {/* Final Message */}
         <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-3xl p-8 text-white text-center shadow-lg">
-          <h2 className="text-3xl font-bold mb-4">🏗️ Arta Arhitecturii în Cod</h2>
+          <h2 className="text-3xl font-bold mb-4">🏗️ The Software Architect</h2>
           <p className="text-xl mb-6 opacity-90">
-            Prin funcții, programatorul devine arhitect, nu doar constructor.
+            Prin funcții, programatorul devine Arhitect, nu doar constructor.
             În loc să ridice cărămidă cu cărămidă, el definește procese, reguli și instrumente care pot fi refolosite oricând.
           </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
@@ -958,7 +957,7 @@ student = proceseaza_student(
           
           <div className="mt-8 pt-6 border-t border-white/20">
             <p className="text-lg font-medium mb-4">
-              🎨 Aici începe adevărata artă a modularității în programare
+              🎨 Aici începe adevărata Artă a modularității în programare
             </p>
             <Button 
               onClick={() => navigate('/foundations')}
