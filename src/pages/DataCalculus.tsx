@@ -1482,7 +1482,7 @@ print("\\n  → Toate cu NumPy! Tu poți! 🚀")
                     
                     <div className="mt-6 pt-4 border-t border-gray-200">
                       <Button
-                        onClick={() => window.open('/artifacts/numpy', '_blank')}
+                        onClick={() => navigate('/artifacts/numpy')}
                         className="w-full bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-semibold py-3 text-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
                       >
                         <div className="flex items-center justify-center gap-3">
@@ -1552,7 +1552,7 @@ print("\\n  → Toate cu NumPy! Tu poți! 🚀")
                     
                     <div className="mt-6 pt-4 border-t border-gray-200">
                       <Button
-                        onClick={() => window.open('/artifacts/linear-algebra', '_blank')}
+                        onClick={() => navigate('/artifacts/linear-algebra')}
                         className="w-full bg-gradient-to-r from-pink-500 to-violet-600 hover:from-pink-600 hover:to-violet-700 text-white font-semibold py-3 text-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
                       >
                         <div className="flex items-center justify-center gap-3">
@@ -1608,13 +1608,12 @@ print("\\n  → Toate cu NumPy! Tu poți! 🚀")
                     </details>
 
                     <Button
-                      onClick={() => window.open('/artifacts/pandas', '_blank')}
+                      onClick={() => navigate('/artifacts/pandas')}
                       className="w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-semibold py-3 text-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
                     >
                       <div className="flex items-center justify-center gap-3">
                         <span className="text-2xl">🐼</span>
                         <span>Open Pandas Interactive Artifact</span>
-                        <span className="text-2xl">📊</span>
                       </div>
                     </Button>
                   </CardContent>

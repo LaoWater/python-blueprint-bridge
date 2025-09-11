@@ -127,6 +127,8 @@ const MiniChart = ({ type, data, title, className = "" }) => {
 const DataVisualizing = () => {
   const { getContent, loading } = useContent();
   const navigate = useNavigate();
+  
+  const [hideFirstTwoCharts, setHideFirstTwoCharts] = useState(false);
 
   const [tocItems] = useState([
     { id: 'revelation', title: 'The Need Arises', sessions: 'Introduction' },
@@ -245,6 +247,21 @@ const DataVisualizing = () => {
     window.scrollTo(0, 0);
   }, []);
 
+  // Hide first 2 charts when scrolling past the Summary section
+  useEffect(() => {
+    const handleScroll = () => {
+      const summarySection = document.getElementById('overview');
+      if (summarySection) {
+        const rect = summarySection.getBoundingClientRect();
+        // Hide charts when summary section scrolls past viewport
+        setHideFirstTwoCharts(rect.bottom < 100);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -290,18 +307,22 @@ const DataVisualizing = () => {
             
             {/* Enhanced with mini visualizations */}
             <div className="mt-6 space-y-4">
-              <MiniChart 
-                type="line" 
-                data={sessionProgressData.slice(0, 5)} 
-                title="Session Progress" 
-                className="border border-violet-100 dark:border-violet-800"
-              />
-              <MiniChart 
-                type="pie" 
-                data={skillDistributionData} 
-                title="Skill Coverage" 
-                className="border border-violet-100 dark:border-violet-800"
-              />
+              {!hideFirstTwoCharts && (
+                <>
+                  <MiniChart 
+                    type="line" 
+                    data={sessionProgressData.slice(0, 5)} 
+                    title="Session Progress" 
+                    className="border border-violet-100 dark:border-violet-800"
+                  />
+                  <MiniChart 
+                    type="pie" 
+                    data={skillDistributionData} 
+                    title="Skill Coverage" 
+                    className="border border-violet-100 dark:border-violet-800"
+                  />
+                </>
+              )}
               <MiniChart 
                 type="area" 
                 data={learningTrendData} 
@@ -467,7 +488,7 @@ const DataVisualizing = () => {
 
                 <div className="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
                   <Button
-                    onClick={() => window.open('/artifacts/matplotlib-mastery', '_blank')}
+                    onClick={() => navigate('/artifacts/matplotlib-mastery')}
                     className="w-full bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-semibold py-4 text-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
                   >
                     <div className="flex items-center justify-center gap-3">
@@ -542,7 +563,7 @@ const DataVisualizing = () => {
 
                 <div className="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
                   <Button
-                    onClick={() => window.open('/artifacts/seaborn-mastery', '_blank')}
+                    onClick={() => navigate('/artifacts/seaborn-mastery')}
                     className="w-full bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700 text-white font-semibold py-4 text-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
                   >
                     <div className="flex items-center justify-center gap-3">
@@ -567,7 +588,7 @@ const DataVisualizing = () => {
               </div>
               <div>
                 <h1 className="text-4xl font-bold bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent">
-                  Complete Visualization Journey
+                  Summary of What We Learned
                 </h1>
                 <p className="text-lg text-muted-foreground">From Data Points to Visual Intelligence</p>
               </div>
