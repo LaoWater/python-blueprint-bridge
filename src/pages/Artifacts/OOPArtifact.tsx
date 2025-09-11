@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Play, Pause, RotateCcw, User, Shield, Users, Zap, BookOpen, Building2, Car, Coins, GraduationCap } from 'lucide-react';
+import { ArrowLeft, Play, Pause, RotateCcw, User, Shield, Users, Zap, BookOpen, Building2, Car, Coins, GraduationCap, Lock, Unlock, Eye, EyeOff } from 'lucide-react';
 
 interface Student {
   nume: string;
@@ -1373,6 +1373,854 @@ print(masina1 == masina2)  # True (același model, an diferit)`}
             </Button>
           </div>
         </div>
+        
+        {/* Interactive Classroom Simulator Challenge - FINAL ELEMENT */}
+        <ClassroomSimulatorChallenge />
+      </div>
+    </div>
+  );
+};
+
+// Password-protected Classroom Simulator Challenge Component
+const ClassroomSimulatorChallenge = () => {
+  const [isUnlocked, setIsUnlocked] = useState(false);
+  const [password, setPassword] = useState('');
+  const [showFullCode, setShowFullCode] = useState(false);
+  const correctPassword = 'blue';
+
+  const handlePasswordSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (password === correctPassword) {
+      setIsUnlocked(true);
+    } else {
+      alert('Wrong password! Hint: The color of our learning platform');
+      setPassword('');
+    }
+  };
+
+  const learningSpecifications = [
+    {
+      collection: "📚 LISTS",
+      concept: "Ordered, Mutable Collections",
+      realWorld: "Student roster, shopping cart, playlist",
+      inClassroom: "Student seating order, grade history, lesson sequence",
+      whyThisMatters: "When order matters and you need to modify the collection",
+      keyOperations: ["append()", "remove()", "insert()", "[index]", "len()"]
+    },
+    {
+      collection: "📋 DICTIONARIES", 
+      concept: "Key-Value Relationships",
+      realWorld: "Contact book, user profiles, settings",
+      inClassroom: "Student profiles, skill tracking, detailed records",
+      whyThisMatters: "When you need fast lookup by meaningful names/IDs",
+      keyOperations: ["dict[key]", ".get()", ".keys()", ".values()", ".items()"]
+    },
+    {
+      collection: "📊 SETS",
+      concept: "Unique Collections",
+      realWorld: "Unique hashtags, visited pages, categories",
+      inClassroom: "Skills mastered, lessons completed, no duplicates",
+      whyThisMatters: "When uniqueness matters and fast membership testing",
+      keyOperations: ["add()", "remove()", "in", "union()", "intersection()"]
+    },
+    {
+      collection: "🎯 TUPLES",
+      concept: "Immutable, Fixed Data",
+      realWorld: "GPS coordinates, RGB colors, database records",
+      inClassroom: "Class schedule, room coordinates, fixed configurations",
+      whyThisMatters: "When data shouldn't change and you need guaranteed stability",
+      keyOperations: ["[index]", "len()", "count()", "index()", "unpacking"]
+    }
+  ];
+
+  const implementationSteps = [
+    {
+      step: 1,
+      title: "🏗️ Setup the Foundation",
+      description: "Create the basic class structure with all collection types",
+      code: `class SmartClassroom:
+    def __init__(self, class_name="My Classroom"):
+        self.students = []              # LIST: ordered student roster
+        self.student_catalog = {}       # DICT: detailed student profiles
+        self.completed_lessons = set()  # SET: unique lessons taught
+        self.schedule = (               # TUPLE: immutable timetable
+            ("09:00", "Morning"),
+            ("10:30", "Break"),
+            ("11:00", "Afternoon")
+        )`
+    },
+    {
+      step: 2, 
+      title: "👥 Student Management",
+      description: "Add functions to manage students using lists and dictionaries",
+      code: `def add_student(self, name, initial_skill=50):
+    student_id = f"STU_{len(self.students) + 1:03d}"
+    
+    # Add to LIST (order matters for seating)
+    self.students.append(student_id)
+    
+    # Create DICTIONARY profile (detailed info)
+    self.student_catalog[student_id] = {
+        "name": name,
+        "skill_level": initial_skill,
+        "grades": [],               # LIST: grade history
+        "learned_skills": set()     # SET: unique skills mastered
+    }`
+    },
+    {
+      step: 3,
+      title: "🎓 Teaching System", 
+      description: "Implement realistic learning with skill improvement",
+      code: `def teach_lesson(self, skill_topic):
+    # Add to completed lessons SET (no duplicates)
+    self.completed_lessons.add(skill_topic)
+    
+    # Each student learns at their own pace
+    for student_id in self.students:
+        student = self.student_catalog[student_id]
+        
+        # Realistic learning: harder to improve when advanced
+        current = student["skill_level"]
+        improvement = (100 - current) * 0.15 * random.uniform(0.5, 1.5)
+        
+        # Update skill (never reaches 100%)
+        student["skill_level"] = min(current + improvement, 99)
+        student["learned_skills"].add(skill_topic)  # SET operation`
+    },
+    {
+      step: 4,
+      title: "📝 Testing & Grading",
+      description: "Create realistic tests combining skill and randomness",
+      code: `def conduct_test(self):
+    for student_id in self.students:
+        student = self.student_catalog[student_id]
+        
+        # Grade = 70% skill + 30% test day luck
+        skill_part = student["skill_level"] * 0.7
+        luck_part = random.uniform(-15, 15)
+        
+        grade = max(0, min(100, skill_part + luck_part))
+        
+        # Add to grade history LIST
+        student["grades"].append(grade)
+        
+        print(f"{student['name']}: {grade:.1f}")`
+    }
+  ];
+
+  const gamificationElements = [
+    {
+      icon: "🎯",
+      title: "Realistic Learning Curves", 
+      description: "Students improve faster when starting, slower as they advance - just like real learning!"
+    },
+    {
+      icon: "🎲",
+      title: "Random Test Conditions",
+      description: "Grades combine skill (70%) with test day factors (30%) - mimicking real exam variability"
+    },
+    {
+      icon: "📈", 
+      title: "Progress Tracking",
+      description: "Watch students grow over time with detailed statistics and individual progress reports"
+    },
+    {
+      icon: "🎮",
+      title: "Interactive Management",
+      description: "Add/remove students, teach lessons, run tests - feel like a real teacher!"
+    }
+  ];
+
+  const previewCode = `# 🏫 SMART CLASSROOM SIMULATOR - Collections + OOP in Action!
+import random
+import time
+from datetime import datetime
+
+class SmartClassroom:
+    """Complete classroom management system using ALL Collection types + OOP!"""
+    
+    def __init__(self, class_name="Python Mastery 101"):
+        # 📚 LISTS - Student roster (order matters)
+        self.students = []
+        
+        # 📋 DICTIONARIES - Student profiles  
+        self.student_catalog = {}
+        
+        # 📊 SETS - Unique skills & lessons
+        self.curriculum_skills = {"variables", "loops", "functions", "collections", "oop"}
+        self.completed_lessons = set()
+        
+        # 🎯 TUPLES - Immutable schedule
+        self.class_schedule = (
+            ("09:00", "Morning Lesson"),
+            ("10:30", "Practice Time"), 
+            ("11:00", "Quiz Time"),
+            ("12:00", "Break")
+        )
+        
+    # 🔒 UNLOCK THE FULL CODE TO SEE:
+    # - Complete OOP-powered classroom management
+    # - Student class with inheritance & polymorphism  
+    # - Interactive teaching system with realistic learning
+    # - Grade calculation (70% skill + 30% randomness)
+    # - Full statistics and progress tracking
+    # - Interactive simulation that feels REAL!`;
+
+  const fullCode = `# 🏫 SMART CLASSROOM SIMULATOR - Collections + OOP Mastery!
+import random
+import time
+from datetime import datetime
+
+class Person:
+    """Base class for all people in the classroom"""
+    def __init__(self, name):
+        self.name = name
+        self.id = f"P_{random.randint(1000, 9999)}"
+    
+    def introduce(self):
+        return f"Hi, I'm {self.name}"
+    
+    def __str__(self):
+        return f"{self.__class__.__name__}: {self.name}"
+
+class Student(Person):
+    """Student class inheriting from Person - demonstrates INHERITANCE"""
+    def __init__(self, name, initial_skill=None):
+        super().__init__(name)  # Call parent constructor
+        self.skill_level = initial_skill or random.randint(20, 60)
+        self.grades = []  # LIST: grade history
+        self.learned_skills = set()  # SET: unique skills mastered
+        self.attendance = 100
+        self.join_date = datetime.now()
+        self.total_lessons = 0
+    
+    def study(self, skill_topic):
+        """Student-specific method"""
+        # Realistic learning: diminishing returns
+        current = self.skill_level
+        max_gain = (100 - current) * 0.15
+        actual_gain = random.uniform(0.5, max_gain)
+        
+        self.skill_level = min(current + actual_gain, 99)
+        self.learned_skills.add(skill_topic)
+        self.total_lessons += 1
+        
+        return f"📚 {self.name} studied {skill_topic}: {current:.1f}% → {self.skill_level:.1f}%"
+    
+    def take_test(self):
+        """Take a test - combines skill with randomness"""
+        skill_component = self.skill_level * 0.7
+        random_component = random.uniform(-15, 15)  # Test day factors
+        
+        grade = max(0, min(100, skill_component + random_component))
+        self.grades.append(grade)
+        
+        return grade
+    
+    def get_average_grade(self):
+        """Calculate student's average grade"""
+        if not self.grades:
+            return 0
+        return sum(self.grades) / len(self.grades)
+    
+    def introduce(self):
+        """Override parent method - demonstrates POLYMORPHISM"""
+        return f"👨‍🎓 Hi, I'm {self.name}, a student with {self.skill_level:.1f}% skill level"
+
+class Teacher(Person):
+    """Teacher class inheriting from Person"""
+    def __init__(self, name, subject):
+        super().__init__(name)
+        self.subject = subject
+        self.lessons_taught = 0
+    
+    def teach(self, students, skill_topic):
+        """Teach a lesson to all students"""
+        results = []
+        for student in students:
+            result = student.study(skill_topic)
+            results.append(result)
+        
+        self.lessons_taught += 1
+        return results
+    
+    def introduce(self):
+        """Override parent method - demonstrates POLYMORPHISM"""
+        return f"👨‍🏫 Hi, I'm Prof. {self.name}, I teach {self.subject}"
+
+class SmartClassroom:
+    """
+    Advanced classroom management system combining:
+    - Collections (Lists, Dicts, Sets, Tuples)
+    - OOP (Classes, Inheritance, Polymorphism, Encapsulation)
+    """
+    
+    def __init__(self, class_name="OOP Mastery Classroom"):
+        self.class_name = class_name
+        self.students = []  # LIST of Student objects
+        self.student_registry = {}  # DICT: student_id -> Student object
+        self.teachers = []  # LIST of Teacher objects
+        self.completed_lessons = set()  # SET: unique lessons taught
+        self.schedule = (  # TUPLE: immutable timetable
+            ("09:00", "Morning Lesson"),
+            ("10:30", "Practice Time"),
+            ("11:00", "Quiz Time"),
+            ("12:00", "Break Time")
+        )
+        self.day_count = 1
+        
+        # Add a default teacher
+        self.add_teacher("Dr. Python", "Programming")
+        
+    def add_student(self, name, initial_skill=None):
+        """Add a new student using OOP principles"""
+        student = Student(name, initial_skill)
+        
+        # Add to collections
+        self.students.append(student)  # LIST
+        self.student_registry[student.id] = student  # DICT
+        
+        print(f"🎉 {student.introduce()}")
+        print(f"   Student ID: {student.id}")
+        return student
+    
+    def add_teacher(self, name, subject):
+        """Add a new teacher"""
+        teacher = Teacher(name, subject)
+        self.teachers.append(teacher)
+        print(f"👨‍🏫 {teacher.introduce()} joined the classroom!")
+        return teacher
+    
+    def teach_lesson(self, skill_topic):
+        """Conduct a lesson using OOP design"""
+        if not self.students:
+            print("📚 Empty classroom - no students to teach!")
+            return
+        
+        print(f"\\n🎓 Teaching lesson: '{skill_topic.upper()}' - Day {self.day_count}")
+        print("=" * 60)
+        
+        # Add to completed lessons SET
+        self.completed_lessons.add(skill_topic)
+        
+        # Get the first available teacher
+        teacher = self.teachers[0] if self.teachers else None
+        
+        if teacher:
+            # Teacher teaches all students (OOP in action!)
+            results = teacher.teach(self.students, skill_topic)
+            for result in results:
+                print(f"  {result}")
+        else:
+            # Fallback: students study independently
+            for student in self.students:
+                result = student.study(skill_topic)
+                print(f"  {result}")
+        
+        time.sleep(1)  # Simulate teaching time
+    
+    def conduct_test(self):
+        """Run a test for all students"""
+        if not self.students:
+            print("📝 No students to test!")
+            return
+        
+        print(f"\\n📝 QUIZ TIME - Day {self.day_count}")
+        print("=" * 60)
+        
+        test_results = []
+        
+        for student in self.students:
+            grade = student.take_test()
+            avg_grade = student.get_average_grade()
+            
+            test_results.append((student.name, grade, avg_grade))
+            print(f"  📊 {student.name}: {grade:.1f} (avg: {avg_grade:.1f})")
+        
+        # Find top performer
+        if test_results:
+            best_student = max(test_results, key=lambda x: x[1])
+            print(f"\\n🏆 Top scorer: {best_student[0]} with {best_student[1]:.1f}!")
+        
+        self.day_count += 1
+    
+    def class_statistics(self):
+        """Show comprehensive statistics using OOP data"""
+        if not self.students:
+            print("📊 No students enrolled!")
+            return
+        
+        print(f"\\n📊 CLASS STATISTICS - {self.class_name}")
+        print("=" * 70)
+        
+        # Calculate overall statistics
+        total_students = len(self.students)
+        avg_skill = sum(s.skill_level for s in self.students) / total_students
+        
+        # Students with grades
+        graded_students = [s for s in self.students if s.grades]
+        if graded_students:
+            all_grades = [grade for s in graded_students for grade in s.grades]
+            avg_grade = sum(all_grades) / len(all_grades)
+            print(f"📈 Class average skill: {avg_skill:.1f}%")
+            print(f"📝 Class average grade: {avg_grade:.1f}")
+        else:
+            print(f"📈 Class average skill: {avg_skill:.1f}%")
+            print(f"📝 No grades yet")
+        
+        print(f"👥 Total students: {total_students}")
+        print(f"👨‍🏫 Teachers: {len(self.teachers)}")
+        print(f"📚 Lessons completed: {len(self.completed_lessons)}")
+        print(f"🎯 Skills taught: {', '.join(self.completed_lessons)}")
+        
+        # Individual student progress (POLYMORPHISM in action)
+        print(f"\\n👥 INDIVIDUAL PROGRESS:")
+        for student in self.students:
+            skills_count = len(student.learned_skills)
+            avg_grade = student.get_average_grade()
+            
+            print(f"  • {student.name}: {student.skill_level:.1f}% skill, "
+                  f"avg grade: {avg_grade:.1f}, {skills_count} skills mastered")
+        
+        # Teacher statistics
+        print(f"\\n👨‍🏫 TEACHING STAFF:")
+        for teacher in self.teachers:
+            print(f"  • {teacher.introduce()} - Lessons taught: {teacher.lessons_taught}")
+    
+    def demonstrate_polymorphism(self):
+        """Demonstrate polymorphism with all people in classroom"""
+        print(f"\\n🎭 POLYMORPHISM DEMONSTRATION:")
+        print("Same method, different behaviors:")
+        print("-" * 40)
+        
+        # All people (students + teachers) have introduce() method
+        all_people = self.students + self.teachers
+        
+        for person in all_people:
+            print(f"  {person.introduce()}")  # Polymorphism in action!
+    
+    def remove_student(self, student_id):
+        """Remove a student by ID"""
+        if student_id in self.student_registry:
+            student = self.student_registry[student_id]
+            self.students.remove(student)
+            del self.student_registry[student_id]
+            print(f"👋 {student.name} has left the class. Good luck!")
+        else:
+            print(f"❌ Student with ID {student_id} not found!")
+
+# 🎮 INTERACTIVE OOP SIMULATION
+def run_oop_classroom_simulation():
+    """Run the complete OOP classroom experience!"""
+    classroom = SmartClassroom("OOP Foundations Bootcamp")
+    
+    print("🏫 WELCOME TO THE SMART OOP CLASSROOM SIMULATOR!")
+    print("Experience the power of Collections + OOP working together!\\n")
+    
+    # Add students using OOP
+    students = [
+        classroom.add_student("Ana Popescu", 45),
+        classroom.add_student("Mihai Ionescu", 35),
+        classroom.add_student("Elena Vasilescu", 50),
+        classroom.add_student("Andrei Marin", 40)
+    ]
+    
+    # Demonstrate polymorphism
+    classroom.demonstrate_polymorphism()
+    
+    # Teaching sequence
+    lessons = ["variables", "if_else_statements", "loops", "collections", "oop"]
+    
+    for day, lesson in enumerate(lessons, 1):
+        print(f"\\n🌅 DAY {day} - Teaching {lesson.replace('_', ' ').title()}")
+        classroom.teach_lesson(lesson)
+        classroom.conduct_test()
+        classroom.class_statistics()
+        
+        if day == 3:  # Add a student mid-course
+            classroom.add_student("Maria Georgescu", 55)
+            classroom.demonstrate_polymorphism()  # Show updated polymorphism
+        
+        print("\\n" + "⭐" * 80)
+        time.sleep(1)  # Brief pause between days
+    
+    print("\\n🎓 OOP SIMULATION COMPLETE!")
+    print("You've experienced how Collections and OOP create powerful, living systems!")
+
+# Interactive Menu System
+def interactive_oop_classroom():
+    """Interactive classroom management with OOP"""
+    classroom = SmartClassroom("Interactive OOP Classroom")
+    
+    while True:
+        print("\\n🏫 OOP CLASSROOM MANAGEMENT MENU")
+        print("1. Add Student")
+        print("2. Add Teacher")
+        print("3. Remove Student") 
+        print("4. Teach Lesson")
+        print("5. Conduct Test")
+        print("6. View Statistics")
+        print("7. Demonstrate Polymorphism")
+        print("8. Full OOP Simulation")
+        print("0. Exit")
+        
+        choice = input("Choose an option: ").strip()
+        
+        if choice == "1":
+            name = input("Student name: ").strip()
+            skill = input("Initial skill (press Enter for random): ").strip()
+            skill_level = int(skill) if skill.isdigit() else None
+            if name:
+                classroom.add_student(name, skill_level)
+                
+        elif choice == "2":
+            name = input("Teacher name: ").strip()
+            subject = input("Subject: ").strip()
+            if name and subject:
+                classroom.add_teacher(name, subject)
+                
+        elif choice == "3":
+            if classroom.students:
+                print("Students:")
+                for i, student in enumerate(classroom.students):
+                    print(f"  {i}: {student.name} (ID: {student.id})")
+                try:
+                    idx = int(input("Student index to remove: "))
+                    if 0 <= idx < len(classroom.students):
+                        student_id = classroom.students[idx].id
+                        classroom.remove_student(student_id)
+                except (ValueError, IndexError):
+                    print("Invalid index")
+            else:
+                print("No students in class!")
+                
+        elif choice == "4":
+            skill = input("Skill to teach (e.g., 'oop'): ").strip()
+            if skill:
+                classroom.teach_lesson(skill)
+                
+        elif choice == "5":
+            classroom.conduct_test()
+            
+        elif choice == "6":
+            classroom.class_statistics()
+            
+        elif choice == "7":
+            classroom.demonstrate_polymorphism()
+            
+        elif choice == "8":
+            run_oop_classroom_simulation()
+            
+        elif choice == "0":
+            print("👋 Goodbye!")
+            break
+        else:
+            print("Invalid choice!")
+
+# Run the OOP classroom experience
+if __name__ == "__main__":
+    print("🎓 OOP CLASSROOM SIMULATOR MODES:")
+    print("1. Interactive Menu")
+    print("2. Auto OOP Simulation")
+    
+    mode = input("Choose mode (1 or 2): ").strip()
+    
+    if mode == "1":
+        interactive_oop_classroom()
+    else:
+        run_oop_classroom_simulation()`;
+
+  return (
+    <div className="mb-12">
+      <div className="bg-gradient-to-br from-indigo-900/90 to-purple-900/90 backdrop-blur-sm rounded-3xl p-8 border border-indigo-400/30 shadow-2xl">
+        <div className="text-center mb-8">
+          <h2 className="text-4xl font-bold mb-4 bg-gradient-to-r from-blue-300 to-purple-300 bg-clip-text text-transparent">
+            🏫 MASTER CHALLENGE: Smart OOP Classroom Simulator
+          </h2>
+          <p className="text-white/80 text-lg mb-4">
+            Combine ALL your knowledge: Collections + OOP to build a complete classroom management system!
+          </p>
+          <div className="bg-blue-600/20 border border-blue-400 rounded-lg p-4 mb-6">
+            <p className="text-blue-200 text-sm">
+              🎯 This is your ultimate capstone project - integrating Lists, Dictionaries, Sets, Tuples with Classes, Inheritance, Polymorphism, and Encapsulation into one powerful, interactive system!
+            </p>
+          </div>
+        </div>
+
+        {/* Learning Specifications - Always Visible */}
+        <div className="mb-8">
+          <h3 className="text-2xl font-bold text-white mb-6 text-center">
+            📋 Complete OOP + Collections Integration
+          </h3>
+          
+          {/* Collections Overview */}
+          <div className="grid md:grid-cols-2 gap-4 mb-8">
+            {learningSpecifications.map((spec, index) => (
+              <div key={index} className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
+                <h4 className="text-lg font-bold text-blue-300 mb-2">{spec.collection}</h4>
+                <p className="text-white/90 text-sm font-medium mb-2">{spec.concept}</p>
+                <div className="space-y-2 text-xs">
+                  <div>
+                    <span className="text-green-300 font-medium">🌍 Real World:</span>
+                    <p className="text-white/70">{spec.realWorld}</p>
+                  </div>
+                  <div>
+                    <span className="text-yellow-300 font-medium">🏫 In Classroom:</span>
+                    <p className="text-white/70">{spec.inClassroom}</p>
+                  </div>
+                  <div>
+                    <span className="text-purple-300 font-medium">💡 Why:</span>
+                    <p className="text-white/70">{spec.whyThisMatters}</p>
+                  </div>
+                  <div>
+                    <span className="text-orange-300 font-medium">⚙️ Key Ops:</span>
+                    <div className="flex flex-wrap gap-1 mt-1">
+                      {spec.keyOperations.map((op, i) => (
+                        <span key={i} className="bg-gray-800 text-green-400 px-2 py-1 rounded text-xs font-mono">
+                          {op}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* OOP Integration */}
+          <div className="mb-8">
+            <h4 className="text-xl font-bold text-white mb-4 text-center">
+              🏗️ OOP Architecture Integration
+            </h4>
+            <div className="grid md:grid-cols-2 gap-4">
+              <div className="bg-violet-600/20 border border-violet-400 rounded-xl p-4">
+                <h5 className="text-violet-300 font-bold mb-2">👥 Person → Student → Teacher</h5>
+                <p className="text-violet-100 text-sm">Inheritance hierarchy with Student and Teacher classes inheriting from Person base class</p>
+              </div>
+              <div className="bg-emerald-600/20 border border-emerald-400 rounded-xl p-4">
+                <h5 className="text-emerald-300 font-bold mb-2">🎭 Polymorphism in Action</h5>
+                <p className="text-emerald-100 text-sm">Same introduce() method behaves differently for students vs teachers</p>
+              </div>
+              <div className="bg-amber-600/20 border border-amber-400 rounded-xl p-4">
+                <h5 className="text-amber-300 font-bold mb-2">🛡️ Encapsulation</h5>
+                <p className="text-amber-100 text-sm">Private attributes and controlled access through methods</p>
+              </div>
+              <div className="bg-cyan-600/20 border border-cyan-400 rounded-xl p-4">
+                <h5 className="text-cyan-300 font-bold mb-2">🏛️ Class Architecture</h5>
+                <p className="text-cyan-100 text-sm">SmartClassroom orchestrates all objects and collections together</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Implementation Steps */}
+          <div className="mb-8">
+            <h4 className="text-xl font-bold text-white mb-4 text-center">
+              🏗️ Step-by-Step OOP Implementation
+            </h4>
+            <div className="space-y-4">
+              {implementationSteps.map((step, index) => (
+                <div key={index} className="bg-gray-900/50 border border-gray-600 rounded-xl p-4">
+                  <div className="flex items-start gap-3 mb-3">
+                    <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-sm">
+                      {step.step}
+                    </div>
+                    <div>
+                      <h5 className="text-lg font-bold text-blue-300">{step.title}</h5>
+                      <p className="text-white/70 text-sm">{step.description}</p>
+                    </div>
+                  </div>
+                  <div className="bg-gray-900 rounded-lg p-3 ml-11">
+                    <pre className="text-green-400 text-xs overflow-x-auto">
+                      <code>{step.code}</code>
+                    </pre>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Gamification Elements */}
+          <div className="mb-8">
+            <h4 className="text-xl font-bold text-white mb-4 text-center">
+              🎮 What Makes This Feel Real
+            </h4>
+            <div className="grid md:grid-cols-2 gap-4">
+              {gamificationElements.map((element, index) => (
+                <div key={index} className="bg-amber-600/20 border border-amber-400 rounded-xl p-4">
+                  <div className="flex items-start gap-3">
+                    <span className="text-2xl">{element.icon}</span>
+                    <div>
+                      <h5 className="text-amber-300 font-bold mb-1">{element.title}</h5>
+                      <p className="text-amber-100 text-sm">{element.description}</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {!isUnlocked ? (
+          // Password Protection Screen
+          <div className="text-center text-white">
+            <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 mb-6">
+              <Lock className="w-16 h-16 mx-auto mb-4 text-yellow-300" />
+              <h3 className="text-2xl font-bold mb-4">🔒 Master Challenge Locked</h3>
+              <p className="text-white/70 mb-6">
+                This is the ultimate programming challenge - combining Collections with OOP to create a living classroom ecosystem. 
+                Enter the password to unlock the complete implementation!
+              </p>
+              
+              <form onSubmit={handlePasswordSubmit} className="max-w-md mx-auto">
+                <div className="flex gap-3">
+                  <input
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Enter password..."
+                    className="flex-1 px-4 py-2 rounded-lg bg-white/10 border border-white/20 text-white placeholder:text-white/50"
+                  />
+                  <Button type="submit" className="bg-blue-600 hover:bg-blue-700">
+                    Unlock
+                  </Button>
+                </div>
+              </form>
+              
+              <p className="text-xs text-white/50 mt-3">
+                💡 Hint: The color of our learning platform
+              </p>
+            </div>
+            
+            {/* Preview Code - Only 20% */}
+            <div className="bg-gray-900 rounded-lg p-4 text-left">
+              <div className="flex items-center justify-between mb-3">
+                <h4 className="text-white font-bold">📖 Code Preview (20% revealed)</h4>
+                <Eye className="w-5 h-5 text-gray-400" />
+              </div>
+              <pre className="text-green-400 text-sm overflow-x-auto whitespace-pre-wrap break-words">
+                <code>{previewCode}</code>
+              </pre>
+            </div>
+          </div>
+        ) : (
+          // Unlocked Content
+          <div className="text-white">
+            <div className="bg-green-600/20 border border-green-400 rounded-2xl p-6 mb-6">
+              <div className="flex items-center gap-3 mb-4">
+                <Unlock className="w-8 h-8 text-green-300" />
+                <h3 className="text-2xl font-bold text-green-300">🎉 Master Challenge Unlocked!</h3>
+              </div>
+              <p className="text-green-100 mb-4">
+                Congratulations! You now have access to the ultimate programming challenge - a complete classroom management system 
+                that combines Collections with Object-Oriented Programming in perfect harmony.
+              </p>
+              
+              {/* OOP + Collections Usage Guide */}
+              <div className="grid md:grid-cols-2 gap-4 text-sm">
+                <div className="bg-white/10 rounded-lg p-3">
+                  <h5 className="font-bold text-blue-300 mb-2">🏛️ OOP Architecture:</h5>
+                  <p className="text-white/80">Person → Student/Teacher classes with inheritance & polymorphism</p>
+                </div>
+                <div className="bg-white/10 rounded-lg p-3">
+                  <h5 className="font-bold text-purple-300 mb-2">📚 Collections Integration:</h5>
+                  <p className="text-white/80">Lists, Dicts, Sets, Tuples working together seamlessly</p>
+                </div>
+                <div className="bg-white/10 rounded-lg p-3">
+                  <h5 className="font-bold text-green-300 mb-2">🎭 Polymorphism Demo:</h5>
+                  <p className="text-white/80">Same methods, different behaviors for students vs teachers</p>
+                </div>
+                <div className="bg-white/10 rounded-lg p-3">
+                  <h5 className="font-bold text-yellow-300 mb-2">🛡️ Encapsulation:</h5>
+                  <p className="text-white/80">Protected data with controlled access methods</p>
+                </div>
+              </div>
+            </div>
+            
+            {/* Full Code with Toggle */}
+            <div className="bg-gray-900 rounded-lg p-4">
+              <div className="flex items-center justify-between mb-3">
+                <h4 className="text-white font-bold">💻 Complete OOP Classroom Simulator</h4>
+                <Button 
+                  onClick={() => setShowFullCode(!showFullCode)}
+                  className="bg-indigo-600 hover:bg-indigo-700 text-sm"
+                >
+                  {showFullCode ? <EyeOff className="w-4 h-4 mr-1" /> : <Eye className="w-4 h-4 mr-1" />}
+                  {showFullCode ? 'Hide' : 'Show'} Full Code
+                </Button>
+              </div>
+              
+              {showFullCode && (
+                <pre className="text-green-400 text-xs overflow-x-auto whitespace-pre-wrap break-words">
+                  <code>{fullCode}</code>
+                </pre>
+              )}
+              
+              {!showFullCode && (
+                <div className="text-center py-8 text-white/60">
+                  <Eye className="w-12 h-12 mx-auto mb-3 opacity-50" />
+                  <p>Click "Show Full Code" to reveal the complete OOP implementation</p>
+                </div>
+              )}
+            </div>
+            
+            {/* Interactive Features & Learning Path */}
+            <div className="mt-6 space-y-6">
+              <div className="bg-amber-600/20 border border-amber-400 rounded-2xl p-6">
+                <h4 className="text-amber-300 font-bold text-xl mb-4">🎮 OOP Features You'll Master:</h4>
+                <div className="grid md:grid-cols-2 gap-4 text-sm text-amber-100">
+                  <div>
+                    <p><strong>• Person/Student/Teacher classes</strong> - Complete inheritance hierarchy</p>
+                    <p><strong>• Polymorphic introduce() methods</strong> - Same interface, different behaviors</p>
+                    <p><strong>• Encapsulated student data</strong> - Protected attributes with controlled access</p>
+                  </div>
+                  <div>
+                    <p><strong>• Interactive classroom management</strong> - Add students, teachers, conduct lessons</p>
+                    <p><strong>• Realistic learning simulation</strong> - Students improve over time</p>
+                    <p><strong>• Complete statistics system</strong> - Track progress of all entities</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-green-600/20 border border-green-400 rounded-2xl p-6">
+                <h4 className="text-green-300 font-bold text-xl mb-4">🚀 Your Mastery Journey:</h4>
+                <div className="space-y-3 text-sm">
+                  <div className="flex items-start gap-3">
+                    <span className="w-6 h-6 bg-green-600 rounded-full flex items-center justify-center text-white font-bold text-xs">1</span>
+                    <p className="text-green-100"><strong>Master the architecture</strong> - Understand how Classes and Collections work together</p>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <span className="w-6 h-6 bg-green-600 rounded-full flex items-center justify-center text-white font-bold text-xs">2</span>
+                    <p className="text-green-100"><strong>Implement inheritance</strong> - Build the Person → Student/Teacher hierarchy</p>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <span className="w-6 h-6 bg-green-600 rounded-full flex items-center justify-center text-white font-bold text-xs">3</span>
+                    <p className="text-green-100"><strong>Add polymorphism</strong> - Create methods that behave differently per class</p>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <span className="w-6 h-6 bg-green-600 rounded-full flex items-center justify-center text-white font-bold text-xs">4</span>
+                    <p className="text-green-100"><strong>Integrate collections</strong> - Use Lists, Dicts, Sets, Tuples to manage data</p>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <span className="w-6 h-6 bg-green-600 rounded-full flex items-center justify-center text-white font-bold text-xs">5</span>
+                    <p className="text-green-100"><strong>Run the simulation</strong> - Watch your object-oriented classroom come to life!</p>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="bg-purple-600/20 border border-purple-400 rounded-2xl p-6">
+                <h4 className="text-purple-300 font-bold text-xl mb-3">⚡ The Ultimate Programming Moment</h4>
+                <p className="text-purple-100 leading-relaxed">
+                  When you complete this simulator, you'll have achieved something extraordinary: <strong>you've built a complex, object-oriented system that mirrors real life!</strong> 
+                  You'll watch Student objects learn and grow, Teacher objects conduct lessons, and the SmartClassroom orchestrate it all seamlessly. 
+                  Your code won't just work - it will demonstrate mastery of both <strong>Collections</strong> and <strong>Object-Oriented Programming</strong>.
+                </p>
+                <p className="text-purple-100 mt-3 font-medium">
+                  This is your graduation moment: <em>from beginner programmer to architect of living, intelligent systems.</em> 🎓
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

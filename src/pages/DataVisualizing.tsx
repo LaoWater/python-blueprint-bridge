@@ -135,6 +135,8 @@ const DataVisualizing = () => {
     { id: 'overview', title: 'Journey Overview', sessions: 'Introduction' },
     { id: 'matplotlib-mastery', title: 'Matplotlib Mastery', sessions: 'Sessions 18-19' },
     { id: 'seaborn-mastery', title: 'Seaborn Mastery', sessions: 'Sessions 20-21' },
+    { id: 'plotly-mastery', title: 'Plotly Interactive', sessions: 'Session 22' },
+    { id: 'streamlit-unified', title: 'Streamlit Unified Mastery', sessions: 'Sessions 23-26' },
     { id: 'data-visualization', title: 'Data Visualization', sessions: 'Sessions 18-22' },
     { id: 'dashboards-apps', title: 'Dashboards & Apps', sessions: 'Sessions 23-27' },
   ]);
@@ -249,16 +251,33 @@ const DataVisualizing = () => {
 
   // Hide first 2 charts when scrolling past the Summary section
   useEffect(() => {
+    let ticking = false;
+    
     const handleScroll = () => {
-      const summarySection = document.getElementById('overview');
-      if (summarySection) {
-        const rect = summarySection.getBoundingClientRect();
-        // Hide charts when summary section scrolls past viewport
-        setHideFirstTwoCharts(rect.bottom < 100);
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          const summarySection = document.getElementById('overview');
+          if (summarySection) {
+            const rect = summarySection.getBoundingClientRect();
+            // Hide charts when summary section scrolls past viewport (more aggressive)
+            const shouldHide = rect.bottom < 0;
+            setHideFirstTwoCharts(shouldHide);
+            
+            // Debug info (throttled)
+            if (Math.random() < 0.1) { // Only log 10% of the time
+              console.log('📊 Chart visibility - Summary bottom:', rect.bottom.toFixed(0), 'Hide charts:', shouldHide);
+            }
+          }
+          ticking = false;
+        });
+        ticking = true;
       }
     };
 
-    window.addEventListener('scroll', handleScroll);
+    // Initial check
+    handleScroll();
+    
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -307,7 +326,7 @@ const DataVisualizing = () => {
             
             {/* Enhanced with mini visualizations */}
             <div className="mt-6 space-y-4">
-              {!hideFirstTwoCharts && (
+              
                 <>
                   <MiniChart 
                     type="line" 
@@ -322,7 +341,6 @@ const DataVisualizing = () => {
                     className="border border-violet-100 dark:border-violet-800"
                   />
                 </>
-              )}
               <MiniChart 
                 type="area" 
                 data={learningTrendData} 
@@ -574,6 +592,163 @@ const DataVisualizing = () => {
                   </Button>
                   <p className="text-center text-sm text-gray-600 dark:text-gray-400 mt-3">
                     Interactive statistical visualization experience with real-world applications
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          </section>
+
+          {/* Session 22: Plotly Interactive Visualizations */}
+          <section id="plotly-mastery" className="mb-12">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-10 h-10 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-lg flex items-center justify-center">
+                <Zap className="w-5 h-5 text-white" />
+              </div>
+              <div>
+                <h2 className="text-2xl font-bold text-foreground">Session 22: Plotly Interactive Mastery</h2>
+                <p className="text-muted-foreground">Vizualizări Interactive cu Plotly - Când datele iau viață prin atingere</p>
+              </div>
+            </div>
+
+            <Card className="border-emerald-200 dark:border-emerald-800 mb-6">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-emerald-700 dark:text-emerald-300">
+                  <Target className="w-5 h-5" />
+                  🕒 Durată: 3 ore
+                </CardTitle>
+                <CardDescription className="text-lg">
+                  🎯 De la necesitatea reală la instrumente interactive care transformă consumul pasiv în explorare activă
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="prose dark:prose-invert max-w-none">
+                  <p className="text-foreground leading-relaxed">
+                    În această lecție explorăm Plotly – o bibliotecă modernă care aduce datele la viață prin grafice interactive. 
+                    Scopul nu este doar să creezi vizualizări, ci să înveți cum să le aplici în viața de zi cu zi, 
+                    în afaceri, în sănătate sau în deciziile personale.
+                  </p>
+
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+                    <div className="bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-950/20 dark:to-teal-950/20 p-4 rounded-lg border border-emerald-200 dark:border-emerald-800">
+                      <h4 className="font-semibold text-emerald-800 dark:text-emerald-200 mb-2">🔍 Interactivitate</h4>
+                      <p className="text-sm text-emerald-700 dark:text-emerald-300">Zoom, hover tooltips, filtrare dinamică</p>
+                    </div>
+                    
+                    <div className="bg-gradient-to-br from-teal-50 to-cyan-50 dark:from-teal-950/20 dark:to-cyan-950/20 p-4 rounded-lg border border-teal-200 dark:border-teal-800">
+                      <h4 className="font-semibold text-teal-800 dark:text-teal-200 mb-2">💰 Finanțe Personale</h4>
+                      <p className="text-sm text-teal-700 dark:text-teal-300">Dashboard-uri interactive pentru cheltuieli și economii</p>
+                    </div>
+
+                    <div className="bg-gradient-to-br from-cyan-50 to-blue-50 dark:from-cyan-950/20 dark:to-blue-950/20 p-4 rounded-lg border border-cyan-200 dark:border-cyan-800">
+                      <h4 className="font-semibold text-cyan-800 dark:text-cyan-200 mb-2">🏥 Sănătate & Wellness</h4>
+                      <p className="text-sm text-cyan-700 dark:text-cyan-300">Monitorizare interactivă - somn, pași, hidratare</p>
+                    </div>
+                  </div>
+
+                  <div className="mt-6 p-4 bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-950/20 dark:to-orange-950/20 rounded-lg border border-amber-200 dark:border-amber-800">
+                    <h4 className="font-semibold text-amber-800 dark:text-amber-200 mb-2">🎯 Aplicații cu Impact Real</h4>
+                    <p className="text-sm text-amber-700 dark:text-amber-300">
+                      <strong>💡 Task 1 – Finanțe:</strong> Dashboard interactiv cu cheltuielile lunare pe categorii<br/>
+                      <strong>💡 Task 2 – Sănătate:</strong> Heatmap interactiv pentru tiparele de somn și energie<br/>
+                      <strong>💡 Task 3 – Viața personală:</strong> Tracking progress pentru hobby-uri și proiecte creative
+                    </p>
+                  </div>
+                </div>
+
+                <div className="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
+                  <Button
+                    onClick={() => navigate('/artifacts/plotly-interactive')}
+                    className="w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-semibold py-4 text-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
+                  >
+                    <div className="flex items-center justify-center gap-3">
+                      <span className="text-2xl">⚡</span>
+                      <span>Enter Plotly Interactive Artifact</span>
+                      <Play className="w-5 h-5" />
+                    </div>
+                  </Button>
+                  <p className="text-center text-sm text-gray-600 dark:text-gray-400 mt-3">
+                    👉 După această lecție, vei putea să-ți construiești propriile instrumente de auto-analiză
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          </section>
+
+          {/* Sessions 23-26: Streamlit Unified Mastery */}
+          <section id="streamlit-unified" className="mb-12">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg flex items-center justify-center">
+                <Code className="w-5 h-5 text-white" />
+              </div>
+              <div>
+                <h2 className="text-2xl font-bold text-foreground">Sessions 23-26: Streamlit Unified Mastery</h2>
+                <p className="text-muted-foreground">Lecție Unificată: Construirea de Dashboarduri Interactive cu Streamlit</p>
+              </div>
+            </div>
+
+            <Card className="border-indigo-200 dark:border-indigo-800 mb-6">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-indigo-700 dark:text-indigo-300">
+                  <Target className="w-5 h-5" />
+                  🕒 Durată totală: ~10 ore (4 sesiuni combinate)
+                </CardTitle>
+                <CardDescription className="text-lg">
+                  🎯 Obiectiv: Învățăm să construim aplicații interactive cu Streamlit – de la prototipuri simple la dashboarduri profesionale conectate la baze de date și gata de deployment în cloud
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="prose dark:prose-invert max-w-none">
+                  <p className="text-foreground leading-relaxed">
+                    Transformăm analizele Python în aplicații web interactive pentru probleme reale din viața ta: 
+                    <strong className="text-indigo-600 dark:text-indigo-400">Health & Personal Finance</strong>. 
+                    Scopul nu este să învățăm încă un tool, ci să simți nevoia de a crea aplicații care schimbă cu adevărat viețile.
+                  </p>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+                    <div className="bg-gradient-to-br from-red-50 to-pink-50 dark:from-red-950/20 dark:to-pink-950/20 p-4 rounded-lg border border-red-200 dark:border-red-800">
+                      <h4 className="font-semibold text-red-800 dark:text-red-200 mb-2">🏥 Health Tracking Crisis</h4>
+                      <p className="text-sm text-red-700 dark:text-red-300">Date de sănătate împrăștiate prin aplicații - nu poți vedea corelațiile</p>
+                    </div>
+                    
+                    <div className="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-950/20 dark:to-emerald-950/20 p-4 rounded-lg border border-green-200 dark:border-green-800">
+                      <h4 className="font-semibold text-green-800 dark:text-green-200 mb-2">💰 Financial Insight Gap</h4>
+                      <p className="text-sm text-green-700 dark:text-green-300">Grafice frumoase care nu ajută la decizii financiare zilnice</p>
+                    </div>
+                  </div>
+
+                  <div className="mt-6 p-4 bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-950/20 dark:to-orange-950/20 rounded-lg border border-amber-200 dark:border-amber-800">
+                    <h4 className="font-semibold text-amber-800 dark:text-amber-200 mb-2">🚀 The Progressive Journey</h4>
+                    <div className="space-y-2 text-sm text-amber-700 dark:text-amber-300">
+                      <div><strong>Session 23:</strong> First Dashboard - Health & Finance Foundations (3h)</div>
+                      <div><strong>Session 24:</strong> Interactive Analytics - Machine Learning Integration (3h)</div>
+                      <div><strong>Session 25:</strong> Real-time Systems - Live Data & Collaboration (2.5h)</div>
+                      <div><strong>Session 26:</strong> Production Ready - Cloud Deployment & Enterprise Features (2.5h)</div>
+                    </div>
+                  </div>
+
+                  <div className="mt-6 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/20 dark:to-indigo-950/20 rounded-lg border border-blue-200 dark:border-blue-800">
+                    <h4 className="font-semibold text-blue-800 dark:text-blue-200 mb-2">💡 Real Impact Outcome</h4>
+                    <p className="text-sm text-blue-700 dark:text-blue-300">
+                      <strong>💡 Task 1 – Buget personal inteligent:</strong> Construiește un dashboard cu autentificare unde utilizatorii își loghează cheltuielile zilnice<br/>
+                      <strong>💡 Task 2 – Jurnal de sănătate:</strong> Creează o aplicație în care utilizatorii își introduc somnul, apa băută, antrenamentele<br/>
+                      <strong>💡 Task 3 – Dashboard pentru hobby/proiecte:</strong> Dacă studiezi sau creezi ceva, creează un tool în care loghezi timpul dedicat
+                    </p>
+                  </div>
+                </div>
+
+                <div className="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
+                  <Button
+                    onClick={() => navigate('/artifacts/streamlit-unified')}
+                    className="w-full bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-semibold py-4 text-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
+                  >
+                    <div className="flex items-center justify-center gap-3">
+                      <span className="text-2xl">🚀</span>
+                      <span>Enter Streamlit Unified Artifact</span>
+                      <Play className="w-5 h-5" />
+                    </div>
+                  </Button>
+                  <p className="text-center text-sm text-gray-600 dark:text-gray-400 mt-3">
+                    🎯 Experiența completă: de la necesitatea reală la aplicații care rulează în cloud și sunt folosite zilnic de familia ta
                   </p>
                 </div>
               </CardContent>

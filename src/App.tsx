@@ -40,6 +40,8 @@ import LinearAlgebraArtifact from "./pages/Artifacts/LinearAlgebraArtifact";
 import PandasArtifact from "./pages/Artifacts/PandasArtifact";
 import MatplotlibMasteryArtifact from "./pages/Artifacts/MatplotlibMasteryArtifact";
 import SeabornMasteryArtifact from "./pages/Artifacts/SeabornMasteryArtifact";
+import PlotlyInteractiveArtifact from "./pages/Artifacts/PlotlyInteractiveArtifact";
+import StreamlitUnifiedArtifact from "./pages/Artifacts/StreamlitUnifiedArtifact";
 
 
 const queryClient = new QueryClient();
@@ -84,6 +86,8 @@ const App = () => (
                   <Route path="/artifacts/pandas" element={<PandasArtifact />} />
                   <Route path="/artifacts/matplotlib-mastery" element={<MatplotlibMasteryArtifact />} />
                   <Route path="/artifacts/seaborn-mastery" element={<SeabornMasteryArtifact />} />
+                  <Route path="/artifacts/plotly-interactive" element={<PlotlyInteractiveArtifact />} />
+                  <Route path="/artifacts/streamlit-unified" element={<StreamlitUnifiedArtifact />} />
                   <Route path="/auth" element={<AuthPage />} />
                   <Route path="/profile" element={<ProfilePage />} />
                   <Route path="/admin" element={<AdminPage />} />

@@ -824,6 +824,7 @@ const CollectionsArtifact = () => {
             </p>
           </div>
         </div>
+        
       </div>
 
       <style>{`
