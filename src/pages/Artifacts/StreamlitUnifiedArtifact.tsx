@@ -3311,9 +3311,9 @@ elif authentication_status == None:
     # Demo accounts info
     st.info("""
     **Demo Accounts:**
-    - Username: `dad` | Password: `password123`
-    - Username: `mom` | Password: `password123` 
-    - Username: `teen` | Password: `password123`
+    - Username: dad | Password: password123
+    - Username: mom | Password: password123 
+    - Username: teen | Password: password123
     """)
 elif authentication_status:
     
