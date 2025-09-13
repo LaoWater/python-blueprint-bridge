@@ -55,11 +55,17 @@ const Navbar = () => {
               >
                 Advanced ML
               </Link>
-              <Link 
+              <Link
                 to="/blueprints"
                 className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
               >
                 Blueprints
+              </Link>
+              <Link
+                to="/group-projects"
+                className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 font-medium"
+              >
+                Group Projects
               </Link>
               <Link 
                 to="/ide"

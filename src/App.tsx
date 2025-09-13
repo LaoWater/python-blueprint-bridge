@@ -25,6 +25,7 @@ import { AuthProvider } from "./components/AuthContext";
 import { ContentProvider } from "./components/ContentProvider";
 import PersonalFilesPage from "./pages/PersonalFilesPage";
 import GitBlueprints from "./pages/GitBlueprints";
+import GroupProjects from "./pages/GroupProjects";
 import IfElseArtifact from "./pages/Artifacts/IfElseArtifact";
 import LoopsArtifact from "./pages/Artifacts/LoopsArtifact";
 import CollectionsArtifact from "./pages/Artifacts/CollectionsArtifact";
@@ -63,6 +64,7 @@ const App = () => (
                   <Route path="/blueprints" element={<Blueprints />} />
                   <Route path="/blueprints_mastery" element={<BlueprintsMastery />} />
                   <Route path="/git-blueprints" element={<GitBlueprints />} />
+                  <Route path="/group-projects" element={<GroupProjects />} />
                   <Route path="/foundations" element={<Foundations />} />
                   <Route path="/ide" element={<IDEPage />} />
             <Route path="/data-calculus" element={<DataCalculus />} />
