@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/components/AuthContext';
 
@@ -89,7 +89,7 @@ export const useGroupProjects = () => {
   };
 
   // Fetch team members
-  const fetchTeamMembers = async (teamId: string) => {
+  const fetchTeamMembers = useCallback(async (teamId: string) => {
     try {
       const { data, error } = await supabase
         .rpc('get_team_members', { p_team_id: teamId });
@@ -102,10 +102,10 @@ export const useGroupProjects = () => {
     } catch (err) {
       console.error('Error fetching team members:', err);
     }
-  };
+  }, []);
 
   // Fetch available users
-  const fetchAvailableUsers = async () => {
+  const fetchAvailableUsers = useCallback(async () => {
     try {
       const { data, error } = await supabase
         .rpc('get_available_users');
@@ -115,10 +115,23 @@ export const useGroupProjects = () => {
     } catch (err) {
       console.error('Error fetching users:', err);
     }
-  };
+  }, []);
+
+  // Update team member counts optimistically
+  const updateTeamCounts = useCallback((oldTeamId: string | null, newTeamId: string | null) => {
+    setTeams(prevTeams => prevTeams.map(team => {
+      if (team.id === oldTeamId) {
+        return { ...team, current_members: Math.max(0, team.current_members - 1) };
+      }
+      if (team.id === newTeamId) {
+        return { ...team, current_members: team.current_members + 1 };
+      }
+      return team;
+    }));
+  }, []);
 
   // Join a project team
-  const joinTeam = async (projectId: string, teamId?: string) => {
+  const joinTeam = useCallback(async (projectId: string, teamId?: string) => {
     if (!user) {
       setError('You must be logged in to join a team');
       return false;
@@ -140,23 +153,17 @@ export const useGroupProjects = () => {
         return false;
       }
 
-      // Refresh data
-      await fetchProjects();
-      if (teamId) {
-        await fetchTeamMembers(teamId);
-      }
-
-      return true;
+      return { success: true, teamId };
     } catch (err) {
       console.error('Error joining team:', err);
       setError('Failed to join team');
       return false;
     }
-  };
+  }, [user]);
 
   // Get user's participation status for a project
-  const getUserParticipation = async (projectId: string) => {
-    if (!user) return null;
+  const getUserParticipation = useCallback(async (projectId: string) => {
+    if (!user?.id) return null;
 
     try {
       const { data, error } = await supabase
@@ -165,15 +172,18 @@ export const useGroupProjects = () => {
         .eq('project_id', projectId)
         .eq('user_id', user.id)
         .eq('status', 'active')
-        .single();
+        .maybeSingle();
 
-      if (error && error.code !== 'PGRST116') throw error;
+      if (error) {
+        console.error('Error fetching user participation:', error);
+        return null;
+      }
       return data;
     } catch (err) {
       console.error('Error fetching user participation:', err);
       return null;
     }
-  };
+  }, [user?.id]);
 
   useEffect(() => {
     const initializeData = async () => {
@@ -199,6 +209,7 @@ export const useGroupProjects = () => {
     fetchAvailableUsers,
     joinTeam,
     getUserParticipation,
+    updateTeamCounts,
     clearError: () => setError(null)
   };
 };

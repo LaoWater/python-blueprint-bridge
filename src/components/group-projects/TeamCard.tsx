@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Users, Plus, Check, AlertCircle, Mic, FileAudio, Brain, Sparkles, Headphones, Volume2, Palette, Puzzle } from 'lucide-react';
 import { ProjectTeam, TeamMember, useGroupProjects } from '@/hooks/useGroupProjects';
 import { useAuth } from '@/components/AuthContext';
+import { useGroupProjectContext } from '@/contexts/GroupProjectContext';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 
@@ -13,10 +14,10 @@ interface TeamCardProps {
 export default function TeamCard({ team, projectId }: TeamCardProps) {
   const [expanded, setExpanded] = useState(false);
   const [members, setMembers] = useState<TeamMember[]>([]);
-  const [userParticipation, setUserParticipation] = useState<any>(null);
   const [isJoining, setIsJoining] = useState(false);
-  const { fetchTeamMembers, teamMembers, joinTeam, getUserParticipation } = useGroupProjects();
+  const { fetchTeamMembers, teamMembers, joinTeam, updateTeamCounts } = useGroupProjects();
   const { user } = useAuth();
+  const { userParticipation, setUserParticipation } = useGroupProjectContext();
 
   // Get the appropriate icon component
   const getIconComponent = (iconName: string) => {
@@ -36,25 +37,14 @@ export default function TeamCard({ team, projectId }: TeamCardProps) {
   };
 
   useEffect(() => {
-    if (expanded) {
+    if (expanded && !teamMembers[team.id]) {
       fetchTeamMembers(team.id);
     }
-  }, [expanded, team.id, fetchTeamMembers]);
+  }, [expanded, team.id]); // Removed fetchTeamMembers from dependencies
 
   useEffect(() => {
     setMembers(teamMembers[team.id] || []);
   }, [teamMembers, team.id]);
-
-  useEffect(() => {
-    const checkUserParticipation = async () => {
-      if (user) {
-        const participation = await getUserParticipation(projectId);
-        setUserParticipation(participation);
-      }
-    };
-
-    checkUserParticipation();
-  }, [user, projectId, getUserParticipation]);
 
   const handleJoinTeam = async () => {
     if (!user) {
@@ -68,13 +58,36 @@ export default function TeamCard({ team, projectId }: TeamCardProps) {
     }
 
     setIsJoining(true);
-    const success = await joinTeam(projectId, team.id);
 
-    if (success) {
-      toast.success(`Successfully joined ${team.name}!`);
-      // Refresh user participation status
-      const participation = await getUserParticipation(projectId);
-      setUserParticipation(participation);
+    // Store old team for count updates
+    const oldTeamId = userParticipation?.team_id || null;
+
+    const result = await joinTeam(projectId, team.id);
+
+    if (result && result.success) {
+      // Optimistically update team member counts
+      updateTeamCounts(oldTeamId, team.id);
+
+      // Show appropriate success message
+      if (oldTeamId && oldTeamId !== team.id) {
+        toast.success(`Successfully switched to ${team.name}!`);
+      } else {
+        toast.success(`Successfully joined ${team.name}!`);
+      }
+
+      // Update local participation state
+      setUserParticipation({
+        project_id: projectId,
+        team_id: team.id,
+        user_id: user.id,
+        status: 'active',
+        role: 'member'
+      });
+
+      // Update team members if expanded
+      if (expanded) {
+        fetchTeamMembers(team.id);
+      }
     }
 
     setIsJoining(false);

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Users, Rocket, Brain, Code, Globe, ChevronRight, Star, GitBranch, MessageSquare, Target, Loader2 } from 'lucide-react';
 import MoodMusicProject from '../components/group-projects/dj_blue';
 import TeamCard from '../components/group-projects/TeamCard';
+import { GroupProjectProvider } from '../contexts/GroupProjectContext';
 import { useGroupProjects } from '../hooks/useGroupProjects';
 import { useAuth } from '../components/AuthContext';
 import { toast } from 'sonner';
@@ -269,25 +270,27 @@ export default function GroupProjects() {
 
                 {/* Teams for Selected Project */}
                 {selectedProject && teams.length > 0 && (
-                  <div className="bg-gradient-to-r from-slate-800/80 to-slate-700/80 backdrop-blur-lg rounded-3xl p-8 border border-blue-500/30">
-                    <div className="text-center mb-8">
-                      <h3 className="text-2xl font-bold text-purple-300">Project Teams</h3>
-                      <p className="text-slate-400">Choose your role and join a team</p>
-                      {!user && (
-                        <p className="text-orange-400 text-sm mt-2">Log in to join teams</p>
-                      )}
-                    </div>
+                  <GroupProjectProvider projectId={selectedProject}>
+                    <div className="bg-gradient-to-r from-slate-800/80 to-slate-700/80 backdrop-blur-lg rounded-3xl p-8 border border-blue-500/30">
+                      <div className="text-center mb-8">
+                        <h3 className="text-2xl font-bold text-purple-300">Project Teams</h3>
+                        <p className="text-slate-400">Choose your role and join a team</p>
+                        {!user && (
+                          <p className="text-orange-400 text-sm mt-2">Log in to join teams</p>
+                        )}
+                      </div>
 
-                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                      {teams.map((team) => (
-                        <TeamCard
-                          key={team.id}
-                          team={team}
-                          projectId={selectedProject}
-                        />
-                      ))}
+                      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {teams.map((team) => (
+                          <TeamCard
+                            key={team.id}
+                            team={team}
+                            projectId={selectedProject}
+                          />
+                        ))}
+                      </div>
                     </div>
-                  </div>
+                  </GroupProjectProvider>
                 )}
 
                 {/* Coming Soon Projects */}
