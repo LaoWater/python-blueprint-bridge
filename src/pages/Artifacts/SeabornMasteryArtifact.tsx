@@ -510,6 +510,11 @@ print(f"• Recommendation: {'Optimize weekend habits' if weekday_mean > weekend
     }
   ];
 
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
+
   const runOriginStory = () => {
     setIsStoryRunning(true);
     setStoryStep(0);

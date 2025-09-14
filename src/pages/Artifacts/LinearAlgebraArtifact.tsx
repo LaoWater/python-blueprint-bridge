@@ -66,6 +66,11 @@ const LinearAlgebraArtifact = () => {
     return a.map((row, i) => row.map((val, j) => val + b[i][j]));
   };
 
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
+
   // Perform matrix operation
   const performMatrixOperation = () => {
     let result;

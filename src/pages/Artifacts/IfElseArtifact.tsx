@@ -42,6 +42,11 @@ const IfElseArtifact = () => {
     }
   };
 
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
+
   useEffect(() => {
     // Add scroll animations
     const cards = document.querySelectorAll('.artifact-card');

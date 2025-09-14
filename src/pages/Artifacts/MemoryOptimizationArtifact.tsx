@@ -57,6 +57,11 @@ const MemoryOptimizationArtifact = () => {
     setIsSimulationRunning(false);
   };
 
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
+
   const resetSimulation = () => {
     setIsSimulationRunning(false);
     setSimulationStep(0);

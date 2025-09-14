@@ -198,6 +198,11 @@ const PlotlyInteractiveArtifact = () => {
     }
   ];
 
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
+
   const runOriginStory = () => {
     setIsStoryRunning(true);
     setStoryStep(0);

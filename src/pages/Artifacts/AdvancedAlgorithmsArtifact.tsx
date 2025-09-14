@@ -150,6 +150,11 @@ const AdvancedAlgorithmsArtifact = () => {
     return memo[n];
   };
 
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
+
   // Greedy Activity Selection
   const greedyActivitySelection = () => {
     setGreedyAnimation(true);

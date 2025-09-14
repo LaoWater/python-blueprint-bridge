@@ -25,6 +25,11 @@ const LoopsArtifact = () => {
   const [passwordMessage, setPasswordMessage] = useState('');
   const [showPasswordCode, setShowPasswordCode] = useState(false);
 
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
+
   // Countdown effect
   useEffect(() => {
     let interval: NodeJS.Timeout;

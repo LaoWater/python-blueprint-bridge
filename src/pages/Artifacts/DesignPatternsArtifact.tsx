@@ -81,6 +81,11 @@ const DesignPatternsArtifact = () => {
   // Active demo selector
   const [activeDemo, setActiveDemo] = useState('singleton');
 
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
+
   // Singleton Pattern Methods
   const addLogEntry = () => {
     if (newLogMessage.trim()) {

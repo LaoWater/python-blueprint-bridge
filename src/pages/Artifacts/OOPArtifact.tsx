@@ -261,6 +261,11 @@ const OOPArtifact = () => {
     }
   };
 
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
+
   useEffect(() => {
     // Add scroll animations
     const cards = document.querySelectorAll('.artifact-card');
@@ -2056,6 +2061,37 @@ if __name__ == "__main__":
                   </div>
                 </div>
               ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Transition Section to Master Challenge */}
+        <div className="my-12">
+          {/* Visual Separator */}
+          <div className="flex items-center justify-center mb-8">
+            <div className="h-px bg-gradient-to-r from-transparent via-blue-400 to-transparent w-full max-w-md"></div>
+            <div className="mx-4 text-blue-300">
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+              </svg>
+            </div>
+            <div className="h-px bg-gradient-to-r from-transparent via-blue-400 to-transparent w-full max-w-md"></div>
+          </div>
+
+          {/* Transition Description */}
+          <div className="text-center text-white mb-8">
+            <h3 className="text-2xl font-bold mb-4 bg-gradient-to-r from-blue-300 to-purple-300 bg-clip-text text-transparent">
+              🎯 Ready for the Ultimate Challenge?
+            </h3>
+            <p className="text-white/80 text-lg mb-4 max-w-3xl mx-auto leading-relaxed">
+              You've learned the foundational concepts, explored advanced patterns, and seen how OOP brings code to life.
+              Now it's time to put everything together in one comprehensive challenge that tests your mastery.
+            </p>
+            <div className="bg-gradient-to-r from-blue-600/20 to-purple-600/20 border border-blue-400/30 rounded-xl p-4 max-w-2xl mx-auto">
+              <p className="text-blue-100 text-sm">
+                💡 <strong>What awaits:</strong> A complete classroom management system that combines Collections,
+                Object-Oriented Programming, and real-world problem-solving. This is where theory meets practice!
+              </p>
             </div>
           </div>
         </div>
