@@ -274,12 +274,12 @@ const PlotlyInteractiveArtifact = () => {
     return {
       average: avg.toFixed(0),
       variance,
-      currentVsTarget,
-      recommendation: currentVsTarget > 20 ? 
+      currentVsTarget: Number(currentVsTarget),
+      recommendation: Number(currentVsTarget) > 20 ? 
         `⚠️ Peste target cu ${currentVsTarget}% - necesită optimizare` :
-        currentVsTarget > 0 ? 
+        Number(currentVsTarget) > 0 ? 
         `⚡ Ușor peste target cu ${currentVsTarget}%` :
-        `✅ Sub target cu ${Math.abs(currentVsTarget)}% - excelent!`
+        `✅ Sub target cu ${Math.abs(Number(currentVsTarget))}% - excelent!`
     };
   };
 
@@ -836,8 +836,8 @@ const PlotlyInteractiveArtifact = () => {
                                         </div>
                                         <div className="text-center">
                                           <div className="text-sm text-gray-600">vs Target</div>
-                                          <div className={`text-lg font-bold ${insights.currentVsTarget > 0 ? 'text-red-600' : 'text-green-600'}`}>
-                                            {insights.currentVsTarget > 0 ? '+' : ''}{insights.currentVsTarget}%
+                                          <div className={`text-lg font-bold ${Number(insights.currentVsTarget) > 0 ? 'text-red-600' : 'text-green-600'}`}>
+                                            {Number(insights.currentVsTarget) > 0 ? '+' : ''}{insights.currentVsTarget}%
                                           </div>
                                         </div>
                                         <div className="col-span-2 md:col-span-1">
@@ -925,7 +925,7 @@ const PlotlyInteractiveArtifact = () => {
                                         {Object.entries(hoveredExpense.breakdown).map(([cat, val]) => (
                                           <div key={cat} className="flex justify-between text-xs">
                                             <span>{cat}:</span>
-                                            <span className="font-medium">€{val}</span>
+                                            <span className="font-medium">€{String(val)}</span>
                                           </div>
                                         ))}
                                       </div>

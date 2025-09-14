@@ -870,14 +870,14 @@ def add_product(category, product, qty):
                             <h4 className="font-bold text-purple-700 mb-3">🏆 Top Cuvinte:</h4>
                             <div className="space-y-2">
                               {Object.entries(wordsAnalysis)
-                                .sort(([,a], [,b]) => b - a)
+                                .sort(([,a], [,b]) => (Number(b) - Number(a)))
                                 .slice(0, 5)
                                 .map(([word, count], index) => (
                                 <div key={word} className="flex justify-between items-center">
                                   <span className="font-mono text-sm">{word}</span>
                                   <div className="flex items-center gap-2">
-                                    <Progress value={(count / Math.max(...Object.values(wordsAnalysis))) * 100} className="w-20 h-2" />
-                                    <Badge>{count}</Badge>
+                                    <Progress value={(Number(count) / Math.max(...Object.values(wordsAnalysis).map(Number))) * 100} className="w-20 h-2" />
+                                    <Badge>{String(count)}</Badge>
                                   </div>
                                 </div>
                               ))}

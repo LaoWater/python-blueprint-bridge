@@ -407,7 +407,7 @@ const CollectionsArtifact = () => {
                               key={index}
                               className="bg-purple-600 text-white px-3 py-1 rounded-full text-sm font-medium"
                             >
-                              {response}
+                              {String(response)}
                             </span>
                           ))}
                         </div>

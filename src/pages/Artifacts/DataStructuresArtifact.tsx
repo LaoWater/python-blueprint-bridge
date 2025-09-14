@@ -361,7 +361,7 @@ const DataStructuresArtifact = () => {
                   <strong>Filtrare rapidă</strong>
                 </p>
                 <div className="mt-4 bg-white/50 rounded-lg p-3">
-                  <code className="text-xs">restaurants = {'Pizza', 'Burger'}</code>
+                  <code className="text-xs">restaurants = {`{'Pizza', 'Burger'}`}</code>
                 </div>
               </div>
               
@@ -533,7 +533,7 @@ const DataStructuresArtifact = () => {
                     <h5 className="font-semibold text-purple-700 mb-3">💻 Codul Python:</h5>
                     <div className="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm">
                       <span className="text-gray-500"># Set - colecție de valori unice</span><br/>
-                      restaurante = {<span className="text-yellow-300">"Pizza Express"</span>, <span className="text-yellow-300">"Burger King"</span>}<br/><br/>
+                      restaurante = {[<span className="text-yellow-300">"Pizza Express"</span>, <span className="text-yellow-300">"Burger King"</span>]}<br/><br/>
                       
                       <span className="text-gray-500"># Operații comune</span><br/>
                       restaurante.add(<span className="text-yellow-300">"KFC"</span>)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span className="text-gray-500"># Adaugă (nu duplică!)</span><br/>
