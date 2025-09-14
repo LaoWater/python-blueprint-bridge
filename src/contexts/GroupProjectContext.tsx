@@ -2,10 +2,19 @@ import React, { createContext, useContext, useState, useEffect, ReactNode } from
 import { useAuth } from '@/components/AuthContext';
 import { useGroupProjects } from '@/hooks/useGroupProjects';
 
+interface UserTeam {
+  team_id: string;
+  team_name: string;
+  team_icon: string;
+  team_color_scheme: string;
+  joined_at: string;
+}
+
 interface GroupProjectContextType {
-  userParticipation: any;
-  setUserParticipation: (participation: any) => void;
-  refreshUserParticipation: (projectId: string) => Promise<void>;
+  userTeams: UserTeam[];
+  setUserTeams: (teams: UserTeam[]) => void;
+  refreshUserTeams: (projectId: string) => Promise<void>;
+  isInTeam: (teamId: string) => boolean;
 }
 
 const GroupProjectContext = createContext<GroupProjectContextType | undefined>(undefined);
@@ -24,29 +33,34 @@ interface GroupProjectProviderProps {
 }
 
 export const GroupProjectProvider: React.FC<GroupProjectProviderProps> = ({ children, projectId }) => {
-  const [userParticipation, setUserParticipation] = useState<any>(null);
+  const [userTeams, setUserTeams] = useState<UserTeam[]>([]);
   const { user } = useAuth();
-  const { getUserParticipation } = useGroupProjects();
+  const { getUserTeams } = useGroupProjects();
 
-  const refreshUserParticipation = async (currentProjectId: string) => {
+  const refreshUserTeams = async (currentProjectId: string) => {
     if (user?.id) {
-      const participation = await getUserParticipation(currentProjectId);
-      setUserParticipation(participation);
+      const teams = await getUserTeams(currentProjectId);
+      setUserTeams(teams || []);
     }
+  };
+
+  const isInTeam = (teamId: string) => {
+    return userTeams.some(team => team.team_id === teamId);
   };
 
   useEffect(() => {
     if (projectId) {
-      refreshUserParticipation(projectId);
+      refreshUserTeams(projectId);
     }
   }, [projectId, user?.id]);
 
   return (
     <GroupProjectContext.Provider
       value={{
-        userParticipation,
-        setUserParticipation,
-        refreshUserParticipation,
+        userTeams,
+        setUserTeams,
+        refreshUserTeams,
+        isInTeam,
       }}
     >
       {children}

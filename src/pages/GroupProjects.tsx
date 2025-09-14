@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Users, Rocket, Brain, Code, Globe, ChevronRight, Star, GitBranch, MessageSquare, Target, Loader2 } from 'lucide-react';
 import MoodMusicProject from '../components/group-projects/dj_blue';
 import TeamCard from '../components/group-projects/TeamCard';
+import UserTeamsDisplay from '../components/group-projects/UserTeamsDisplay';
 import { GroupProjectProvider } from '../contexts/GroupProjectContext';
 import { useGroupProjects } from '../hooks/useGroupProjects';
 import { useAuth } from '../components/AuthContext';
@@ -30,6 +31,11 @@ export default function GroupProjects() {
       clearError();
     }
   }, [error, clearError]);
+
+  // Scroll to top on page load
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 text-white pb-20">
@@ -274,11 +280,13 @@ export default function GroupProjects() {
                     <div className="bg-gradient-to-r from-slate-800/80 to-slate-700/80 backdrop-blur-lg rounded-3xl p-8 border border-blue-500/30">
                       <div className="text-center mb-8">
                         <h3 className="text-2xl font-bold text-purple-300">Project Teams</h3>
-                        <p className="text-slate-400">Choose your role and join a team</p>
+                        <p className="text-slate-400">Join up to 3 teams and collaborate with other programmers</p>
                         {!user && (
                           <p className="text-orange-400 text-sm mt-2">Log in to join teams</p>
                         )}
                       </div>
+
+                      <UserTeamsDisplay />
 
                       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {teams.map((team) => (

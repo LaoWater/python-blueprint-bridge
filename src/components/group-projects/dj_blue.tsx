@@ -98,18 +98,18 @@ export default function MoodMusicProject() {
     },
     {
       id: 7,
-      name: "The Designers",
+      name: "The AI Designers",
       icon: <Palette className="w-8 h-8" />,
       color: "from-teal-400 to-blue-400",
       mission: "Make it beautiful and easy to use",
       tasks: [
-        "Design a simple music player UI",
-        "Show current song & next 2 songs",
+        "Create a presentation website",
+        "Create Player UI & Show current song and next 2 songs",
         "Add play/pause/skip buttons",
         "Display current mood with colors"
       ],
-      difficulty: "⭐⭐⭐",
-      vibe: "You're the face of the magic! 🎨"
+      difficulty: "⭐⭐⭐⭐",
+      vibe: "You're the face of the Magic! 🎨"
     },
     {
       id: 8,

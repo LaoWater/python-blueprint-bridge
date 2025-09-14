@@ -117,14 +117,16 @@ export const useGroupProjects = () => {
     }
   }, []);
 
-  // Update team member counts optimistically
-  const updateTeamCounts = useCallback((oldTeamId: string | null, newTeamId: string | null) => {
+  // Update team member counts for multi-team membership
+  const updateTeamCounts = useCallback((teamId: string, increment: boolean) => {
     setTeams(prevTeams => prevTeams.map(team => {
-      if (team.id === oldTeamId) {
-        return { ...team, current_members: Math.max(0, team.current_members - 1) };
-      }
-      if (team.id === newTeamId) {
-        return { ...team, current_members: team.current_members + 1 };
+      if (team.id === teamId) {
+        return {
+          ...team,
+          current_members: increment
+            ? team.current_members + 1
+            : Math.max(0, team.current_members - 1)
+        };
       }
       return team;
     }));
@@ -161,27 +163,78 @@ export const useGroupProjects = () => {
     }
   }, [user]);
 
-  // Get user's participation status for a project
-  const getUserParticipation = useCallback(async (projectId: string) => {
-    if (!user?.id) return null;
+  // Leave a project team
+  const leaveTeam = useCallback(async (projectId: string, teamId: string) => {
+    if (!user) {
+      setError('You must be logged in to leave a team');
+      return false;
+    }
+
+    try {
+      const { data, error } = await supabase
+        .rpc('leave_project_team', {
+          p_project_id: projectId,
+          p_team_id: teamId
+        });
+
+      if (error) throw error;
+
+      const result = data as { success: boolean; error?: string; message?: string };
+
+      if (!result.success) {
+        setError(result.error || 'Failed to leave team');
+        return false;
+      }
+
+      return { success: true, teamId };
+    } catch (err) {
+      console.error('Error leaving team:', err);
+      setError('Failed to leave team');
+      return false;
+    }
+  }, [user]);
+
+  // Get user's teams for a project
+  const getUserTeams = useCallback(async (projectId: string) => {
+    if (!user?.id) return [];
+
+    try {
+      const { data, error } = await supabase
+        .rpc('get_user_teams', { p_project_id: projectId });
+
+      if (error) {
+        console.error('Error fetching user teams:', error);
+        return [];
+      }
+      return data || [];
+    } catch (err) {
+      console.error('Error fetching user teams:', err);
+      return [];
+    }
+  }, [user?.id]);
+
+  // Check if user is in a specific team
+  const isUserInTeam = useCallback(async (projectId: string, teamId: string) => {
+    if (!user?.id) return false;
 
     try {
       const { data, error } = await supabase
         .from('project_participants')
-        .select('*')
+        .select('id')
         .eq('project_id', projectId)
         .eq('user_id', user.id)
+        .eq('team_id', teamId)
         .eq('status', 'active')
         .maybeSingle();
 
       if (error) {
-        console.error('Error fetching user participation:', error);
-        return null;
+        console.error('Error checking team membership:', error);
+        return false;
       }
-      return data;
+      return !!data;
     } catch (err) {
-      console.error('Error fetching user participation:', err);
-      return null;
+      console.error('Error checking team membership:', err);
+      return false;
     }
   }, [user?.id]);
 
@@ -208,7 +261,9 @@ export const useGroupProjects = () => {
     fetchTeamMembers,
     fetchAvailableUsers,
     joinTeam,
-    getUserParticipation,
+    leaveTeam,
+    getUserTeams,
+    isUserInTeam,
     updateTeamCounts,
     clearError: () => setError(null)
   };

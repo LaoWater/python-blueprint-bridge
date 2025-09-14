@@ -15,9 +15,15 @@ export default function TeamCard({ team, projectId }: TeamCardProps) {
   const [expanded, setExpanded] = useState(false);
   const [members, setMembers] = useState<TeamMember[]>([]);
   const [isJoining, setIsJoining] = useState(false);
-  const { fetchTeamMembers, teamMembers, joinTeam, updateTeamCounts } = useGroupProjects();
+  const [isLeaving, setIsLeaving] = useState(false);
+  const { fetchTeamMembers, teamMembers, joinTeam, leaveTeam, updateTeamCounts } = useGroupProjects();
   const { user } = useAuth();
-  const { userParticipation, setUserParticipation } = useGroupProjectContext();
+  const { userTeams, isInTeam } = useGroupProjectContext();
+
+  // Calculate team membership info
+  const userTeamCount = userTeams.length;
+  const canJoinMoreTeams = userTeamCount < 3;
+  const isUserInThisTeam = isInTeam(team.id);
 
   // Get the appropriate icon component
   const getIconComponent = (iconName: string) => {
@@ -57,34 +63,22 @@ export default function TeamCard({ team, projectId }: TeamCardProps) {
       return;
     }
 
-    setIsJoining(true);
+    if (!canJoinMoreTeams) {
+      toast.error('You can only join up to 3 teams');
+      return;
+    }
 
-    // Store old team for count updates
-    const oldTeamId = userParticipation?.team_id || null;
+    setIsJoining(true);
 
     const result = await joinTeam(projectId, team.id);
 
     if (result && result.success) {
-      // Optimistically update team member counts
-      updateTeamCounts(oldTeamId, team.id);
+      // Optimistically update team member count
+      updateTeamCounts(team.id, true);
 
-      // Show appropriate success message
-      if (oldTeamId && oldTeamId !== team.id) {
-        toast.success(`Successfully switched to ${team.name}!`);
-      } else {
-        toast.success(`Successfully joined ${team.name}!`);
-      }
+      toast.success(`Successfully joined ${team.name}!`);
 
-      // Update local participation state
-      setUserParticipation({
-        project_id: projectId,
-        team_id: team.id,
-        user_id: user.id,
-        status: 'active',
-        role: 'member'
-      });
-
-      // Update team members if expanded
+      // Refresh team members if expanded
       if (expanded) {
         fetchTeamMembers(team.id);
       }
@@ -93,8 +87,31 @@ export default function TeamCard({ team, projectId }: TeamCardProps) {
     setIsJoining(false);
   };
 
-  const isUserInThisTeam = userParticipation?.team_id === team.id;
-  const isUserInAnotherTeam = userParticipation && userParticipation.team_id !== team.id;
+  const handleLeaveTeam = async () => {
+    if (!user) {
+      toast.error('Please log in to leave a team');
+      return;
+    }
+
+    setIsLeaving(true);
+
+    const result = await leaveTeam(projectId, team.id);
+
+    if (result && result.success) {
+      // Optimistically update team member count
+      updateTeamCounts(team.id, false);
+
+      toast.success(`Successfully left ${team.name}`);
+
+      // Refresh team members if expanded
+      if (expanded) {
+        fetchTeamMembers(team.id);
+      }
+    }
+
+    setIsLeaving(false);
+  };
+
   const teamIsFull = team.current_members >= team.max_members;
 
   return (
@@ -182,28 +199,34 @@ export default function TeamCard({ team, projectId }: TeamCardProps) {
                 <p className="text-sm text-gray-400">No members yet</p>
               )}
 
-              {/* Join Button */}
-              <div className="mt-4">
+              {/* Action Buttons */}
+              <div className="mt-4 space-y-2">
                 {!user ? (
                   <p className="text-xs text-gray-400 text-center">
-                    Log in to join this team
+                    Log in to join teams
                   </p>
                 ) : isUserInThisTeam ? (
-                  <Button disabled className="w-full bg-green-600/50 text-green-200">
-                    <Check className="w-4 h-4 mr-2" />
-                    Already in this team
-                  </Button>
-                ) : isUserInAnotherTeam ? (
-                  <Button
-                    onClick={handleJoinTeam}
-                    disabled={isJoining}
-                    className="w-full bg-orange-600 hover:bg-orange-700"
-                  >
-                    {isJoining ? 'Switching...' : 'Switch to this team'}
-                  </Button>
+                  <>
+                    <Button disabled className="w-full bg-green-600/50 text-green-200">
+                      <Check className="w-4 h-4 mr-2" />
+                      Joined
+                    </Button>
+                    <Button
+                      onClick={handleLeaveTeam}
+                      disabled={isLeaving}
+                      variant="outline"
+                      className="w-full border-red-500/50 text-red-300 hover:bg-red-500/10"
+                    >
+                      {isLeaving ? 'Leaving...' : 'Leave Team'}
+                    </Button>
+                  </>
                 ) : teamIsFull ? (
                   <Button disabled className="w-full bg-gray-600 text-gray-400">
-                    Team is full
+                    Team is full ({team.current_members}/{team.max_members})
+                  </Button>
+                ) : !canJoinMoreTeams ? (
+                  <Button disabled className="w-full bg-gray-600 text-gray-400">
+                    Maximum 3 teams ({userTeamCount}/3)
                   </Button>
                 ) : (
                   <Button
@@ -216,7 +239,7 @@ export default function TeamCard({ team, projectId }: TeamCardProps) {
                     ) : (
                       <>
                         <Plus className="w-4 h-4 mr-2" />
-                        Join This Team
+                        Join Team ({userTeamCount}/3)
                       </>
                     )}
                   </Button>
