@@ -187,7 +187,7 @@ const AdvancedAlgorithmsArtifact = () => {
     setQueensSolving(true);
     setQueensSteps(0);
     setQueensSolutions([]);
-    setQueensBoard(Array(size).fill().map(() => Array(size).fill(0)));
+    setQueensBoard(Array(size).fill(null).map(() => Array(size).fill(0)));
     
     const solutions = [];
     let steps = 0;
@@ -234,7 +234,7 @@ const AdvancedAlgorithmsArtifact = () => {
     };
     
     setTimeout(() => {
-      const board = Array(size).fill().map(() => Array(size).fill(0));
+      const board = Array(size).fill(null).map(() => Array(size).fill(0));
       solve(board, 0);
       setQueensSolutions(solutions);
       setQueensSteps(steps);

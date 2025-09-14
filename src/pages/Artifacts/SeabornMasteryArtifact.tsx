@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ArrowLeft, Play, Pause, RotateCcw, TrendingUp, BarChart3, Scatter, Grid, Target, Lightbulb, Code, Copy, Download, Zap, Activity, Calendar, DollarSign, Briefcase, Heart, Brain, Palette, Eye, LineChart } from 'lucide-react';
+import { ArrowLeft, Play, Pause, RotateCcw, TrendingUp, BarChart3, Grid, Target, Lightbulb, Code, Copy, Download, Zap, Activity, Calendar, DollarSign, Briefcase, Heart, Brain, Palette, Eye, LineChart } from 'lucide-react';
 
 const SeabornMasteryArtifact = () => {
   const navigate = useNavigate();

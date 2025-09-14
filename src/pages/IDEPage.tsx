@@ -1599,7 +1599,6 @@ const IDEPage: React.FC = () => {
             size={16} 
             className="text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 cursor-pointer"
             onClick={() => setShowSettings(!showSettings)}
-            title="IDE Settings (Ctrl+,)"
           />
         </div>
       </div>
@@ -1757,7 +1756,7 @@ const IDEPage: React.FC = () => {
                           <span className="text-sm" title={tab.path}>{tab.name}</span>
                           {/* Unsaved changes indicator */}
                           {currentFile?.id === tab.id && hasUnsavedChanges && (
-                            <Circle size={8} className="ml-2 fill-orange-500 text-orange-500" title="Unsaved changes" />
+                            <Circle size={8} className="ml-2 fill-orange-500 text-orange-500" />
                           )}
                           {openTabs.length > 1 && (
                             <button

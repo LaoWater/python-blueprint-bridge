@@ -186,7 +186,13 @@ export const useExplorer = (): UseExplorerReturn => {
     language: string = 'plaintext'
   ) => {
     try {
-      const newFile = await explorerService.createFile(name, parentId, content, language);
+      const newFile = await explorerService.createFile({ 
+        name, 
+        type: 'file', 
+        content, 
+        language,
+        path: parentId ? `${parentId}/${name}` : `/${name}`
+      });
       
       // Refresh file tree to show the new file
       await loadFileTree();
@@ -269,7 +275,7 @@ export const useExplorer = (): UseExplorerReturn => {
     try {
       setIsLoading(true);
       const results = await explorerService.searchFiles(query);
-      setSearchResults(results);
+      setSearchResults(results as any);
     } catch (err) {
       handleError(err, 'Failed to search files');
     } finally {

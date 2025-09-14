@@ -10,7 +10,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { LineChart as RechartsLineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area, BarChart as RechartsBarChart, Bar, PieChart as RechartsPieChart, Cell, Pie } from 'recharts';
-import dataVisualizingHero from '@/assets/data-calculus-landscape.jpg';
+import dataVisualizingHero from '@/assets/data-calculus-hero.jpg';
 
 // Mock components for the course structure
 const EditableContent = ({ children }) => children;

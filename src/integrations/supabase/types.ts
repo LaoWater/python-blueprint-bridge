@@ -160,7 +160,7 @@ export type Database = {
             foreignKeyName: "file_sync_status_file_id_fkey"
             columns: ["file_id"]
             isOneToOne: false
-            referencedRelation: "content"
+            referencedRelation: "file_system_items"
             referencedColumns: ["id"]
           },
           {
@@ -250,13 +250,67 @@ export type Database = {
           },
         ]
       }
+      group_projects: {
+        Row: {
+          created_at: string | null
+          created_by: string | null
+          current_participants: number | null
+          description: string | null
+          difficulty_level: number
+          end_date: string | null
+          id: string
+          max_participants: number | null
+          name: string
+          project_data: Json | null
+          project_type: string
+          start_date: string | null
+          status: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          created_by?: string | null
+          current_participants?: number | null
+          description?: string | null
+          difficulty_level: number
+          end_date?: string | null
+          id?: string
+          max_participants?: number | null
+          name: string
+          project_data?: Json | null
+          project_type?: string
+          start_date?: string | null
+          status?: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          created_by?: string | null
+          current_participants?: number | null
+          description?: string | null
+          difficulty_level?: number
+          end_date?: string | null
+          id?: string
+          max_participants?: number | null
+          name?: string
+          project_data?: Json | null
+          project_type?: string
+          start_date?: string | null
+          status?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       personal_files: {
         Row: {
           created_at: string
           file_extension: string
           file_size_bytes: number
           id: string
+          last_password_attempt: string | null
           original_filename: string
+          password_hash: string | null
+          password_protected: boolean | null
           processed_md_content: string | null
           updated_at: string
           upload_status: string
@@ -267,7 +321,10 @@ export type Database = {
           file_extension: string
           file_size_bytes: number
           id?: string
+          last_password_attempt?: string | null
           original_filename: string
+          password_hash?: string | null
+          password_protected?: boolean | null
           processed_md_content?: string | null
           updated_at?: string
           upload_status?: string
@@ -278,7 +335,10 @@ export type Database = {
           file_extension?: string
           file_size_bytes?: number
           id?: string
+          last_password_attempt?: string | null
           original_filename?: string
+          password_hash?: string | null
+          password_protected?: boolean | null
           processed_md_content?: string | null
           updated_at?: string
           upload_status?: string
@@ -309,6 +369,221 @@ export type Database = {
           username?: string | null
         }
         Relationships: []
+      }
+      project_participants: {
+        Row: {
+          contribution_score: number | null
+          experience_level: number | null
+          id: string
+          joined_at: string | null
+          last_activity_at: string | null
+          preferred_skills: Json | null
+          project_id: string
+          role: string | null
+          status: string
+          team_id: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          contribution_score?: number | null
+          experience_level?: number | null
+          id?: string
+          joined_at?: string | null
+          last_activity_at?: string | null
+          preferred_skills?: Json | null
+          project_id: string
+          role?: string | null
+          status?: string
+          team_id?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          contribution_score?: number | null
+          experience_level?: number | null
+          id?: string
+          joined_at?: string | null
+          last_activity_at?: string | null
+          preferred_skills?: Json | null
+          project_id?: string
+          role?: string | null
+          status?: string
+          team_id?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "project_participants_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "group_projects"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "project_participants_team_id_fkey"
+            columns: ["team_id"]
+            isOneToOne: false
+            referencedRelation: "project_teams"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      project_tasks: {
+        Row: {
+          actual_hours: number | null
+          assigned_to: string | null
+          completed_at: string | null
+          created_at: string | null
+          created_by: string | null
+          deliverables: Json | null
+          depends_on: Json | null
+          description: string | null
+          due_date: string | null
+          estimated_hours: number | null
+          id: string
+          priority: string | null
+          progress_percentage: number | null
+          project_id: string
+          required_skills: Json | null
+          started_at: string | null
+          status: string
+          task_type: string | null
+          team_id: string
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          actual_hours?: number | null
+          assigned_to?: string | null
+          completed_at?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          deliverables?: Json | null
+          depends_on?: Json | null
+          description?: string | null
+          due_date?: string | null
+          estimated_hours?: number | null
+          id?: string
+          priority?: string | null
+          progress_percentage?: number | null
+          project_id: string
+          required_skills?: Json | null
+          started_at?: string | null
+          status?: string
+          task_type?: string | null
+          team_id: string
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          actual_hours?: number | null
+          assigned_to?: string | null
+          completed_at?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          deliverables?: Json | null
+          depends_on?: Json | null
+          description?: string | null
+          due_date?: string | null
+          estimated_hours?: number | null
+          id?: string
+          priority?: string | null
+          progress_percentage?: number | null
+          project_id?: string
+          required_skills?: Json | null
+          started_at?: string | null
+          status?: string
+          task_type?: string | null
+          team_id?: string
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "project_tasks_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "group_projects"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "project_tasks_team_id_fkey"
+            columns: ["team_id"]
+            isOneToOne: false
+            referencedRelation: "project_teams"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      project_teams: {
+        Row: {
+          color_scheme: string | null
+          created_at: string | null
+          current_members: number | null
+          deliverables: Json | null
+          description: string | null
+          difficulty_stars: number
+          icon: string | null
+          id: string
+          max_members: number | null
+          mission: string
+          name: string
+          project_id: string
+          required_skills: Json | null
+          sort_order: number | null
+          tasks: Json | null
+          team_vibe: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          color_scheme?: string | null
+          created_at?: string | null
+          current_members?: number | null
+          deliverables?: Json | null
+          description?: string | null
+          difficulty_stars: number
+          icon?: string | null
+          id?: string
+          max_members?: number | null
+          mission: string
+          name: string
+          project_id: string
+          required_skills?: Json | null
+          sort_order?: number | null
+          tasks?: Json | null
+          team_vibe?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          color_scheme?: string | null
+          created_at?: string | null
+          current_members?: number | null
+          deliverables?: Json | null
+          description?: string | null
+          difficulty_stars?: number
+          icon?: string | null
+          id?: string
+          max_members?: number | null
+          mission?: string
+          name?: string
+          project_id?: string
+          required_skills?: Json | null
+          sort_order?: number | null
+          tasks?: Json | null
+          team_vibe?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "project_teams_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "group_projects"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       projects: {
         Row: {
@@ -418,6 +693,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      check_password_attempt_rate_limit: {
+        Args: { p_user_id: string }
+        Returns: boolean
+      }
       cleanup_expired_codes: {
         Args: Record<PropertyKey, never>
         Returns: undefined
@@ -435,6 +714,15 @@ export type Database = {
           table_name: string
         }[]
       }
+      get_available_users: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          admin_level: number
+          created_at: string
+          id: string
+          username: string
+        }[]
+      }
       get_file_tree: {
         Args: { project_uuid: string }
         Returns: {
@@ -447,6 +735,55 @@ export type Database = {
           type: string
           updated_at: string
         }[]
+      }
+      get_project_details: {
+        Args: { project_uuid: string }
+        Returns: {
+          current_members: number
+          difficulty_stars: number
+          max_members: number
+          project_description: string
+          project_id: string
+          project_name: string
+          project_status: string
+          sort_order: number
+          team_color_scheme: string
+          team_description: string
+          team_icon: string
+          team_id: string
+          team_mission: string
+          team_name: string
+          team_tasks: Json
+          team_vibe: string
+        }[]
+      }
+      get_team_members: {
+        Args: { p_team_id: string }
+        Returns: {
+          contribution_score: number
+          joined_at: string
+          role: string
+          user_id: string
+          username: string
+        }[]
+      }
+      get_user_teams: {
+        Args: { p_project_id: string }
+        Returns: {
+          joined_at: string
+          team_color_scheme: string
+          team_icon: string
+          team_id: string
+          team_name: string
+        }[]
+      }
+      join_project_team: {
+        Args: { p_project_id: string; p_team_id?: string }
+        Returns: Json
+      }
+      leave_project_team: {
+        Args: { p_project_id: string; p_team_id: string }
+        Returns: Json
       }
       test_authenticated_operations: {
         Args: Record<PropertyKey, never>

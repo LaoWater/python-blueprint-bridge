@@ -81,7 +81,7 @@ export const useGroupProjects = () => {
         .order('sort_order', { ascending: true });
 
       if (error) throw error;
-      setTeams(data || []);
+      setTeams((data as any) || []);
     } catch (err) {
       console.error('Error fetching teams:', err);
       setError('Failed to fetch teams');

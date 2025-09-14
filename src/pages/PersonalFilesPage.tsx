@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/components/ui/use-toast';
 import { useAuth } from '@/components/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
-import { Lock, Upload, File, Mail, RefreshCw, Edit, Trash2, Eye } from 'lucide-react';
+import { Lock, Upload, File, Key, RefreshCw, Edit, Trash2, Eye, Shield } from 'lucide-react';
 import { Textarea } from '@/components/ui/textarea';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import ReactMarkdown from 'react-markdown';
@@ -19,78 +19,171 @@ interface PersonalFile {
   file_size_bytes: number;
   processed_md_content: string | null;
   upload_status: 'uploading' | 'processing' | 'completed' | 'error';
+  password_protected: boolean;
   created_at: string;
   updated_at: string;
 }
 
+// Simple password hashing (for demo purposes - in production use bcrypt)
+const hashPassword = async (password: string): Promise<string> => {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(password);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+};
+
 const PersonalFilesPage = () => {
   const { user } = useAuth();
   const { toast } = useToast();
-  const [isVerified, setIsVerified] = useState(false);
-  const [verificationCode, setVerificationCode] = useState('');
-  const [isVerifying, setIsVerifying] = useState(false);
-  const [isSendingCode, setIsSendingCode] = useState(false);
+  const [isPasswordSet, setIsPasswordSet] = useState(false);
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [enterPassword, setEnterPassword] = useState('');
+  const [isSettingPassword, setIsSettingPassword] = useState(false);
+  const [isVerifyingPassword, setIsVerifyingPassword] = useState(false);
   const [files, setFiles] = useState<PersonalFile[]>([]);
   const [loading, setLoading] = useState(false);
   const [editingFile, setEditingFile] = useState<PersonalFile | null>(null);
   const [editContent, setEditContent] = useState('');
 
   useEffect(() => {
-    if (isVerified) {
+    if (user && isPasswordSet) {
       loadFiles();
     }
-  }, [isVerified]);
+  }, [user, isPasswordSet]);
 
-  const sendVerificationCode = async () => {
-    if (!user) return;
+  useEffect(() => {
+    if (user) {
+      checkPasswordStatus();
+    }
+  }, [user]);
 
-    setIsSendingCode(true);
+  const checkPasswordStatus = async () => {
     try {
-      const { error } = await supabase.functions.invoke('send-verification-email', {
-        body: { email: user.email }
+      const { data, error } = await supabase
+        .from('personal_files')
+        .select('password_protected')
+        .eq('user_id', user?.id)
+        .limit(1);
+
+      if (error) throw error;
+      
+      // If user has any password-protected files, they have set a password
+      setIsPasswordSet(data && data.length > 0 && data[0].password_protected);
+    } catch (error: any) {
+      console.error('Error checking password status:', error);
+    }
+  };
+
+  const setUserPassword = async () => {
+    if (!password || password !== confirmPassword) {
+      toast({
+        title: "Password Error",
+        description: "Passwords don't match or are empty",
+        variant: "destructive",
       });
+      return;
+    }
+
+    if (password.length < 6) {
+      toast({
+        title: "Password Error", 
+        description: "Password must be at least 6 characters long",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsSettingPassword(true);
+    try {
+      const passwordHash = await hashPassword(password);
+      
+      // Create a dummy file record with password to establish password protection
+      const { error } = await supabase
+        .from('personal_files')
+        .insert({
+          original_filename: '.password_setup',
+          file_extension: '.system',
+          file_size_bytes: 0,
+          upload_status: 'completed' as const,
+          password_hash: passwordHash,
+          password_protected: true,
+          user_id: user?.id
+        });
 
       if (error) throw error;
 
+      setIsPasswordSet(true);
+      setPassword('');
+      setConfirmPassword('');
+      
       toast({
-        title: "Verification Code Sent",
-        description: "Please check your email for the verification code.",
+        title: "Password Set",
+        description: "Your password has been set successfully.",
       });
     } catch (error: any) {
       toast({
         title: "Error",
-        description: error.message || "Failed to send verification code",
+        description: error.message || "Failed to set password",
         variant: "destructive",
       });
     } finally {
-      setIsSendingCode(false);
+      setIsSettingPassword(false);
     }
   };
 
-  const verifyCode = async () => {
-    if (!user || !verificationCode) return;
+  const verifyPassword = async () => {
+    if (!enterPassword) return;
 
-    setIsVerifying(true);
+    setIsVerifyingPassword(true);
     try {
-      const { error } = await supabase.functions.invoke('verify-email-code', {
-        body: { code: verificationCode }
+      // Check rate limiting
+      const { data: rateLimitCheck } = await supabase.rpc('check_password_attempt_rate_limit', {
+        p_user_id: user?.id
       });
+
+      if (!rateLimitCheck) {
+        throw new Error('Too many password attempts. Please wait a minute before trying again.');
+      }
+
+      const passwordHash = await hashPassword(enterPassword);
+      
+      // Check if password matches any of the user's files
+      const { data, error } = await supabase
+        .from('personal_files')
+        .select('password_hash')
+        .eq('user_id', user?.id)
+        .eq('password_protected', true)
+        .not('password_hash', 'is', null)
+        .limit(1);
 
       if (error) throw error;
 
-      setIsVerified(true);
-      toast({
-        title: "Verification Successful",
-        description: "You now have access to Personal Files.",
-      });
+      // Update last password attempt
+      await supabase
+        .from('personal_files')
+        .update({ last_password_attempt: new Date().toISOString() })
+        .eq('user_id', user?.id);
+
+      if (data && data.length > 0 && data[0].password_hash === passwordHash) {
+        setIsPasswordSet(true);
+        setEnterPassword('');
+        toast({
+          title: "Access Granted",
+          description: "Password verified successfully.",
+        });
+      } else {
+        throw new Error('Invalid password');
+      }
     } catch (error: any) {
       toast({
         title: "Verification Failed",
-        description: error.message || "Invalid verification code",
+        description: error.message || "Invalid password",
         variant: "destructive",
       });
     } finally {
-      setIsVerifying(false);
+      setIsVerifyingPassword(false);
     }
   };
 
@@ -100,6 +193,8 @@ const PersonalFilesPage = () => {
       const { data, error } = await supabase
         .from('personal_files')
         .select('*')
+        .eq('user_id', user?.id)
+        .neq('original_filename', '.password_setup') // Exclude system files
         .order('created_at', { ascending: false });
 
       if (error) throw error;
@@ -136,8 +231,9 @@ const PersonalFilesPage = () => {
     reader.onload = async (e) => {
       try {
         const content = e.target?.result as string;
+        const passwordHash = await hashPassword(enterPassword || 'default');
         
-        // Insert file record
+        // Insert file record with password protection
         const { data: fileRecord, error: insertError } = await supabase
           .from('personal_files')
           .insert({
@@ -145,7 +241,9 @@ const PersonalFilesPage = () => {
             file_extension: fileExtension,
             file_size_bytes: file.size,
             upload_status: 'processing' as const,
-            user_id: user.id
+            password_hash: passwordHash,
+            password_protected: true,
+            user_id: user?.id
           })
           .select()
           .single();
@@ -253,56 +351,85 @@ const PersonalFilesPage = () => {
     );
   }
 
-  if (!isVerified) {
+  if (!isPasswordSet) {
+    // Check if user needs to set password or enter password
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
         <Card className="w-full max-w-md">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Mail className="w-5 h-5" />
-              Email Verification Required
+              <Shield className="w-5 h-5" />
+              Personal Files Protection
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <p className="text-sm text-gray-600 dark:text-gray-300">
-              For security, please verify your email to access Personal Files.
+              Secure your personal files with a password. This ensures only you can access your uploaded content.
             </p>
             
-            <Button 
-              onClick={sendVerificationCode} 
-              disabled={isSendingCode}
-              className="w-full"
-            >
-              {isSendingCode ? (
-                <>
-                  <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
-                  Sending...
-                </>
-              ) : (
-                'Send Verification Code'
-              )}
-            </Button>
-
+            {/* Try to enter existing password first */}
             <div className="space-y-2">
+              <label className="text-sm font-medium">Enter Password</label>
               <Input
-                placeholder="Enter verification code"
-                value={verificationCode}
-                onChange={(e) => setVerificationCode(e.target.value)}
-                disabled={isVerifying}
+                type="password"
+                placeholder="Enter your password"
+                value={enterPassword}
+                onChange={(e) => setEnterPassword(e.target.value)}
+                disabled={isVerifyingPassword}
               />
               <Button 
-                onClick={verifyCode} 
-                disabled={!verificationCode || isVerifying}
-                variant="outline"
+                onClick={verifyPassword} 
+                disabled={!enterPassword || isVerifyingPassword}
                 className="w-full"
               >
-                {isVerifying ? (
+                {isVerifyingPassword ? (
                   <>
                     <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
                     Verifying...
                   </>
                 ) : (
-                  'Verify Code'
+                  <>
+                    <Key className="w-4 h-4 mr-2" />
+                    Access Files
+                  </>
+                )}
+              </Button>
+            </div>
+
+            <div className="text-center">
+              <span className="text-sm text-gray-500">or set a new password</span>
+            </div>
+
+            {/* Set new password */}
+            <div className="space-y-2">
+              <label className="text-sm font-medium">New Password</label>
+              <Input
+                type="password"
+                placeholder="Create a password (min 6 characters)"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                disabled={isSettingPassword}
+              />
+              <Input
+                type="password"
+                placeholder="Confirm password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                disabled={isSettingPassword}
+              />
+              <Button 
+                onClick={setUserPassword} 
+                disabled={!password || !confirmPassword || isSettingPassword}
+                variant="outline"
+                className="w-full"
+              >
+                {isSettingPassword ? (
+                  <>
+                    <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
+                    Setting Password...
+                  </>
+                ) : (
+                  'Set Password'
                 )}
               </Button>
             </div>
@@ -368,6 +495,12 @@ const PersonalFilesPage = () => {
                     }>
                       {file.upload_status}
                     </Badge>
+                    {file.password_protected && (
+                      <Badge variant="outline">
+                        <Shield className="w-3 h-3 mr-1" />
+                        Protected
+                      </Badge>
+                    )}
                     <span className="text-sm text-gray-500">
                       {(file.file_size_bytes / 1024).toFixed(1)} KB
                     </span>
