@@ -17,14 +17,14 @@ INSERT INTO group_projects (
 ) VALUES (
   gen_random_uuid(),
   'Personal Wellness Oracle',
-  'Your AI life coach that understands your patterns and guides you toward optimal living through deep biological intelligence',
+  'Your AI wellness companion that discovers patterns in your daily diary entries and guides you toward optimal living through holistic understanding',
   'ai_wellness',
   5,
   32, -- 8 teams × 4 avg members
   0,
   'active',
   jsonb_build_object(
-    'vision', 'Build an AI that understands genetics, emotional triggers, and family patterns to provide personalized wellness guidance',
+    'vision', 'Build an AI that analyzes diary patterns across environment, lifestyle, emotions, goals, and personal biology to provide holistic wellness guidance',
     'tech_stack', ARRAY['Python', 'React', 'LangChain', 'ChromaDB', 'PostgreSQL', 'Supabase'],
     'duration_weeks', 8,
     'learning_focus', ARRAY['AI Architecture', 'Vector Databases', 'LLM Chains', 'Health Data Analysis']
@@ -77,20 +77,21 @@ BEGIN
       tasks, team_vibe, sort_order
     ) VALUES (
       gen_random_uuid(), wellness_project_id,
-      'The Data Harvesters',
-      'Collect comprehensive wellness data that actually matters',
+      'The Life Pattern Collectors',
+      'Capture holistic wellness data from daily life patterns',
       '⚡',
       'from-green-400 to-emerald-400',
       4, 0, 2,
-      'Connect to real APIs and build the data foundation',
+      'Build comprehensive data foundation for holistic wellness tracking',
       to_jsonb(ARRAY[
-        'Sleep API integrations (Fitbit, Apple Health, Oura)',
-        'Daily step and activity tracking',
-        'Simple 1-10 health ratings (energy, digestion, mood)',
-        'Voice-to-text diary entry system',
-        'Data validation and error handling'
+        'Daily diary entry system with voice-to-text',
+        'Environmental data integration (air quality, weather)',
+        'Sleep and activity tracking (multiple device APIs)',
+        'Simple wellness ratings (energy, digestion, mood, stress)',
+        'Goal and intention tracking system',
+        'Data validation and privacy protection'
       ]),
-      'You''re the foundation of everything! 📊',
+      'You capture the story of human experience! 📖',
       1
     );
 
@@ -101,20 +102,20 @@ BEGIN
       tasks, team_vibe, sort_order
     ) VALUES (
       gen_random_uuid(), wellness_project_id,
-      'The Vector Architects',
-      'Transform all wellness data into searchable, meaningful vectors',
+      'The Pattern Memory Builders',
+      'Transform life experiences into searchable AI memory',
       '🧠',
       'from-purple-400 to-pink-400',
       4, 0, 5,
-      'Build the AI brain that makes every piece of data searchable',
+      'Create AI memory that understands context and connections',
       to_jsonb(ARRAY[
-        'Embed diary entries using sentence transformers',
-        'Create temporal vector indexes for time-based patterns',
-        'Build similarity search for wellness patterns',
-        'Handle multi-modal data (numbers + text + context)',
-        'Implement time-decay for pattern relevance'
+        'Embed diary entries and life context using transformers',
+        'Build multi-dimensional pattern recognition (emotional, physical, environmental)',
+        'Create similarity search across different wellness domains',
+        'Handle complex life context (goals, relationships, environment)',
+        'Implement temporal pattern weighting and relevance scoring'
       ]),
-      'You''re the AI''s memory system! 🧠',
+      'You create the AI''s understanding of patterns! 🧠',
       2
     );
 
@@ -125,20 +126,20 @@ BEGIN
       tasks, team_vibe, sort_order
     ) VALUES (
       gen_random_uuid(), wellness_project_id,
-      'The LLM Chain Engineers',
-      'Build the conversational AI that understands wellness context',
+      'The Wisdom Conversation Engineers',
+      'Build AI that understands your unique life context and patterns',
       '🤖',
       'from-blue-400 to-cyan-400',
       4, 0, 5,
-      'Create the intelligent conversation system',
+      'Create deeply contextual and personalized AI conversations',
       to_jsonb(ARRAY[
-        'Design prompt chains for health pattern analysis',
-        'Build retrieval-augmented generation pipeline',
-        'Create context-aware response generation',
-        'Handle complex health correlations and insights',
-        'Implement conversation memory and state management'
+        'Design prompts for holistic pattern analysis (physical, emotional, environmental)',
+        'Build retrieval systems that understand multi-factor wellness connections',
+        'Create empathetic, personalized response generation',
+        'Handle complex life correlations and provide gentle guidance',
+        'Implement conversation memory with personal context awareness'
       ]),
-      'You''re the conversational genius! 💬',
+      'You bring wisdom to every conversation! 💬',
       3
     );
 
@@ -149,20 +150,20 @@ BEGIN
       tasks, team_vibe, sort_order
     ) VALUES (
       gen_random_uuid(), wellness_project_id,
-      'The Pattern Detectives',
-      'Find hidden connections in wellness data',
+      'The Life Connection Detectives',
+      'Discover hidden patterns across all aspects of daily life',
       '🔍',
       'from-yellow-400 to-orange-400',
       4, 0, 4,
-      'Discover the patterns humans miss',
+      'Find meaningful connections across all life domains',
       to_jsonb(ARRAY[
-        'Correlation analysis between wellness metrics',
-        'Identify cyclical patterns (weekly, monthly rhythms)',
-        'Detect early warning signals for energy crashes',
-        'Build predictive models for mood and energy',
-        'Time-series analysis for personal optimization'
+        'Multi-factor correlation analysis (environment, emotions, goals, physical)',
+        'Identify personal rhythm patterns (daily, weekly, seasonal)',
+        'Detect early signals for wellness disruptions',
+        'Build holistic predictive models for energy and mood',
+        'Discover unique personal optimization patterns'
       ]),
-      'You''re the pattern whisperer! 🔍',
+      'You reveal the hidden connections in life! 🔍',
       4
     );
 
@@ -173,20 +174,20 @@ BEGIN
       tasks, team_vibe, sort_order
     ) VALUES (
       gen_random_uuid(), wellness_project_id,
-      'The Memory Keepers',
-      'Store and retrieve personal history with blazing speed',
+      'The Personal History Guardians',
+      'Securely store and instantly access your complete wellness story',
       '💾',
       'from-indigo-400 to-purple-400',
       4, 0, 4,
-      'Build the high-performance data backbone',
+      'Build secure, high-performance personal data systems',
       to_jsonb(ARRAY[
-        'Design efficient wellness data schemas',
-        'Build fast retrieval systems with proper indexing',
-        'Handle privacy and security (Row Level Security)',
-        'Create data export/backup systems',
-        'Optimize for vector similarity searches'
+        'Design schemas for complex life pattern data',
+        'Build lightning-fast pattern retrieval systems',
+        'Implement bulletproof privacy and security (Row Level Security)',
+        'Create personal data ownership and export systems',
+        'Optimize for multi-dimensional pattern searches'
       ]),
-      'You''re the keeper of memories! 💾',
+      'You protect and serve personal stories! 💾',
       5
     );
 
@@ -197,20 +198,20 @@ BEGIN
       tasks, team_vibe, sort_order
     ) VALUES (
       gen_random_uuid(), wellness_project_id,
-      'The Conversation Designers',
-      'Make talking to AI feel natural and deeply understanding',
+      'The Empathy Engineers',
+      'Create AI conversations that feel genuinely understanding and supportive',
       '💬',
       'from-pink-400 to-rose-400',
       4, 0, 3,
-      'Craft the perfect human-AI interaction',
+      'Design deeply empathetic AI communication',
       to_jsonb(ARRAY[
-        'Design conversation flows for health topics',
-        'Handle sensitive health discussions with empathy',
-        'Create emotional tone recognition',
-        'Build trust through consistent accuracy',
-        'Design intuitive voice and text interfaces'
+        'Design conversation flows for sensitive personal topics',
+        'Create emotional intelligence for wellness discussions',
+        'Build tone recognition that responds with appropriate empathy',
+        'Establish trust through gentle, non-judgmental guidance',
+        'Design interfaces that feel safe and supportive'
       ]),
-      'You''re the empathy engineer! ❤️',
+      'You create genuine understanding! ❤️',
       6
     );
 
@@ -221,20 +222,20 @@ BEGIN
       tasks, team_vibe, sort_order
     ) VALUES (
       gen_random_uuid(), wellness_project_id,
-      'The Interface Magicians',
-      'Create a wellness companion that feels magical to use',
+      'The Experience Alchemists',
+      'Transform complex life data into beautiful, intuitive experiences',
       '✨',
       'from-emerald-400 to-teal-400',
       4, 0, 4,
-      'Build the beautiful, intuitive experience',
+      'Craft magical user experiences for personal wellness',
       to_jsonb(ARRAY[
-        'Design chat interface with integrated data visualization',
-        'Create quick daily logging flows',
-        'Build insight presentation with beautiful charts',
-        'Mobile-first responsive design',
-        'Real-time data synchronization UI'
+        'Design intuitive daily life logging interfaces',
+        'Create beautiful visualizations of personal patterns',
+        'Build seamless diary entry and insight discovery flows',
+        'Design mobile-first experiences for daily use',
+        'Create delightful interactions that encourage reflection'
       ]),
-      'You''re the experience wizard! ✨',
+      'You transform data into delight! ✨',
       7
     );
 
@@ -245,20 +246,20 @@ BEGIN
       tasks, team_vibe, sort_order
     ) VALUES (
       gen_random_uuid(), wellness_project_id,
-      'The Wellness Orchestrators',
-      'Coordinate all systems into one intelligent, learning assistant',
+      'The Life Harmony Orchestrators',
+      'Unite all systems into one wise, understanding companion',
       '🎼',
       'from-violet-400 to-indigo-400',
       4, 0, 5,
-      'Build the master AI that connects everything',
+      'Create the master AI that understands your complete story',
       to_jsonb(ARRAY[
-        'Connect all team components into unified system',
-        'Build the main conversation and analysis loop',
-        'Handle complex multi-turn conversations',
-        'Deploy and scale the complete wellness AI',
-        'Coordinate real-time learning and adaptation'
+        'Integrate all components into harmonious wellness AI',
+        'Build the central intelligence that connects all life patterns',
+        'Orchestrate complex, context-aware conversations',
+        'Deploy and scale personalized wellness wisdom',
+        'Coordinate continuous learning from your unique patterns'
       ]),
-      'You''re the conductor of the symphony! 🎼',
+      'You orchestrate the harmony of wellness! 🎼',
       8
     );
 END;

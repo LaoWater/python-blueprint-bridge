@@ -22,7 +22,7 @@ import {
 import { useGroupProjects } from '../../hooks/useGroupProjects';
 
 export default function AIStudyBuddy() {
-  const [activeSection, setActiveSection] = useState('vision');
+  const [activeSection, setActiveSection] = useState('teams');
   const [expandedTeam, setExpandedTeam] = useState<string | null>(null);
   const [joiningTeam, setJoiningTeam] = useState<string | null>(null);
   const [userTeams, setUserTeams] = useState<string[]>([]);
@@ -33,20 +33,31 @@ export default function AIStudyBuddy() {
   // Get the AI Study Buddy project
   const studyBuddyProject = projects.find(p => p.name === 'AI Study Buddy');
 
+  // Load user's current teams with error handling
+  const loadUserTeams = useCallback(async () => {
+    if (!studyBuddyProject?.id) return;
+    try {
+      const teams = await getUserTeams(studyBuddyProject.id);
+      if (teams && Array.isArray(teams)) {
+        setUserTeams(teams.map(t => t.team_id));
+      }
+    } catch (err) {
+      console.error('Error loading user teams:', err);
+      // Silently fail - don't break the UI
+    }
+  }, [studyBuddyProject?.id, getUserTeams]);
+
   // Fetch teams and user's teams when component mounts or project changes
   useEffect(() => {
     if (studyBuddyProject?.id) {
-      fetchTeams(studyBuddyProject.id);
-      loadUserTeams();
+      // Add a small delay to prevent rapid fire requests
+      const timer = setTimeout(() => {
+        fetchTeams(studyBuddyProject.id);
+        loadUserTeams();
+      }, 300);
+      return () => clearTimeout(timer);
     }
   }, [studyBuddyProject?.id, fetchTeams, loadUserTeams]);
-
-  // Load user's current teams
-  const loadUserTeams = useCallback(async () => {
-    if (!studyBuddyProject?.id) return;
-    const teams = await getUserTeams(studyBuddyProject.id);
-    setUserTeams(teams.map(t => t.team_id));
-  }, [studyBuddyProject?.id, getUserTeams]);
 
   // Team icons mapping
   const getTeamIcon = (iconName: string) => {

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Users, Rocket, Brain, Code, Globe, ChevronRight, Star, GitBranch, MessageSquare, Target, Loader2, Heart, BookOpen } from 'lucide-react';
+import { Users, Rocket, Brain, Code, Globe, ChevronRight, ChevronLeft, Star, GitBranch, MessageSquare, Target, Loader2, Heart, BookOpen } from 'lucide-react';
 import MoodMusicProject from '../components/group-projects/dj_blue';
 import WellnessOracle from '../components/group-projects/WellnessOracle';
 import AIStudyBuddy from '../components/group-projects/AIStudyBuddy';
@@ -16,16 +16,22 @@ export default function GroupProjects() {
   const { projects, teams, loading, error, fetchTeams, clearError } = useGroupProjects();
   const { user } = useAuth();
 
-  // Auto-select DJ Blue project
+  // Auto-select first project with debouncing
   useEffect(() => {
     if (projects.length > 0 && !selectedProject) {
-      const djBlue = projects.find(p => p.name.includes('DJ Blue'));
-      if (djBlue) {
-        setSelectedProject(djBlue.id);
-        fetchTeams(djBlue.id);
-      }
+      const timer = setTimeout(() => {
+        const firstProject = projects[0];
+        if (firstProject) {
+          setSelectedProject(firstProject.id);
+          // Only fetch teams if we're in the teams section
+          if (activeView === 'overview' || activeView === 'philosophy') {
+            fetchTeams(firstProject.id);
+          }
+        }
+      }, 500);
+      return () => clearTimeout(timer);
     }
-  }, [projects, selectedProject, fetchTeams]);
+  }, [projects, selectedProject, activeView, fetchTeams]);
 
   useEffect(() => {
     if (error) {
@@ -85,39 +91,6 @@ export default function GroupProjects() {
             <Brain className="inline mr-2" size={20} />
             Collaboration Art
           </button>
-          <button
-            onClick={() => setActiveView('wellness-oracle')}
-            className={`px-6 py-3 rounded-full transition-all ${
-              activeView === 'wellness-oracle'
-                ? 'bg-gradient-to-r from-blue-500 to-purple-500 shadow-lg shadow-blue-500/50'
-                : 'bg-slate-800 hover:bg-slate-700'
-            }`}
-          >
-            <Heart className="inline mr-2" size={20} />
-            Wellness Oracle
-          </button>
-          <button
-            onClick={() => setActiveView('ai-study-buddy')}
-            className={`px-6 py-3 rounded-full transition-all ${
-              activeView === 'ai-study-buddy'
-                ? 'bg-gradient-to-r from-blue-500 to-purple-500 shadow-lg shadow-blue-500/50'
-                : 'bg-slate-800 hover:bg-slate-700'
-            }`}
-          >
-            <BookOpen className="inline mr-2" size={20} />
-            AI Study Buddy
-          </button>
-          <button
-            onClick={() => setActiveView('dj-blue')}
-            className={`px-6 py-3 rounded-full transition-all ${
-              activeView === 'dj-blue'
-                ? 'bg-gradient-to-r from-blue-500 to-purple-500 shadow-lg shadow-blue-500/50'
-                : 'bg-slate-800 hover:bg-slate-700'
-            }`}
-          >
-            <Rocket className="inline mr-2" size={20} />
-            DJ BlueAI
-          </button>
         </div>
       </div>
 
@@ -160,7 +133,7 @@ export default function GroupProjects() {
               </div>
             </div>
 
-            <div className="bg-gradient-to-r from-blue-600/20 to-purple-600/20 rounded-3xl p-8 border border-blue-500/30">
+            <div className="bg-gradient-to-r from-blue-600/20 to-purple-600/20 rounded-3xl p-8 border border-blue-500/30 mb-12">
               <h3 className="text-3xl font-bold mb-6 text-center">🎯 The Art of Programming Evolution</h3>
 
               <div className="grid md:grid-cols-3 gap-8 text-center">
@@ -181,6 +154,76 @@ export default function GroupProjects() {
                 </div>
               </div>
             </div>
+
+            {/* Group Projects Cards */}
+            <div className="mb-8">
+              <h3 className="text-3xl font-bold mb-6 text-center text-blue-300">🚀 Jump Into Real Projects</h3>
+              <p className="text-center text-xl text-slate-300 mb-8">
+                Ready to apply your skills? Join a team and start building
+              </p>
+
+              <div className="grid md:grid-cols-3 gap-6">
+                {/* Wellness Oracle Card */}
+                <div
+                  onClick={() => setActiveView('wellness-oracle')}
+                  className="bg-gradient-to-br from-pink-500/10 to-purple-500/10 backdrop-blur-lg rounded-2xl p-6 border border-pink-500/20 cursor-pointer transition-all duration-300 hover:shadow-xl hover:shadow-pink-500/20 hover:scale-105"
+                >
+                  <div className="text-center">
+                    <div className="w-16 h-16 bg-gradient-to-br from-pink-500 to-purple-500 rounded-xl flex items-center justify-center mx-auto mb-4">
+                      <Heart className="w-8 h-8 text-white" />
+                    </div>
+                    <h4 className="text-xl font-bold mb-3 text-pink-300">Personal Wellness Oracle</h4>
+                    <p className="text-slate-300 text-sm mb-4">
+                      AI companion that discovers patterns in daily diary entries and guides optimal living through holistic understanding.
+                    </p>
+                    <div className="flex justify-center items-center gap-2 text-sm text-purple-300">
+                      <span>Join Teams</span>
+                      <ChevronRight className="w-4 h-4" />
+                    </div>
+                  </div>
+                </div>
+
+                {/* AI Study Buddy Card */}
+                <div
+                  onClick={() => setActiveView('ai-study-buddy')}
+                  className="bg-gradient-to-br from-blue-500/10 to-cyan-500/10 backdrop-blur-lg rounded-2xl p-6 border border-blue-500/20 cursor-pointer transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/20 hover:scale-105"
+                >
+                  <div className="text-center">
+                    <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center mx-auto mb-4">
+                      <BookOpen className="w-8 h-8 text-white" />
+                    </div>
+                    <h4 className="text-xl font-bold mb-3 text-blue-300">AI Study Buddy</h4>
+                    <p className="text-slate-300 text-sm mb-4">
+                      Personalized learning companion that adapts to your pace, identifies knowledge gaps, and creates optimal study paths.
+                    </p>
+                    <div className="flex justify-center items-center gap-2 text-sm text-cyan-300">
+                      <span>Join Teams</span>
+                      <ChevronRight className="w-4 h-4" />
+                    </div>
+                  </div>
+                </div>
+
+                {/* DJ Blue Card */}
+                <div
+                  onClick={() => setActiveView('dj-blue')}
+                  className="bg-gradient-to-br from-indigo-500/10 to-purple-500/10 backdrop-blur-lg rounded-2xl p-6 border border-indigo-500/20 cursor-pointer transition-all duration-300 hover:shadow-xl hover:shadow-indigo-500/20 hover:scale-105"
+                >
+                  <div className="text-center">
+                    <div className="w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-xl flex items-center justify-center mx-auto mb-4">
+                      <Rocket className="w-8 h-8 text-white" />
+                    </div>
+                    <h4 className="text-xl font-bold mb-3 text-indigo-300">DJ BlueAI</h4>
+                    <p className="text-slate-300 text-sm mb-4">
+                      Mood-adaptive music assistant that reads emotional state and curates perfect soundscapes for any moment.
+                    </p>
+                    <div className="flex justify-center items-center gap-2 text-sm text-purple-300">
+                      <span>Join Teams</span>
+                      <ChevronRight className="w-4 h-4" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       )}
@@ -188,7 +231,7 @@ export default function GroupProjects() {
       {/* Philosophy Section */}
       {activeView === 'philosophy' && (
         <div className="container mx-auto px-4 mb-16">
-          <div className="max-w-4xl mx-auto">
+          <div className="max-w-6xl mx-auto">
             <div className="bg-slate-800/50 backdrop-blur-lg rounded-3xl p-8 mb-8 border border-blue-500/20">
               <h2 className="text-4xl font-bold mb-8 text-center text-blue-300">The Collaboration Mindset</h2>
 
@@ -239,6 +282,76 @@ export default function GroupProjects() {
               </div>
             </div>
 
+            {/* Group Projects Cards */}
+            <div className="mb-8">
+              <h3 className="text-3xl font-bold mb-6 text-center text-purple-300">🚀 Apply These Principles</h3>
+              <p className="text-center text-xl text-slate-300 mb-8">
+                Choose a project below to see collaboration in action
+              </p>
+
+              <div className="grid md:grid-cols-3 gap-6">
+                {/* Wellness Oracle Card */}
+                <div
+                  onClick={() => setActiveView('wellness-oracle')}
+                  className="bg-gradient-to-br from-pink-500/10 to-purple-500/10 backdrop-blur-lg rounded-2xl p-6 border border-pink-500/20 cursor-pointer transition-all duration-300 hover:shadow-xl hover:shadow-pink-500/20 hover:scale-105"
+                >
+                  <div className="text-center">
+                    <div className="w-16 h-16 bg-gradient-to-br from-pink-500 to-purple-500 rounded-xl flex items-center justify-center mx-auto mb-4">
+                      <Heart className="w-8 h-8 text-white" />
+                    </div>
+                    <h4 className="text-xl font-bold mb-3 text-pink-300">Personal Wellness Oracle</h4>
+                    <p className="text-slate-300 text-sm mb-4">
+                      AI life coach that understands your patterns and guides you toward optimal living through deep biological intelligence.
+                    </p>
+                    <div className="flex justify-center items-center gap-2 text-sm text-purple-300">
+                      <span>Explore Project</span>
+                      <ChevronRight className="w-4 h-4" />
+                    </div>
+                  </div>
+                </div>
+
+                {/* AI Study Buddy Card */}
+                <div
+                  onClick={() => setActiveView('ai-study-buddy')}
+                  className="bg-gradient-to-br from-blue-500/10 to-cyan-500/10 backdrop-blur-lg rounded-2xl p-6 border border-blue-500/20 cursor-pointer transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/20 hover:scale-105"
+                >
+                  <div className="text-center">
+                    <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center mx-auto mb-4">
+                      <BookOpen className="w-8 h-8 text-white" />
+                    </div>
+                    <h4 className="text-xl font-bold mb-3 text-blue-300">AI Study Buddy</h4>
+                    <p className="text-slate-300 text-sm mb-4">
+                      Personalized learning companion that adapts to your pace, identifies knowledge gaps, and creates optimal study paths.
+                    </p>
+                    <div className="flex justify-center items-center gap-2 text-sm text-cyan-300">
+                      <span>Explore Project</span>
+                      <ChevronRight className="w-4 h-4" />
+                    </div>
+                  </div>
+                </div>
+
+                {/* DJ Blue Card */}
+                <div
+                  onClick={() => setActiveView('dj-blue')}
+                  className="bg-gradient-to-br from-indigo-500/10 to-purple-500/10 backdrop-blur-lg rounded-2xl p-6 border border-indigo-500/20 cursor-pointer transition-all duration-300 hover:shadow-xl hover:shadow-indigo-500/20 hover:scale-105"
+                >
+                  <div className="text-center">
+                    <div className="w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-xl flex items-center justify-center mx-auto mb-4">
+                      <Rocket className="w-8 h-8 text-white" />
+                    </div>
+                    <h4 className="text-xl font-bold mb-3 text-indigo-300">DJ BlueAI</h4>
+                    <p className="text-slate-300 text-sm mb-4">
+                      Mood-adaptive music assistant that reads your emotional state and curates perfect soundscapes for any moment.
+                    </p>
+                    <div className="flex justify-center items-center gap-2 text-sm text-purple-300">
+                      <span>Explore Project</span>
+                      <ChevronRight className="w-4 h-4" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <div className="bg-gradient-to-r from-purple-600/20 to-pink-600/20 rounded-3xl p-8 border border-purple-500/30">
               <h3 className="text-2xl font-bold mb-4 text-center text-purple-300">Remember: Programming is a Social Art</h3>
               <p className="text-center text-xl text-slate-300">
@@ -253,6 +366,15 @@ export default function GroupProjects() {
       {/* Wellness Oracle Project Detail */}
       {activeView === 'wellness-oracle' && (
         <div className="container mx-auto px-4 mb-16">
+          <div className="mb-6">
+            <button
+              onClick={() => setActiveView('philosophy')}
+              className="flex items-center gap-2 px-4 py-2 bg-slate-800 hover:bg-slate-700 rounded-lg transition-colors text-slate-300 hover:text-white"
+            >
+              <ChevronLeft className="w-4 h-4" />
+              Back to Collaboration Art
+            </button>
+          </div>
           <WellnessOracle />
         </div>
       )}
@@ -260,6 +382,15 @@ export default function GroupProjects() {
       {/* AI Study Buddy Project Detail */}
       {activeView === 'ai-study-buddy' && (
         <div className="container mx-auto px-4 mb-16">
+          <div className="mb-6">
+            <button
+              onClick={() => setActiveView('philosophy')}
+              className="flex items-center gap-2 px-4 py-2 bg-slate-800 hover:bg-slate-700 rounded-lg transition-colors text-slate-300 hover:text-white"
+            >
+              <ChevronLeft className="w-4 h-4" />
+              Back to Collaboration Art
+            </button>
+          </div>
           <AIStudyBuddy />
         </div>
       )}
@@ -267,6 +398,15 @@ export default function GroupProjects() {
       {/* DJ Blue Project Detail */}
       {activeView === 'dj-blue' && (
         <div className="container mx-auto px-4 mb-16">
+          <div className="mb-6">
+            <button
+              onClick={() => setActiveView('philosophy')}
+              className="flex items-center gap-2 px-4 py-2 bg-slate-800 hover:bg-slate-700 rounded-lg transition-colors text-slate-300 hover:text-white"
+            >
+              <ChevronLeft className="w-4 h-4" />
+              Back to Collaboration Art
+            </button>
+          </div>
           <MoodMusicProject />
         </div>
       )}

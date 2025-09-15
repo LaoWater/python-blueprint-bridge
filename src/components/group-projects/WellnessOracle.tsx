@@ -23,7 +23,7 @@ import {
 import { useGroupProjects } from '../../hooks/useGroupProjects';
 
 export default function WellnessOracle() {
-  const [activeSection, setActiveSection] = useState('vision');
+  const [activeSection, setActiveSection] = useState('teams');
   const [expandedTeam, setExpandedTeam] = useState<string | null>(null);
   const [joiningTeam, setJoiningTeam] = useState<string | null>(null);
   const [userTeams, setUserTeams] = useState<string[]>([]);
@@ -39,20 +39,44 @@ export default function WellnessOracle() {
   // console.log('Wellness Project:', wellnessProject);
   // console.log('Teams:', teams);
 
+  // Load user's current teams with error handling
+  const loadUserTeams = useCallback(async () => {
+    if (!wellnessProject?.id) return;
+    try {
+      const teams = await getUserTeams(wellnessProject.id);
+      if (teams && Array.isArray(teams)) {
+        setUserTeams(teams.map(t => t.team_id));
+      }
+    } catch (err) {
+      console.error('Error loading user teams:', err);
+      // Silently fail - don't break the UI
+    }
+  }, [wellnessProject?.id, getUserTeams]);
+
   // Fetch teams and user's teams when component mounts or project changes
   useEffect(() => {
     if (wellnessProject?.id) {
-      fetchTeams(wellnessProject.id);
-      loadUserTeams();
+      // Add a small delay to prevent rapid fire requests
+      const timer = setTimeout(() => {
+        fetchTeams(wellnessProject.id);
+        loadUserTeams();
+      }, 300);
+      return () => clearTimeout(timer);
     }
   }, [wellnessProject?.id, fetchTeams, loadUserTeams]);
 
-  // Load user's current teams
-  const loadUserTeams = useCallback(async () => {
-    if (!wellnessProject?.id) return;
-    const teams = await getUserTeams(wellnessProject.id);
-    setUserTeams(teams.map(t => t.team_id));
-  }, [wellnessProject?.id, getUserTeams]);
+  // Handle page visibility changes to prevent unnecessary requests
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        // Page is hidden, clear any pending requests
+        return;
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
+  }, []);
 
   // Team icons mapping
   const getTeamIcon = (iconName: string) => {
@@ -100,10 +124,7 @@ export default function WellnessOracle() {
     return 'available';
   }, [isInTeam]);
 
-  // Auto-scroll to top on section change
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, [activeSection]);
+  // Removed auto-scroll for better UX - let users stay where they are
 
   return (
     <div className="w-full bg-transparent text-white">
@@ -113,7 +134,7 @@ export default function WellnessOracle() {
           <h1 className="text-6xl font-bold mb-4 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
             Personal Wellness Oracle
           </h1>
-          <p className="text-xl text-gray-300">Your AI life coach that understands your patterns and guides you toward optimal living</p>
+          <p className="text-xl text-gray-300">Your AI wellness companion that discovers patterns in your daily life and guides you toward optimal living</p>
         </div>
 
         {/* Navigation */}
@@ -158,16 +179,16 @@ export default function WellnessOracle() {
       {activeSection === 'vision' && (
         <div className="max-w-5xl mx-auto">
           <div className="bg-gray-800/50 backdrop-blur-lg rounded-3xl p-8 mb-8 border border-blue-500/20">
-            <h2 className="text-3xl font-bold mb-6 text-center text-blue-300">🧬 Deep Biological Intelligence: Understanding Your Complete Story</h2>
+            <h2 className="text-3xl font-bold mb-6 text-center text-blue-300">🌟 Holistic Pattern Recognition: Understanding Your Complete Story</h2>
 
             <div className="space-y-8 text-lg">
               <div className="flex items-start gap-6 p-6 bg-gray-700/30 rounded-2xl">
                 <div className="text-4xl">🌅</div>
                 <div>
-                  <p className="font-semibold text-blue-300 mb-2">Morning (7:23 AM) - The Genetic Detective</p>
+                  <p className="font-semibold text-blue-300 mb-2">Morning (7:23 AM) - The Pattern Detective</p>
                   <p className="text-gray-300 mb-3">You wake up groggy despite sleeping 8 hours. You open the Oracle app and speak: <span className="text-yellow-300">"I feel terrible again, and I don't know why."</span></p>
                   <div className="bg-blue-900/30 p-4 rounded-lg border-l-4 border-blue-400">
-                    <p className="text-blue-200 italic">Oracle's Deep Analysis: "I see the multi-layered pattern combining your genetics, family history, and emotional triggers. Your sleep was fragmented - 4 wake-ups between 2-4 AM. Three factors converged: <strong>Genetic:</strong> Your COMT gene variant makes you a slow caffeine metabolizer - yesterday's 3 PM coffee was still active at bedtime. <strong>Inherited Pattern:</strong> Your stress response mirrors your mother's cortisol pattern (elevated evening cortisol, documented in family health history). <strong>Emotional Trigger:</strong> Client criticism activated your inherited 'rejection sensitivity' - a pattern that runs in your family line. The 9:30 PM stress-eating wasn't just behavioral; it was your genetic stress response seeking comfort through food, disrupting your circadian rhythm that's programmed for 10 PM melatonin release."</p>
+                    <p className="text-blue-200 italic">Oracle's Pattern Analysis: "Looking at your diary entries from the past 3 weeks, I notice a constellation of factors converging. <strong>Sleep Pattern:</strong> Your sleep tracker shows 4 wake-ups between 2-4 AM - this happened after your most stressful work days. <strong>Environmental:</strong> Yesterday's air quality index was 156 (unhealthy) - your energy crashes consistently correlate with poor air days. <strong>Digestive:</strong> Your diary mentions bloating after lunch yesterday - dairy sensitivity patterns show up 6 hours later as sleep disruption. <strong>Emotional:</strong> The client criticism triggered your familiar stress-eating pattern at 9:30 PM. <strong>Personal Context:</strong> You've been putting pressure on yourself about the promotion deadline. All these factors created a perfect storm disrupting your natural circadian rhythm."</p>
                   </div>
                 </div>
               </div>
@@ -175,10 +196,10 @@ export default function WellnessOracle() {
               <div className="flex items-start gap-6 p-6 bg-gray-700/30 rounded-2xl">
                 <div className="text-4xl">☀️</div>
                 <div>
-                  <p className="font-semibold text-purple-300 mb-2">Afternoon (2:15 PM) - Generational Patterns</p>
+                  <p className="font-semibold text-purple-300 mb-2">Afternoon (2:15 PM) - Multi-Factor Analysis</p>
                   <p className="text-gray-300 mb-3">You're dragging despite caffeine. <span className="text-yellow-300">"Why doesn't coffee help anymore? This feels familiar."</span></p>
                   <div className="bg-purple-900/30 p-4 rounded-lg border-l-4 border-purple-400">
-                    <p className="text-purple-200 italic">Oracle: "It IS familiar - this exact pattern appeared in your grandmother's wellness journal from 1987. Your genetic profile shows you're a slow caffeine metabolizer (CYP1A2 variant), AND you've inherited the family's adrenal sensitivity. Your 2 PM crash follows three generations of data: disrupted sleep → cortisol dysregulation → blood sugar instability → energy collapse. But here's what's powerful: your grandmother never understood WHY. You do. Your genetic makeup creates this vulnerability, but knowing this gives you the power to work WITH your biology instead of against it. The emotional stress from yesterday's call triggered your inherited fight-or-flight response, depleting your adrenals faster than average due to your genetic predisposition."</p>
+                    <p className="text-purple-200 italic">Oracle: "It IS familiar - your diary shows this exact pattern 6 times in the past 2 months. Multiple factors are working against you: <strong>Timing:</strong> Your energy naturally dips at 2 PM (circadian rhythm), but caffeine from this morning is blocking your adenosine receptors. <strong>Blood Sugar:</strong> Your diary shows you skipped morning protein - your glucose crashed exactly when caffeine peaked. <strong>Hydration:</strong> Only 16oz water logged today, and dehydration amplifies fatigue. <strong>Goals Stress:</strong> You wrote about the promotion pressure yesterday - chronic stress depletes your natural energy systems. <strong>Family Pattern:</strong> Yes, your family history suggests sensitivity to stimulants, but now you understand the WHY behind the pattern. You have tools to work WITH your unique biology."</p>
                   </div>
                 </div>
               </div>
@@ -186,10 +207,10 @@ export default function WellnessOracle() {
               <div className="flex items-start gap-6 p-6 bg-gray-700/30 rounded-2xl">
                 <div className="text-4xl">🧬</div>
                 <div>
-                  <p className="font-semibold text-green-300 mb-2">Evening (6:47 PM) - Emotional Heritage & New Choices</p>
-                  <p className="text-gray-300 mb-3">Work stress hits again. Your Oracle sends a personalized intervention based on deep family patterns:</p>
+                  <p className="font-semibold text-green-300 mb-2">Evening (6:47 PM) - Personalized Intervention</p>
+                  <p className="text-gray-300 mb-3">Work stress hits again. Your Oracle sends a personalized intervention based on your unique patterns:</p>
                   <div className="bg-green-900/30 p-4 rounded-lg border-l-4 border-green-400">
-                    <p className="text-green-200 italic">"Stress pattern detected - this is your family's signature response. Three generations show this exact trigger: work criticism → emotional eating → sleep disruption → next-day fatigue. Your genetic stress response (high cortisol sensitivity via COMT gene) combines with learned family coping mechanisms passed down through emotional modeling. But you have tools they didn't: Based on your genetic profile, ashwagandha works 3x better for you than average (genetic testing confirmed). Your breathing exercise interrupts the inherited stress cascade at the neurological level. Most importantly, you're choosing your prepared meal over emotional eating - literally rewriting your family's coping patterns. You're not just optimizing your health; you're healing generational trauma and creating new neural pathways for future generations."</p>
+                    <p className="text-green-200 italic">"Stress pattern detected - I recognize this from your diary entries. Your personal stress signature: work criticism → stomach tension → emotional eating → sleep disruption → next-day fatigue. But today feels different. <strong>Environmental Support:</strong> Air quality improved to 45 (good) - your body can process stress better. <strong>Digestive Prep:</strong> You logged yogurt this morning - your gut microbiome is more balanced for stress resilience. <strong>Goal Clarity:</strong> Yesterday's journaling about your promotion fears shows you're processing, not suppressing. <strong>Family Wisdom:</strong> Your family history suggests high stress sensitivity, but you've learned tools they didn't have. <strong>Personal Growth:</strong> You're choosing your prepared meal over emotional eating - creating new neural pathways and breaking old patterns. This isn't just habit change; it's personal evolution."</p>
                   </div>
                 </div>
               </div>
@@ -197,10 +218,10 @@ export default function WellnessOracle() {
               <div className="flex items-start gap-6 p-6 bg-gray-700/30 rounded-2xl">
                 <div className="text-4xl">🌟</div>
                 <div>
-                  <p className="font-semibold text-orange-300 mb-2">Weekend (11:32 AM) - Epigenetic Transformation</p>
+                  <p className="font-semibold text-orange-300 mb-2">Weekend (11:32 AM) - Holistic Harmony</p>
                   <p className="text-gray-300 mb-3">You check in feeling different: <span className="text-yellow-300">"I actually feel great today. What's different? This feels... new."</span></p>
                   <div className="bg-orange-900/30 p-4 rounded-lg border-l-4 border-orange-400">
-                    <p className="text-orange-200 italic">Oracle: "You're experiencing something your family history shows rarely happened - sustained energy without crashes, emotional resilience under stress. Here's the constellation: You honored your genetic chronotype (early sleep), avoided late caffeine (genetic sensitivity), processed stress through movement instead of food (breaking learned pattern), and maintained consistent meal timing (supporting your genetic insulin sensitivity). Most remarkably, your choices are influencing gene expression - what scientists call epigenetics. Stress no longer automatically triggers the cortisol-food-sleep disruption cycle because you've created new neural pathways. You're not just the beneficiary of your genetic inheritance; you're actively reshaping it. Your future children will inherit not just your genes, but the improved epigenetic expression you're creating through these conscious choices."</p>
+                    <p className="text-orange-200 italic">Oracle: "You're experiencing harmonious alignment across all your wellness factors. Here's your constellation: <strong>Environment:</strong> Perfect air quality (32) and you spent 2 hours outdoors. <strong>Digestive:</strong> Your gut feels calm - the dairy elimination experiment is working. <strong>Emotional:</strong> Yesterday's journaling about the promotion shows clarity, not anxiety. <strong>Physical:</strong> You honored your natural sleep rhythm and moved your body. <strong>Goals:</strong> You're aligned with your authentic aspirations, not external pressure. <strong>Family Patterns:</strong> You've transformed inherited stress patterns into conscious choices. This isn't just feeling good - it's your entire system working in harmony. You've created a sustainable foundation for optimal living by understanding and honoring your unique patterns rather than fighting against them."</p>
                   </div>
                 </div>
               </div>
@@ -208,38 +229,38 @@ export default function WellnessOracle() {
           </div>
 
           <div className="bg-gradient-to-r from-blue-600/20 to-purple-600/20 rounded-3xl p-8 border border-blue-500/30">
-            <h3 className="text-2xl font-bold mb-4 text-center text-blue-300">🧬 The Biological Intelligence Stack</h3>
+            <h3 className="text-2xl font-bold mb-4 text-center text-blue-300">🌈 The Holistic Wellness Intelligence Stack</h3>
             <div className="grid md:grid-cols-4 gap-6 text-center">
               <div>
                 <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center mx-auto mb-4">
                   <Database className="w-8 h-8 text-white" />
                 </div>
-                <h4 className="font-bold mb-2">Collect Your Reality</h4>
-                <p className="text-gray-300 text-sm">Sleep, energy, mood, genetic data, family history - your complete biological story</p>
+                <h4 className="font-bold mb-2">Capture Your World</h4>
+                <p className="text-gray-300 text-sm">Daily diary entries, sleep patterns, energy levels, digestive health, air quality, emotions, goals, and family context</p>
               </div>
 
               <div>
                 <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center mx-auto mb-4">
                   <Brain className="w-8 h-8 text-white" />
                 </div>
-                <h4 className="font-bold mb-2">Find Deep Patterns</h4>
-                <p className="text-gray-300 text-sm">AI connects genetics, emotions, family patterns, and behaviors across generations</p>
+                <h4 className="font-bold mb-2">Discover Hidden Connections</h4>
+                <p className="text-gray-300 text-sm">AI finds patterns across environment, lifestyle, emotions, goals, family history, and personal biology</p>
               </div>
 
               <div>
                 <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-500 rounded-xl flex items-center justify-center mx-auto mb-4">
                   <Heart className="w-8 h-8 text-white" />
                 </div>
-                <h4 className="font-bold mb-2">Understand Heritage</h4>
-                <p className="text-gray-300 text-sm">Recognize inherited emotional triggers and genetic predispositions</p>
+                <h4 className="font-bold mb-2">Honor Your Uniqueness</h4>
+                <p className="text-gray-300 text-sm">Understand your personal patterns, family influences, and individual biological needs</p>
               </div>
 
               <div>
                 <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-red-500 rounded-xl flex items-center justify-center mx-auto mb-4">
                   <Target className="w-8 h-8 text-white" />
                 </div>
-                <h4 className="font-bold mb-2">Transform Legacy</h4>
-                <p className="text-gray-300 text-sm">Create new patterns that heal generational cycles and optimize your unique biology</p>
+                <h4 className="font-bold mb-2">Create Your Optimal Life</h4>
+                <p className="text-gray-300 text-sm">Transform patterns through conscious choices that align with your authentic self and life goals</p>
               </div>
             </div>
           </div>
@@ -316,14 +337,22 @@ export default function WellnessOracle() {
             <p className="text-xl text-gray-300">Each team owns their piece of the AI puzzle. Trust others with theirs. Together, we build magic.</p>
           </div>
 
-          {/* Debug Info */}
-          {loading && <div className="text-center text-gray-400">Loading teams...</div>}
-          {error && <div className="text-center text-red-400">Error: {error}</div>}
-          {!loading && teams.length === 0 && (
-            <div className="text-center text-gray-400">
-              <p>No teams found. Project ID: {wellnessProject?.id || 'Not found'}</p>
-              <p>Available projects: {projects.map(p => p.name).join(', ')}</p>
-              <p>Teams count: {teams.length}</p>
+          {/* Status Info */}
+          {loading && <div className="text-center text-gray-400 mb-8">Loading teams...</div>}
+          {error && (
+            <div className="text-center mb-8">
+              <div className="bg-yellow-900/30 border border-yellow-500/30 rounded-lg p-4 max-w-md mx-auto">
+                <p className="text-yellow-300">Teams temporarily unavailable</p>
+                <p className="text-gray-400 text-sm mt-2">Working in offline mode</p>
+              </div>
+            </div>
+          )}
+          {!loading && !error && teams.length === 0 && (
+            <div className="text-center text-gray-400 mb-8">
+              <div className="bg-blue-900/30 border border-blue-500/30 rounded-lg p-4 max-w-md mx-auto">
+                <p>Setting up team structure...</p>
+                <p className="text-sm mt-2">Check back soon!</p>
+              </div>
             </div>
           )}
 

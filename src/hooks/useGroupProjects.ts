@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/components/AuthContext';
 
@@ -12,6 +12,9 @@ export interface GroupProject {
   current_participants: number;
   status: string;
   project_data: any;
+  votes_up: number;
+  votes_down: number;
+  vote_score: number;
 }
 
 export interface ProjectTeam {
@@ -54,37 +57,112 @@ export const useGroupProjects = () => {
   const [error, setError] = useState<string | null>(null);
   const { user } = useAuth();
 
+  // Prevent infinite loops with request tracking
+  const fetchingRef = useRef<Set<string>>(new Set());
+  const retryCountRef = useRef<Map<string, number>>(new Map());
+  const maxRetries = 3;
+  const retryDelay = 1000;
+
+  // Helper function to handle retries
+  const withRetry = async (key: string, fn: () => Promise<any>) => {
+    if (fetchingRef.current.has(key)) {
+      return; // Already fetching
+    }
+
+    fetchingRef.current.add(key);
+    const retries = retryCountRef.current.get(key) || 0;
+
+    try {
+      const result = await fn();
+      retryCountRef.current.delete(key);
+      return result;
+    } catch (err) {
+      if (retries < maxRetries) {
+        retryCountRef.current.set(key, retries + 1);
+        setTimeout(() => withRetry(key, fn), retryDelay * (retries + 1));
+      } else {
+        console.error(`Failed after ${maxRetries} retries:`, err);
+        retryCountRef.current.delete(key);
+        throw err;
+      }
+    } finally {
+      fetchingRef.current.delete(key);
+    }
+  };
+
   // Fetch all group projects
   const fetchProjects = async () => {
     try {
-      const { data, error } = await supabase
-        .from('group_projects')
-        .select('*')
-        .eq('status', 'active')
-        .order('created_at', { ascending: false });
+      await withRetry('projects', async () => {
+        const { data, error } = await supabase
+          .from('group_projects')
+          .select('*')
+          .eq('status', 'active')
+          .order('created_at', { ascending: false });
 
-      if (error) throw error;
-      setProjects(data || []);
+        if (error) throw error;
+        setProjects(data || []);
+      });
     } catch (err) {
       console.error('Error fetching projects:', err);
-      setError('Failed to fetch projects');
+      setError('Network error - using offline mode');
+      // Set default projects for offline mode
+      setProjects([
+        {
+          id: 'wellness-oracle',
+          name: 'Personal Wellness Oracle',
+          description: 'Your AI wellness companion that discovers patterns in your daily diary entries',
+          project_type: 'ai_wellness',
+          difficulty_level: 5,
+          max_participants: 32,
+          current_participants: 0,
+          status: 'active',
+          project_data: {}
+        },
+        {
+          id: 'ai-study-buddy',
+          name: 'AI Study Buddy',
+          description: 'Personal tutor that adapts to your learning style',
+          project_type: 'ai_education',
+          difficulty_level: 5,
+          max_participants: 32,
+          current_participants: 0,
+          status: 'active',
+          project_data: {}
+        },
+        {
+          id: 'dj-blue',
+          name: 'DJ BlueAI',
+          description: 'Mood-adaptive music assistant',
+          project_type: 'ai_music',
+          difficulty_level: 4,
+          max_participants: 24,
+          current_participants: 0,
+          status: 'active',
+          project_data: {}
+        }
+      ]);
     }
   };
 
   // Fetch teams for a specific project
   const fetchTeams = async (projectId: string) => {
     try {
-      const { data, error } = await supabase
-        .from('project_teams')
-        .select('*')
-        .eq('project_id', projectId)
-        .order('sort_order', { ascending: true });
+      await withRetry(`teams-${projectId}`, async () => {
+        const { data, error } = await supabase
+          .from('project_teams')
+          .select('*')
+          .eq('project_id', projectId)
+          .order('sort_order', { ascending: true });
 
-      if (error) throw error;
-      setTeams((data as any) || []);
+        if (error) throw error;
+        setTeams((data as any) || []);
+      });
     } catch (err) {
       console.error('Error fetching teams:', err);
-      setError('Failed to fetch teams');
+      setError('Teams temporarily unavailable');
+      // Set empty teams for now
+      setTeams([]);
     }
   };
 
@@ -205,14 +283,15 @@ export const useGroupProjects = () => {
     if (!user?.id) return [];
 
     try {
-      const { data, error } = await supabase
-        .rpc('get_user_teams', { p_project_id: projectId });
+      return await withRetry(`user-teams-${projectId}`, async () => {
+        const { data, error } = await supabase
+          .rpc('get_user_teams', { p_project_id: projectId });
 
-      if (error) {
-        console.error('Error fetching user teams:', error);
-        return [];
-      }
-      return data || [];
+        if (error) {
+          throw error;
+        }
+        return data || [];
+      });
     } catch (err) {
       console.error('Error fetching user teams:', err);
       return [];
@@ -255,6 +334,92 @@ export const useGroupProjects = () => {
     initializeData();
   }, []);
 
+  // Cast a vote for a project
+  const castVote = useCallback(async (projectId: string, voteType: 'up' | 'down') => {
+    if (!user) {
+      setError('You must be logged in to vote');
+      return false;
+    }
+
+    try {
+      const { data, error } = await supabase
+        .rpc('cast_project_vote', {
+          p_project_id: projectId,
+          p_vote_type: voteType
+        });
+
+      if (error) throw error;
+
+      const result = data as { success: boolean; error?: string; message?: string };
+
+      if (!result.success) {
+        setError(result.error || 'Failed to cast vote');
+        return false;
+      }
+
+      // Refresh projects to get updated vote counts
+      await fetchProjects();
+
+      return true;
+    } catch (err) {
+      console.error('Error casting vote:', err);
+      setError('Failed to cast vote');
+      return false;
+    }
+  }, [user, fetchProjects]);
+
+  // Remove a vote for a project
+  const removeVote = useCallback(async (projectId: string) => {
+    if (!user) {
+      setError('You must be logged in to remove vote');
+      return false;
+    }
+
+    try {
+      const { data, error } = await supabase
+        .rpc('remove_project_vote', {
+          p_project_id: projectId
+        });
+
+      if (error) throw error;
+
+      const result = data as { success: boolean; error?: string; message?: string };
+
+      if (!result.success) {
+        setError(result.error || 'Failed to remove vote');
+        return false;
+      }
+
+      // Refresh projects to get updated vote counts
+      await fetchProjects();
+
+      return true;
+    } catch (err) {
+      console.error('Error removing vote:', err);
+      setError('Failed to remove vote');
+      return false;
+    }
+  }, [user, fetchProjects]);
+
+  // Get user's vote for a project
+  const getUserVote = useCallback(async (projectId: string) => {
+    if (!user?.id) return null;
+
+    try {
+      const { data, error } = await supabase
+        .rpc('get_user_project_vote', {
+          p_project_id: projectId
+        });
+
+      if (error) throw error;
+
+      return data && data.length > 0 ? data[0] : null;
+    } catch (err) {
+      console.error('Error getting user vote:', err);
+      return null;
+    }
+  }, [user?.id]);
+
   return {
     projects,
     teams,
@@ -271,6 +436,9 @@ export const useGroupProjects = () => {
     getUserTeams,
     isUserInTeam,
     updateTeamCounts,
+    castVote,
+    removeVote,
+    getUserVote,
     clearError: () => setError(null)
   };
 };

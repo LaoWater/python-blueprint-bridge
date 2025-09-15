@@ -4,7 +4,7 @@ import { Music, Mic, Brain, Users, Volume2, Sparkles, Headphones, Play, FileAudi
 import { useGroupProjects } from '../../hooks/useGroupProjects';
 
 export default function MoodMusicProject() {
-  const [activeSection, setActiveSection] = useState('vision');
+  const [activeSection, setActiveSection] = useState('teams');
   const [expandedTeam, setExpandedTeam] = useState<string | null>(null);
   const [joiningTeam, setJoiningTeam] = useState<string | null>(null);
   const [userTeams, setUserTeams] = useState<string[]>([]);
@@ -15,20 +15,31 @@ export default function MoodMusicProject() {
   // Get the DJ Blue project
   const djBlueProject = projects.find(p => p.name === 'DJ Blue - Group Mood Music Assistant');
 
-  // Fetch teams and user's teams when component mounts or project changes
-  useEffect(() => {
-    if (djBlueProject?.id) {
-      fetchTeams(djBlueProject.id);
-      loadUserTeams();
-    }
-  }, [djBlueProject?.id, fetchTeams, loadUserTeams]);
-
   // Load user's current teams
   const loadUserTeams = useCallback(async () => {
     if (!djBlueProject?.id) return;
-    const teams = await getUserTeams(djBlueProject.id);
-    setUserTeams(teams.map(t => t.team_id));
+    try {
+      const teams = await getUserTeams(djBlueProject.id);
+      if (teams && Array.isArray(teams)) {
+        setUserTeams(teams.map(t => t.team_id));
+      }
+    } catch (err) {
+      console.error('Error loading user teams:', err);
+      // Silently fail - don't break the UI
+    }
   }, [djBlueProject?.id, getUserTeams]);
+
+  // Fetch teams and user's teams when component mounts or project changes
+  useEffect(() => {
+    if (djBlueProject?.id) {
+      // Add a small delay to prevent rapid fire requests
+      const timer = setTimeout(() => {
+        fetchTeams(djBlueProject.id);
+        loadUserTeams();
+      }, 300);
+      return () => clearTimeout(timer);
+    }
+  }, [djBlueProject?.id, fetchTeams, loadUserTeams]);
 
   // Team icons mapping
   const getTeamIcon = (iconName: string) => {

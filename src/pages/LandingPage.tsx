@@ -5,14 +5,14 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { 
-  ArrowRight, 
-  Code, 
-  Package, 
-  Wrench, 
-  Feather, 
-  Zap, 
-  BookOpen, 
-  Globe, 
+  ArrowRight,
+  Code,
+  Package,
+  Wrench,
+  Feather,
+  Zap,
+  BookOpen,
+  Globe,
   Shield,
   Brain,
   Compass,
@@ -22,7 +22,8 @@ import {
   Search,
   Play,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  Users
 } from 'lucide-react';
 import {
   Carousel,
@@ -456,7 +457,101 @@ const LandingPage = () => {
           </div>
         </div>
       </section>
-      
+
+      {/* Group Projects Section */}
+      <section className="py-20 px-4 bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-slate-800">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-16 animate-on-scroll">
+            <h2 className="text-3xl md:text-4xl font-bold mb-6 text-slate-800 dark:text-slate-100">Real-World Collaboration</h2>
+            <p className="text-xl text-slate-600 dark:text-slate-300 max-w-3xl mx-auto leading-relaxed">
+              Apply your algorithmic thinking in collaborative projects that solve actual problems.
+              Learn the art of building together—the most crucial skill for modern developers.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8 mb-12">
+            {/* Wellness Oracle */}
+            <div className="animate-on-scroll group">
+              <Link to="/group-projects">
+                <Card className="h-full bg-white dark:bg-slate-800 border-2 border-transparent group-hover:border-pink-200 dark:group-hover:border-pink-800 transition-all duration-300 transform group-hover:-translate-y-2">
+                  <CardContent className="p-6">
+                    <div className="w-16 h-16 bg-gradient-to-br from-pink-500 to-purple-500 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                      <Cpu className="w-8 h-8 text-white" />
+                    </div>
+                    <h3 className="text-xl font-bold mb-3 text-slate-800 dark:text-slate-100">Personal Wellness Oracle</h3>
+                    <p className="text-slate-600 dark:text-slate-300 text-sm mb-4 leading-relaxed">
+                      AI companion that discovers patterns in daily diary entries and guides optimal living through holistic understanding.
+                    </p>
+                    <div className="flex items-center text-pink-600 dark:text-pink-400 text-sm font-medium">
+                      <span>Explore Project</span>
+                      <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                    </div>
+                  </CardContent>
+                </Card>
+              </Link>
+            </div>
+
+            {/* AI Study Buddy */}
+            <div className="animate-on-scroll group" style={{animationDelay: '0.1s'}}>
+              <Link to="/group-projects">
+                <Card className="h-full bg-white dark:bg-slate-800 border-2 border-transparent group-hover:border-blue-200 dark:group-hover:border-blue-800 transition-all duration-300 transform group-hover:-translate-y-2">
+                  <CardContent className="p-6">
+                    <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                      <BookOpen className="w-8 h-8 text-white" />
+                    </div>
+                    <h3 className="text-xl font-bold mb-3 text-slate-800 dark:text-slate-100">AI Study Buddy</h3>
+                    <p className="text-slate-600 dark:text-slate-300 text-sm mb-4 leading-relaxed">
+                      Personalized learning companion that adapts to your pace, identifies knowledge gaps, and creates optimal study paths.
+                    </p>
+                    <div className="flex items-center text-blue-600 dark:text-blue-400 text-sm font-medium">
+                      <span>Explore Project</span>
+                      <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                    </div>
+                  </CardContent>
+                </Card>
+              </Link>
+            </div>
+
+            {/* DJ Blue */}
+            <div className="animate-on-scroll group" style={{animationDelay: '0.2s'}}>
+              <Link to="/group-projects">
+                <Card className="h-full bg-white dark:bg-slate-800 border-2 border-transparent group-hover:border-indigo-200 dark:group-hover:border-indigo-800 transition-all duration-300 transform group-hover:-translate-y-2">
+                  <CardContent className="p-6">
+                    <div className="w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                      <Zap className="w-8 h-8 text-white" />
+                    </div>
+                    <h3 className="text-xl font-bold mb-3 text-slate-800 dark:text-slate-100">DJ BlueAI</h3>
+                    <p className="text-slate-600 dark:text-slate-300 text-sm mb-4 leading-relaxed">
+                      Mood-adaptive music assistant that reads emotional state and curates perfect soundscapes for any moment.
+                    </p>
+                    <div className="flex items-center text-indigo-600 dark:text-indigo-400 text-sm font-medium">
+                      <span>Explore Project</span>
+                      <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                    </div>
+                  </CardContent>
+                </Card>
+              </Link>
+            </div>
+          </div>
+
+          <div className="text-center animate-on-scroll">
+            <div className="bg-white dark:bg-slate-800 rounded-2xl p-8 max-w-3xl mx-auto shadow-lg">
+              <h3 className="text-2xl font-bold mb-4 text-slate-800 dark:text-slate-100">The Art of Programming Together</h3>
+              <p className="text-slate-600 dark:text-slate-300 mb-6 leading-relaxed">
+                These projects teach you the most valuable skill: <strong>breaking complex problems into components</strong>
+                that different minds can own, while designing clear interfaces for seamless collaboration.
+              </p>
+              <Link to="/group-projects">
+                <Button className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white px-8 py-3">
+                  Join a Project Team
+                  <Users className="w-5 h-5 ml-2" />
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Final Call to Action */}
       <section className="py-24 px-4 bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700 relative overflow-hidden">
         <div className="absolute inset-0 bg-grid-small-white/10"></div>
