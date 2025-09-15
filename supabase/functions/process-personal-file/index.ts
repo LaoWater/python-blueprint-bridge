@@ -38,9 +38,23 @@ serve(async (req) => {
       throw new Error('OpenAI API key not configured');
     }
 
+    // Get auth header and create authenticated client
+    const authHeader = req.headers.get('Authorization');
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
-    const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
-    const supabase = createClient(supabaseUrl, supabaseKey);
+    const supabaseKey = Deno.env.get('SUPABASE_ANON_KEY')!;
+    const supabase = createClient(supabaseUrl, supabaseKey, {
+      global: {
+        headers: {
+          Authorization: authHeader || ''
+        }
+      }
+    });
+
+    // Verify user is authenticated
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    if (authError || !user) {
+      throw new Error('User must be authenticated to manage personal files');
+    }
 
     // Process with OpenAI
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
