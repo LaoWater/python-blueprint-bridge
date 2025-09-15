@@ -74,6 +74,16 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				vault: {
+					dark: "hsl(var(--vault-dark))",
+					surface: "hsl(var(--vault-surface))",
+					accent: "hsl(var(--vault-accent))",
+					border: "hsl(var(--vault-border))",
+					primary: "hsl(var(--vault-primary))",
+					text: "hsl(var(--vault-text))",
+					muted: "hsl(var(--vault-muted))",
+					input: "hsl(var(--vault-input))",
 				}
 			},
 			borderRadius: {
