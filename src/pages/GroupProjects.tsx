@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Users, Rocket, Brain, Code, Globe, ChevronRight, Star, GitBranch, MessageSquare, Target, Loader2 } from 'lucide-react';
+import { Users, Rocket, Brain, Code, Globe, ChevronRight, Star, GitBranch, MessageSquare, Target, Loader2, Heart, BookOpen } from 'lucide-react';
 import MoodMusicProject from '../components/group-projects/dj_blue';
+import WellnessOracle from '../components/group-projects/WellnessOracle';
+import AIStudyBuddy from '../components/group-projects/AIStudyBuddy';
 import TeamCard from '../components/group-projects/TeamCard';
 import UserTeamsDisplay from '../components/group-projects/UserTeamsDisplay';
 import { GroupProjectProvider } from '../contexts/GroupProjectContext';
@@ -84,15 +86,37 @@ export default function GroupProjects() {
             Collaboration Art
           </button>
           <button
-            onClick={() => setActiveView('projects')}
+            onClick={() => setActiveView('wellness-oracle')}
             className={`px-6 py-3 rounded-full transition-all ${
-              activeView === 'projects'
+              activeView === 'wellness-oracle'
+                ? 'bg-gradient-to-r from-blue-500 to-purple-500 shadow-lg shadow-blue-500/50'
+                : 'bg-slate-800 hover:bg-slate-700'
+            }`}
+          >
+            <Heart className="inline mr-2" size={20} />
+            Wellness Oracle
+          </button>
+          <button
+            onClick={() => setActiveView('ai-study-buddy')}
+            className={`px-6 py-3 rounded-full transition-all ${
+              activeView === 'ai-study-buddy'
+                ? 'bg-gradient-to-r from-blue-500 to-purple-500 shadow-lg shadow-blue-500/50'
+                : 'bg-slate-800 hover:bg-slate-700'
+            }`}
+          >
+            <BookOpen className="inline mr-2" size={20} />
+            AI Study Buddy
+          </button>
+          <button
+            onClick={() => setActiveView('dj-blue')}
+            className={`px-6 py-3 rounded-full transition-all ${
+              activeView === 'dj-blue'
                 ? 'bg-gradient-to-r from-blue-500 to-purple-500 shadow-lg shadow-blue-500/50'
                 : 'bg-slate-800 hover:bg-slate-700'
             }`}
           >
             <Rocket className="inline mr-2" size={20} />
-            Live Projects
+            DJ BlueAI
           </button>
         </div>
       </div>
@@ -225,142 +249,24 @@ export default function GroupProjects() {
         </div>
       )}
 
-      {/* Projects Section */}
-      {activeView === 'projects' && (
+
+      {/* Wellness Oracle Project Detail */}
+      {activeView === 'wellness-oracle' && (
         <div className="container mx-auto px-4 mb-16">
-          <div className="max-w-6xl mx-auto">
-            <div className="text-center mb-12">
-              <h2 className="text-4xl font-bold mb-4 text-blue-300">Live Group Projects</h2>
-              <p className="text-xl text-slate-300">
-                Real projects where teams of programmers collaborate to build amazing systems
-              </p>
-            </div>
+          <WellnessOracle />
+        </div>
+      )}
 
-            {loading ? (
-              <div className="flex items-center justify-center py-16">
-                <Loader2 className="w-8 h-8 animate-spin text-blue-400" />
-                <span className="ml-2 text-slate-300">Loading projects...</span>
-              </div>
-            ) : (
-              <>
-                {/* Project Selection */}
-                {projects.length > 0 && (
-                  <div className="mb-8">
-                    <h3 className="text-lg font-semibold text-slate-300 mb-4">Choose a Project:</h3>
-                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-                      {projects.map((project) => (
-                        <button
-                          key={project.id}
-                          onClick={() => {
-                            setSelectedProject(project.id);
-                            fetchTeams(project.id);
-                          }}
-                          className={`text-left p-4 rounded-xl border transition-all ${
-                            selectedProject === project.id
-                              ? 'bg-purple-500/20 border-purple-500/50 text-purple-200'
-                              : 'bg-slate-800/50 border-slate-600/30 text-slate-300 hover:bg-slate-700/50'
-                          }`}
-                        >
-                          <h4 className="font-bold mb-2">{project.name}</h4>
-                          <p className="text-sm opacity-80 mb-2">{project.description}</p>
-                          <div className="flex items-center gap-2 text-xs">
-                            <span>Difficulty: {'⭐'.repeat(project.difficulty_level)}</span>
-                            <span>•</span>
-                            <span>{project.current_participants}/{project.max_participants} members</span>
-                          </div>
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* Teams for Selected Project */}
-                {selectedProject && teams.length > 0 && (
-                  <GroupProjectProvider projectId={selectedProject}>
-                    <div className="bg-gradient-to-r from-slate-800/80 to-slate-700/80 backdrop-blur-lg rounded-3xl p-8 border border-blue-500/30">
-                      <div className="text-center mb-8">
-                        <h3 className="text-2xl font-bold text-purple-300">Project Teams</h3>
-                        <p className="text-slate-400">Join up to 3 teams and collaborate with other programmers</p>
-                        {!user && (
-                          <p className="text-orange-400 text-sm mt-2">Log in to join teams</p>
-                        )}
-                      </div>
-
-                      <UserTeamsDisplay />
-
-                      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {teams.map((team) => (
-                          <TeamCard
-                            key={team.id}
-                            team={team}
-                            projectId={selectedProject}
-                          />
-                        ))}
-                      </div>
-                    </div>
-                  </GroupProjectProvider>
-                )}
-
-                {/* Coming Soon Projects */}
-                <div className="mt-16">
-                  <h3 className="text-2xl font-bold text-center mb-8 text-slate-300">Coming Soon</h3>
-                  <div className="grid md:grid-cols-2 gap-8">
-                    <div className="bg-slate-800/50 backdrop-blur-lg rounded-2xl p-8 border border-slate-600/30">
-                      <div className="flex items-center gap-4 mb-4">
-                        <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center">
-                          <Code className="w-6 h-6 text-white" />
-                        </div>
-                        <div>
-                          <h3 className="text-xl font-bold text-blue-300">Smart Code Reviewer</h3>
-                          <p className="text-slate-400">Coming Soon</p>
-                        </div>
-                      </div>
-                      <p className="text-slate-300 mb-4">
-                        AI-powered code review system that learns from the best practices of expert programmers
-                        and provides contextual feedback for improving code quality.
-                      </p>
-                      <div className="text-sm text-slate-400">
-                        Teams: Analysis • Pattern Recognition • Feedback Generation • Integration
-                      </div>
-                    </div>
-
-                    <div className="bg-slate-800/50 backdrop-blur-lg rounded-2xl p-8 border border-slate-600/30">
-                      <div className="flex items-center gap-4 mb-4">
-                        <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-500 rounded-xl flex items-center justify-center">
-                          <MessageSquare className="w-6 h-6 text-white" />
-                        </div>
-                        <div>
-                          <h3 className="text-xl font-bold text-green-300">Collaborative Learning Bot</h3>
-                          <p className="text-slate-400">Coming Soon</p>
-                        </div>
-                      </div>
-                      <p className="text-slate-300 mb-4">
-                        An intelligent tutoring system that adapts to individual learning styles and facilitates
-                        peer-to-peer knowledge sharing in programming education.
-                      </p>
-                      <div className="text-sm text-slate-400">
-                        Teams: Learning Analytics • Content Generation • Peer Matching • Assessment
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </>
-            )}
-          </div>
+      {/* AI Study Buddy Project Detail */}
+      {activeView === 'ai-study-buddy' && (
+        <div className="container mx-auto px-4 mb-16">
+          <AIStudyBuddy />
         </div>
       )}
 
       {/* DJ Blue Project Detail */}
       {activeView === 'dj-blue' && (
         <div className="container mx-auto px-4 mb-16">
-          <div className="mb-8 text-center">
-            <button
-              onClick={() => setActiveView('projects')}
-              className="inline-flex items-center text-blue-300 hover:text-blue-200 transition-colors"
-            >
-              ← Back to Projects
-            </button>
-          </div>
           <MoodMusicProject />
         </div>
       )}

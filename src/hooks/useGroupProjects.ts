@@ -155,13 +155,16 @@ export const useGroupProjects = () => {
         return false;
       }
 
+      // Automatically refresh teams after successful join
+      await fetchTeams(projectId);
+
       return { success: true, teamId };
     } catch (err) {
       console.error('Error joining team:', err);
       setError('Failed to join team');
       return false;
     }
-  }, [user]);
+  }, [user, fetchTeams]);
 
   // Leave a project team
   const leaveTeam = useCallback(async (projectId: string, teamId: string) => {
@@ -186,13 +189,16 @@ export const useGroupProjects = () => {
         return false;
       }
 
+      // Automatically refresh teams after successful leave
+      await fetchTeams(projectId);
+
       return { success: true, teamId };
     } catch (err) {
       console.error('Error leaving team:', err);
       setError('Failed to leave team');
       return false;
     }
-  }, [user]);
+  }, [user, fetchTeams]);
 
   // Get user's teams for a project
   const getUserTeams = useCallback(async (projectId: string) => {

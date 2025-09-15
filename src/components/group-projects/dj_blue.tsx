@@ -1,132 +1,80 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Music, Mic, Brain, Users, Volume2, Sparkles, Headphones, Play, FileAudio, Database, Cpu, Palette, Puzzle, Rocket, Heart } from 'lucide-react';
+
+import { useGroupProjects } from '../../hooks/useGroupProjects';
 
 export default function MoodMusicProject() {
   const [activeSection, setActiveSection] = useState('vision');
-  const [expandedTeam, setExpandedTeam] = useState<number | null>(null);
+  const [expandedTeam, setExpandedTeam] = useState<string | null>(null);
+  const [joiningTeam, setJoiningTeam] = useState<string | null>(null);
+  const [userTeams, setUserTeams] = useState<string[]>([]);
+  const [joinSuccess, setJoinSuccess] = useState<string | null>(null);
+  const [joinError, setJoinError] = useState<string | null>(null);
+  const { projects, teams, fetchTeams, joinTeam, getUserTeams, loading, error } = useGroupProjects();
 
-  const teams = [
-    {
-      id: 1,
-      name: "The Listeners",
-      icon: <Mic className="w-8 h-8" />,
-      color: "from-purple-400 to-pink-400",
-      mission: "Record conversations with a simple Python script",
-      tasks: [
-        "Press record, save as MP3",
-        "Split audio every 10 minutes",
-        "Name files with timestamps",
-        "Keep a backup folder"
-      ],
-      difficulty: "⭐⭐",
-      vibe: "You're the ears of the system! 👂"
-    },
-    {
-      id: 2,
-      name: "The Music Librarians",
-      icon: <FileAudio className="w-8 h-8" />,
-      color: "from-blue-400 to-cyan-400",
-      mission: "Organize our music collection",
-      tasks: [
-        "Collect 50+ MP3 songs",
-        "Create mood folders (Happy, Chill, Party, Focus)",
-        "Make a simple spreadsheet of songs",
-        "Test all files play correctly"
-      ],
-      difficulty: "⭐",
-      vibe: "You're the heart of the playlist! 💿"
-    },
-    {
-      id: 3,
-      name: "The Translators",
-      icon: <Brain className="w-8 h-8" />,
-      color: "from-green-400 to-emerald-400",
-      mission: "Turn audio into text we can read",
-      tasks: [
-        "Use Whisper or Google Speech API",
-        "Save transcripts as text files",
-        "Handle errors gracefully",
-        "Keep the last 3 transcripts"
-      ],
-      difficulty: "⭐⭐⭐",
-      vibe: "You're the bridge to understanding! 🌉"
-    },
-    {
-      id: 4,
-      name: "The Mood Readers",
-      icon: <Sparkles className="w-8 h-8" />,
-      color: "from-yellow-400 to-orange-400",
-      mission: "Feel the vibe of the conversation",
-      tasks: [
-        "Send transcript to ChatGPT",
-        "Ask: 'What's the mood? Scale 1-10 energy?'",
-        "Get back: mood type + energy level",
-        "Remember the last 3 moods"
-      ],
-      difficulty: "⭐⭐⭐⭐",
-      vibe: "You're the soul of the system! ✨"
-    },
-    {
-      id: 5,
-      name: "The DJs",
-      icon: <Headphones className="w-8 h-8" />,
-      color: "from-indigo-400 to-purple-400",
-      mission: "Pick the perfect next songs",
-      tasks: [
-        "Match mood to music genre",
-        "Pick 3 songs for the queue",
-        "Avoid repeating recent songs",
-        "Smooth energy transitions"
-      ],
-      difficulty: "⭐⭐⭐",
-      vibe: "You're the taste makers! 🎵"
-    },
-    {
-      id: 6,
-      name: "The Sound Engineers",
-      icon: <Volume2 className="w-8 h-8" />,
-      color: "from-red-400 to-pink-400",
-      mission: "Play music smoothly",
-      tasks: [
-        "Build a Python music player",
-        "Handle play, pause, skip",
-        "Adjust volume based on conversation",
-        "Smooth transitions between songs"
-      ],
-      difficulty: "⭐⭐⭐⭐",
-      vibe: "You're the rhythm keeper! 🎚️"
-    },
-    {
-      id: 7,
-      name: "The AI Designers",
-      icon: <Palette className="w-8 h-8" />,
-      color: "from-teal-400 to-blue-400",
-      mission: "Make it beautiful and easy to use",
-      tasks: [
-        "Create a presentation website",
-        "Create Player UI & Show current song and next 2 songs",
-        "Add play/pause/skip buttons",
-        "Display current mood with colors"
-      ],
-      difficulty: "⭐⭐⭐⭐",
-      vibe: "You're the face of the Magic! 🎨"
-    },
-    {
-      id: 8,
-      name: "The Architects",
-      icon: <Puzzle className="w-8 h-8" />,
-      color: "from-gray-400 to-gray-600",
-      mission: "Connect all the pieces together",
-      tasks: [
-        "Make teams talk to each other",
-        "Create the main program loop",
-        "Handle errors between components",
-        "Test the complete system"
-      ],
-      difficulty: "⭐⭐⭐⭐⭐",
-      vibe: "You're the master builders! 🏗️"
+  // Get the DJ Blue project
+  const djBlueProject = projects.find(p => p.name === 'DJ Blue - Group Mood Music Assistant');
+
+  // Fetch teams and user's teams when component mounts or project changes
+  useEffect(() => {
+    if (djBlueProject?.id) {
+      fetchTeams(djBlueProject.id);
+      loadUserTeams();
     }
-  ];
+  }, [djBlueProject?.id, fetchTeams, loadUserTeams]);
+
+  // Load user's current teams
+  const loadUserTeams = useCallback(async () => {
+    if (!djBlueProject?.id) return;
+    const teams = await getUserTeams(djBlueProject.id);
+    setUserTeams(teams.map(t => t.team_id));
+  }, [djBlueProject?.id, getUserTeams]);
+
+  // Team icons mapping
+  const getTeamIcon = (iconName: string) => {
+    const iconMap: Record<string, React.ReactNode> = {
+      '🎤': <Mic className="w-8 h-8" />,
+      '🎵': <FileAudio className="w-8 h-8" />,
+      '🧠': <Brain className="w-8 h-8" />,
+      '✨': <Sparkles className="w-8 h-8" />,
+      '🎧': <Headphones className="w-8 h-8" />,
+      '🔊': <Volume2 className="w-8 h-8" />,
+      '🎨': <Palette className="w-8 h-8" />,
+      '🧩': <Puzzle className="w-8 h-8" />
+    };
+    return iconMap[iconName] || <Music className="w-8 h-8" />;
+  };
+
+  // Handle team join
+  const handleJoinTeam = async (teamId: string) => {
+    if (!djBlueProject?.id || joiningTeam) return;
+
+    setJoiningTeam(teamId);
+    setJoinError(null);
+    setJoinSuccess(null);
+
+    const result = await joinTeam(djBlueProject.id, teamId);
+    if (result && 'success' in result && result.success) {
+      // Refresh user teams (fetchTeams is called automatically by hook)
+      await loadUserTeams();
+      setJoinSuccess('Successfully joined team! 🎵');
+      setTimeout(() => setJoinSuccess(null), 3000);
+    } else {
+      setJoinError('Failed to join team. You may already be a member or the team may be full.');
+      setTimeout(() => setJoinError(null), 5000);
+    }
+    setJoiningTeam(null);
+  };
+
+  // Check if user is in team
+  const isInTeam = useCallback((teamId: string) => userTeams.includes(teamId), [userTeams]);
+
+  // Get team status
+  const getTeamStatus = useCallback((team: any) => {
+    if (isInTeam(team.id)) return 'joined';
+    if (team.current_members >= team.max_members) return 'full';
+    return 'available';
+  }, [isInTeam]);
 
   return (
     <div className="w-full bg-transparent text-white">
@@ -181,51 +129,88 @@ export default function MoodMusicProject() {
       {activeSection === 'vision' && (
         <div className="max-w-4xl mx-auto">
           <div className="bg-gray-800/50 backdrop-blur-lg rounded-3xl p-8 mb-8 border border-purple-500/20">
-            <h2 className="text-3xl font-bold mb-6 text-center">🎭 How Would We Do It As Humans?</h2>
-            
-            <div className="space-y-6 text-lg">
-              <div className="flex items-start gap-4">
-                <span className="text-3xl">👥</span>
+            <h2 className="text-3xl font-bold mb-6 text-center">🎭 The Art of Reading Human Energy: From Intuition to Intelligence</h2>
+
+            <div className="space-y-8 text-lg">
+              <div className="flex items-start gap-6 p-6 bg-gray-700/30 rounded-2xl">
+                <span className="text-4xl">👥</span>
                 <div>
-                  <p className="font-semibold text-purple-300">You're at a party...</p>
-                  <p className="text-gray-300">You notice people are having deep conversations. The energy is mellow. You'd naturally lower the music and play something chill.</p>
+                  <p className="font-semibold text-purple-300 mb-2">Corporate Event (7:32 PM) - The Subtle Art of Professional Energy</p>
+                  <p className="text-gray-300 mb-3">You notice the networking event's energy: conversations are focused but tense, people speak in measured tones about quarterly reports and market projections. The music is currently jazz at medium volume.</p>
+                  <div className="bg-purple-900/30 p-4 rounded-lg border-l-4 border-purple-400">
+                    <p className="text-purple-200 italic">DJ Blue's Advanced Analysis: "Detecting professional anxiety markers in speech patterns: 23% slower speech rate, 15% longer pauses between words, formal vocabulary density at 87%. Stress indicators suggest cognitive load from work discussions. Current jazz tempo (140 BPM) is creating subliminal urgency. Optimal intervention: transition to ambient instrumental at 90-110 BPM, reduce volume by 15%, select tracks with natural harmonies to activate parasympathetic nervous system. This will reduce cortisol response and encourage deeper, more authentic networking conversations."</p>
+                  </div>
                 </div>
               </div>
 
-              <div className="flex items-start gap-4">
-                <span className="text-3xl">🎉</span>
+              <div className="flex items-start gap-6 p-6 bg-gray-700/30 rounded-2xl">
+                <span className="text-4xl">🎉</span>
                 <div>
-                  <p className="font-semibold text-purple-300">Suddenly everyone starts laughing...</p>
-                  <p className="text-gray-300">The mood shifts! People are energized. Time to gradually turn up something more upbeat!</p>
+                  <p className="font-semibold text-pink-300 mb-2">House Party (11:15 PM) - Reading Micro-Expressions Through Audio</p>
+                  <p className="text-gray-300 mb-3">The conversation shifts - sudden bursts of laughter, overlapping speech, playful interruptions. Someone just told a story that triggered genuine joy responses in the group.</p>
+                  <div className="bg-pink-900/30 p-4 rounded-lg border-l-4 border-pink-400">
+                    <p className="text-pink-200 italic">DJ Blue: "Euphoria cascade detected: authentic laughter signatures (not polite chuckles), dopamine-driven speech acceleration, social bonding vocalizations increasing by 340%. The group has shifted from formal to tribal bonding mode. Current ambient track is emotionally mismatched. Initiating gradual transition: crossfade to uplifting indie track at 128 BPM, increase bass presence for embodied response, time the crescendo with their natural energy peak. Music becomes the invisible amplifier of their existing joy, not an interruption to it."</p>
+                  </div>
                 </div>
               </div>
 
-              <div className="flex items-start gap-4">
-                <span className="text-3xl">🤖</span>
+              <div className="flex items-start gap-6 p-6 bg-gray-700/30 rounded-2xl">
+                <span className="text-4xl">🧠</span>
                 <div>
-                  <p className="font-semibold text-purple-300">Our AI DJ does exactly this!</p>
-                  <p className="text-gray-300">It listens, understands the vibe, and adjusts the music - just like a thoughtful friend would.</p>
+                  <p className="font-semibold text-blue-300 mb-2">Study Group (2:45 PM) - Cognitive Load Recognition</p>
+                  <p className="text-gray-300 mb-3">Five friends working on calculus problems. Long silences punctuated by frustrated sighs, pencils tapping, occasional "wait, how did you get that?" There's focused concentration but mounting stress.</p>
+                  <div className="bg-blue-900/30 p-4 rounded-lg border-l-4 border-blue-400">
+                    <p className="text-blue-200 italic">DJ Blue: "Cognitive strain pattern identified: increased vocal fry indicating mental fatigue, question intonation suggesting confusion, declining verbal confidence markers. Working memory is approaching capacity limits. Current silence is productive but stress indicators rising. Optimal cognitive support: introduce binaural beats at 40Hz (gamma wave stimulation), layer with nature sounds at barely audible levels, select instrumental tracks with mathematical ratios in melody structure. This enhances focus without conscious distraction, reduces cortisol, and supports sustained attention for complex problem-solving."</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-6 p-6 bg-gray-700/30 rounded-2xl">
+                <span className="text-4xl">💫</span>
+                <div>
+                  <p className="font-semibold text-green-300 mb-2">Date Night (8:20 PM) - Emotional Intimacy Detection</p>
+                  <p className="text-gray-300 mb-3">Two people sharing vulnerable stories about their childhood. Speech is soft, intimate, with longer pauses filled with emotional presence rather than awkwardness.</p>
+                  <div className="bg-green-900/30 p-4 rounded-lg border-l-4 border-green-400">
+                    <p className="text-green-200 italic">DJ Blue: "Intimate connection protocol activated: detecting vulnerability markers (softer vocal tones, increased pause tolerance, storytelling structure), emotional synchronization (matching breathing patterns in speech rhythm), trust-building language patterns. Current environment requires invisible support. Implementing: ultra-subtle ambient soundscape at threshold of perception, frequency spectrum that enhances voice clarity, eliminate any musical elements that could interrupt emotional flow. The goal is to create acoustic intimacy that makes their voices feel like the only sounds in the world - turning the space into an emotional sanctuary."</p>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
 
           <div className="bg-gradient-to-r from-purple-600/20 to-pink-600/20 rounded-3xl p-8 border border-purple-500/30">
-            <h3 className="text-2xl font-bold mb-4 text-center">✨ The Magic Formula</h3>
-            <div className="flex justify-around items-center text-center">
+            <h3 className="text-2xl font-bold mb-4 text-center">🧠 The Emotional Intelligence Stack</h3>
+            <div className="grid md:grid-cols-4 gap-6 text-center">
               <div>
-                <Mic className="w-12 h-12 mx-auto mb-2 text-purple-400" />
-                <p>Listen</p>
+                <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center mx-auto mb-4">
+                  <Mic className="w-8 h-8 text-white" />
+                </div>
+                <h4 className="font-bold mb-2">Deep Listening</h4>
+                <p className="text-gray-300 text-sm">Analyze speech patterns, vocal stress, laughter authenticity, and conversation dynamics</p>
               </div>
-              <span className="text-2xl">→</span>
+
               <div>
-                <Brain className="w-12 h-12 mx-auto mb-2 text-pink-400" />
-                <p>Understand</p>
+                <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center mx-auto mb-4">
+                  <Brain className="w-8 h-8 text-white" />
+                </div>
+                <h4 className="font-bold mb-2">Emotional Decode</h4>
+                <p className="text-gray-300 text-sm">Recognize cognitive load, social bonding, stress markers, and intimacy levels</p>
               </div>
-              <span className="text-2xl">→</span>
+
               <div>
-                <Music className="w-12 h-12 mx-auto mb-2 text-orange-400" />
-                <p>Play</p>
+                <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-500 rounded-xl flex items-center justify-center mx-auto mb-4">
+                  <Heart className="w-8 h-8 text-white" />
+                </div>
+                <h4 className="font-bold mb-2">Context Awareness</h4>
+                <p className="text-gray-300 text-sm">Understand the purpose: networking, celebration, focus, or intimate connection</p>
+              </div>
+
+              <div>
+                <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-red-500 rounded-xl flex items-center justify-center mx-auto mb-4">
+                  <Music className="w-8 h-8 text-white" />
+                </div>
+                <h4 className="font-bold mb-2">Invisible Support</h4>
+                <p className="text-gray-300 text-sm">Create the perfect acoustic environment that amplifies human connection</p>
               </div>
             </div>
           </div>
@@ -321,24 +306,38 @@ export default function MoodMusicProject() {
                 key={team.id}
                 className="relative bg-gray-800/50 backdrop-blur-lg rounded-2xl border border-purple-500/20 overflow-hidden transition-all duration-300 hover:shadow-xl hover:shadow-purple-500/20"
               >
-                <div className={`absolute inset-0 bg-gradient-to-br ${team.color} opacity-10 rounded-2xl`}></div>
+                <div className={`absolute inset-0 bg-gradient-to-br ${team.color_scheme} opacity-10 rounded-2xl`}></div>
 
                 <div className="relative z-10 p-6">
                   <div className="flex items-center justify-between mb-4">
-                    <div className={`p-3 bg-gradient-to-br ${team.color} rounded-xl`}>
-                      {team.icon}
+                    <div className={`p-3 bg-gradient-to-br ${team.color_scheme} rounded-xl`}>
+                      {getTeamIcon(team.icon)}
                     </div>
-                    <span className="text-2xl">{team.difficulty}</span>
+                    <span className="text-2xl">{'⭐'.repeat(team.difficulty_stars)}</span>
                   </div>
 
                   <h3 className="text-xl font-bold mb-2">{team.name}</h3>
-                  <p className="text-gray-300 mb-4">{team.mission}</p>
+                  <p className="text-gray-300 mb-3 text-sm">{team.description}</p>
+                  <p className="text-gray-400 mb-3 text-sm font-medium">{team.mission}</p>
+
+                  {/* Member Count Display */}
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="text-sm text-gray-400">
+                      {team.current_members}/{team.max_members} members
+                    </span>
+                    {isInTeam(team.id) && (
+                      <span className="text-xs bg-green-500/20 text-green-300 px-2 py-1 rounded-full">✓ Joined</span>
+                    )}
+                    {team.current_members >= team.max_members && !isInTeam(team.id) && (
+                      <span className="text-xs bg-red-500/20 text-red-300 px-2 py-1 rounded-full">Full</span>
+                    )}
+                  </div>
 
                   <button
                     onClick={() => setExpandedTeam(expandedTeam === team.id ? null : team.id)}
                     className="w-full text-left mb-4 text-sm text-purple-300 hover:text-purple-200 transition-colors"
                   >
-                    {expandedTeam === team.id ? '▼ Hide Tasks' : '▶ View Tasks & Join Team'}
+                    {expandedTeam === team.id ? '▼ Hide Details' : '▶ View Tasks & Join Team'}
                   </button>
 
                   {expandedTeam === team.id && (
@@ -348,7 +347,7 @@ export default function MoodMusicProject() {
                         <ul className="text-sm text-gray-300 space-y-1">
                           {team.tasks.map((task, idx) => (
                             <li key={idx} className="flex items-start gap-2">
-                              <span className="text-purple-400">•</span>
+                              <span className="text-purple-400 mt-1">•</span>
                               <span>{task}</span>
                             </li>
                           ))}
@@ -356,21 +355,55 @@ export default function MoodMusicProject() {
                       </div>
 
                       <div className="border-t border-purple-500/20 pt-4">
-                        <p className="text-sm text-gray-400 mb-3">Team Members:</p>
-                        <div className="flex flex-wrap gap-2 mb-3">
-                          <span className="px-2 py-1 bg-purple-500/20 rounded text-xs text-purple-300">
-                            2/5 spots filled
-                          </span>
+                        <div className="flex items-center justify-between mb-3">
+                          <span className="text-sm text-gray-400">({team.current_members}/{team.max_members} members)</span>
+                          {getTeamStatus(team) === 'joined' && (
+                            <span className="text-xs bg-green-500/20 text-green-300 px-2 py-1 rounded-full">✓ Joined</span>
+                          )}
+                          {getTeamStatus(team) === 'full' && (
+                            <span className="text-xs bg-red-500/20 text-red-300 px-2 py-1 rounded-full">Full</span>
+                          )}
                         </div>
-                        <button className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 px-4 py-2 rounded-lg text-sm font-semibold transition-all">
-                          Join This Team
+
+                        {joinSuccess && expandedTeam === team.id && (
+                          <div className="mb-3 p-2 bg-green-500/20 border border-green-500/30 rounded-lg text-green-300 text-sm text-center">
+                            {joinSuccess}
+                          </div>
+                        )}
+
+                        {joinError && expandedTeam === team.id && (
+                          <div className="mb-3 p-2 bg-red-500/20 border border-red-500/30 rounded-lg text-red-300 text-sm text-center">
+                            {joinError}
+                          </div>
+                        )}
+
+                        <button
+                          onClick={() => handleJoinTeam(team.id)}
+                          disabled={getTeamStatus(team) !== 'available' || joiningTeam === team.id}
+                          className={`w-full px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
+                            getTeamStatus(team) === 'joined'
+                              ? 'bg-green-500/20 text-green-300 border border-green-500/30 cursor-not-allowed'
+                              : getTeamStatus(team) === 'full'
+                              ? 'bg-gray-600/50 text-gray-400 cursor-not-allowed'
+                              : joiningTeam === team.id
+                              ? 'bg-purple-500/50 text-purple-300 cursor-wait'
+                              : 'bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600'
+                          }`}
+                        >
+                          {getTeamStatus(team) === 'joined'
+                            ? '✓ Already Joined'
+                            : getTeamStatus(team) === 'full'
+                            ? 'Team Full'
+                            : joiningTeam === team.id
+                            ? 'Joining...'
+                            : 'Join This Team'}
                         </button>
                       </div>
                     </div>
                   )}
 
                   <p className="text-center text-lg font-semibold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-                    {team.vibe}
+                    {team.team_vibe}
                   </p>
                 </div>
               </div>
