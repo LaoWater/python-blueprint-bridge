@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { useToast } from '@/components/ui/use-toast';
+import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/components/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { 
@@ -14,6 +14,7 @@ import {
 import { Textarea } from '@/components/ui/textarea';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import ReactMarkdown from 'react-markdown';
+import UploadButton from '@/components/UploadButton';
 
 interface PersonalFile {
   id: string;
@@ -209,70 +210,71 @@ const PersonalVault = () => {
     }
   };
 
-  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
+  const handleFileUpload = async (file: File) => {
     const allowedTypes = ['.txt', '.sql', '.py', '.js', '.ts', '.md', '.json', '.java', '.cpp', '.c', '.php', '.rb', '.go', '.rs', '.kt', '.swift'];
     const fileExtension = '.' + file.name.split('.').pop()?.toLowerCase();
     
     if (!allowedTypes.includes(fileExtension)) {
-      toast({
-        title: "Unsupported File Type",
-        description: "Upload code files, documentation, or structured data files",
-        variant: "destructive",
-      });
-      return;
+      throw new Error("Unsupported file type. Upload code files, documentation, or structured data files");
     }
 
     const reader = new FileReader();
-    reader.onload = async (e) => {
-      try {
-        const content = e.target?.result as string;
-        const passwordHash = await hashPassword(enterPassword || 'default');
-        
-        const { data: fileRecord, error: insertError } = await supabase
-          .from('personal_files')
-          .insert({
-            original_filename: file.name,
-            file_extension: fileExtension,
-            file_size_bytes: file.size,
-            upload_status: 'processing' as const,
-            password_hash: passwordHash,
-            password_protected: true,
-            user_id: user?.id
-          })
-          .select()
-          .single();
+    
+    return new Promise<void>((resolve, reject) => {
+      reader.onload = async (e) => {
+        try {
+          const content = e.target?.result as string;
+          const passwordHash = await hashPassword(enterPassword || 'default');
+          
+          const { data: fileRecord, error: insertError } = await supabase
+            .from('personal_files')
+            .insert({
+              original_filename: file.name,
+              file_extension: fileExtension,
+              file_size_bytes: file.size,
+              upload_status: 'processing' as const,
+              password_hash: passwordHash,
+              password_protected: true,
+              user_id: user?.id
+            })
+            .select()
+            .single();
 
-        if (insertError) throw insertError;
+          if (insertError) throw insertError;
 
-        const { error: processError } = await supabase.functions.invoke('process-personal-file', {
-          body: { 
-            fileId: fileRecord.id,
-            filename: file.name,
-            content: content 
-          }
-        });
+          const { error: processError } = await supabase.functions.invoke('process-personal-file', {
+            body: { 
+              fileId: fileRecord.id,
+              filename: file.name,
+              content: content 
+            }
+          });
 
-        if (processError) throw processError;
+          if (processError) throw processError;
 
-        toast({
-          title: "Blueprint Added",
-          description: "Your knowledge is being processed and stored securely...",
-        });
+          toast({
+            title: "Blueprint Added",
+            description: "Your knowledge is being processed and stored securely...",
+          });
 
-        loadFiles();
-      } catch (error: any) {
-        toast({
-          title: "Upload Failed",
-          description: error.message || "Failed to upload file",
-          variant: "destructive",
-        });
-      }
-    };
+          loadFiles();
+          resolve();
+        } catch (error: any) {
+          toast({
+            title: "Upload Failed",
+            description: error.message || "Failed to upload file",
+            variant: "destructive",
+          });
+          reject(error);
+        }
+      };
 
-    reader.readAsText(file);
+      reader.onerror = () => {
+        reject(new Error('Failed to read file'));
+      };
+
+      reader.readAsText(file);
+    });
   };
 
   const updateFileContent = async () => {
@@ -539,28 +541,10 @@ const PersonalVault = () => {
         </div>
 
         {/* Upload Zone */}
-        <Card className="mb-8 bg-vault-surface/80 border-vault-border backdrop-blur-sm">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-vault-text">
-              <Upload className="w-5 h-5" />
-              Add to Vault
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="border-2 border-dashed border-vault-border rounded-lg p-8 text-center hover:border-vault-primary transition-colors">
-              <Upload className="w-12 h-12 mx-auto mb-4 text-vault-muted" />
-              <p className="mb-4 text-vault-muted">
-                Upload your code, notes, documentation, and programming knowledge
-              </p>
-              <Input
-                type="file"
-                accept=".txt,.sql,.py,.js,.ts,.md,.json,.java,.cpp,.c,.php,.rb,.go,.rs,.kt,.swift"
-                onChange={handleFileUpload}
-                className="max-w-xs mx-auto bg-vault-input border-vault-border"
-              />
-            </div>
-          </CardContent>
-        </Card>
+        <UploadButton 
+          onFileUpload={handleFileUpload}
+          className="mb-8"
+        />
 
         {/* Files Grid */}
         {loading ? (
