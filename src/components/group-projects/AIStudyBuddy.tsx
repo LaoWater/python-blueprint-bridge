@@ -28,7 +28,7 @@ export default function AIStudyBuddy() {
   const [userTeams, setUserTeams] = useState<string[]>([]);
   const [joinSuccess, setJoinSuccess] = useState<string | null>(null);
   const [joinError, setJoinError] = useState<string | null>(null);
-  const { projects, teams, fetchTeams, joinTeam, getUserTeams, loading, error } = useGroupProjects();
+  const { projects, teams, fetchTeams, joinTeam, leaveTeam, getUserTeams, loading, error } = useGroupProjects();
 
   // Get the AI Study Buddy project
   const studyBuddyProject = projects.find(p => p.name === 'AI Study Buddy');

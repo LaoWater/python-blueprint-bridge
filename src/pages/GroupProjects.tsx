@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Users, Rocket, Brain, Code, Globe, ChevronRight, ChevronLeft, Star, GitBranch, MessageSquare, Target, Loader2, Heart, BookOpen } from 'lucide-react';
+import { Users, Rocket, Brain, Code, Globe, ChevronRight, ChevronLeft, Star, GitBranch, MessageSquare, Target, Loader2, Heart, BookOpen, Trophy, Medal, Award } from 'lucide-react';
 import MoodMusicProject from '../components/group-projects/dj_blue';
 import WellnessOracle from '../components/group-projects/WellnessOracle';
 import AIStudyBuddy from '../components/group-projects/AIStudyBuddy';
 import TeamCard from '../components/group-projects/TeamCard';
 import UserTeamsDisplay from '../components/group-projects/UserTeamsDisplay';
+import ProjectVoting from '../components/group-projects/ProjectVoting';
 import { GroupProjectProvider } from '../contexts/GroupProjectContext';
 import { useGroupProjects } from '../hooks/useGroupProjects';
 import { useAuth } from '../components/AuthContext';
@@ -90,6 +91,17 @@ export default function GroupProjects() {
           >
             <Brain className="inline mr-2" size={20} />
             Collaboration Art
+          </button>
+          <button
+            onClick={() => setActiveView('leaderboard')}
+            className={`px-6 py-3 rounded-full transition-all ${
+              activeView === 'leaderboard'
+                ? 'bg-gradient-to-r from-blue-500 to-purple-500 shadow-lg shadow-blue-500/50'
+                : 'bg-slate-800 hover:bg-slate-700'
+            }`}
+          >
+            <Trophy className="inline mr-2" size={20} />
+            Community Vote
           </button>
         </div>
       </div>
@@ -362,6 +374,102 @@ export default function GroupProjects() {
         </div>
       )}
 
+      {/* Leaderboard Section */}
+      {activeView === 'leaderboard' && (
+        <div className="container mx-auto px-4 mb-16">
+          <div className="max-w-4xl mx-auto">
+            <div className="text-center mb-8">
+              <h2 className="text-4xl font-bold mb-4 text-yellow-300">🏆 Community Leaderboard</h2>
+              <p className="text-xl text-slate-300">
+                Vote for the projects you want to see prioritized! Each user gets one vote per project.
+              </p>
+            </div>
+
+            <div className="space-y-6">
+              {projects
+                .sort((a, b) => (b.vote_score || 0) - (a.vote_score || 0))
+                .map((project, index) => {
+                  const getRankIcon = () => {
+                    if (index === 0) return <Trophy className="w-8 h-8 text-yellow-400" />;
+                    if (index === 1) return <Medal className="w-8 h-8 text-gray-300" />;
+                    if (index === 2) return <Award className="w-8 h-8 text-orange-400" />;
+                    return <div className="w-8 h-8 bg-slate-600 rounded-full flex items-center justify-center text-slate-300 font-bold">#{index + 1}</div>;
+                  };
+
+                  const getRankClass = () => {
+                    if (index === 0) return 'border-yellow-400/30 bg-yellow-400/5';
+                    if (index === 1) return 'border-gray-300/30 bg-gray-300/5';
+                    if (index === 2) return 'border-orange-400/30 bg-orange-400/5';
+                    return 'border-slate-600/30 bg-slate-800/20';
+                  };
+
+                  return (
+                    <div key={project.id} className={`bg-slate-800/50 backdrop-blur-lg rounded-xl p-6 border-2 ${getRankClass()}`}>
+                      <div className="flex items-start gap-6">
+                        <div className="flex flex-col items-center gap-2">
+                          {getRankIcon()}
+                          <span className="text-2xl font-bold text-slate-300">#{index + 1}</span>
+                        </div>
+
+                        <div className="flex-1">
+                          <div className="flex items-start justify-between mb-4">
+                            <div>
+                              <h3 className="text-2xl font-bold mb-2 text-slate-100">{project.name}</h3>
+                              <p className="text-slate-300 leading-relaxed">{project.description}</p>
+                            </div>
+
+                            <div className="ml-6 shrink-0">
+                              <ProjectVoting
+                                projectId={project.id}
+                                projectName={project.name}
+                                currentVotes={{
+                                  votes_up: project.votes_up || 0,
+                                  votes_down: project.votes_down || 0,
+                                  vote_score: project.vote_score || 0
+                                }}
+                              />
+                            </div>
+                          </div>
+
+                          <div className="flex items-center gap-6 text-sm text-slate-400">
+                            <div>
+                              <span className="font-medium">Difficulty:</span> {'⭐'.repeat(project.difficulty_level)}
+                            </div>
+                            <div>
+                              <span className="font-medium">Participants:</span> {project.current_participants}/{project.max_participants}
+                            </div>
+                            <div>
+                              <span className="font-medium">Type:</span> {project.project_type.replace('_', ' ')}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+            </div>
+
+            <div className="mt-8 bg-gradient-to-r from-blue-600/20 to-purple-600/20 rounded-xl p-6 border border-blue-500/30">
+              <h3 className="text-xl font-bold mb-4 text-center text-blue-300">How Voting Works</h3>
+              <div className="grid md:grid-cols-2 gap-6 text-sm">
+                <div>
+                  <h4 className="font-semibold text-green-300 mb-2">👍 Upvote a Project</h4>
+                  <p className="text-slate-300">Show support for projects you want to see prioritized and actively developed by the community.</p>
+                </div>
+                <div>
+                  <h4 className="font-semibold text-red-300 mb-2">👎 Downvote a Project</h4>
+                  <p className="text-slate-300">Express concerns or suggest that resources might be better allocated elsewhere.</p>
+                </div>
+              </div>
+              <div className="mt-4 text-center">
+                <p className="text-xs text-slate-400">
+                  • One vote per project per user • You can change your vote anytime • Projects are ranked by total score (upvotes - downvotes)
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Wellness Oracle Project Detail */}
       {activeView === 'wellness-oracle' && (
