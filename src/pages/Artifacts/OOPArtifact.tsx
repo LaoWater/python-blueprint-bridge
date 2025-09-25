@@ -1936,7 +1936,7 @@ if __name__ == "__main__":
         run_oop_classroom_simulation()`;
 
   return (
-    <div className="mb-12">
+    <div className="mb-12 mt-12">
       <div className="bg-gradient-to-br from-indigo-900/90 to-purple-900/90 backdrop-blur-sm rounded-3xl p-8 border border-indigo-400/30 shadow-2xl">
         <div className="text-center mb-8">
           <h2 className="text-4xl font-bold mb-4 bg-gradient-to-r from-blue-300 to-purple-300 bg-clip-text text-transparent">
