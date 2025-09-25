@@ -380,7 +380,7 @@ salut("${greetingName || 'Ana'}")
     - tip_cafea (string): Tipul de cafea dorit
     - nivel_zahar (string): Preferința pentru zahăr
     """
-    comanda = f"☕ Comandă: {'{'}tip_cafea{'}'} {'{'}nivel_zahar{'}'}"
+    comanda = f"☕ Comandă: {tip_cafea} {nivel_zahar}"
     comanda += ". Comanda ta este pregătită!"
     return comanda
 
