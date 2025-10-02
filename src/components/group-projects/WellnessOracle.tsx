@@ -148,24 +148,24 @@ export default function WellnessOracle() {
   // Removed auto-scroll for better UX - let users stay where they are
 
   return (
-    <div className="w-full bg-transparent text-white">
+    <div className="w-full bg-background text-foreground transition-colors duration-300">
       {/* Header */}
       <div className="max-w-6xl mx-auto mb-12">
         <div className="text-center mb-8">
           <h1 className="text-6xl font-bold mb-4 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
             Personal Wellness Oracle
           </h1>
-          <p className="text-xl text-gray-300">Your AI wellness companion that discovers patterns in your daily life and guides you toward optimal living</p>
+          <p className="text-xl text-muted-foreground dark:text-gray-300">Your AI wellness companion that discovers patterns in your daily life and guides you toward optimal living</p>
         </div>
 
         {/* Navigation */}
         <div className="flex justify-center gap-4 mb-8 flex-wrap">
           <button
             onClick={() => setActiveSection('vision')}
-            className={`px-6 py-3 rounded-full transition-all ${
+            className={`px-6 py-3 rounded-full transition-all duration-300 ${
               activeSection === 'vision'
-                ? 'bg-gradient-to-r from-blue-500 to-purple-500 shadow-lg shadow-blue-500/50'
-                : 'bg-gray-800 hover:bg-gray-700'
+                ? 'bg-gradient-to-r from-blue-500 to-purple-500 shadow-lg shadow-blue-500/50 text-white'
+                : 'bg-card hover:bg-secondary dark:bg-gray-800 dark:hover:bg-gray-700 text-foreground'
             }`}
           >
             <Heart className="inline mr-2" size={20} />
@@ -173,10 +173,10 @@ export default function WellnessOracle() {
           </button>
           <button
             onClick={() => setActiveSection('architecture')}
-            className={`px-6 py-3 rounded-full transition-all ${
+            className={`px-6 py-3 rounded-full transition-all duration-300 ${
               activeSection === 'architecture'
-                ? 'bg-gradient-to-r from-blue-500 to-purple-500 shadow-lg shadow-blue-500/50'
-                : 'bg-gray-800 hover:bg-gray-700'
+                ? 'bg-gradient-to-r from-blue-500 to-purple-500 shadow-lg shadow-blue-500/50 text-white'
+                : 'bg-card hover:bg-secondary dark:bg-gray-800 dark:hover:bg-gray-700 text-foreground'
             }`}
           >
             <Brain className="inline mr-2" size={20} />
@@ -184,10 +184,10 @@ export default function WellnessOracle() {
           </button>
           <button
             onClick={() => setActiveSection('teams')}
-            className={`px-6 py-3 rounded-full transition-all ${
+            className={`px-6 py-3 rounded-full transition-all duration-300 ${
               activeSection === 'teams'
-                ? 'bg-gradient-to-r from-blue-500 to-purple-500 shadow-lg shadow-blue-500/50'
-                : 'bg-gray-800 hover:bg-gray-700'
+                ? 'bg-gradient-to-r from-blue-500 to-purple-500 shadow-lg shadow-blue-500/50 text-white'
+                : 'bg-card hover:bg-secondary dark:bg-gray-800 dark:hover:bg-gray-700 text-foreground'
             }`}
           >
             <Users className="inline mr-2" size={20} />
@@ -199,48 +199,48 @@ export default function WellnessOracle() {
       {/* Vision Section */}
       {activeSection === 'vision' && (
         <div className="max-w-5xl mx-auto">
-          <div className="bg-gray-800/50 backdrop-blur-lg rounded-3xl p-8 mb-8 border border-blue-500/20">
+          <div className="bg-card/50 dark:bg-gray-800/50 backdrop-blur-lg rounded-3xl p-8 mb-8 border border-border dark:border-blue-500/20 transition-colors duration-300">
             <h2 className="text-3xl font-bold mb-6 text-center text-blue-300">🌟 Holistic Pattern Recognition: Understanding Your Complete Story</h2>
 
             <div className="space-y-8 text-lg">
-              <div className="flex items-start gap-6 p-6 bg-gray-700/30 rounded-2xl">
+              <div className="flex items-start gap-6 p-6 bg-secondary/50 dark:bg-gray-700/30 rounded-2xl transition-colors duration-300">
                 <div className="text-4xl">🌅</div>
                 <div>
                   <p className="font-semibold text-blue-300 mb-2">Morning (7:23 AM) - The Pattern Detective</p>
-                  <p className="text-gray-300 mb-3">You wake up groggy despite sleeping 8 hours. You open the Oracle app and speak: <span className="text-yellow-300">"I feel terrible again, and I don't know why."</span></p>
+                  <p className="text-muted-foreground dark:text-gray-300 mb-3">You wake up groggy despite sleeping 8 hours. You open the Oracle app and speak: <span className="text-yellow-300">"I feel terrible again, and I don't know why."</span></p>
                   <div className="bg-blue-900/30 p-4 rounded-lg border-l-4 border-blue-400">
                     <p className="text-blue-200 italic">Oracle's Pattern Analysis: "Looking at your diary entries from the past 3 weeks, I notice a constellation of factors converging. <strong>Sleep Pattern:</strong> Your sleep tracker shows 4 wake-ups between 2-4 AM - this happened after your most stressful work days. <strong>Environmental:</strong> Yesterday's air quality index was 156 (unhealthy) - your energy crashes consistently correlate with poor air days. <strong>Digestive:</strong> Your diary mentions bloating after lunch yesterday - dairy sensitivity patterns show up 6 hours later as sleep disruption. <strong>Emotional:</strong> The client criticism triggered your familiar stress-eating pattern at 9:30 PM. <strong>Personal Context:</strong> You've been putting pressure on yourself about the promotion deadline. All these factors created a perfect storm disrupting your natural circadian rhythm."</p>
                   </div>
                 </div>
               </div>
 
-              <div className="flex items-start gap-6 p-6 bg-gray-700/30 rounded-2xl">
+              <div className="flex items-start gap-6 p-6 bg-secondary/50 dark:bg-gray-700/30 rounded-2xl transition-colors duration-300">
                 <div className="text-4xl">☀️</div>
                 <div>
                   <p className="font-semibold text-purple-300 mb-2">Afternoon (2:15 PM) - Multi-Factor Analysis</p>
-                  <p className="text-gray-300 mb-3">You're dragging despite caffeine. <span className="text-yellow-300">"Why doesn't coffee help anymore? This feels familiar."</span></p>
+                  <p className="text-muted-foreground dark:text-gray-300 mb-3">You're dragging despite caffeine. <span className="text-yellow-300">"Why doesn't coffee help anymore? This feels familiar."</span></p>
                   <div className="bg-purple-900/30 p-4 rounded-lg border-l-4 border-purple-400">
                     <p className="text-purple-200 italic">Oracle: "It IS familiar - your diary shows this exact pattern 6 times in the past 2 months. Multiple factors are working against you: <strong>Timing:</strong> Your energy naturally dips at 2 PM (circadian rhythm), but caffeine from this morning is blocking your adenosine receptors. <strong>Blood Sugar:</strong> Your diary shows you skipped morning protein - your glucose crashed exactly when caffeine peaked. <strong>Hydration:</strong> Only 16oz water logged today, and dehydration amplifies fatigue. <strong>Goals Stress:</strong> You wrote about the promotion pressure yesterday - chronic stress depletes your natural energy systems. <strong>Family Pattern:</strong> Yes, your family history suggests sensitivity to stimulants, but now you understand the WHY behind the pattern. You have tools to work WITH your unique biology."</p>
                   </div>
                 </div>
               </div>
 
-              <div className="flex items-start gap-6 p-6 bg-gray-700/30 rounded-2xl">
+              <div className="flex items-start gap-6 p-6 bg-secondary/50 dark:bg-gray-700/30 rounded-2xl transition-colors duration-300">
                 <div className="text-4xl">🧬</div>
                 <div>
                   <p className="font-semibold text-green-300 mb-2">Evening (6:47 PM) - Personalized Intervention</p>
-                  <p className="text-gray-300 mb-3">Work stress hits again. Your Oracle sends a personalized intervention based on your unique patterns:</p>
+                  <p className="text-muted-foreground dark:text-gray-300 mb-3">Work stress hits again. Your Oracle sends a personalized intervention based on your unique patterns:</p>
                   <div className="bg-green-900/30 p-4 rounded-lg border-l-4 border-green-400">
                     <p className="text-green-200 italic">"Stress pattern detected - I recognize this from your diary entries. Your personal stress signature: work criticism → stomach tension → emotional eating → sleep disruption → next-day fatigue. But today feels different. <strong>Environmental Support:</strong> Air quality improved to 45 (good) - your body can process stress better. <strong>Digestive Prep:</strong> You logged yogurt this morning - your gut microbiome is more balanced for stress resilience. <strong>Goal Clarity:</strong> Yesterday's journaling about your promotion fears shows you're processing, not suppressing. <strong>Family Wisdom:</strong> Your family history suggests high stress sensitivity, but you've learned tools they didn't have. <strong>Personal Growth:</strong> You're choosing your prepared meal over emotional eating - creating new neural pathways and breaking old patterns. This isn't just habit change; it's personal evolution."</p>
                   </div>
                 </div>
               </div>
 
-              <div className="flex items-start gap-6 p-6 bg-gray-700/30 rounded-2xl">
+              <div className="flex items-start gap-6 p-6 bg-secondary/50 dark:bg-gray-700/30 rounded-2xl transition-colors duration-300">
                 <div className="text-4xl">🌟</div>
                 <div>
                   <p className="font-semibold text-orange-300 mb-2">Weekend (11:32 AM) - Holistic Harmony</p>
-                  <p className="text-gray-300 mb-3">You check in feeling different: <span className="text-yellow-300">"I actually feel great today. What's different? This feels... new."</span></p>
+                  <p className="text-muted-foreground dark:text-gray-300 mb-3">You check in feeling different: <span className="text-yellow-300">"I actually feel great today. What's different? This feels... new."</span></p>
                   <div className="bg-orange-900/30 p-4 rounded-lg border-l-4 border-orange-400">
                     <p className="text-orange-200 italic">Oracle: "You're experiencing harmonious alignment across all your wellness factors. Here's your constellation: <strong>Environment:</strong> Perfect air quality (32) and you spent 2 hours outdoors. <strong>Digestive:</strong> Your gut feels calm - the dairy elimination experiment is working. <strong>Emotional:</strong> Yesterday's journaling about the promotion shows clarity, not anxiety. <strong>Physical:</strong> You honored your natural sleep rhythm and moved your body. <strong>Goals:</strong> You're aligned with your authentic aspirations, not external pressure. <strong>Family Patterns:</strong> You've transformed inherited stress patterns into conscious choices. This isn't just feeling good - it's your entire system working in harmony. You've created a sustainable foundation for optimal living by understanding and honoring your unique patterns rather than fighting against them."</p>
                   </div>

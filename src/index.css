@@ -43,6 +43,17 @@
     --vault-text: 220 15% 15%;
     --vault-muted: 220 10% 45%;
     --vault-input: 220 20% 95%;
+
+    /* Group Projects Theme Colors - Light */
+    --group-bg-primary: 214 32% 95%;
+    --group-bg-secondary: 214 32% 91%;
+    --group-bg-card: 0 0% 100%;
+    --group-text-primary: 222 47% 11%;
+    --group-text-secondary: 215 16% 47%;
+    --group-text-muted: 215 20% 65%;
+    --group-border: 214 32% 88%;
+    --group-accent: 221 83% 53%;
+    --group-hover: 214 32% 88%;
   }
 
   .dark {
@@ -83,6 +94,17 @@
     --vault-text: 220 5% 95%;
     --vault-muted: 220 10% 60%;
     --vault-input: 220 20% 15%;
+
+    /* Group Projects Theme Colors - Dark */
+    --group-bg-primary: 222 47% 11%;
+    --group-bg-secondary: 217 33% 17%;
+    --group-bg-card: 222 47% 15%;
+    --group-text-primary: 210 40% 98%;
+    --group-text-secondary: 215 16% 65%;
+    --group-text-muted: 217 20% 45%;
+    --group-border: 217 33% 24%;
+    --group-accent: 221 83% 63%;
+    --group-hover: 217 33% 20%;
   }
 
   * {

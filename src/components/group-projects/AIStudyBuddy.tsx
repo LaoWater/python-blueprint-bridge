@@ -126,30 +126,27 @@ export default function AIStudyBuddy() {
     return 'available';
   }, [isInTeam]);
 
-  // Auto-scroll to top on section change
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, [activeSection]);
+  // Removed auto-scroll for better UX - let users stay where they are
 
   return (
-    <div className="w-full bg-transparent text-white">
+    <div className="w-full bg-background text-foreground transition-colors duration-300">
       {/* Header */}
       <div className="max-w-6xl mx-auto mb-12">
         <div className="text-center mb-8">
           <h1 className="text-6xl font-bold mb-4 bg-gradient-to-r from-green-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">
             AI Study Buddy
           </h1>
-          <p className="text-xl text-gray-300">Personal tutor that adapts to your learning style and maximizes knowledge retention</p>
+          <p className="text-xl text-muted-foreground dark:text-gray-300">Personal tutor that adapts to your learning style and maximizes knowledge retention</p>
         </div>
 
         {/* Navigation */}
         <div className="flex justify-center gap-4 mb-8 flex-wrap">
           <button
             onClick={() => setActiveSection('vision')}
-            className={`px-6 py-3 rounded-full transition-all ${
+            className={`px-6 py-3 rounded-full transition-all duration-300 ${
               activeSection === 'vision'
-                ? 'bg-gradient-to-r from-green-500 to-blue-500 shadow-lg shadow-green-500/50'
-                : 'bg-gray-800 hover:bg-gray-700'
+                ? 'bg-gradient-to-r from-green-500 to-blue-500 shadow-lg shadow-green-500/50 text-white'
+                : 'bg-card hover:bg-secondary dark:bg-gray-800 dark:hover:bg-gray-700 text-foreground'
             }`}
           >
             <BookOpen className="inline mr-2" size={20} />
@@ -157,10 +154,10 @@ export default function AIStudyBuddy() {
           </button>
           <button
             onClick={() => setActiveSection('architecture')}
-            className={`px-6 py-3 rounded-full transition-all ${
+            className={`px-6 py-3 rounded-full transition-all duration-300 ${
               activeSection === 'architecture'
-                ? 'bg-gradient-to-r from-green-500 to-blue-500 shadow-lg shadow-green-500/50'
-                : 'bg-gray-800 hover:bg-gray-700'
+                ? 'bg-gradient-to-r from-green-500 to-blue-500 shadow-lg shadow-green-500/50 text-white'
+                : 'bg-card hover:bg-secondary dark:bg-gray-800 dark:hover:bg-gray-700 text-foreground'
             }`}
           >
             <Brain className="inline mr-2" size={20} />
@@ -168,10 +165,10 @@ export default function AIStudyBuddy() {
           </button>
           <button
             onClick={() => setActiveSection('teams')}
-            className={`px-6 py-3 rounded-full transition-all ${
+            className={`px-6 py-3 rounded-full transition-all duration-300 ${
               activeSection === 'teams'
-                ? 'bg-gradient-to-r from-green-500 to-blue-500 shadow-lg shadow-green-500/50'
-                : 'bg-gray-800 hover:bg-gray-700'
+                ? 'bg-gradient-to-r from-green-500 to-blue-500 shadow-lg shadow-green-500/50 text-white'
+                : 'bg-card hover:bg-secondary dark:bg-gray-800 dark:hover:bg-gray-700 text-foreground'
             }`}
           >
             <Users className="inline mr-2" size={20} />
@@ -183,15 +180,15 @@ export default function AIStudyBuddy() {
       {/* Vision Section */}
       {activeSection === 'vision' && (
         <div className="max-w-5xl mx-auto">
-          <div className="bg-gray-800/50 backdrop-blur-lg rounded-3xl p-8 mb-8 border border-green-500/20">
+          <div className="bg-card dark:bg-gray-800/50 backdrop-blur-lg rounded-3xl p-8 mb-8 border border-green-500/20 transition-colors">
             <h2 className="text-3xl font-bold mb-6 text-center text-green-300">🧠 The Future of Learning: When AI Understands How Your Mind Works</h2>
 
             <div className="space-y-8 text-lg">
-              <div className="flex items-start gap-6 p-6 bg-gray-700/30 rounded-2xl">
+              <div className="flex items-start gap-6 p-6 bg-secondary/50 dark:bg-gray-700/30 rounded-2xl transition-colors">
                 <div className="text-4xl">📖</div>
                 <div>
                   <p className="font-semibold text-blue-300 mb-2">Week 1: Cognitive Fingerprinting</p>
-                  <p className="text-gray-300 mb-3">You're studying for the MCAT. You upload your Kaplan biochemistry textbook and tell your Study Buddy: <span className="text-yellow-300">"I keep forgetting the Krebs cycle enzymes."</span></p>
+                  <p className="text-muted-foreground dark:text-gray-300 mb-3 transition-colors">You're studying for the MCAT. You upload your Kaplan biochemistry textbook and tell your Study Buddy: <span className="text-yellow-300">"I keep forgetting the Krebs cycle enzymes."</span></p>
                   <div className="bg-blue-900/30 p-4 rounded-lg border-l-4 border-blue-400">
                     <p className="text-blue-200 italic">Study Buddy's Deep Analysis: "I've analyzed your learning patterns across 47 study sessions. Your brain processes visual information 3.2x faster than text, with peak retention at 7-minute intervals. Your working memory excels with spatial relationships, but struggles with sequential lists. Most importantly, you forget complex biochemical processes with a personal half-life of 2.8 days - faster than average due to your analytical learning style that prioritizes understanding over memorization. Let me create an interactive 3D molecular visualization of the Krebs cycle that maps to your visual-spatial strengths, with spaced repetition precisely timed to your personal forgetting curve and chunked into 7-minute segments that match your optimal attention span."</p>
                   </div>

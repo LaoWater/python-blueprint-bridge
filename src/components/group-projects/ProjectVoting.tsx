@@ -114,26 +114,26 @@ export default function ProjectVoting({ projectId, projectName, currentVotes, cl
     if (voteType === 'up') {
       return `${baseClass} ${
         isActive
-          ? 'bg-green-500/20 text-green-300 border border-green-500/30'
-          : 'bg-gray-700/50 text-gray-300 hover:bg-green-500/10 hover:text-green-300'
+          ? 'bg-green-500/30 text-green-700 dark:text-green-300 border-2 border-green-600 dark:border-green-500/30'
+          : 'bg-secondary/80 dark:bg-gray-700/50 text-foreground dark:text-gray-300 hover:bg-green-500/20 dark:hover:bg-green-500/10 hover:text-green-700 dark:hover:text-green-300 border border-border dark:border-transparent'
       }`;
     } else {
       return `${baseClass} ${
         isActive
-          ? 'bg-red-500/20 text-red-300 border border-red-500/30'
-          : 'bg-gray-700/50 text-gray-300 hover:bg-red-500/10 hover:text-red-300'
+          ? 'bg-red-500/30 text-red-700 dark:text-red-300 border-2 border-red-600 dark:border-red-500/30'
+          : 'bg-secondary/80 dark:bg-gray-700/50 text-foreground dark:text-gray-300 hover:bg-red-500/20 dark:hover:bg-red-500/10 hover:text-red-700 dark:hover:text-red-300 border border-border dark:border-transparent'
       }`;
     }
   };
 
   const getScoreColor = () => {
     const score = localVotes.vote_score;
-    if (score > 10) return 'text-green-400';
-    if (score > 5) return 'text-green-300';
-    if (score > 0) return 'text-blue-300';
-    if (score === 0) return 'text-gray-300';
-    if (score > -5) return 'text-orange-300';
-    return 'text-red-300';
+    if (score > 10) return 'text-green-600 dark:text-green-400';
+    if (score > 5) return 'text-green-600 dark:text-green-300';
+    if (score > 0) return 'text-blue-600 dark:text-blue-300';
+    if (score === 0) return 'text-muted-foreground dark:text-gray-300';
+    if (score > -5) return 'text-orange-600 dark:text-orange-300';
+    return 'text-red-600 dark:text-red-300';
   };
 
   const getScoreIcon = () => {
@@ -145,12 +145,12 @@ export default function ProjectVoting({ projectId, projectName, currentVotes, cl
   };
 
   return (
-    <div className={`bg-gray-800/30 backdrop-blur-sm rounded-xl p-4 border border-gray-600/20 ${className}`}>
+    <div className={`bg-card/80 dark:bg-gray-800/30 backdrop-blur-sm rounded-xl p-4 border border-border dark:border-gray-600/20 transition-colors duration-300 ${className}`}>
       <div className="flex items-center justify-between mb-3">
-        <h3 className="text-sm font-medium text-gray-300">Community Vote</h3>
+        <h3 className="text-sm font-medium text-foreground dark:text-gray-300">Community Vote</h3>
         <div className={`flex items-center gap-1 ${getScoreColor()}`}>
           {getScoreIcon()}
-          <span className="font-bold">{localVotes.vote_score > 0 ? '+' : ''}{localVotes.vote_score}</span>
+          <span className="font-bold text-lg">{localVotes.vote_score > 0 ? '+' : ''}{localVotes.vote_score}</span>
         </div>
       </div>
 
@@ -161,7 +161,7 @@ export default function ProjectVoting({ projectId, projectName, currentVotes, cl
           className={getVoteButtonClass('up')}
         >
           <ThumbsUp className="w-4 h-4" />
-          <span>{localVotes.votes_up}</span>
+          <span className="font-semibold">{localVotes.votes_up}</span>
         </button>
 
         <button
@@ -170,18 +170,18 @@ export default function ProjectVoting({ projectId, projectName, currentVotes, cl
           className={getVoteButtonClass('down')}
         >
           <ThumbsDown className="w-4 h-4" />
-          <span>{localVotes.votes_down}</span>
+          <span className="font-semibold">{localVotes.votes_down}</span>
         </button>
       </div>
 
       {!user && (
-        <p className="text-xs text-gray-400 text-center">
+        <p className="text-xs text-muted-foreground dark:text-gray-400 text-center">
           Login to vote on projects
         </p>
       )}
 
       {isVoting && (
-        <p className="text-xs text-blue-300 text-center">
+        <p className="text-xs text-blue-600 dark:text-blue-300 text-center font-medium">
           Updating vote...
         </p>
       )}

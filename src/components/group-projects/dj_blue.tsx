@@ -120,14 +120,14 @@ export default function MoodMusicProject() {
   }, [isInTeam]);
 
   return (
-    <div className="w-full bg-transparent text-white">
+    <div className="w-full bg-transparent text-foreground transition-colors">
       {/* Header */}
       <div className="max-w-6xl mx-auto mb-12">
         <div className="text-center mb-8">
           <h1 className="text-6xl font-bold mb-4 bg-gradient-to-r from-purple-400 via-pink-400 to-orange-400 bg-clip-text text-transparent">
             Group Mood Music Assistant
           </h1>
-          <p className="text-xl text-gray-300">A magical DJ that reads the room and plays the perfect soundtrack</p>
+          <p className="text-xl text-muted-foreground">A magical DJ that reads the room and plays the perfect soundtrack</p>
         </div>
 
         {/* Navigation */}
@@ -135,9 +135,9 @@ export default function MoodMusicProject() {
           <button
             onClick={() => setActiveSection('vision')}
             className={`px-6 py-3 rounded-full transition-all ${
-              activeSection === 'vision' 
-                ? 'bg-gradient-to-r from-purple-500 to-pink-500 shadow-lg shadow-purple-500/50' 
-                : 'bg-gray-800 hover:bg-gray-700'
+              activeSection === 'vision'
+                ? 'bg-gradient-to-r from-purple-500 to-pink-500 shadow-lg shadow-purple-500/50 text-white'
+                : 'bg-secondary/50 hover:bg-secondary text-secondary-foreground'
             }`}
           >
             <Heart className="inline mr-2" size={20} />
@@ -146,9 +146,9 @@ export default function MoodMusicProject() {
           <button
             onClick={() => setActiveSection('mental')}
             className={`px-6 py-3 rounded-full transition-all ${
-              activeSection === 'mental' 
-                ? 'bg-gradient-to-r from-purple-500 to-pink-500 shadow-lg shadow-purple-500/50' 
-                : 'bg-gray-800 hover:bg-gray-700'
+              activeSection === 'mental'
+                ? 'bg-gradient-to-r from-purple-500 to-pink-500 shadow-lg shadow-purple-500/50 text-white'
+                : 'bg-secondary/50 hover:bg-secondary text-secondary-foreground'
             }`}
           >
             <Brain className="inline mr-2" size={20} />
@@ -157,9 +157,9 @@ export default function MoodMusicProject() {
           <button
             onClick={() => setActiveSection('teams')}
             className={`px-6 py-3 rounded-full transition-all ${
-              activeSection === 'teams' 
-                ? 'bg-gradient-to-r from-purple-500 to-pink-500 shadow-lg shadow-purple-500/50' 
-                : 'bg-gray-800 hover:bg-gray-700'
+              activeSection === 'teams'
+                ? 'bg-gradient-to-r from-purple-500 to-pink-500 shadow-lg shadow-purple-500/50 text-white'
+                : 'bg-secondary/50 hover:bg-secondary text-secondary-foreground'
             }`}
           >
             <Users className="inline mr-2" size={20} />
@@ -171,89 +171,89 @@ export default function MoodMusicProject() {
       {/* Vision Section */}
       {activeSection === 'vision' && (
         <div className="max-w-4xl mx-auto">
-          <div className="bg-gray-800/50 backdrop-blur-lg rounded-3xl p-8 mb-8 border border-purple-500/20">
-            <h2 className="text-3xl font-bold mb-6 text-center">🎭 The Art of Reading Human Energy: From Intuition to Intelligence</h2>
+          <div className="bg-card/50 backdrop-blur-lg rounded-3xl p-8 mb-8 border border-purple-500/20 transition-colors">
+            <h2 className="text-3xl font-bold mb-6 text-center text-foreground">🎭 The Art of Reading Human Energy: From Intuition to Intelligence</h2>
 
             <div className="space-y-8 text-lg">
-              <div className="flex items-start gap-6 p-6 bg-gray-700/30 rounded-2xl">
+              <div className="flex items-start gap-6 p-6 bg-secondary/30 rounded-2xl transition-colors">
                 <span className="text-4xl">👥</span>
                 <div>
                   <p className="font-semibold text-purple-300 mb-2">Corporate Event (7:32 PM) - The Subtle Art of Professional Energy</p>
-                  <p className="text-gray-300 mb-3">You notice the networking event's energy: conversations are focused but tense, people speak in measured tones about quarterly reports and market projections. The music is currently jazz at medium volume.</p>
-                  <div className="bg-purple-900/30 p-4 rounded-lg border-l-4 border-purple-400">
-                    <p className="text-purple-200 italic">DJ Blue's Advanced Analysis: "Detecting professional anxiety markers in speech patterns: 23% slower speech rate, 15% longer pauses between words, formal vocabulary density at 87%. Stress indicators suggest cognitive load from work discussions. Current jazz tempo (140 BPM) is creating subliminal urgency. Optimal intervention: transition to ambient instrumental at 90-110 BPM, reduce volume by 15%, select tracks with natural harmonies to activate parasympathetic nervous system. This will reduce cortisol response and encourage deeper, more authentic networking conversations."</p>
+                  <p className="text-muted-foreground mb-3">You notice the networking event's energy: conversations are focused but tense, people speak in measured tones about quarterly reports and market projections. The music is currently jazz at medium volume.</p>
+                  <div className="bg-purple-900/30 dark:bg-purple-900/30 bg-purple-100/50 p-4 rounded-lg border-l-4 border-purple-400 transition-colors">
+                    <p className="text-purple-200 dark:text-purple-200 text-purple-700 italic">DJ Blue's Advanced Analysis: "Detecting professional anxiety markers in speech patterns: 23% slower speech rate, 15% longer pauses between words, formal vocabulary density at 87%. Stress indicators suggest cognitive load from work discussions. Current jazz tempo (140 BPM) is creating subliminal urgency. Optimal intervention: transition to ambient instrumental at 90-110 BPM, reduce volume by 15%, select tracks with natural harmonies to activate parasympathetic nervous system. This will reduce cortisol response and encourage deeper, more authentic networking conversations."</p>
                   </div>
                 </div>
               </div>
 
-              <div className="flex items-start gap-6 p-6 bg-gray-700/30 rounded-2xl">
+              <div className="flex items-start gap-6 p-6 bg-secondary/30 rounded-2xl transition-colors">
                 <span className="text-4xl">🎉</span>
                 <div>
                   <p className="font-semibold text-pink-300 mb-2">House Party (11:15 PM) - Reading Micro-Expressions Through Audio</p>
-                  <p className="text-gray-300 mb-3">The conversation shifts - sudden bursts of laughter, overlapping speech, playful interruptions. Someone just told a story that triggered genuine joy responses in the group.</p>
-                  <div className="bg-pink-900/30 p-4 rounded-lg border-l-4 border-pink-400">
-                    <p className="text-pink-200 italic">DJ Blue: "Euphoria cascade detected: authentic laughter signatures (not polite chuckles), dopamine-driven speech acceleration, social bonding vocalizations increasing by 340%. The group has shifted from formal to tribal bonding mode. Current ambient track is emotionally mismatched. Initiating gradual transition: crossfade to uplifting indie track at 128 BPM, increase bass presence for embodied response, time the crescendo with their natural energy peak. Music becomes the invisible amplifier of their existing joy, not an interruption to it."</p>
+                  <p className="text-muted-foreground mb-3">The conversation shifts - sudden bursts of laughter, overlapping speech, playful interruptions. Someone just told a story that triggered genuine joy responses in the group.</p>
+                  <div className="bg-pink-900/30 dark:bg-pink-900/30 bg-pink-100/50 p-4 rounded-lg border-l-4 border-pink-400 transition-colors">
+                    <p className="text-pink-200 dark:text-pink-200 text-pink-700 italic">DJ Blue: "Euphoria cascade detected: authentic laughter signatures (not polite chuckles), dopamine-driven speech acceleration, social bonding vocalizations increasing by 340%. The group has shifted from formal to tribal bonding mode. Current ambient track is emotionally mismatched. Initiating gradual transition: crossfade to uplifting indie track at 128 BPM, increase bass presence for embodied response, time the crescendo with their natural energy peak. Music becomes the invisible amplifier of their existing joy, not an interruption to it."</p>
                   </div>
                 </div>
               </div>
 
-              <div className="flex items-start gap-6 p-6 bg-gray-700/30 rounded-2xl">
+              <div className="flex items-start gap-6 p-6 bg-secondary/30 rounded-2xl transition-colors">
                 <span className="text-4xl">🧠</span>
                 <div>
                   <p className="font-semibold text-blue-300 mb-2">Study Group (2:45 PM) - Cognitive Load Recognition</p>
-                  <p className="text-gray-300 mb-3">Five friends working on calculus problems. Long silences punctuated by frustrated sighs, pencils tapping, occasional "wait, how did you get that?" There's focused concentration but mounting stress.</p>
-                  <div className="bg-blue-900/30 p-4 rounded-lg border-l-4 border-blue-400">
-                    <p className="text-blue-200 italic">DJ Blue: "Cognitive strain pattern identified: increased vocal fry indicating mental fatigue, question intonation suggesting confusion, declining verbal confidence markers. Working memory is approaching capacity limits. Current silence is productive but stress indicators rising. Optimal cognitive support: introduce binaural beats at 40Hz (gamma wave stimulation), layer with nature sounds at barely audible levels, select instrumental tracks with mathematical ratios in melody structure. This enhances focus without conscious distraction, reduces cortisol, and supports sustained attention for complex problem-solving."</p>
+                  <p className="text-muted-foreground mb-3">Five friends working on calculus problems. Long silences punctuated by frustrated sighs, pencils tapping, occasional "wait, how did you get that?" There's focused concentration but mounting stress.</p>
+                  <div className="bg-blue-900/30 dark:bg-blue-900/30 bg-blue-100/50 p-4 rounded-lg border-l-4 border-blue-400 transition-colors">
+                    <p className="text-blue-200 dark:text-blue-200 text-blue-700 italic">DJ Blue: "Cognitive strain pattern identified: increased vocal fry indicating mental fatigue, question intonation suggesting confusion, declining verbal confidence markers. Working memory is approaching capacity limits. Current silence is productive but stress indicators rising. Optimal cognitive support: introduce binaural beats at 40Hz (gamma wave stimulation), layer with nature sounds at barely audible levels, select instrumental tracks with mathematical ratios in melody structure. This enhances focus without conscious distraction, reduces cortisol, and supports sustained attention for complex problem-solving."</p>
                   </div>
                 </div>
               </div>
 
-              <div className="flex items-start gap-6 p-6 bg-gray-700/30 rounded-2xl">
+              <div className="flex items-start gap-6 p-6 bg-secondary/30 rounded-2xl transition-colors">
                 <span className="text-4xl">💫</span>
                 <div>
                   <p className="font-semibold text-green-300 mb-2">Date Night (8:20 PM) - Emotional Intimacy Detection</p>
-                  <p className="text-gray-300 mb-3">Two people sharing vulnerable stories about their childhood. Speech is soft, intimate, with longer pauses filled with emotional presence rather than awkwardness.</p>
-                  <div className="bg-green-900/30 p-4 rounded-lg border-l-4 border-green-400">
-                    <p className="text-green-200 italic">DJ Blue: "Intimate connection protocol activated: detecting vulnerability markers (softer vocal tones, increased pause tolerance, storytelling structure), emotional synchronization (matching breathing patterns in speech rhythm), trust-building language patterns. Current environment requires invisible support. Implementing: ultra-subtle ambient soundscape at threshold of perception, frequency spectrum that enhances voice clarity, eliminate any musical elements that could interrupt emotional flow. The goal is to create acoustic intimacy that makes their voices feel like the only sounds in the world - turning the space into an emotional sanctuary."</p>
+                  <p className="text-muted-foreground mb-3">Two people sharing vulnerable stories about their childhood. Speech is soft, intimate, with longer pauses filled with emotional presence rather than awkwardness.</p>
+                  <div className="bg-green-900/30 dark:bg-green-900/30 bg-green-100/50 p-4 rounded-lg border-l-4 border-green-400 transition-colors">
+                    <p className="text-green-200 dark:text-green-200 text-green-700 italic">DJ Blue: "Intimate connection protocol activated: detecting vulnerability markers (softer vocal tones, increased pause tolerance, storytelling structure), emotional synchronization (matching breathing patterns in speech rhythm), trust-building language patterns. Current environment requires invisible support. Implementing: ultra-subtle ambient soundscape at threshold of perception, frequency spectrum that enhances voice clarity, eliminate any musical elements that could interrupt emotional flow. The goal is to create acoustic intimacy that makes their voices feel like the only sounds in the world - turning the space into an emotional sanctuary."</p>
                   </div>
                 </div>
               </div>
             </div>
           </div>
 
-          <div className="bg-gradient-to-r from-purple-600/20 to-pink-600/20 rounded-3xl p-8 border border-purple-500/30">
-            <h3 className="text-2xl font-bold mb-4 text-center">🧠 The Emotional Intelligence Stack</h3>
+          <div className="bg-gradient-to-r from-purple-600/20 to-pink-600/20 rounded-3xl p-8 border border-purple-500/30 transition-colors">
+            <h3 className="text-2xl font-bold mb-4 text-center text-foreground">🧠 The Emotional Intelligence Stack</h3>
             <div className="grid md:grid-cols-4 gap-6 text-center">
               <div>
                 <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center mx-auto mb-4">
                   <Mic className="w-8 h-8 text-white" />
                 </div>
-                <h4 className="font-bold mb-2">Deep Listening</h4>
-                <p className="text-gray-300 text-sm">Analyze speech patterns, vocal stress, laughter authenticity, and conversation dynamics</p>
+                <h4 className="font-bold mb-2 text-foreground">Deep Listening</h4>
+                <p className="text-muted-foreground text-sm">Analyze speech patterns, vocal stress, laughter authenticity, and conversation dynamics</p>
               </div>
 
               <div>
                 <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center mx-auto mb-4">
                   <Brain className="w-8 h-8 text-white" />
                 </div>
-                <h4 className="font-bold mb-2">Emotional Decode</h4>
-                <p className="text-gray-300 text-sm">Recognize cognitive load, social bonding, stress markers, and intimacy levels</p>
+                <h4 className="font-bold mb-2 text-foreground">Emotional Decode</h4>
+                <p className="text-muted-foreground text-sm">Recognize cognitive load, social bonding, stress markers, and intimacy levels</p>
               </div>
 
               <div>
                 <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-500 rounded-xl flex items-center justify-center mx-auto mb-4">
                   <Heart className="w-8 h-8 text-white" />
                 </div>
-                <h4 className="font-bold mb-2">Context Awareness</h4>
-                <p className="text-gray-300 text-sm">Understand the purpose: networking, celebration, focus, or intimate connection</p>
+                <h4 className="font-bold mb-2 text-foreground">Context Awareness</h4>
+                <p className="text-muted-foreground text-sm">Understand the purpose: networking, celebration, focus, or intimate connection</p>
               </div>
 
               <div>
                 <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-red-500 rounded-xl flex items-center justify-center mx-auto mb-4">
                   <Music className="w-8 h-8 text-white" />
                 </div>
-                <h4 className="font-bold mb-2">Invisible Support</h4>
-                <p className="text-gray-300 text-sm">Create the perfect acoustic environment that amplifies human connection</p>
+                <h4 className="font-bold mb-2 text-foreground">Invisible Support</h4>
+                <p className="text-muted-foreground text-sm">Create the perfect acoustic environment that amplifies human connection</p>
               </div>
             </div>
           </div>
