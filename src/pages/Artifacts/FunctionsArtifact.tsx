@@ -285,7 +285,7 @@ const FunctionsArtifact = () => {
     Funcție simplă care salută o persoană
     Parametru: nume (string)
     """
-    mesaj = f"Salut, {'{'}nume{'}'}! 👋"
+    mesaj = f"Salut, {nume}! 👋"
     mesaj += " Bun venit în lumea funcțiilor!"
     print(mesaj)
 
@@ -503,8 +503,8 @@ def salariu_total(salariu_baza, experienta):
 # Exemple de utilizare:
 bonus = calculeaza_bonus(${salary}, ${experience})
 total = salariu_total(${salary}, ${experience})
-print(f"Bonus: {'{'}bonus{'}'} RON")
-print(f"Total: {'{'}total{'}'} RON")`}
+print(f"Bonus: {bonus} RON")
+print(f"Total: {total} RON")`}
                   </pre>
                 </div>
                 
@@ -658,9 +658,9 @@ def afiseaza_raport(angajati):
     total = calculeaza_masa_salariala(angajati)
     mediu = salariu_mediu(angajati)
     
-    print(f"👥 Angajați: {'{'}len(angajati){'}'}")
-    print(f"💰 Masa salarială: {'{'}total:,{'}'} RON")
-    print(f"📊 Salariu mediu: {'{'}mediu:,.0f{'}'} RON")
+    print(f"👥 Angajați: {len(angajati)}")
+    print(f"💰 Masa salarială: {total:,} RON")
+    print(f"📊 Salariu mediu: {mediu:,.0f} RON")
 
 # Cooperarea funcțiilor pentru sistem complet!`}
                     </pre>

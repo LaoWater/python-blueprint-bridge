@@ -461,7 +461,7 @@ const OOPArtifact = () => {
     
     def __str__(self):
         """Reprezentarea string a obiectului"""
-        return f"Student: {'{'}self.nume{'}'} din clasa {'{'}self.clasa{'}'}"
+        return f"Student: {self.nume} din clasa {self.clasa}"
 
 # Crearea obiectelor (instanțiere)
 student1 = Student("Ana Popescu", "10A")
@@ -472,8 +472,8 @@ student1.adauga_nota(9)
 student1.adauga_nota(8)
 student2.adauga_nota(7)
 
-print(f"Media lui {'{'}student1.nume{'}'}: {'{'}student1.calculeaza_media():.2f{'}'}")
-print(f"Media lui {'{'}student2.nume{'}'}: {'{'}student2.calculeaza_media():.2f{'}'}")`}
+print(f"Media lui {student1.nume}: {student1.calculeaza_media():.2f}")
+print(f"Media lui {student2.nume}: {student2.calculeaza_media():.2f}")`}
                   </pre>
                 </div>
                 
@@ -621,7 +621,7 @@ print(f"Media lui {'{'}student2.nume{'}'}: {'{'}student2.calculeaza_media():.2f{
         
         if suma > 0:
             self.__sold += suma
-            return f"✅ Depozit: +{'{'}suma{'}'} RON"
+            return f"✅ Depozit: +{suma} RON"
         return "❌ Suma trebuie să fie pozitivă!"
     
     def retrage(self, suma):
@@ -630,11 +630,11 @@ print(f"Media lui {'{'}student2.nume{'}'}: {'{'}student2.calculeaza_media():.2f{
             return "❌ Contul este blocat!"
         
         if suma > self.__sold:
-            return f"❌ Fonduri insuficiente! Sold: {'{'}self.__sold{'}'}"
+            return f"❌ Fonduri insuficiente! Sold: {self.__sold}"
         
         if suma > 0:
             self.__sold -= suma
-            return f"✅ Retragere: -{'{'}suma{'}'} RON"
+            return f"✅ Retragere: -{suma} RON"
         return "❌ Suma trebuie să fie pozitivă!"
     
     def consulta_sold(self):
@@ -773,10 +773,10 @@ print(cont.retrage(200))       # ✅ Retragere: -200 RON`}
     
     def vorbeste(self):
         """Metodă comună pentru toate persoanele"""
-        return f"🗣️ {'{'}self.nume{'}'} vorbește: 'Salut!'"
+        return f"🗣️ {self.nume} vorbește: 'Salut!'"
     
     def prezinta(self):
-        return f"👤 Sunt {'{'}self.nume{'}'}"
+        return f"👤 Sunt {self.nume}"
 
 class Profesor(Persoana):
     """
@@ -788,11 +788,11 @@ class Profesor(Persoana):
     
     def preda(self):
         """Metodă NOUĂ, specifică doar profesorilor"""
-        return f"📚 {'{'}self.nume{'}'} predă: 'Astăzi învățăm despre {'{'}self.specializare{'}'}!'"
+        return f"📚 {self.nume} predă: 'Astăzi învățăm despre {self.specializare}!'"
     
     def prezinta(self):
         """Metodă SUPRASCRISĂ (override)"""
-        return f"👨‍🏫 Sunt Prof. {'{'}self.nume{'}'}, specializat în {'{'}self.specializare{'}'}"
+        return f"👨‍🏫 Sunt Prof. {self.nume}, specializat în {self.specializare}"
 
 # Utilizare:
 persoana = Persoana("Ana Popescu")
@@ -905,23 +905,23 @@ print(profesor.prezinta())    # "👨‍🏫 Sunt Prof. Ion..."`}
         pass
     
     def mananca(self):
-        return f"{'{'}self.nume{'}'} mănâncă"
+        return f"{self.nume} mănâncă"
 
 class Caine(Animal):
     def vorbeste(self):
-        return f"{'{'}self.nume{'}'}: Ham ham! 🐕"
+        return f"{self.nume}: Ham ham! 🐕"
 
 class Pisica(Animal):
     def vorbeste(self):
-        return f"{'{'}self.nume{'}'}: Miau! 🐱"
+        return f"{self.nume}: Miau! 🐱"
 
 class Papagal(Animal):
     def vorbeste(self):
-        return f"{'{'}self.nume{'}'}: Polly wants a cracker! 🦜"
+        return f"{self.nume}: Polly wants a cracker! 🦜"
 
 class Peste(Animal):
     def vorbeste(self):
-        return f"{'{'}self.nume{'}'}: Blub blub... (nu face sunet) 🐟"
+        return f"{self.nume}: Blub blub... (nu face sunet) 🐟"
 
 # Crearea unei liste cu animale diferite:
 animale = [
@@ -1093,18 +1093,18 @@ concert_animal(animale)
     def login(self, parola_introdusa):
         """Metodă pentru login"""
         if self.__parola == parola_introdusa:
-            return f"✅ {'{'}self.nume{'}'} s-a logat cu succes!"
+            return f"✅ {self.nume} s-a logat cu succes!"
         return "❌ Parolă incorectă!"
     
     def schimba_parola(self, parola_veche, parola_noua):
         """Metodă pentru schimbarea parolei"""
         if self.__parola == parola_veche:
             self.__parola = parola_noua
-            return f"🔒 {'{'}self.nume{'}'} și-a schimbat parola!"
+            return f"🔒 {self.nume} și-a schimbat parola!"
         return "❌ Parolă veche incorectă!"
     
     def afiseaza_profil(self):
-        return f"👤 {'{'}self.nume{'}'} - {'{'}self.email{'}'}"
+        return f"👤 {self.nume} - {self.email}"
 
 class Administrator(Utilizator):
     """
@@ -1117,11 +1117,11 @@ class Administrator(Utilizator):
     
     def sterge_utilizator(self, utilizator):
         """Metodă NOUĂ - doar adminii pot șterge"""
-        return f"🗑️ Admin {'{'}self.nume{'}'} a șters utilizatorul {'{'}utilizator.nume{'}'}"
+        return f"🗑️ Admin {self.nume} a șters utilizatorul {utilizator.nume}"
     
     def afiseaza_profil(self):
         """Metodă SUPRASCRISĂ (override)"""
-        return f"👑 Admin {'{'}self.nume{'}'} - {'{'}self.email{'}'}"
+        return f"👑 Admin {self.nume} - {self.email}"
 
 # POLIMORFISM în acțiune:
 def procesează_login(lista_utilizatori, parola):
@@ -1265,11 +1265,11 @@ print(admin1.sterge_utilizator(user1))  # 🗑️ Doar adminii pot!`}
     
     def __str__(self):
         """Reprezentare string frumoasă"""
-        return f"🚗 {'{'}self.marca{'}'} {'{'}self.model{'}'} ({'{'}self.an{'}'}) - {'{'}self.pret:,{'}'} €"
+        return f"🚗 {self.marca} {self.model} ({self.an}) - {self.pret:,} €"
     
     def __repr__(self):
         """Reprezentare pentru debugging"""
-        return f"Masina('{'{'}self.marca{'}'}', '{'{'}self.model{'}'}', {'{'}self.an{'}'}, {'{'}self.pret{'}'})"
+        return f"Masina('{self.marca}', '{self.model}', {self.an}, {self.pret})"
     
     def __eq__(self, other):
         """Comparare de egalitate"""
@@ -1287,7 +1287,7 @@ print(admin1.sterge_utilizator(user1))  # 🗑️ Doar adminii pot!`}
     
     def __len__(self):
         """Lungimea numelui complet"""
-        return len(f"{'{'}self.marca{'}'} {'{'}self.model{'}'}")
+        return len(f"{self.marca} {self.model}")
 
 class MasinaElectrica(Masina):
     """Moștenire cu funcționalități specifice"""
@@ -1297,7 +1297,7 @@ class MasinaElectrica(Masina):
     
     def __str__(self):
         """Override pentru afișare specială"""
-        return f"⚡ {'{'}self.marca{'}'} {'{'}self.model{'}'} Electric ({'{'}self.an{'}'}) - {'{'}self.pret:,{'}'} € (Autonomie: {'{'}self.autonomie_km{'}'}km)"
+        return f"⚡ {self.marca} {self.model} Electric ({self.an}) - {self.pret:,} € (Autonomie: {self.autonomie_km}km)"
 
 # Utilizare avansată:
 masini = [
