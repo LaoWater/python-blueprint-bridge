@@ -115,7 +115,7 @@ export default function TeamCard({ team, projectId }: TeamCardProps) {
   const teamIsFull = team.current_members >= team.max_members;
 
   return (
-    <div className="relative bg-gray-800/50 backdrop-blur-lg rounded-2xl border border-purple-500/20 overflow-hidden transition-all duration-300 hover:shadow-xl hover:shadow-purple-500/20">
+    <div className="relative bg-card/50 dark:bg-gray-800/50 backdrop-blur-lg rounded-2xl border border-border dark:border-purple-500/20 overflow-hidden transition-all duration-300 hover:shadow-xl hover:shadow-purple-500/20">
       <div className={`absolute inset-0 bg-gradient-to-br ${team.color_scheme} opacity-10 rounded-2xl`}></div>
 
       <div className="relative z-10 p-6">
@@ -125,29 +125,29 @@ export default function TeamCard({ team, projectId }: TeamCardProps) {
           </div>
           <div className="text-right">
             <div className="text-2xl">{'⭐'.repeat(team.difficulty_stars)}</div>
-            <div className="text-xs text-gray-400">Difficulty</div>
+            <div className="text-xs text-muted-foreground dark:text-gray-400">Difficulty</div>
           </div>
         </div>
 
-        <h3 className="text-xl font-bold mb-2">{team.name}</h3>
-        <p className="text-gray-300 mb-4">{team.mission}</p>
+        <h3 className="text-xl font-bold mb-2 text-foreground">{team.name}</h3>
+        <p className="text-muted-foreground dark:text-gray-300 mb-4">{team.mission}</p>
 
         {/* Team Status */}
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
-            <Users className="w-4 h-4 text-gray-400" />
-            <span className="text-sm text-gray-400">
+            <Users className="w-4 h-4 text-muted-foreground dark:text-gray-400" />
+            <span className="text-sm text-muted-foreground dark:text-gray-400">
               {team.current_members}/{team.max_members} members
             </span>
           </div>
           {isUserInThisTeam && (
-            <div className="flex items-center gap-1 text-green-400">
+            <div className="flex items-center gap-1 text-green-600 dark:text-green-400">
               <Check className="w-4 h-4" />
               <span className="text-xs">Joined</span>
             </div>
           )}
           {teamIsFull && (
-            <div className="flex items-center gap-1 text-orange-400">
+            <div className="flex items-center gap-1 text-orange-600 dark:text-orange-400">
               <AlertCircle className="w-4 h-4" />
               <span className="text-xs">Full</span>
             </div>
@@ -156,7 +156,7 @@ export default function TeamCard({ team, projectId }: TeamCardProps) {
 
         <button
           onClick={() => setExpanded(!expanded)}
-          className="w-full text-left mb-4 text-sm text-purple-300 hover:text-purple-200 transition-colors"
+          className="w-full text-left mb-4 text-sm text-purple-600 dark:text-purple-300 hover:text-purple-700 dark:hover:text-purple-200 transition-colors duration-300"
         >
           {expanded ? '▼ Hide Details' : '▶ View Tasks & Members'}
         </button>
@@ -165,11 +165,11 @@ export default function TeamCard({ team, projectId }: TeamCardProps) {
           <div className="space-y-4 mb-4 animate-in fade-in duration-200">
             {/* Tasks */}
             <div>
-              <p className="font-semibold text-sm text-purple-300 mb-2">Team Tasks:</p>
-              <ul className="text-sm text-gray-300 space-y-1">
+              <p className="font-semibold text-sm text-purple-600 dark:text-purple-300 mb-2">Team Tasks:</p>
+              <ul className="text-sm text-foreground dark:text-gray-300 space-y-1">
                 {team.tasks.map((task, idx) => (
                   <li key={idx} className="flex items-start gap-2">
-                    <span className="text-purple-400">•</span>
+                    <span className="text-purple-600 dark:text-purple-400">•</span>
                     <span>{task}</span>
                   </li>
                 ))}
@@ -177,17 +177,17 @@ export default function TeamCard({ team, projectId }: TeamCardProps) {
             </div>
 
             {/* Members */}
-            <div className="border-t border-purple-500/20 pt-4">
-              <p className="font-semibold text-sm text-purple-300 mb-2">Team Members:</p>
+            <div className="border-t border-border dark:border-purple-500/20 pt-4 transition-colors duration-300">
+              <p className="font-semibold text-sm text-purple-600 dark:text-purple-300 mb-2">Team Members:</p>
               {members.length > 0 ? (
                 <div className="space-y-2">
                   {members.map((member) => (
                     <div key={member.user_id} className="flex items-center justify-between text-sm">
-                      <span className="text-gray-300">{member.username}</span>
+                      <span className="text-foreground dark:text-gray-300">{member.username}</span>
                       <div className="flex items-center gap-2">
-                        <span className="text-xs text-gray-400">{member.role}</span>
+                        <span className="text-xs text-muted-foreground dark:text-gray-400">{member.role}</span>
                         {member.contribution_score > 0 && (
-                          <span className="text-xs bg-purple-500/20 px-2 py-1 rounded text-purple-300">
+                          <span className="text-xs bg-purple-500/20 px-2 py-1 rounded text-purple-600 dark:text-purple-300">
                             {member.contribution_score} pts
                           </span>
                         )}
@@ -196,18 +196,18 @@ export default function TeamCard({ team, projectId }: TeamCardProps) {
                   ))}
                 </div>
               ) : (
-                <p className="text-sm text-gray-400">No members yet</p>
+                <p className="text-sm text-muted-foreground dark:text-gray-400">No members yet</p>
               )}
 
               {/* Action Buttons */}
               <div className="mt-4 space-y-2">
                 {!user ? (
-                  <p className="text-xs text-gray-400 text-center">
+                  <p className="text-xs text-muted-foreground dark:text-gray-400 text-center">
                     Log in to join teams
                   </p>
                 ) : isUserInThisTeam ? (
                   <>
-                    <Button disabled className="w-full bg-green-600/50 text-green-200">
+                    <Button disabled className="w-full bg-green-600/50 dark:bg-green-600/50 text-green-700 dark:text-green-200">
                       <Check className="w-4 h-4 mr-2" />
                       Joined
                     </Button>
@@ -215,24 +215,24 @@ export default function TeamCard({ team, projectId }: TeamCardProps) {
                       onClick={handleLeaveTeam}
                       disabled={isLeaving}
                       variant="outline"
-                      className="w-full border-red-500/50 text-red-300 hover:bg-red-500/10"
+                      className="w-full border-red-500/50 text-red-700 dark:text-red-300 hover:bg-red-500/10"
                     >
                       {isLeaving ? 'Leaving...' : 'Leave Team'}
                     </Button>
                   </>
                 ) : teamIsFull ? (
-                  <Button disabled className="w-full bg-gray-600 text-gray-400">
+                  <Button disabled className="w-full bg-secondary dark:bg-gray-600 text-muted-foreground dark:text-gray-400">
                     Team is full ({team.current_members}/{team.max_members})
                   </Button>
                 ) : !canJoinMoreTeams ? (
-                  <Button disabled className="w-full bg-gray-600 text-gray-400">
+                  <Button disabled className="w-full bg-secondary dark:bg-gray-600 text-muted-foreground dark:text-gray-400">
                     Maximum 3 teams ({userTeamCount}/3)
                   </Button>
                 ) : (
                   <Button
                     onClick={handleJoinTeam}
                     disabled={isJoining}
-                    className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600"
+                    className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white"
                   >
                     {isJoining ? (
                       'Joining...'
@@ -249,7 +249,7 @@ export default function TeamCard({ team, projectId }: TeamCardProps) {
           </div>
         )}
 
-        <p className="text-center text-lg font-semibold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+        <p className="text-center text-lg font-semibold bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-400 dark:to-pink-400 bg-clip-text text-transparent">
           {team.team_vibe}
         </p>
       </div>

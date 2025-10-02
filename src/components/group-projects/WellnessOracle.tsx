@@ -249,7 +249,7 @@ export default function WellnessOracle() {
             </div>
           </div>
 
-          <div className="bg-gradient-to-r from-blue-600/20 to-purple-600/20 rounded-3xl p-8 border border-blue-500/30">
+          <div className="bg-gradient-to-r from-blue-600/20 to-purple-600/20 rounded-3xl p-8 border border-border dark:border-blue-500/30 transition-colors duration-300">
             <h3 className="text-2xl font-bold mb-4 text-center text-blue-300">🌈 The Holistic Wellness Intelligence Stack</h3>
             <div className="grid md:grid-cols-4 gap-6 text-center">
               <div>
@@ -257,7 +257,7 @@ export default function WellnessOracle() {
                   <Database className="w-8 h-8 text-white" />
                 </div>
                 <h4 className="font-bold mb-2">Capture Your World</h4>
-                <p className="text-gray-300 text-sm">Daily diary entries, sleep patterns, energy levels, digestive health, air quality, emotions, goals, and family context</p>
+                <p className="text-muted-foreground dark:text-gray-300 text-sm">Daily diary entries, sleep patterns, energy levels, digestive health, air quality, emotions, goals, and family context</p>
               </div>
 
               <div>
@@ -265,7 +265,7 @@ export default function WellnessOracle() {
                   <Brain className="w-8 h-8 text-white" />
                 </div>
                 <h4 className="font-bold mb-2">Discover Hidden Connections</h4>
-                <p className="text-gray-300 text-sm">AI finds patterns across environment, lifestyle, emotions, goals, family history, and personal biology</p>
+                <p className="text-muted-foreground dark:text-gray-300 text-sm">AI finds patterns across environment, lifestyle, emotions, goals, family history, and personal biology</p>
               </div>
 
               <div>
@@ -273,7 +273,7 @@ export default function WellnessOracle() {
                   <Heart className="w-8 h-8 text-white" />
                 </div>
                 <h4 className="font-bold mb-2">Honor Your Uniqueness</h4>
-                <p className="text-gray-300 text-sm">Understand your personal patterns, family influences, and individual biological needs</p>
+                <p className="text-muted-foreground dark:text-gray-300 text-sm">Understand your personal patterns, family influences, and individual biological needs</p>
               </div>
 
               <div>
@@ -281,7 +281,7 @@ export default function WellnessOracle() {
                   <Target className="w-8 h-8 text-white" />
                 </div>
                 <h4 className="font-bold mb-2">Create Your Optimal Life</h4>
-                <p className="text-gray-300 text-sm">Transform patterns through conscious choices that align with your authentic self and life goals</p>
+                <p className="text-muted-foreground dark:text-gray-300 text-sm">Transform patterns through conscious choices that align with your authentic self and life goals</p>
               </div>
             </div>
           </div>
@@ -291,11 +291,11 @@ export default function WellnessOracle() {
       {/* Architecture Section */}
       {activeSection === 'architecture' && (
         <div className="max-w-6xl mx-auto">
-          <div className="bg-gray-800/50 backdrop-blur-lg rounded-3xl p-8 border border-purple-500/20">
+          <div className="bg-card/50 dark:bg-gray-800/50 backdrop-blur-lg rounded-3xl p-8 border border-border dark:border-purple-500/20 transition-colors duration-300">
             <h2 className="text-3xl font-bold mb-8 text-center text-purple-300">🧠 Advanced LLM Chain Architecture</h2>
 
             <div className="grid md:grid-cols-2 gap-8 mb-8">
-              <div className="bg-gradient-to-br from-blue-500/10 to-purple-500/10 rounded-xl p-6 border border-blue-500/30">
+              <div className="bg-gradient-to-br from-blue-500/10 to-purple-500/10 rounded-xl p-6 border border-border dark:border-blue-500/30 transition-colors duration-300">
                 <h3 className="text-xl font-bold mb-4 text-blue-300">Core Data Pipeline</h3>
                 <div className="space-y-3 text-sm">
                   <div className="flex items-center gap-3">
@@ -317,7 +317,7 @@ export default function WellnessOracle() {
                 </div>
               </div>
 
-              <div className="bg-gradient-to-br from-green-500/10 to-cyan-500/10 rounded-xl p-6 border border-green-500/30">
+              <div className="bg-gradient-to-br from-green-500/10 to-cyan-500/10 rounded-xl p-6 border border-border dark:border-green-500/30 transition-colors duration-300">
                 <h3 className="text-xl font-bold mb-4 text-green-300">LLM Chain Process</h3>
                 <ol className="space-y-2 text-sm">
                   <li><span className="text-green-400 font-bold">1.</span> Context Retrieval (vector search)</li>
@@ -329,20 +329,20 @@ export default function WellnessOracle() {
               </div>
             </div>
 
-            <div className="bg-gradient-to-r from-purple-600/20 to-pink-600/20 rounded-xl p-6 border border-purple-500/30">
+            <div className="bg-gradient-to-r from-purple-600/20 to-pink-600/20 rounded-xl p-6 border border-border dark:border-purple-500/30 transition-colors duration-300">
               <h3 className="text-xl font-bold mb-4 text-center text-purple-300">🔮 The AI Magic</h3>
               <div className="grid md:grid-cols-3 gap-6 text-center text-sm">
                 <div>
                   <h4 className="font-bold mb-2 text-blue-300">Vector Memory</h4>
-                  <p className="text-gray-400">Every diary entry, mood rating, and pattern becomes searchable context that never forgets</p>
+                  <p className="text-muted-foreground dark:text-gray-400">Every diary entry, mood rating, and pattern becomes searchable context that never forgets</p>
                 </div>
                 <div>
                   <h4 className="font-bold mb-2 text-purple-300">Deep Retrieval</h4>
-                  <p className="text-gray-400">When you say "I feel terrible," AI instantly searches through months of similar moments</p>
+                  <p className="text-muted-foreground dark:text-gray-400">When you say "I feel terrible," AI instantly searches through months of similar moments</p>
                 </div>
                 <div>
                   <h4 className="font-bold mb-2 text-pink-300">Pattern Synthesis</h4>
-                  <p className="text-gray-400">Connects dots across time: sleep→mood→productivity→relationships</p>
+                  <p className="text-muted-foreground dark:text-gray-400">Connects dots across time: sleep→mood→productivity→relationships</p>
                 </div>
               </div>
             </div>
@@ -355,22 +355,22 @@ export default function WellnessOracle() {
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-8">
             <h2 className="text-3xl font-bold mb-4 text-purple-300">🏗️ The Art of Building Intelligence</h2>
-            <p className="text-xl text-gray-300">Each team owns their piece of the AI puzzle. Trust others with theirs. Together, we build magic.</p>
+            <p className="text-xl text-muted-foreground dark:text-gray-300">Each team owns their piece of the AI puzzle. Trust others with theirs. Together, we build magic.</p>
           </div>
 
           {/* Status Info */}
-          {loading && <div className="text-center text-gray-400 mb-8">Loading teams...</div>}
+          {loading && <div className="text-center text-muted-foreground dark:text-gray-400 mb-8">Loading teams...</div>}
           {error && (
             <div className="text-center mb-8">
-              <div className="bg-yellow-900/30 border border-yellow-500/30 rounded-lg p-4 max-w-md mx-auto">
+              <div className="bg-yellow-900/30 border border-yellow-500/30 rounded-lg p-4 max-w-md mx-auto transition-colors duration-300">
                 <p className="text-yellow-300">Teams temporarily unavailable</p>
-                <p className="text-gray-400 text-sm mt-2">Working in offline mode</p>
+                <p className="text-muted-foreground dark:text-gray-400 text-sm mt-2">Working in offline mode</p>
               </div>
             </div>
           )}
           {!loading && !error && teams.length === 0 && (
-            <div className="text-center text-gray-400 mb-8">
-              <div className="bg-blue-900/30 border border-blue-500/30 rounded-lg p-4 max-w-md mx-auto">
+            <div className="text-center text-muted-foreground dark:text-gray-400 mb-8">
+              <div className="bg-blue-900/30 border border-blue-500/30 rounded-lg p-4 max-w-md mx-auto transition-colors duration-300">
                 <p>Setting up team structure...</p>
                 <p className="text-sm mt-2">Check back soon!</p>
               </div>
@@ -381,7 +381,7 @@ export default function WellnessOracle() {
             {teams.map((team) => (
               <div
                 key={team.id}
-                className="relative bg-gray-800/50 backdrop-blur-lg rounded-2xl border border-purple-500/20 overflow-hidden transition-all duration-300 hover:shadow-xl hover:shadow-purple-500/20"
+                className="relative bg-card/50 dark:bg-gray-800/50 backdrop-blur-lg rounded-2xl border border-border dark:border-purple-500/20 overflow-hidden transition-all duration-300 hover:shadow-xl hover:shadow-purple-500/20"
               >
                 <div className={`absolute inset-0 bg-gradient-to-br ${team.color_scheme} opacity-10 rounded-2xl`}></div>
 
@@ -394,12 +394,12 @@ export default function WellnessOracle() {
                   </div>
 
                   <h3 className="text-xl font-bold mb-2">{team.name}</h3>
-                  <p className="text-gray-300 mb-3 text-sm">{team.description}</p>
-                  <p className="text-gray-400 mb-3 text-sm font-medium">{team.mission}</p>
+                  <p className="text-muted-foreground dark:text-gray-300 mb-3 text-sm">{team.description}</p>
+                  <p className="text-muted-foreground dark:text-gray-400 mb-3 text-sm font-medium">{team.mission}</p>
 
                   {/* Member Count Display */}
                   <div className="flex items-center justify-between mb-4">
-                    <span className="text-sm text-gray-400">
+                    <span className="text-sm text-muted-foreground dark:text-gray-400">
                       {team.current_members}/{team.max_members} members
                     </span>
                     {isInTeam(team.id) && (
@@ -412,7 +412,7 @@ export default function WellnessOracle() {
 
                   <button
                     onClick={() => setExpandedTeam(expandedTeam === team.id ? null : team.id)}
-                    className="w-full text-left mb-4 text-sm text-purple-300 hover:text-purple-200 transition-colors"
+                    className="w-full text-left mb-4 text-sm text-purple-300 hover:text-purple-200 transition-colors duration-300"
                   >
                     {expandedTeam === team.id ? '▼ Hide Details' : '▶ View Tasks & Focus'}
                   </button>
@@ -421,7 +421,7 @@ export default function WellnessOracle() {
                     <div className="space-y-4 mb-4 animate-in fade-in duration-200">
                       <div>
                         <p className="font-semibold text-sm text-blue-300 mb-2">Core Tasks:</p>
-                        <ul className="text-xs text-gray-300 space-y-1">
+                        <ul className="text-xs text-muted-foreground dark:text-gray-300 space-y-1">
                           {team.tasks.map((task, idx) => (
                             <li key={idx} className="flex items-start gap-2">
                               <span className="text-blue-400 mt-1">•</span>
@@ -431,9 +431,9 @@ export default function WellnessOracle() {
                         </ul>
                       </div>
 
-                      <div className="border-t border-purple-500/20 pt-4">
+                      <div className="border-t border-border dark:border-purple-500/20 pt-4 transition-colors duration-300">
                         <div className="flex items-center justify-between mb-3">
-                          <span className="text-sm text-gray-400">({team.current_members}/{team.max_members} members)</span>
+                          <span className="text-sm text-muted-foreground dark:text-gray-400">({team.current_members}/{team.max_members} members)</span>
                           {getTeamStatus(team) === 'joined' && (
                             <span className="text-xs bg-green-500/20 text-green-300 px-2 py-1 rounded-full">✓ Joined</span>
                           )}
@@ -443,13 +443,13 @@ export default function WellnessOracle() {
                         </div>
 
                         {joinSuccess && expandedTeam === team.id && (
-                          <div className="mb-3 p-2 bg-green-500/20 border border-green-500/30 rounded-lg text-green-300 text-sm text-center">
+                          <div className="mb-3 p-2 bg-green-500/20 border border-green-500/30 rounded-lg text-green-300 text-sm text-center transition-colors duration-300">
                             {joinSuccess}
                           </div>
                         )}
 
                         {joinError && expandedTeam === team.id && (
-                          <div className="mb-3 p-2 bg-red-500/20 border border-red-500/30 rounded-lg text-red-300 text-sm text-center">
+                          <div className="mb-3 p-2 bg-red-500/20 border border-red-500/30 rounded-lg text-red-300 text-sm text-center transition-colors duration-300">
                             {joinError}
                           </div>
                         )}
@@ -458,7 +458,7 @@ export default function WellnessOracle() {
                           <button
                             onClick={() => handleLeaveTeam(team.id)}
                             disabled={joiningTeam === team.id}
-                            className={`w-full px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
+                            className={`w-full px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-300 ${
                               joiningTeam === team.id
                                 ? 'bg-red-500/50 text-red-300 cursor-wait'
                                 : 'bg-red-500/20 text-red-300 border border-red-500/30 hover:bg-red-500/30'
@@ -470,12 +470,12 @@ export default function WellnessOracle() {
                           <button
                             onClick={() => handleJoinTeam(team.id)}
                             disabled={getTeamStatus(team) !== 'available' || joiningTeam === team.id}
-                            className={`w-full px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
+                            className={`w-full px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-300 ${
                               getTeamStatus(team) === 'full'
                                 ? 'bg-gray-600/50 text-gray-400 cursor-not-allowed'
                                 : joiningTeam === team.id
                                 ? 'bg-purple-500/50 text-purple-300 cursor-wait'
-                                : 'bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600'
+                                : 'bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white'
                             }`}
                           >
                             {getTeamStatus(team) === 'full'
@@ -497,32 +497,32 @@ export default function WellnessOracle() {
             ))}
           </div>
 
-          <div className="mt-12 bg-gradient-to-r from-blue-600/20 to-purple-600/20 rounded-3xl p-8 border border-blue-500/30">
+          <div className="mt-12 bg-gradient-to-r from-blue-600/20 to-purple-600/20 rounded-3xl p-8 border border-border dark:border-blue-500/30 transition-colors duration-300">
             <h3 className="text-2xl font-bold mb-6 text-center">🚀 The Art of Building Together</h3>
 
             <div className="grid md:grid-cols-4 gap-6 text-center">
               <div>
                 <div className="text-4xl mb-3">📊</div>
                 <h4 className="font-bold mb-2">Week 1-2: Data Foundation</h4>
-                <p className="text-gray-300 text-sm">Harvesters & Memory Keepers build the data pipeline</p>
+                <p className="text-muted-foreground dark:text-gray-300 text-sm">Harvesters & Memory Keepers build the data pipeline</p>
               </div>
 
               <div>
                 <div className="text-4xl mb-3">🧠</div>
                 <h4 className="font-bold mb-2">Week 3-4: Intelligence Layer</h4>
-                <p className="text-gray-300 text-sm">Vector Architects & LLM Engineers create the AI brain</p>
+                <p className="text-muted-foreground dark:text-gray-300 text-sm">Vector Architects & LLM Engineers create the AI brain</p>
               </div>
 
               <div>
                 <div className="text-4xl mb-3">🔍</div>
                 <h4 className="font-bold mb-2">Week 5-6: Pattern Recognition</h4>
-                <p className="text-gray-300 text-sm">Pattern Detectives find the hidden connections</p>
+                <p className="text-muted-foreground dark:text-gray-300 text-sm">Pattern Detectives find the hidden connections</p>
               </div>
 
               <div>
                 <div className="text-4xl mb-3">✨</div>
                 <h4 className="font-bold mb-2">Week 7-8: Magic Interface</h4>
-                <p className="text-gray-300 text-sm">Interface Magicians & Conversation Designers perfect the experience</p>
+                <p className="text-muted-foreground dark:text-gray-300 text-sm">Interface Magicians & Conversation Designers perfect the experience</p>
               </div>
             </div>
 

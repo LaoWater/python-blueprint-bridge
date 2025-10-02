@@ -1391,7 +1391,7 @@ const ClassroomSimulatorChallenge = () => {
   const [isUnlocked, setIsUnlocked] = useState(false);
   const [password, setPassword] = useState('');
   const [showFullCode, setShowFullCode] = useState(false);
-  const correctPassword = 'blue';
+  const correctPassword = 'artemis';
 
   const handlePasswordSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -2123,7 +2123,7 @@ if __name__ == "__main__":
               </form>
               
               <p className="text-xs text-white/50 mt-3">
-                💡 Hint: The color of our learning platform
+                💡 Hint: Soon to be disclosed
               </p>
             </div>
             

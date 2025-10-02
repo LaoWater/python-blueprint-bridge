@@ -263,13 +263,13 @@ export default function MoodMusicProject() {
       {/* Mental Model Section */}
       {activeSection === 'mental' && (
         <div className="max-w-5xl mx-auto">
-          <div className="bg-gray-800/50 backdrop-blur-lg rounded-3xl p-8 border border-purple-500/20">
-            <h2 className="text-3xl font-bold mb-8 text-center">🧠 The Mental Model</h2>
-            
+          <div className="bg-card/50 backdrop-blur-lg rounded-3xl p-8 border border-purple-500/20 transition-colors">
+            <h2 className="text-3xl font-bold mb-8 text-center text-foreground">🧠 The Mental Model</h2>
+
             <div className="grid md:grid-cols-2 gap-8 mb-8">
-              <div className="bg-gradient-to-br from-purple-500/10 to-pink-500/10 rounded-xl p-6 border border-purple-500/30">
+              <div className="bg-gradient-to-br from-purple-500/10 to-pink-500/10 rounded-xl p-6 border border-purple-500/30 transition-colors">
                 <h3 className="text-xl font-bold mb-4 text-purple-300">Every 10 Minutes...</h3>
-                <ol className="space-y-3">
+                <ol className="space-y-3 text-foreground">
                   <li className="flex items-start gap-2">
                     <span className="text-purple-400 font-bold">1.</span>
                     <span>Save the last 10 minutes of conversation</span>
@@ -297,38 +297,38 @@ export default function MoodMusicProject() {
                 </ol>
               </div>
 
-              <div className="bg-gradient-to-br from-blue-500/10 to-cyan-500/10 rounded-xl p-6 border border-blue-500/30">
+              <div className="bg-gradient-to-br from-blue-500/10 to-cyan-500/10 rounded-xl p-6 border border-blue-500/30 transition-colors">
                 <h3 className="text-xl font-bold mb-4 text-blue-300">Mood → Music Mapping</h3>
                 <div className="space-y-2">
-                  <div className="flex justify-between items-center p-2 bg-gray-700/30 rounded">
-                    <span>😊 Happy</span>
+                  <div className="flex justify-between items-center p-2 bg-secondary/30 rounded transition-colors">
+                    <span className="text-foreground">😊 Happy</span>
                     <span className="text-yellow-400">→ Pop, Upbeat</span>
                   </div>
-                  <div className="flex justify-between items-center p-2 bg-gray-700/30 rounded">
-                    <span>😌 Chill</span>
+                  <div className="flex justify-between items-center p-2 bg-secondary/30 rounded transition-colors">
+                    <span className="text-foreground">😌 Chill</span>
                     <span className="text-green-400">→ Lo-fi, Acoustic</span>
                   </div>
-                  <div className="flex justify-between items-center p-2 bg-gray-700/30 rounded">
-                    <span>🎉 Party</span>
+                  <div className="flex justify-between items-center p-2 bg-secondary/30 rounded transition-colors">
+                    <span className="text-foreground">🎉 Party</span>
                     <span className="text-pink-400">→ Dance, Electronic</span>
                   </div>
-                  <div className="flex justify-between items-center p-2 bg-gray-700/30 rounded">
-                    <span>🤔 Focus</span>
+                  <div className="flex justify-between items-center p-2 bg-secondary/30 rounded transition-colors">
+                    <span className="text-foreground">🤔 Focus</span>
                     <span className="text-blue-400">→ Instrumental, Classical</span>
                   </div>
-                  <div className="flex justify-between items-center p-2 bg-gray-700/30 rounded">
-                    <span>😴 Winding Down</span>
+                  <div className="flex justify-between items-center p-2 bg-secondary/30 rounded transition-colors">
+                    <span className="text-foreground">😴 Winding Down</span>
                     <span className="text-purple-400">→ Ambient, Soft</span>
                   </div>
                 </div>
               </div>
             </div>
 
-            <div className="bg-gradient-to-r from-orange-500/10 to-red-500/10 rounded-xl p-6 border border-orange-500/30">
+            <div className="bg-gradient-to-r from-orange-500/10 to-red-500/10 rounded-xl p-6 border border-orange-500/30 transition-colors">
               <h3 className="text-xl font-bold mb-4 text-orange-300 text-center">The Beautiful Loop</h3>
               <div className="text-center text-lg">
-                <p className="mb-2">Listen (continuously) → Analyze (every 10 min) → Select Music → Play Smoothly</p>
-                <p className="text-gray-400">↺ Repeat Forever ↺</p>
+                <p className="mb-2 text-foreground">Listen (continuously) → Analyze (every 10 min) → Select Music → Play Smoothly</p>
+                <p className="text-muted-foreground">↺ Repeat Forever ↺</p>
               </div>
             </div>
           </div>
@@ -339,15 +339,15 @@ export default function MoodMusicProject() {
       {activeSection === 'teams' && (
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-8">
-            <h2 className="text-3xl font-bold mb-4">🏗️ The Art of Breaking It Down</h2>
-            <p className="text-xl text-gray-300">Each team owns their brick. Trust others with theirs. Together, we build magic.</p>
+            <h2 className="text-3xl font-bold mb-4 text-foreground">🏗️ The Art of Breaking It Down</h2>
+            <p className="text-xl text-muted-foreground">Each team owns their brick. Trust others with theirs. Together, we build magic.</p>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {teams.map((team) => (
               <div
                 key={team.id}
-                className="relative bg-gray-800/50 backdrop-blur-lg rounded-2xl border border-purple-500/20 overflow-hidden transition-all duration-300 hover:shadow-xl hover:shadow-purple-500/20"
+                className="relative bg-card/50 backdrop-blur-lg rounded-2xl border border-purple-500/20 overflow-hidden transition-all duration-300 hover:shadow-xl hover:shadow-purple-500/20"
               >
                 <div className={`absolute inset-0 bg-gradient-to-br ${team.color_scheme} opacity-10 rounded-2xl`}></div>
 
@@ -359,13 +359,13 @@ export default function MoodMusicProject() {
                     <span className="text-2xl">{'⭐'.repeat(team.difficulty_stars)}</span>
                   </div>
 
-                  <h3 className="text-xl font-bold mb-2">{team.name}</h3>
-                  <p className="text-gray-300 mb-3 text-sm">{team.description}</p>
-                  <p className="text-gray-400 mb-3 text-sm font-medium">{team.mission}</p>
+                  <h3 className="text-xl font-bold mb-2 text-foreground">{team.name}</h3>
+                  <p className="text-muted-foreground mb-3 text-sm">{team.description}</p>
+                  <p className="text-muted-foreground/80 mb-3 text-sm font-medium">{team.mission}</p>
 
                   {/* Member Count Display */}
                   <div className="flex items-center justify-between mb-4">
-                    <span className="text-sm text-gray-400">
+                    <span className="text-sm text-muted-foreground">
                       {team.current_members}/{team.max_members} members
                     </span>
                     {isInTeam(team.id) && (
@@ -387,7 +387,7 @@ export default function MoodMusicProject() {
                     <div className="space-y-4 mb-4 animate-in fade-in duration-200">
                       <div>
                         <p className="font-semibold text-sm text-purple-300 mb-2">Your Tasks:</p>
-                        <ul className="text-sm text-gray-300 space-y-1">
+                        <ul className="text-sm text-muted-foreground space-y-1">
                           {team.tasks.map((task, idx) => (
                             <li key={idx} className="flex items-start gap-2">
                               <span className="text-purple-400 mt-1">•</span>
@@ -399,7 +399,7 @@ export default function MoodMusicProject() {
 
                       <div className="border-t border-purple-500/20 pt-4">
                         <div className="flex items-center justify-between mb-3">
-                          <span className="text-sm text-gray-400">({team.current_members}/{team.max_members} members)</span>
+                          <span className="text-sm text-muted-foreground">({team.current_members}/{team.max_members} members)</span>
                           {getTeamStatus(team) === 'joined' && (
                             <span className="text-xs bg-green-500/20 text-green-300 px-2 py-1 rounded-full">✓ Joined</span>
                           )}
@@ -409,13 +409,13 @@ export default function MoodMusicProject() {
                         </div>
 
                         {joinSuccess && expandedTeam === team.id && (
-                          <div className="mb-3 p-2 bg-green-500/20 border border-green-500/30 rounded-lg text-green-300 text-sm text-center">
+                          <div className="mb-3 p-2 bg-green-500/20 border border-green-500/30 rounded-lg text-green-300 text-sm text-center transition-colors">
                             {joinSuccess}
                           </div>
                         )}
 
                         {joinError && expandedTeam === team.id && (
-                          <div className="mb-3 p-2 bg-red-500/20 border border-red-500/30 rounded-lg text-red-300 text-sm text-center">
+                          <div className="mb-3 p-2 bg-red-500/20 border border-red-500/30 rounded-lg text-red-300 text-sm text-center transition-colors">
                             {joinError}
                           </div>
                         )}
@@ -438,10 +438,10 @@ export default function MoodMusicProject() {
                             disabled={getTeamStatus(team) === 'full' || joiningTeam === team.id}
                             className={`w-full px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
                               getTeamStatus(team) === 'full'
-                                ? 'bg-gray-600/50 text-gray-400 cursor-not-allowed'
+                                ? 'bg-secondary/50 text-muted-foreground cursor-not-allowed'
                                 : joiningTeam === team.id
                                 ? 'bg-purple-500/50 text-purple-300 cursor-wait'
-                                : 'bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600'
+                                : 'bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white'
                             }`}
                           >
                             {getTeamStatus(team) === 'full'
@@ -463,26 +463,26 @@ export default function MoodMusicProject() {
             ))}
           </div>
 
-          <div className="mt-12 bg-gradient-to-r from-purple-600/20 to-pink-600/20 rounded-3xl p-8 border border-purple-500/30">
-            <h3 className="text-2xl font-bold mb-6 text-center">🚀 The Art of Putting It Together</h3>
-            
+          <div className="mt-12 bg-gradient-to-r from-purple-600/20 to-pink-600/20 rounded-3xl p-8 border border-purple-500/30 transition-colors">
+            <h3 className="text-2xl font-bold mb-6 text-center text-foreground">🚀 The Art of Putting It Together</h3>
+
             <div className="grid md:grid-cols-3 gap-6 text-center">
               <div>
                 <div className="text-4xl mb-3">📦</div>
-                <h4 className="font-bold mb-2">Week 1-2: Build Your Brick</h4>
-                <p className="text-gray-300">Each team perfects their component independently</p>
+                <h4 className="font-bold mb-2 text-foreground">Week 1-2: Build Your Brick</h4>
+                <p className="text-muted-foreground">Each team perfects their component independently</p>
               </div>
-              
+
               <div>
                 <div className="text-4xl mb-3">🔗</div>
-                <h4 className="font-bold mb-2">Week 3: Connect the Dots</h4>
-                <p className="text-gray-300">Teams start talking to each other's code</p>
+                <h4 className="font-bold mb-2 text-foreground">Week 3: Connect the Dots</h4>
+                <p className="text-muted-foreground">Teams start talking to each other's code</p>
               </div>
-              
+
               <div>
                 <div className="text-4xl mb-3">✨</div>
-                <h4 className="font-bold mb-2">Week 4: The Magic Happens</h4>
-                <p className="text-gray-300">Everything flows together as one system</p>
+                <h4 className="font-bold mb-2 text-foreground">Week 4: The Magic Happens</h4>
+                <p className="text-muted-foreground">Everything flows together as one system</p>
               </div>
             </div>
 
