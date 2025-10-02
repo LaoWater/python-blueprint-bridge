@@ -12,8 +12,13 @@ export default function MoodMusicProject() {
   const [joinError, setJoinError] = useState<string | null>(null);
   const { projects, teams, fetchTeams, joinTeam, leaveTeam, getUserTeams, loading, error } = useGroupProjects();
 
-  // Get the DJ Blue project
-  const djBlueProject = projects.find(p => p.name === 'DJ Blue - Group Mood Music Assistant');
+  // Get the DJ Blue project (check multiple possible names)
+  const djBlueProject = projects.find(p =>
+    p.name === 'DJ Blue - Group Mood Music Assistant' ||
+    p.name === 'DJ BlueAI' ||
+    p.id === 'dj-blue' ||
+    p.name.toLowerCase().includes('dj blue')
+  );
 
   // Load user's current teams
   const loadUserTeams = useCallback(async () => {
@@ -72,6 +77,33 @@ export default function MoodMusicProject() {
       setTimeout(() => setJoinSuccess(null), 3000);
     } else {
       setJoinError('Failed to join team. You may already be a member or the team may be full.');
+      setTimeout(() => setJoinError(null), 5000);
+    }
+    setJoiningTeam(null);
+  };
+
+  // Handle team leave
+  const handleLeaveTeam = async (teamId: string) => {
+    if (!djBlueProject?.id || joiningTeam) return;
+
+    console.log('🎵 DJ Blue - Leaving team:', { projectId: djBlueProject.id, teamId });
+
+    setJoiningTeam(teamId);
+    setJoinError(null);
+    setJoinSuccess(null);
+
+    const result = await leaveTeam(djBlueProject.id, teamId);
+    console.log('🎵 DJ Blue - Leave result:', result);
+
+    if (result && 'success' in result && result.success) {
+      // Refresh user teams (fetchTeams is called automatically by hook)
+      await loadUserTeams();
+      setJoinSuccess('Successfully left team! 👋');
+      setTimeout(() => setJoinSuccess(null), 3000);
+    } else {
+      const errorMsg = (result && 'error' in result) ? result.error : 'Failed to leave team. Please try again.';
+      console.error('🎵 DJ Blue - Leave failed:', errorMsg);
+      setJoinError(errorMsg || 'Failed to leave team. Please try again.');
       setTimeout(() => setJoinError(null), 5000);
     }
     setJoiningTeam(null);
@@ -388,27 +420,37 @@ export default function MoodMusicProject() {
                           </div>
                         )}
 
-                        <button
-                          onClick={() => handleJoinTeam(team.id)}
-                          disabled={getTeamStatus(team) !== 'available' || joiningTeam === team.id}
-                          className={`w-full px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
-                            getTeamStatus(team) === 'joined'
-                              ? 'bg-green-500/20 text-green-300 border border-green-500/30 cursor-not-allowed'
-                              : getTeamStatus(team) === 'full'
-                              ? 'bg-gray-600/50 text-gray-400 cursor-not-allowed'
+                        {getTeamStatus(team) === 'joined' ? (
+                          <button
+                            onClick={() => handleLeaveTeam(team.id)}
+                            disabled={joiningTeam === team.id}
+                            className={`w-full px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
+                              joiningTeam === team.id
+                                ? 'bg-red-500/50 text-red-300 cursor-wait'
+                                : 'bg-red-500/20 text-red-300 border border-red-500/30 hover:bg-red-500/30'
+                            }`}
+                          >
+                            {joiningTeam === team.id ? 'Leaving...' : 'Leave Team'}
+                          </button>
+                        ) : (
+                          <button
+                            onClick={() => handleJoinTeam(team.id)}
+                            disabled={getTeamStatus(team) === 'full' || joiningTeam === team.id}
+                            className={`w-full px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
+                              getTeamStatus(team) === 'full'
+                                ? 'bg-gray-600/50 text-gray-400 cursor-not-allowed'
+                                : joiningTeam === team.id
+                                ? 'bg-purple-500/50 text-purple-300 cursor-wait'
+                                : 'bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600'
+                            }`}
+                          >
+                            {getTeamStatus(team) === 'full'
+                              ? 'Team Full'
                               : joiningTeam === team.id
-                              ? 'bg-purple-500/50 text-purple-300 cursor-wait'
-                              : 'bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600'
-                          }`}
-                        >
-                          {getTeamStatus(team) === 'joined'
-                            ? '✓ Already Joined'
-                            : getTeamStatus(team) === 'full'
-                            ? 'Team Full'
-                            : joiningTeam === team.id
-                            ? 'Joining...'
-                            : 'Join This Team'}
-                        </button>
+                              ? 'Joining...'
+                              : 'Join This Team'}
+                          </button>
+                        )}
                       </div>
                     </div>
                   )}

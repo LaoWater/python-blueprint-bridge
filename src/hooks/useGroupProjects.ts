@@ -246,35 +246,47 @@ export const useGroupProjects = () => {
 
   // Leave a project team
   const leaveTeam = useCallback(async (projectId: string, teamId: string) => {
+    console.log('🔍 Leave Team Debug:', { projectId, teamId, userId: user?.id });
+
     if (!user) {
+      console.error('❌ No user authenticated');
       setError('You must be logged in to leave a team');
-      return false;
+      return { success: false, error: 'You must be logged in to leave a team' };
     }
 
     try {
+      console.log('📤 Calling leave_project_team RPC...');
       const { data, error } = await supabase
         .rpc('leave_project_team', {
           p_project_id: projectId,
           p_team_id: teamId
         });
 
-      if (error) throw error;
+      console.log('📥 RPC Response:', { data, error });
 
-      const result = data as { success: boolean; error?: string; message?: string };
-
-      if (!result.success) {
-        setError(result.error || 'Failed to leave team');
-        return false;
+      if (error) {
+        console.error('❌ Supabase error:', error);
+        throw error;
       }
 
+      const result = data as { success: boolean; error?: string; message?: string };
+      console.log('📋 Result parsed:', result);
+
+      if (!result.success) {
+        console.error('❌ Leave team failed:', result.error);
+        setError(result.error || 'Failed to leave team');
+        return { success: false, error: result.error || 'Failed to leave team' };
+      }
+
+      console.log('✅ Successfully left team, refreshing teams...');
       // Automatically refresh teams after successful leave
       await fetchTeams(projectId);
 
       return { success: true, teamId };
     } catch (err) {
-      console.error('Error leaving team:', err);
+      console.error('❌ Exception in leaveTeam:', err);
       setError('Failed to leave team');
-      return false;
+      return { success: false, error: 'Failed to leave team' };
     }
   }, [user, fetchTeams]);
 

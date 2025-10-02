@@ -17,8 +17,14 @@ export interface ProjectVotingProps {
 export default function ProjectVoting({ projectId, projectName, currentVotes, className = '' }: ProjectVotingProps) {
   const [userVote, setUserVote] = useState<{ vote_type: string } | null>(null);
   const [isVoting, setIsVoting] = useState(false);
-  const { castVote, removeVote, getUserVote } = useGroupProjects();
+  const [localVotes, setLocalVotes] = useState(currentVotes);
+  const { castVote, removeVote, getUserVote, fetchProjects } = useGroupProjects();
   const { user } = useAuth();
+
+  // Update local votes when prop changes
+  useEffect(() => {
+    setLocalVotes(currentVotes);
+  }, [currentVotes]);
 
   // Load user's current vote
   useEffect(() => {
@@ -36,18 +42,64 @@ export default function ProjectVoting({ projectId, projectName, currentVotes, cl
 
     setIsVoting(true);
 
+    // Store previous vote for rollback if needed
+    const previousVote = userVote;
+    const previousLocalVotes = localVotes;
+
     try {
       // If user already voted the same way, remove the vote
       if (userVote?.vote_type === voteType) {
+        // Optimistically update UI
+        setUserVote(null);
+        setLocalVotes(prev => ({
+          votes_up: voteType === 'up' ? Math.max(0, prev.votes_up - 1) : prev.votes_up,
+          votes_down: voteType === 'down' ? Math.max(0, prev.votes_down - 1) : prev.votes_down,
+          vote_score: voteType === 'up' ? prev.vote_score - 1 : prev.vote_score + 1
+        }));
+
         const success = await removeVote(projectId);
         if (success) {
-          setUserVote(null);
+          // Refresh projects to get accurate counts from server
+          await fetchProjects();
+        } else {
+          // Rollback on failure
+          setUserVote(previousVote);
+          setLocalVotes(previousLocalVotes);
         }
       } else {
-        // Cast new vote or change existing vote
+        // Determine vote change impact
+        const wasUpvote = userVote?.vote_type === 'up';
+        const wasDownvote = userVote?.vote_type === 'down';
+
+        // Optimistically update UI
+        setUserVote({ vote_type: voteType });
+        setLocalVotes(prev => {
+          let newUpCount = prev.votes_up;
+          let newDownCount = prev.votes_down;
+
+          if (voteType === 'up') {
+            newUpCount = prev.votes_up + 1;
+            if (wasDownvote) newDownCount = Math.max(0, prev.votes_down - 1);
+          } else {
+            newDownCount = prev.votes_down + 1;
+            if (wasUpvote) newUpCount = Math.max(0, prev.votes_up - 1);
+          }
+
+          return {
+            votes_up: newUpCount,
+            votes_down: newDownCount,
+            vote_score: newUpCount - newDownCount
+          };
+        });
+
         const success = await castVote(projectId, voteType);
         if (success) {
-          setUserVote({ vote_type: voteType });
+          // Refresh projects to get accurate counts from server
+          await fetchProjects();
+        } else {
+          // Rollback on failure
+          setUserVote(previousVote);
+          setLocalVotes(previousLocalVotes);
         }
       }
     } finally {
@@ -75,7 +127,7 @@ export default function ProjectVoting({ projectId, projectName, currentVotes, cl
   };
 
   const getScoreColor = () => {
-    const score = currentVotes.vote_score;
+    const score = localVotes.vote_score;
     if (score > 10) return 'text-green-400';
     if (score > 5) return 'text-green-300';
     if (score > 0) return 'text-blue-300';
@@ -85,7 +137,7 @@ export default function ProjectVoting({ projectId, projectName, currentVotes, cl
   };
 
   const getScoreIcon = () => {
-    const score = currentVotes.vote_score;
+    const score = localVotes.vote_score;
     if (score > 10) return <Crown className="w-5 h-5" />;
     if (score > 0) return <TrendingUp className="w-5 h-5" />;
     if (score === 0) return null;
@@ -98,7 +150,7 @@ export default function ProjectVoting({ projectId, projectName, currentVotes, cl
         <h3 className="text-sm font-medium text-gray-300">Community Vote</h3>
         <div className={`flex items-center gap-1 ${getScoreColor()}`}>
           {getScoreIcon()}
-          <span className="font-bold">{currentVotes.vote_score > 0 ? '+' : ''}{currentVotes.vote_score}</span>
+          <span className="font-bold">{localVotes.vote_score > 0 ? '+' : ''}{localVotes.vote_score}</span>
         </div>
       </div>
 
@@ -109,7 +161,7 @@ export default function ProjectVoting({ projectId, projectName, currentVotes, cl
           className={getVoteButtonClass('up')}
         >
           <ThumbsUp className="w-4 h-4" />
-          <span>{currentVotes.votes_up}</span>
+          <span>{localVotes.votes_up}</span>
         </button>
 
         <button
@@ -118,7 +170,7 @@ export default function ProjectVoting({ projectId, projectName, currentVotes, cl
           className={getVoteButtonClass('down')}
         >
           <ThumbsDown className="w-4 h-4" />
-          <span>{currentVotes.votes_down}</span>
+          <span>{localVotes.votes_down}</span>
         </button>
       </div>
 

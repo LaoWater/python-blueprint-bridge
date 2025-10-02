@@ -237,7 +237,7 @@ BEGIN
   -- Remove user from team
   UPDATE project_participants
   SET
-    status = 'left',
+    status = 'inactive',
     updated_at = NOW()
   WHERE id = v_participant_id;
 

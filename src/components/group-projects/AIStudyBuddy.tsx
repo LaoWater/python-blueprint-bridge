@@ -95,6 +95,27 @@ export default function AIStudyBuddy() {
     setJoiningTeam(null);
   };
 
+  // Handle team leave
+  const handleLeaveTeam = async (teamId: string) => {
+    if (!studyBuddyProject?.id || joiningTeam) return;
+
+    setJoiningTeam(teamId);
+    setJoinError(null);
+    setJoinSuccess(null);
+
+    const result = await leaveTeam(studyBuddyProject.id, teamId);
+    if (result && 'success' in result && result.success) {
+      // Refresh user teams (fetchTeams is called automatically by hook)
+      await loadUserTeams();
+      setJoinSuccess('Successfully left team! 👋');
+      setTimeout(() => setJoinSuccess(null), 3000);
+    } else {
+      setJoinError('Failed to leave team. Please try again.');
+      setTimeout(() => setJoinError(null), 5000);
+    }
+    setJoiningTeam(null);
+  };
+
   // Check if user is in team
   const isInTeam = useCallback((teamId: string) => userTeams.includes(teamId), [userTeams]);
 
@@ -398,27 +419,37 @@ export default function AIStudyBuddy() {
                           </div>
                         )}
 
-                        <button
-                          onClick={() => handleJoinTeam(team.id)}
-                          disabled={getTeamStatus(team) !== 'available' || joiningTeam === team.id}
-                          className={`w-full px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
-                            getTeamStatus(team) === 'joined'
-                              ? 'bg-green-500/20 text-green-300 border border-green-500/30 cursor-not-allowed'
-                              : getTeamStatus(team) === 'full'
-                              ? 'bg-gray-600/50 text-gray-400 cursor-not-allowed'
+                        {getTeamStatus(team) === 'joined' ? (
+                          <button
+                            onClick={() => handleLeaveTeam(team.id)}
+                            disabled={joiningTeam === team.id}
+                            className={`w-full px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
+                              joiningTeam === team.id
+                                ? 'bg-red-500/50 text-red-300 cursor-wait'
+                                : 'bg-red-500/20 text-red-300 border border-red-500/30 hover:bg-red-500/30'
+                            }`}
+                          >
+                            {joiningTeam === team.id ? 'Leaving...' : 'Leave Team'}
+                          </button>
+                        ) : (
+                          <button
+                            onClick={() => handleJoinTeam(team.id)}
+                            disabled={getTeamStatus(team) === 'full' || joiningTeam === team.id}
+                            className={`w-full px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
+                              getTeamStatus(team) === 'full'
+                                ? 'bg-gray-600/50 text-gray-400 cursor-not-allowed'
+                                : joiningTeam === team.id
+                                ? 'bg-green-500/50 text-green-300 cursor-wait'
+                                : 'bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600'
+                            }`}
+                          >
+                            {getTeamStatus(team) === 'full'
+                              ? 'Team Full'
                               : joiningTeam === team.id
-                              ? 'bg-green-500/50 text-green-300 cursor-wait'
-                              : 'bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600'
-                          }`}
-                        >
-                          {getTeamStatus(team) === 'joined'
-                            ? '✓ Already Joined'
-                            : getTeamStatus(team) === 'full'
-                            ? 'Team Full'
-                            : joiningTeam === team.id
-                            ? 'Joining...'
-                            : 'Join This Team'}
-                        </button>
+                              ? 'Joining...'
+                              : 'Join This Team'}
+                          </button>
+                        )}
                       </div>
                     </div>
                   )}

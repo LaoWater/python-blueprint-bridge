@@ -67,6 +67,70 @@ export default function GroupProjects() {
         </div>
       </div>
 
+      {/* Project Navigation - Subtle & Beautiful */}
+      <div className="container mx-auto px-4 mb-8">
+        <div className="max-w-4xl mx-auto bg-gradient-to-r from-slate-800/40 to-slate-700/40 backdrop-blur-md rounded-2xl border border-slate-600/30 p-2">
+          <div className="grid grid-cols-3 gap-2">
+            <button
+              onClick={() => setActiveView('wellness-oracle')}
+              className={`group relative px-4 py-3 rounded-xl transition-all duration-300 ${
+                activeView === 'wellness-oracle'
+                  ? 'bg-gradient-to-r from-pink-500/20 to-purple-500/20 shadow-lg shadow-pink-500/20'
+                  : 'hover:bg-slate-700/50'
+              }`}
+            >
+              <div className="flex items-center justify-center gap-2">
+                <Heart className={`w-4 h-4 ${activeView === 'wellness-oracle' ? 'text-pink-400' : 'text-slate-400 group-hover:text-pink-400'} transition-colors`} />
+                <span className={`text-sm font-medium ${activeView === 'wellness-oracle' ? 'text-pink-300' : 'text-slate-300 group-hover:text-pink-300'} transition-colors`}>
+                  Wellness Oracle
+                </span>
+              </div>
+              {activeView === 'wellness-oracle' && (
+                <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-12 h-0.5 bg-gradient-to-r from-pink-500 to-purple-500 rounded-full"></div>
+              )}
+            </button>
+
+            <button
+              onClick={() => setActiveView('ai-study-buddy')}
+              className={`group relative px-4 py-3 rounded-xl transition-all duration-300 ${
+                activeView === 'ai-study-buddy'
+                  ? 'bg-gradient-to-r from-blue-500/20 to-cyan-500/20 shadow-lg shadow-blue-500/20'
+                  : 'hover:bg-slate-700/50'
+              }`}
+            >
+              <div className="flex items-center justify-center gap-2">
+                <BookOpen className={`w-4 h-4 ${activeView === 'ai-study-buddy' ? 'text-blue-400' : 'text-slate-400 group-hover:text-blue-400'} transition-colors`} />
+                <span className={`text-sm font-medium ${activeView === 'ai-study-buddy' ? 'text-blue-300' : 'text-slate-300 group-hover:text-blue-300'} transition-colors`}>
+                  AI Study Buddy
+                </span>
+              </div>
+              {activeView === 'ai-study-buddy' && (
+                <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-12 h-0.5 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full"></div>
+              )}
+            </button>
+
+            <button
+              onClick={() => setActiveView('dj-blue')}
+              className={`group relative px-4 py-3 rounded-xl transition-all duration-300 ${
+                activeView === 'dj-blue'
+                  ? 'bg-gradient-to-r from-indigo-500/20 to-purple-500/20 shadow-lg shadow-indigo-500/20'
+                  : 'hover:bg-slate-700/50'
+              }`}
+            >
+              <div className="flex items-center justify-center gap-2">
+                <Rocket className={`w-4 h-4 ${activeView === 'dj-blue' ? 'text-indigo-400' : 'text-slate-400 group-hover:text-indigo-400'} transition-colors`} />
+                <span className={`text-sm font-medium ${activeView === 'dj-blue' ? 'text-indigo-300' : 'text-slate-300 group-hover:text-indigo-300'} transition-colors`}>
+                  DJ BlueAI
+                </span>
+              </div>
+              {activeView === 'dj-blue' && (
+                <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-12 h-0.5 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full"></div>
+              )}
+            </button>
+          </div>
+        </div>
+      </div>
+
       {/* Navigation Pills */}
       <div className="container mx-auto px-4 mb-12">
         <div className="flex justify-center gap-4 flex-wrap">
