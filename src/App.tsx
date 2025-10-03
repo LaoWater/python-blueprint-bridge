@@ -66,7 +66,8 @@ const App = () => (
                   <Route path="/blueprints_mastery" element={<BlueprintsMastery />} />
                   <Route path="/git-blueprints" element={<GitBlueprints />} />
                   <Route path="/group-projects" element={<GroupProjects />} />
-                  <Route path="/test" element={<TestPlatform />} />
+          <Route path="/test" element={<TestPlatform />} />
+          <Route path="/test-platform" element={<TestPlatform />} />
                   <Route path="/foundations" element={<Foundations />} />
                   <Route path="/ide" element={<IDEPage />} />
             <Route path="/data-calculus" element={<DataCalculus />} />

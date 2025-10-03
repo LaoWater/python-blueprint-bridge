@@ -7,6 +7,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import LiveTestMonitor from './LiveTestMonitor';
 import TestCreator from './TestCreator';
+import TestReviewInterface from './TestReviewInterface';
+import { ClipboardCheck } from 'lucide-react';
 
 type Test = Database['public']['Tables']['tests']['Row'];
 
@@ -98,6 +100,10 @@ const TestAdminDashboard = () => {
           </TabsTrigger>
           <TabsTrigger value="closed">
             Closed <Badge className="ml-2" variant="outline">{closedTests.length}</Badge>
+          </TabsTrigger>
+          <TabsTrigger value="review">
+            <ClipboardCheck className="w-4 h-4 mr-2" />
+            Review Submissions
           </TabsTrigger>
         </TabsList>
 
@@ -194,6 +200,10 @@ const TestAdminDashboard = () => {
               </CardContent>
             </Card>
           ))}
+        </TabsContent>
+
+        <TabsContent value="review" className="h-[calc(100vh-200px)]">
+          <TestReviewInterface />
         </TabsContent>
       </Tabs>
     </div>
