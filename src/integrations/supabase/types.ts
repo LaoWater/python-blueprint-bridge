@@ -266,6 +266,9 @@ export type Database = {
           start_date: string | null
           status: string
           updated_at: string | null
+          vote_score: number | null
+          votes_down: number | null
+          votes_up: number | null
         }
         Insert: {
           created_at?: string | null
@@ -282,6 +285,9 @@ export type Database = {
           start_date?: string | null
           status?: string
           updated_at?: string | null
+          vote_score?: number | null
+          votes_down?: number | null
+          votes_up?: number | null
         }
         Update: {
           created_at?: string | null
@@ -298,6 +304,9 @@ export type Database = {
           start_date?: string | null
           status?: string
           updated_at?: string | null
+          vote_score?: number | null
+          votes_down?: number | null
+          votes_up?: number | null
         }
         Relationships: []
       }
@@ -585,6 +594,41 @@ export type Database = {
           },
         ]
       }
+      project_votes: {
+        Row: {
+          created_at: string | null
+          id: string
+          project_id: string | null
+          updated_at: string | null
+          user_id: string | null
+          vote_type: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          project_id?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+          vote_type: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          project_id?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+          vote_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "project_votes_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "group_projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       projects: {
         Row: {
           created_at: string | null
@@ -647,6 +691,238 @@ export type Database = {
           },
         ]
       }
+      test_questions: {
+        Row: {
+          created_at: string
+          description: string
+          id: string
+          points: number
+          question_number: number
+          starter_code: string | null
+          test_id: string
+          title: string
+        }
+        Insert: {
+          created_at?: string
+          description: string
+          id?: string
+          points?: number
+          question_number: number
+          starter_code?: string | null
+          test_id: string
+          title: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          id?: string
+          points?: number
+          question_number?: number
+          starter_code?: string | null
+          test_id?: string
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "test_questions_test_id_fkey"
+            columns: ["test_id"]
+            isOneToOne: false
+            referencedRelation: "tests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      test_student_questions: {
+        Row: {
+          admin_response: string | null
+          created_at: string
+          id: string
+          question_text: string
+          responded_at: string | null
+          responded_by: string | null
+          student_id: string
+          test_id: string
+        }
+        Insert: {
+          admin_response?: string | null
+          created_at?: string
+          id?: string
+          question_text: string
+          responded_at?: string | null
+          responded_by?: string | null
+          student_id: string
+          test_id: string
+        }
+        Update: {
+          admin_response?: string | null
+          created_at?: string
+          id?: string
+          question_text?: string
+          responded_at?: string | null
+          responded_by?: string | null
+          student_id?: string
+          test_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "test_student_questions_responded_by_fkey"
+            columns: ["responded_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "test_student_questions_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "test_student_questions_test_id_fkey"
+            columns: ["test_id"]
+            isOneToOne: false
+            referencedRelation: "tests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      test_submissions: {
+        Row: {
+          code_content: string
+          copy_paste_attempts: number | null
+          cursor_position: Json | null
+          id: string
+          is_active: boolean | null
+          last_edit_at: string
+          last_edited_by: string | null
+          question_id: string
+          score: number | null
+          started_at: string
+          status: string
+          student_id: string
+          submitted_at: string | null
+          tab_switches: number | null
+          teacher_note: string | null
+          test_id: string
+          updated_at: string
+        }
+        Insert: {
+          code_content?: string
+          copy_paste_attempts?: number | null
+          cursor_position?: Json | null
+          id?: string
+          is_active?: boolean | null
+          last_edit_at?: string
+          last_edited_by?: string | null
+          question_id: string
+          score?: number | null
+          started_at?: string
+          status?: string
+          student_id: string
+          submitted_at?: string | null
+          tab_switches?: number | null
+          teacher_note?: string | null
+          test_id: string
+          updated_at?: string
+        }
+        Update: {
+          code_content?: string
+          copy_paste_attempts?: number | null
+          cursor_position?: Json | null
+          id?: string
+          is_active?: boolean | null
+          last_edit_at?: string
+          last_edited_by?: string | null
+          question_id?: string
+          score?: number | null
+          started_at?: string
+          status?: string
+          student_id?: string
+          submitted_at?: string | null
+          tab_switches?: number | null
+          teacher_note?: string | null
+          test_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "test_submissions_last_edited_by_fkey"
+            columns: ["last_edited_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "test_submissions_question_id_fkey"
+            columns: ["question_id"]
+            isOneToOne: false
+            referencedRelation: "test_questions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "test_submissions_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "test_submissions_test_id_fkey"
+            columns: ["test_id"]
+            isOneToOne: false
+            referencedRelation: "tests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tests: {
+        Row: {
+          created_at: string
+          created_by: string
+          description: string | null
+          end_time: string | null
+          id: string
+          start_time: string | null
+          status: string
+          time_limit_minutes: number | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by: string
+          description?: string | null
+          end_time?: string | null
+          id?: string
+          start_time?: string | null
+          status?: string
+          time_limit_minutes?: number | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          description?: string | null
+          end_time?: string | null
+          id?: string
+          start_time?: string | null
+          status?: string
+          time_limit_minutes?: number | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tests_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_sessions: {
         Row: {
           created_at: string | null
@@ -693,6 +969,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      cast_project_vote: {
+        Args: { p_project_id: string; p_vote_type: string }
+        Returns: Json
+      }
       check_password_attempt_rate_limit: {
         Args: { p_user_id: string }
         Returns: boolean
@@ -767,6 +1047,13 @@ export type Database = {
           username: string
         }[]
       }
+      get_user_project_vote: {
+        Args: { p_project_id: string }
+        Returns: {
+          vote_type: string
+          voted_at: string
+        }[]
+      }
       get_user_teams: {
         Args: { p_project_id: string }
         Returns: {
@@ -783,6 +1070,10 @@ export type Database = {
       }
       leave_project_team: {
         Args: { p_project_id: string; p_team_id: string }
+        Returns: Json
+      }
+      remove_project_vote: {
+        Args: { p_project_id: string }
         Returns: Json
       }
       test_authenticated_operations: {
