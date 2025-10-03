@@ -9,40 +9,43 @@ import TimerCountdown from './TimerCountdown';
 import AskQuestionDialog from './AskQuestionDialog';
 import { Button } from '@/components/ui/button';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { ChevronDown, ChevronUp } from 'lucide-react';
 
 type Test = Database['public']['Tables']['tests']['Row'];
-type Question = Database['public']['Tables']['test_questions']['Row'];
+type Assignment = Database['public']['Tables']['test_questions']['Row'];
 type Submission = Database['public']['Tables']['test_submissions']['Row'];
 
 const TestEnvironment = () => {
   const { user } = useAuth();
   const [liveTests, setLiveTests] = useState<Test[]>([]);
   const [selectedTest, setSelectedTest] = useState<Test | null>(null);
-  const [questions, setQuestions] = useState<Question[]>([]);
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [assignments, setAssignments] = useState<Assignment[]>([]);
+  const [currentAssignmentIndex, setCurrentAssignmentIndex] = useState(0);
   const [submission, setSubmission] = useState<Submission | null>(null);
   const [code, setCode] = useState('');
   const [showSubmitDialog, setShowSubmitDialog] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(true);
 
   // Fetch live tests
   useEffect(() => {
     fetchLiveTests();
   }, []);
 
-  // Fetch questions when test is selected
+  // Fetch assignments when test is selected
   useEffect(() => {
     if (selectedTest) {
-      fetchQuestions();
+      fetchAssignments();
     }
   }, [selectedTest]);
 
-  // Load or create submission when question changes
+  // Load or create submission when assignment changes
   useEffect(() => {
-    if (selectedTest && questions.length > 0 && user) {
+    if (selectedTest && assignments.length > 0 && user) {
       loadOrCreateSubmission();
     }
-  }, [currentQuestionIndex, questions, selectedTest, user]);
+  }, [currentAssignmentIndex, assignments, selectedTest, user]);
 
   const fetchLiveTests = async () => {
     try {
@@ -70,7 +73,7 @@ const TestEnvironment = () => {
     }
   };
 
-  const fetchQuestions = async () => {
+  const fetchAssignments = async () => {
     if (!selectedTest) return;
 
     try {
@@ -81,19 +84,19 @@ const TestEnvironment = () => {
         .order('question_number', { ascending: true });
 
       if (error) throw error;
-      setQuestions(data || []);
+      setAssignments(data || []);
     } catch (error) {
-      console.error('Error fetching questions:', error);
+      console.error('Error fetching assignments:', error);
       toast({
         title: 'Error',
-        description: 'Failed to load questions',
+        description: 'Failed to load assignments',
         variant: 'destructive',
       });
     }
   };
 
   const loadOrCreateSubmission = async () => {
-    if (!selectedTest || !questions[currentQuestionIndex] || !user) return;
+    if (!selectedTest || !assignments[currentAssignmentIndex] || !user) return;
 
     try {
       // Try to fetch existing submission
@@ -101,21 +104,21 @@ const TestEnvironment = () => {
         .from('test_submissions')
         .select('*')
         .eq('student_id', user.id)
-        .eq('question_id', questions[currentQuestionIndex].id)
+        .eq('question_id', assignments[currentAssignmentIndex].id)
         .single();
 
       if (existing) {
         setSubmission(existing);
-        setCode(existing.code_content || questions[currentQuestionIndex].starter_code || '');
+        setCode(existing.code_content || assignments[currentAssignmentIndex].starter_code || '');
       } else {
         // Create new submission
         const { data: newSubmission, error: createError } = await supabase
           .from('test_submissions')
           .insert({
             test_id: selectedTest.id,
-            question_id: questions[currentQuestionIndex].id,
+            question_id: assignments[currentAssignmentIndex].id,
             student_id: user.id,
-            code_content: questions[currentQuestionIndex].starter_code || '',
+            code_content: assignments[currentAssignmentIndex].starter_code || '',
           })
           .select()
           .single();
@@ -149,13 +152,13 @@ const TestEnvironment = () => {
         description: 'Answer submitted successfully',
       });
 
-      // Move to next question or finish
-      if (currentQuestionIndex < questions.length - 1) {
-        setCurrentQuestionIndex(currentQuestionIndex + 1);
+      // Move to next assignment or finish
+      if (currentAssignmentIndex < assignments.length - 1) {
+        setCurrentAssignmentIndex(currentAssignmentIndex + 1);
       } else {
         toast({
           title: 'Test Complete',
-          description: 'You have completed all questions',
+          description: 'You have completed all assignments',
         });
       }
     } catch (error) {
@@ -192,29 +195,29 @@ const TestEnvironment = () => {
     );
   }
 
-  if (!selectedTest || questions.length === 0) {
+  if (!selectedTest || assignments.length === 0) {
     return (
       <div className="min-h-screen flex items-center justify-center p-4">
         <div className="text-center space-y-4">
           <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto" />
-          <p className="text-muted-foreground">Loading test questions...</p>
+          <p className="text-muted-foreground">Loading assignments...</p>
         </div>
       </div>
     );
   }
 
-  const currentQuestion = questions[currentQuestionIndex];
+  const currentAssignment = assignments[currentAssignmentIndex];
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header with timer */}
+      {/* Compact Header with timer */}
       <div className="border-b bg-card/50 backdrop-blur-sm sticky top-0 z-10">
-        <div className="container mx-auto px-4 py-3 flex items-center justify-between">
+        <div className="container mx-auto px-4 py-2 flex items-center justify-between">
           <div>
-            <h1 className="text-xl font-bold">{selectedTest.title}</h1>
-            <p className="text-sm text-muted-foreground">Question {currentQuestionIndex + 1} of {questions.length}</p>
+            <h1 className="text-lg font-bold">{selectedTest.title}</h1>
+            <p className="text-xs text-muted-foreground">Assignment {currentAssignmentIndex + 1} of {assignments.length}</p>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
             {selectedTest.time_limit_minutes && selectedTest.start_time && (
               <TimerCountdown
                 startTime={selectedTest.start_time}
@@ -225,6 +228,7 @@ const TestEnvironment = () => {
             <Button
               onClick={() => setShowSubmitDialog(true)}
               disabled={!submission || submission.status === 'submitted'}
+              size="sm"
             >
               Submit Answer
             </Button>
@@ -232,33 +236,51 @@ const TestEnvironment = () => {
         </div>
       </div>
 
-      <div className="flex h-[calc(100vh-64px)]">
-        {/* Question Navigation Sidebar */}
+      <div className="flex h-[calc(100vh-56px)]">
+        {/* Assignment Navigation Sidebar */}
         <QuestionNavigation
-          questions={questions}
-          currentIndex={currentQuestionIndex}
-          onSelectQuestion={setCurrentQuestionIndex}
+          questions={assignments}
+          currentIndex={currentAssignmentIndex}
+          onSelectQuestion={setCurrentAssignmentIndex}
         />
 
         {/* Main Editor Area */}
-        <div className="flex-1 flex flex-col">
-          {/* Question Description */}
-          <div className="p-6 border-b bg-card/30">
-            <h2 className="text-2xl font-bold mb-2">{currentQuestion.title}</h2>
-            <p className="text-muted-foreground whitespace-pre-wrap">{currentQuestion.description}</p>
-            <div className="mt-2 text-sm text-muted-foreground">
-              Points: {currentQuestion.points}
-            </div>
-            {submission?.teacher_note && (
-              <div className="mt-4 p-4 bg-primary/5 border border-primary/20 rounded-lg">
-                <p className="text-sm font-medium mb-1">💡 Teacher's Note:</p>
-                <p className="text-sm">{submission.teacher_note}</p>
-              </div>
-            )}
-          </div>
+        <div className="flex-1 flex flex-col overflow-hidden">
+          {/* Collapsible Assignment Description */}
+          <Collapsible
+            open={isDescriptionExpanded}
+            onOpenChange={setIsDescriptionExpanded}
+            className="border-b bg-card/30"
+          >
+            <CollapsibleTrigger asChild>
+              <Button
+                variant="ghost"
+                className="w-full flex items-center justify-between p-4 hover:bg-card/50"
+              >
+                <div className="flex items-center gap-3">
+                  <h2 className="text-xl font-bold">{currentAssignment.title}</h2>
+                  <span className="text-sm text-muted-foreground">({currentAssignment.points} pts)</span>
+                </div>
+                {isDescriptionExpanded ? (
+                  <ChevronUp className="h-5 w-5" />
+                ) : (
+                  <ChevronDown className="h-5 w-5" />
+                )}
+              </Button>
+            </CollapsibleTrigger>
+            <CollapsibleContent className="px-4 pb-4">
+              <p className="text-muted-foreground whitespace-pre-wrap">{currentAssignment.description}</p>
+              {submission?.teacher_note && (
+                <div className="mt-3 p-3 bg-primary/5 border border-primary/20 rounded-lg">
+                  <p className="text-sm font-medium mb-1">💡 Teacher's Note:</p>
+                  <p className="text-sm">{submission.teacher_note}</p>
+                </div>
+              )}
+            </CollapsibleContent>
+          </Collapsible>
 
-          {/* Secure Code Editor */}
-          <div className="flex-1 relative">
+          {/* Secure Code Editor - Takes remaining space */}
+          <div className="flex-1 min-h-0">
             {submission && (
               <SecureEditor
                 code={code}
