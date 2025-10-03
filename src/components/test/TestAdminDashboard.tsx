@@ -6,12 +6,14 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import LiveTestMonitor from './LiveTestMonitor';
+import TestCreator from './TestCreator';
 
 type Test = Database['public']['Tables']['tests']['Row'];
 
 const TestAdminDashboard = () => {
   const [tests, setTests] = useState<Test[]>([]);
   const [selectedTest, setSelectedTest] = useState<Test | null>(null);
+  const [showCreator, setShowCreator] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -49,6 +51,20 @@ const TestAdminDashboard = () => {
     }
   };
 
+  if (showCreator) {
+    return (
+      <div className="container mx-auto p-6">
+        <TestCreator
+          onSuccess={() => {
+            setShowCreator(false);
+            fetchTests();
+          }}
+          onCancel={() => setShowCreator(false)}
+        />
+      </div>
+    );
+  }
+
   if (selectedTest) {
     return (
       <LiveTestMonitor
@@ -69,7 +85,7 @@ const TestAdminDashboard = () => {
           <h1 className="text-3xl font-bold">Test Administration</h1>
           <p className="text-muted-foreground">Manage and monitor student tests</p>
         </div>
-        <Button>Create New Test</Button>
+        <Button onClick={() => setShowCreator(true)}>Create New Test</Button>
       </div>
 
       <Tabs defaultValue="live" className="space-y-4">
