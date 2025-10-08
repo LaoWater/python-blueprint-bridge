@@ -43,6 +43,8 @@ import MatplotlibMasteryArtifact from "./pages/Artifacts/MatplotlibMasteryArtifa
 import SeabornMasteryArtifact from "./pages/Artifacts/SeabornMasteryArtifact";
 import PlotlyInteractiveArtifact from "./pages/Artifacts/PlotlyInteractiveArtifact";
 import StreamlitUnifiedArtifact from "./pages/Artifacts/StreamlitUnifiedArtifact";
+import TestPage from "./pages/TestPage";
+import LiveQuizPage from "./pages/LiveQuizPage";
 
 
 const queryClient = new QueryClient();
@@ -73,6 +75,8 @@ const App = () => (
                   <Route path="/advanced-machine-learning" element={<AdvancedMachineLearning />} />
 
                   <Route path="/personal-files" element={<PersonalFilesPage />} />
+                  <Route path="/test" element={<TestPage />} />
+                  <Route path="/live-quiz" element={<LiveQuizPage />} />
                   <Route path="/artifacts/ifelse" element={<IfElseArtifact />} />
                   <Route path="/artifacts/loops" element={<LoopsArtifact />} />
                   <Route path="/artifacts/collections" element={<CollectionsArtifact />} />

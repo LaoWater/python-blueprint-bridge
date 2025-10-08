@@ -497,7 +497,7 @@ const DesignPatternsArtifact = () => {
             'message': message
         }
         self.logs.append(entry)
-        print(f"[{'{'}entry['timestamp']{'}'} {'{'}level{'}'}] {'{'}message{'}'}")
+        print(f"[{entry['timestamp']} {level}] {message}")
     
     def get_logs(self):
         """Returnează toate log-urile"""
@@ -657,23 +657,23 @@ class Animal:
 
 class Caine(Animal):
     def face_sunet(self):
-        return f"{'{'}self.nume{'}'}: Ham ham! 🐕"
+        return f"{self.nume}: Ham ham! 🐕"
 
 class Pisica(Animal):
     def face_sunet(self):
-        return f"{'{'}self.nume{'}'}: Miau! 🐱"
+        return f"{self.nume}: Miau! 🐱"
 
 class Vaca(Animal):
     def face_sunet(self):
-        return f"{'{'}self.nume{'}'}: Muuu! 🐄"
+        return f"{self.nume}: Muuu! 🐄"
 
 class Oaie(Animal):
     def face_sunet(self):
-        return f"{'{'}self.nume{'}'}: Beeee! 🐑"
+        return f"{self.nume}: Beeee! 🐑"
 
 class Rata(Animal):
     def face_sunet(self):
-        return f"{'{'}self.nume{'}'}: Mac mac! 🦆"
+        return f"{self.nume}: Mac mac! 🦆"
 
 # FACTORY PATTERN - creează animalele centralizat
 class AnimalFactory:
@@ -697,7 +697,7 @@ class AnimalFactory:
         elif tip_animal.lower() == "rata":
             return Rata(nume)
         else:
-            raise ValueError(f"Tipul '{'{'}tip_animal{'}'}' nu este suportat!")
+            raise ValueError(f"Tipul '{tip_animal}' nu este suportat!")
 
 # UTILIZARE - mult mai simplă!
 def creeaza_ferma():
@@ -930,7 +930,7 @@ def creeaza_ferma():
     def __str__(self):
         toppings_text = ", ".join(self.toppings) if self.toppings else "Fără toppings"
         branza_text = "cu brânză" if self.branza else "fără brânză"
-        return f"🍕 Pizza {'{'}self.marime{'}'} cu aluat {'{'}self.aluat{'}'}, sos {'{'}self.sos{'}'}, {'{'}branza_text{'}'}, toppings: {'{'}toppings_text{'}'} - {'{'}self.pret{'}'} RON"
+        return f"🍕 Pizza {self.marime} cu aluat {self.aluat}, sos {self.sos}, {branza_text}, toppings: {toppings_text} - {self.pret} RON"
 
 class PizzaBuilder:
     """
@@ -942,19 +942,19 @@ class PizzaBuilder:
     def set_marime(self, marime):
         """Pas 1: Setează mărimea"""
         self.pizza.marime = marime
-        print(f"🔧 Mărime setată: {'{'}marime{'}'}")
+        print(f"🔧 Mărime setată: {marime}")
         return self  # Return self pentru method chaining!
     
     def set_aluat(self, aluat):
         """Pas 2: Setează alatul"""
         self.pizza.aluat = aluat
-        print(f"🔧 Aluat setat: {'{'}aluat{'}'}")
+        print(f"🔧 Aluat setat: {aluat}")
         return self
     
     def set_sos(self, sos):
         """Pas 3: Setează sosul"""
         self.pizza.sos = sos
-        print(f"🔧 Sos setat: {'{'}sos{'}'}")
+        print(f"🔧 Sos setat: {sos}")
         return self
     
     def add_branza(self):
@@ -966,7 +966,7 @@ class PizzaBuilder:
     def add_topping(self, topping):
         """Pas 5: Adaugă topping"""
         self.pizza.toppings.append(topping)
-        print(f"🔧 Topping adăugat: {'{'}topping{'}'}")
+        print(f"🔧 Topping adăugat: {topping}")
         return self
     
     def calculeaza_pret(self):
@@ -1252,7 +1252,7 @@ class SystemLogger:
             'message': message
         }
         self.logs.append(entry)
-        print(f"[LOG {'{'}entry['timestamp']{'}'} {'{'}message{'}'}")
+        print(f"[LOG {entry['timestamp']} {message}")
 
 # 2. FACTORY - User Factory
 class UserFactory:
@@ -1265,7 +1265,7 @@ class UserFactory:
         elif role == "admin":
             return Admin(nume, email)
         else:
-            raise ValueError(f"Rol necunoscut: {'{'}role{'}'}")
+            raise ValueError(f"Rol necunoscut: {role}")
 
 class User:
     def __init__(self, nume, email):
@@ -1304,24 +1304,24 @@ class CourseBuilder:
     
     def set_title(self, title):
         self.course['title'] = title
-        self.logger.log(f"Titlu setat: {'{'}title{'}'}")
+        self.logger.log(f"Titlu setat: {title}")
         return self
     
     def set_instructor(self, instructor):
         self.course['instructor'] = instructor
-        self.logger.log(f"Instructor setat: {'{'}instructor{'}'}")
+        self.logger.log(f"Instructor setat: {instructor}")
         return self
     
     def set_duration(self, hours):
         self.course['duration'] = hours
         self._calculate_price()
-        self.logger.log(f"Durată setată: {'{'}hours{'}'} ore")
+        self.logger.log(f"Durată setată: {hours} ore")
         return self
     
     def add_topic(self, topic):
         if topic not in self.course['topics']:
             self.course['topics'].append(topic)
-            self.logger.log(f"Subiect adăugat: {'{'}topic{'}'}")
+            self.logger.log(f"Subiect adăugat: {topic}")
         return self
     
     def _calculate_price(self):
@@ -1342,7 +1342,7 @@ class CourseBuilder:
     
     def build(self):
         self._calculate_price()
-        self.logger.log(f"Curs finalizat: {'{'}self.course['title']{'}'}")
+        self.logger.log(f"Curs finalizat: {self.course['title']}")
         return self.course.copy()
 
 # UTILIZARE - toate pattern-urile împreună:
@@ -1365,11 +1365,11 @@ def main():
               .add_topic("OOP")
               .build())
     
-    print(f"Curs creat: {'{'}course{'}'}")
+    print(f"Curs creat: {course}")
     
     # Toate log-urile sunt în aceeași instanță!
     for log in logger.logs:
-        print(f"📝 {'{'}log['timestamp']{'}'}: {'{'}log['message']{'}'}")
+        print(f"📝 {log['timestamp']}: {log['message']}")
 
 if __name__ == "__main__":
     main()`}
