@@ -36,16 +36,42 @@ const AdminQuizDashboard = () => {
 
   const loadStats = async () => {
     try {
+      const INACTIVE_THRESHOLD_MS = 2 * 60 * 1000; // 2 minutes
+      const now = Date.now();
+
       // Total attempts
       const { count: totalAttempts } = await supabase
         .from('quiz_attempts')
         .select('*', { count: 'exact', head: true });
 
-      // Active students (started but not completed)
-      const { count: activeStudents } = await supabase
+      // Active students (started but not completed, with recent activity within 2 minutes)
+      const { data: incompleteAttempts } = await supabase
         .from('quiz_attempts')
-        .select('*', { count: 'exact', head: true })
+        .select('id, started_at')
         .eq('is_completed', false);
+
+      // Check last activity for each incomplete attempt
+      let activeCount = 0;
+      if (incompleteAttempts) {
+        for (const attempt of incompleteAttempts) {
+          const { data: lastResponse } = await supabase
+            .from('quiz_responses')
+            .select('answered_at')
+            .eq('attempt_id', attempt.id)
+            .order('answered_at', { ascending: false })
+            .limit(1)
+            .maybeSingle();
+
+          const lastActivityTime = lastResponse?.answered_at
+            ? new Date(lastResponse.answered_at).getTime()
+            : new Date(attempt.started_at).getTime();
+
+          const timeSinceActivity = now - lastActivityTime;
+          if (timeSinceActivity < INACTIVE_THRESHOLD_MS) {
+            activeCount++;
+          }
+        }
+      }
 
       // Completed today
       const today = new Date();
@@ -69,7 +95,7 @@ const AdminQuizDashboard = () => {
 
       setStats({
         totalAttempts: totalAttempts || 0,
-        activeStudents: activeStudents || 0,
+        activeStudents: activeCount,
         completedToday: completedToday || 0,
         averageScore: avgScore,
       });

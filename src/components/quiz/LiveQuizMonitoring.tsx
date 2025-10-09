@@ -14,6 +14,8 @@ interface ActiveStudent {
   total_questions: number;
   current_progress: number;
   time_elapsed: number;
+  last_activity: string | null;
+  is_active: boolean;
 }
 
 const LiveQuizMonitoring = () => {
@@ -61,6 +63,9 @@ const LiveQuizMonitoring = () => {
 
   const loadActiveStudents = async () => {
     try {
+      const INACTIVE_THRESHOLD_MS = 2 * 60 * 1000; // 2 minutes in milliseconds
+      const now = Date.now();
+
       // Get active quiz attempts (not completed)
       const { data: attempts, error } = await supabase
         .from('quiz_attempts')
@@ -79,14 +84,24 @@ const LiveQuizMonitoring = () => {
 
       const profileMap = new Map(profiles?.map(p => [p.id, p]) || []);
 
-      // Calculate progress for each student
+      // Calculate progress for each student and get last activity
       const studentsWithProgress = await Promise.all(
         (attempts || []).map(async (attempt) => {
-          // Get number of responses so far
-          const { count } = await supabase
+          // Get number of responses and last activity time
+          const { data: responses, count } = await supabase
             .from('quiz_responses')
-            .select('*', { count: 'exact', head: true })
-            .eq('attempt_id', attempt.id);
+            .select('answered_at', { count: 'exact' })
+            .eq('attempt_id', attempt.id)
+            .order('answered_at', { ascending: false })
+            .limit(1);
+
+          const lastActivity = responses?.[0]?.answered_at || null;
+          const lastActivityTime = lastActivity
+            ? new Date(lastActivity).getTime()
+            : new Date(attempt.started_at).getTime();
+
+          const timeSinceLastActivity = now - lastActivityTime;
+          const isActive = timeSinceLastActivity < INACTIVE_THRESHOLD_MS;
 
           const progress = attempt.total_questions > 0
             ? Math.round(((count || 0) / attempt.total_questions) * 100)
@@ -107,11 +122,16 @@ const LiveQuizMonitoring = () => {
             total_questions: attempt.total_questions,
             current_progress: progress,
             time_elapsed: timeElapsed,
+            last_activity: lastActivity,
+            is_active: isActive,
           };
         })
       );
 
-      setActiveStudents(studentsWithProgress);
+      // Filter to only show active students (last activity within 2 minutes)
+      const activeOnly = studentsWithProgress.filter(student => student.is_active);
+
+      setActiveStudents(activeOnly);
     } catch (error) {
       console.error('Error loading active students:', error);
     } finally {
@@ -125,11 +145,17 @@ const LiveQuizMonitoring = () => {
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
-  const getActivityColor = (timeElapsed: number) => {
-    // If last activity was very recent, show active
-    if (timeElapsed < 30) return 'bg-green-500';
-    if (timeElapsed < 120) return 'bg-yellow-500';
-    return 'bg-red-500';
+  const getActivityColor = (lastActivity: string | null, startedAt: string) => {
+    // Calculate seconds since last activity
+    const lastActivityTime = lastActivity
+      ? new Date(lastActivity).getTime()
+      : new Date(startedAt).getTime();
+    const secondsSinceActivity = Math.floor((Date.now() - lastActivityTime) / 1000);
+
+    // Green if active within 2 minutes
+    if (secondsSinceActivity < 120) return 'bg-green-500';
+    // This shouldn't happen as we filter out inactive students, but just in case:
+    return 'bg-yellow-500';
   };
 
   if (loading) {
@@ -177,7 +203,8 @@ const LiveQuizMonitoring = () => {
                   <div className="flex items-center gap-2">
                     <div
                       className={`h-2 w-2 rounded-full ${getActivityColor(
-                        Date.now() / 1000 - new Date(student.started_at).getTime() / 1000
+                        student.last_activity,
+                        student.started_at
                       )}`}
                     />
                     <User className="h-4 w-4" />
@@ -186,7 +213,7 @@ const LiveQuizMonitoring = () => {
                     </CardTitle>
                   </div>
                   <Badge variant="outline" className="text-xs">
-                    In Progress
+                    Active
                   </Badge>
                 </div>
               </CardHeader>
