@@ -7,7 +7,7 @@ import { Progress } from '@/components/ui/progress';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { CheckCircle2, XCircle, Clock, Trophy, BookOpen } from 'lucide-react';
+import { CheckCircle2, XCircle, Clock, Trophy, BookOpen, Home } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import AdminQuizDashboard from '@/components/quiz/AdminQuizDashboard';
 import { useTestMode } from '@/components/TestModeContext';
@@ -46,6 +46,8 @@ export default function LiveQuizPage() {
   const navigate = useNavigate();
 
   // Quiz state
+  const [availableQuizzes, setAvailableQuizzes] = useState<Quiz[]>([]);
+  const [selectedQuizId, setSelectedQuizId] = useState<string | null>(null);
   const [quiz, setQuiz] = useState<Quiz | null>(null);
   const [questions, setQuestions] = useState<Question[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -77,9 +79,9 @@ export default function LiveQuizPage() {
     return () => setTestMode(false);
   }, [quizStarted, quizCompleted, setTestMode]);
 
-  // Fetch quiz and questions on mount
+  // Fetch all quizzes on mount
   useEffect(() => {
-    fetchQuizData();
+    fetchAllQuizzes();
   }, []);
 
   // Timer for quiz duration
@@ -94,19 +96,42 @@ export default function LiveQuizPage() {
     return () => clearInterval(interval);
   }, [quizStarted, quizCompleted, startTime]);
 
-  const fetchQuizData = async () => {
+  const fetchAllQuizzes = async () => {
     try {
       setLoading(true);
 
-      // Fetch Phase I quiz
+      // Fetch all active quizzes
+      const { data: quizzesData, error: quizzesError } = await supabase
+        .from('quizzes')
+        .select('*')
+        .eq('is_active', true)
+        .order('created_at', { ascending: true });
+
+      if (quizzesError) throw quizzesError;
+      setAvailableQuizzes(quizzesData || []);
+
+      setLoading(false);
+    } catch (err) {
+      console.error('Error fetching quizzes:', err);
+      setError('Failed to load quizzes. Please try again.');
+      setLoading(false);
+    }
+  };
+
+  const loadQuiz = async (quizId: string) => {
+    try {
+      setLoading(true);
+
+      // Fetch specific quiz
       const { data: quizData, error: quizError } = await supabase
         .from('quizzes')
         .select('*')
-        .eq('title', 'Python Fundamentals - Phase I')
+        .eq('id', quizId)
         .single();
 
       if (quizError) throw quizError;
       setQuiz(quizData);
+      setSelectedQuizId(quizId);
 
       // Fetch questions for this quiz
       const { data: questionsData, error: questionsError } = await supabase
@@ -305,6 +330,24 @@ export default function LiveQuizPage() {
     }
   };
 
+  const backToQuizSelection = () => {
+    setQuizStarted(false);
+    setQuizCompleted(false);
+    setCurrentQuestionIndex(0);
+    setSelectedAnswer('');
+    setUserAnswers({});
+    setShowExplanation(false);
+    setIsAnswerCorrect(null);
+    setAttemptId(null);
+    setStartTime(null);
+    setTimeElapsed(0);
+    setScore(0);
+    setCorrectCount(0);
+    setQuiz(null);
+    setQuestions([]);
+    setSelectedQuizId(null);
+  };
+
   const retakeQuiz = () => {
     setQuizStarted(false);
     setQuizCompleted(false);
@@ -375,12 +418,78 @@ export default function LiveQuizPage() {
     );
   }
 
-  if (!quiz || questions.length === 0) {
+  // Show quiz selection if no quiz is selected
+  if (!selectedQuizId || !quiz) {
     return (
       <div className="container mx-auto py-12 px-4">
-        <Alert>
-          <AlertDescription>No quiz available at the moment.</AlertDescription>
-        </Alert>
+        <div className="max-w-4xl mx-auto">
+          <div className="mb-8">
+            <h1 className="text-4xl font-bold mb-2">Available Quizzes</h1>
+            <p className="text-muted-foreground">
+              Select a quiz to test your Python programming knowledge
+            </p>
+          </div>
+
+          {availableQuizzes.length === 0 ? (
+            <Alert>
+              <AlertDescription>No quizzes available at the moment.</AlertDescription>
+            </Alert>
+          ) : (
+            <div className="grid gap-6 md:grid-cols-2">
+              {availableQuizzes.map((availableQuiz) => (
+                <Card
+                  key={availableQuiz.id}
+                  className="hover:shadow-lg transition-shadow cursor-pointer"
+                  onClick={() => loadQuiz(availableQuiz.id)}
+                >
+                  <CardHeader>
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1">
+                        <CardTitle className="text-xl mb-2">{availableQuiz.title}</CardTitle>
+                        <CardDescription className="line-clamp-2">
+                          {availableQuiz.description}
+                        </CardDescription>
+                      </div>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between text-sm">
+                        <div className="flex items-center gap-2">
+                          <BookOpen className="w-4 h-4 text-primary" />
+                          <span>{availableQuiz.total_questions} Questions</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Clock className="w-4 h-4 text-primary" />
+                          <span>{availableQuiz.time_limit_minutes} min</span>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span
+                          className={`px-2 py-1 rounded-full text-xs font-medium ${
+                            availableQuiz.difficulty === 'easy'
+                              ? 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300'
+                              : availableQuiz.difficulty === 'medium'
+                              ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900 dark:text-yellow-300'
+                              : 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300'
+                          }`}
+                        >
+                          {availableQuiz.difficulty}
+                        </span>
+                        <span className="text-xs text-muted-foreground">
+                          Passing: {availableQuiz.passing_score}%
+                        </span>
+                      </div>
+                    </div>
+                  </CardContent>
+                  <CardFooter>
+                    <Button className="w-full">Start Quiz</Button>
+                  </CardFooter>
+                </Card>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     );
   }
@@ -448,8 +557,8 @@ export default function LiveQuizPage() {
             <Button onClick={retakeQuiz} variant="outline" className="flex-1">
               Retake Quiz
             </Button>
-            <Button onClick={() => navigate('/')} className="flex-1">
-              Back to Home
+            <Button onClick={backToQuizSelection} className="flex-1">
+              Back to Quizzes
             </Button>
           </CardFooter>
         </Card>
@@ -461,11 +570,21 @@ export default function LiveQuizPage() {
   if (!quizStarted) {
     return (
       <div className="container mx-auto py-12 px-4">
-        <Card className="max-w-2xl mx-auto">
-          <CardHeader>
-            <CardTitle className="text-3xl">{quiz.title}</CardTitle>
-            <CardDescription>{quiz.description}</CardDescription>
-          </CardHeader>
+        <div className="max-w-2xl mx-auto space-y-4">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={backToQuizSelection}
+            className="flex items-center gap-2"
+          >
+            <Home className="w-4 h-4" />
+            Back to Quizzes
+          </Button>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-3xl">{quiz.title}</CardTitle>
+              <CardDescription>{quiz.description}</CardDescription>
+            </CardHeader>
           <CardContent className="space-y-6">
             <div className="grid grid-cols-2 gap-4">
               <div className="flex items-center gap-2">
@@ -505,7 +624,8 @@ export default function LiveQuizPage() {
               Start Quiz
             </Button>
           </CardFooter>
-        </Card>
+          </Card>
+        </div>
       </div>
     );
   }
@@ -521,8 +641,19 @@ export default function LiveQuizPage() {
         <Card>
           <CardContent className="pt-6">
             <div className="flex justify-between items-center mb-4">
-              <div className="text-sm font-medium">
-                Question {currentQuestionIndex + 1} of {questions.length}
+              <div className="flex items-center gap-4">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={backToQuizSelection}
+                  className="flex items-center gap-2"
+                >
+                  <Home className="w-4 h-4" />
+                  Back to Quizzes
+                </Button>
+                <div className="text-sm font-medium">
+                  Question {currentQuestionIndex + 1} of {questions.length}
+                </div>
               </div>
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <Clock className="w-4 h-4" />
