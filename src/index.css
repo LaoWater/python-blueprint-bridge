@@ -419,4 +419,54 @@
   .concept-card:nth-child(6) { animation-delay: 0.5s; }
   .concept-card:nth-child(7) { animation-delay: 0.6s; }
   .concept-card:nth-child(8) { animation-delay: 0.7s; }
+
+  /* Compact markdown styling for test instructions */
+  .text-instructions h1 {
+    @apply text-lg font-bold mb-2 mt-0 text-indigo-900 dark:text-indigo-100;
+  }
+
+  .text-instructions h2 {
+    @apply text-base font-semibold mb-1.5 mt-3 text-indigo-800 dark:text-indigo-200;
+  }
+
+  .text-instructions h3 {
+    @apply text-sm font-semibold mb-1 mt-2 text-indigo-700 dark:text-indigo-300;
+  }
+
+  .text-instructions p {
+    @apply text-sm mb-2 leading-relaxed;
+  }
+
+  .text-instructions ul,
+  .text-instructions ol {
+    @apply text-sm mb-2 ml-4 space-y-1;
+  }
+
+  .text-instructions li {
+    @apply leading-snug;
+  }
+
+  .text-instructions strong {
+    @apply font-semibold text-indigo-900 dark:text-indigo-100;
+  }
+
+  .text-instructions em {
+    @apply italic text-gray-700 dark:text-gray-300;
+  }
+
+  .text-instructions code {
+    @apply text-xs bg-indigo-100 dark:bg-indigo-900 px-1 py-0.5 rounded font-mono;
+  }
+
+  .text-instructions pre {
+    @apply text-xs bg-gray-100 dark:bg-gray-800 p-2 rounded mb-2 overflow-x-auto;
+  }
+
+  .text-instructions pre code {
+    @apply bg-transparent p-0;
+  }
+
+  .text-instructions blockquote {
+    @apply border-l-4 border-indigo-400 pl-3 py-1 text-sm italic text-gray-700 dark:text-gray-300 mb-2;
+  }
 }

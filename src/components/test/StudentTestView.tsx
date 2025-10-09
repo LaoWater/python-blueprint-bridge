@@ -9,6 +9,8 @@ import { Clock, Code, AlertTriangle, CheckCircle, ChevronDown, ChevronUp, FileCo
 import SecureCodeEditor from './SecureCodeEditor';
 import { toast } from '@/components/ui/use-toast';
 import { Separator } from '@/components/ui/separator';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 interface Test {
   id: string;
@@ -375,6 +377,24 @@ const CompletedTests = ({ userId }: { userId: string }) => {
                             <span className="ml-2 font-medium">{sub.paste_attempt_count}</span>
                           </div>
                         </div>
+                      </div>
+                    )}
+
+                    {/* Test Instructions */}
+                    {sub.tests?.instructions && (
+                      <div className="space-y-2">
+                        <details className="group">
+                          <summary className="cursor-pointer text-sm font-medium flex items-center gap-2 hover:text-primary transition-colors">
+                            <FileCode className="h-4 w-4 text-indigo-600" />
+                            <span>Test Instructions</span>
+                            <ChevronDown className="h-4 w-4 text-muted-foreground group-open:rotate-180 transition-transform" />
+                          </summary>
+                          <div className="mt-3 bg-indigo-50 dark:bg-indigo-950 border border-indigo-200 dark:border-indigo-800 p-4 rounded-md text-instructions">
+                            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                              {sub.tests.instructions}
+                            </ReactMarkdown>
+                          </div>
+                        </details>
                       </div>
                     )}
 

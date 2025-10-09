@@ -10,6 +10,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { CheckCircle2, XCircle, Clock, Trophy, BookOpen } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import AdminQuizDashboard from '@/components/quiz/AdminQuizDashboard';
+import { useTestMode } from '@/components/TestModeContext';
 
 interface QuizOption {
   id: string;
@@ -41,6 +42,7 @@ interface Quiz {
 
 export default function LiveQuizPage() {
   const { user, isAdmin } = useAuth();
+  const { setTestMode } = useTestMode();
   const navigate = useNavigate();
 
   // Quiz state
@@ -64,6 +66,16 @@ export default function LiveQuizPage() {
   const [correctCount, setCorrectCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  // Enable test mode when quiz is started, disable when not in quiz
+  useEffect(() => {
+    if (quizStarted && !quizCompleted) {
+      setTestMode(true);
+    } else {
+      setTestMode(false);
+    }
+    return () => setTestMode(false);
+  }, [quizStarted, quizCompleted, setTestMode]);
 
   // Fetch quiz and questions on mount
   useEffect(() => {
@@ -106,6 +118,11 @@ export default function LiveQuizPage() {
       if (questionsError) throw questionsError;
       setQuestions(questionsData);
 
+      // Check for existing active attempt
+      if (user) {
+        await checkForActiveAttempt(quizData.id, questionsData);
+      }
+
       setLoading(false);
     } catch (err) {
       console.error('Error fetching quiz:', err);
@@ -114,11 +131,70 @@ export default function LiveQuizPage() {
     }
   };
 
+  const checkForActiveAttempt = async (quizId: string, questionsData: Question[]) => {
+    try {
+      // Look for an active (incomplete) attempt
+      const { data: activeAttempt, error: attemptError } = await supabase
+        .from('quiz_attempts')
+        .select('*, quiz_responses(*)')
+        .eq('user_id', user!.id)
+        .eq('quiz_id', quizId)
+        .eq('is_completed', false)
+        .order('started_at', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+      if (attemptError) throw attemptError;
+
+      if (activeAttempt) {
+        // Resume existing attempt
+        setAttemptId(activeAttempt.id);
+        setQuizStarted(true);
+        setStartTime(new Date(activeAttempt.started_at));
+        setTimeElapsed(activeAttempt.time_spent_seconds || 0);
+        setCorrectCount(activeAttempt.correct_answers || 0);
+
+        // Build user answers map from responses
+        const answersMap: Record<number, string> = {};
+        activeAttempt.quiz_responses.forEach((response: any) => {
+          const questionIdx = questionsData.findIndex(q => q.id === response.question_id);
+          if (questionIdx !== -1) {
+            answersMap[questionIdx] = response.user_answer;
+          }
+        });
+        setUserAnswers(answersMap);
+
+        // Set current question to first unanswered question
+        const nextQuestionIdx = Object.keys(answersMap).length;
+        setCurrentQuestionIndex(Math.min(nextQuestionIdx, questionsData.length - 1));
+      }
+    } catch (err) {
+      console.error('Error checking for active attempt:', err);
+    }
+  };
+
   const startQuiz = async () => {
     if (!user || !quiz) return;
 
     try {
-      // Create a new quiz attempt
+      // Check if there's already an active attempt
+      const { data: activeAttempt, error: checkError } = await supabase
+        .from('quiz_attempts')
+        .select('id')
+        .eq('user_id', user.id)
+        .eq('quiz_id', quiz.id)
+        .eq('is_completed', false)
+        .maybeSingle();
+
+      if (checkError) throw checkError;
+
+      if (activeAttempt) {
+        // Resume existing attempt instead of creating a new one
+        await checkForActiveAttempt(quiz.id, questions);
+        return;
+      }
+
+      // Create a new quiz attempt only if no active one exists
       const { data: attemptData, error: attemptError } = await supabase
         .from('quiz_attempts')
         .insert({

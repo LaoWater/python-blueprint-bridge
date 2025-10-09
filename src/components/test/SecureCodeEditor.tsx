@@ -13,11 +13,15 @@ import {
   Eye,
   EyeOff,
   MessageSquare,
-  X
+  X,
+  ChevronDown
 } from 'lucide-react';
 import { toast } from '@/components/ui/use-toast';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import { useTestMode } from '@/components/TestModeContext';
 
 interface SecureCodeEditorProps {
   test: any;
@@ -35,6 +39,7 @@ interface AdminIntervention {
 
 const SecureCodeEditor = ({ test, submission, onExit }: SecureCodeEditorProps) => {
   const { user } = useAuth();
+  const { setTestMode } = useTestMode();
   const [code, setCode] = useState(submission.code_content || '');
   const [altTabCount, setAltTabCount] = useState(0);
   const [pasteAttempts, setPasteAttempts] = useState(0);
@@ -48,6 +53,12 @@ const SecureCodeEditor = ({ test, submission, onExit }: SecureCodeEditorProps) =
   const editorRef = useRef<HTMLTextAreaElement>(null);
   const saveTimeoutRef = useRef<NodeJS.Timeout>();
   const sessionIdRef = useRef<string>('');
+
+  // Enable test mode when component mounts, disable on unmount
+  useEffect(() => {
+    setTestMode(true);
+    return () => setTestMode(false);
+  }, [setTestMode]);
 
   // Calculate time remaining
   useEffect(() => {
@@ -145,6 +156,26 @@ const SecureCodeEditor = ({ test, submission, onExit }: SecureCodeEditorProps) =
   // Block context menu (right-click)
   const handleContextMenu = (e: React.MouseEvent) => {
     e.preventDefault();
+  };
+
+  // Handle TAB key for indentation
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Tab') {
+      e.preventDefault();
+
+      const textarea = e.currentTarget;
+      const start = textarea.selectionStart;
+      const end = textarea.selectionEnd;
+
+      // Insert 4 spaces at cursor position
+      const newCode = code.substring(0, start) + '    ' + code.substring(end);
+      setCode(newCode);
+
+      // Move cursor after the inserted spaces
+      setTimeout(() => {
+        textarea.selectionStart = textarea.selectionEnd = start + 4;
+      }, 0);
+    }
   };
 
   // Auto-save code
@@ -366,6 +397,28 @@ const SecureCodeEditor = ({ test, submission, onExit }: SecureCodeEditorProps) =
         <Progress value={timeProgress} className="h-1 rounded-none" />
       </div>
 
+      {/* Instructions panel (collapsible & scrollable) */}
+      <div className="border-b bg-gradient-to-r from-indigo-50 to-blue-50 dark:from-indigo-950 dark:to-blue-950">
+        <details open className="group">
+          <summary className="cursor-pointer p-4 hover:bg-indigo-100 dark:hover:bg-indigo-900 transition-colors">
+            <div className="flex items-center justify-between">
+              <h3 className="font-semibold text-lg text-indigo-900 dark:text-indigo-100 inline-flex items-center gap-2">
+                📋 Test Instructions
+                <ChevronDown className="h-5 w-5 text-indigo-600 dark:text-indigo-400 group-open:rotate-180 transition-transform inline" />
+              </h3>
+              <span className="text-xs text-indigo-600 dark:text-indigo-400">Click to collapse</span>
+            </div>
+          </summary>
+          <div className="overflow-y-auto px-4 pb-4" style={{ maxHeight: '35vh' }}>
+            <div className="prose-compact prose-sm dark:prose-invert max-w-none text-instructions">
+              <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                {test.instructions}
+              </ReactMarkdown>
+            </div>
+          </div>
+        </details>
+      </div>
+
       {/* Warning overlay */}
       {showWarning && (
         <div className="absolute inset-0 z-50 bg-red-500/20 backdrop-blur-sm flex items-center justify-center">
@@ -392,6 +445,7 @@ const SecureCodeEditor = ({ test, submission, onExit }: SecureCodeEditorProps) =
                 ref={editorRef}
                 value={code}
                 onChange={(e) => setCode(e.target.value)}
+                onKeyDown={handleKeyDown}
                 onPaste={handlePaste}
                 onCopy={handleCopy}
                 onContextMenu={handleContextMenu}
@@ -474,16 +528,6 @@ const SecureCodeEditor = ({ test, submission, onExit }: SecureCodeEditorProps) =
             </div>
           </div>
         )}
-      </div>
-
-      {/* Instructions panel (collapsible) */}
-      <div className="border-t bg-muted/50 p-4">
-        <details>
-          <summary className="cursor-pointer font-semibold">Test Instructions</summary>
-          <div className="mt-3 prose dark:prose-invert max-w-none">
-            <p className="whitespace-pre-wrap">{test.instructions}</p>
-          </div>
-        </details>
       </div>
     </div>
   );

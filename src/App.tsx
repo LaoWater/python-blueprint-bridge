@@ -23,6 +23,7 @@ import Navbar from "./components/Navbar";
 import ChatButton from "./components/ChatButton";
 import { AuthProvider } from "./components/AuthContext";
 import { ContentProvider } from "./components/ContentProvider";
+import { TestModeProvider } from "./components/TestModeContext";
 import PersonalFilesPage from "./pages/PersonalFilesPage";
 import GitBlueprints from "./pages/GitBlueprints";
 import GroupProjects from "./pages/GroupProjects";
@@ -54,13 +55,14 @@ const App = () => (
     <ThemeProvider defaultTheme="light" storageKey="bluepigeon-theme">
       <AuthProvider>
         <ContentProvider>
-          <TooltipProvider>
-            <Toaster />
-            <Sonner />
-            <BrowserRouter>
-              <div className="min-h-screen bg-background transition-colors duration-300">
-                <Navbar />
-                <Routes>
+          <TestModeProvider>
+            <TooltipProvider>
+              <Toaster />
+              <Sonner />
+              <BrowserRouter>
+                <div className="min-h-screen bg-background transition-colors duration-300">
+                  <Navbar />
+                  <Routes>
                   <Route path="/" element={<LandingPage />} />
                   <Route path="/python" element={<Index />} />
                   <Route path="/blueprints" element={<Blueprints />} />
@@ -98,11 +100,12 @@ const App = () => (
                   <Route path="/profile" element={<ProfilePage />} />
                   <Route path="/admin" element={<AdminPage />} />
                   <Route path="*" element={<NotFound />} />
-                </Routes>
-                <ChatButton />
-              </div>
-            </BrowserRouter>
-          </TooltipProvider>
+                  </Routes>
+                  <ChatButton />
+                </div>
+              </BrowserRouter>
+            </TooltipProvider>
+          </TestModeProvider>
         </ContentProvider>
       </AuthProvider>
     </ThemeProvider>
