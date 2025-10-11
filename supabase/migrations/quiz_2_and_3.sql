@@ -3,6 +3,50 @@
 -- Quiz 2: Python Fundamentals - Phase II (Easy)
 -- Quiz 3: Object-Oriented Python - Phase I (Medium)
 -- ============================================================================
+--- Quiz_questions.JSON
+
+DEFINITIE OBIECT JSON - "Ce asteapta Baza de date BluePigeon de la noi ca sa se potriveasca cu architectura sa?"
+quiz_questions (quiz_id, question_type, question_text, code_snippet, options, correct_answer, explanation, points, difficulty, chapter, order_index)
+quiz_personal_questions = [
+  (
+    'b2c3d4e5-f6a7-4901-bcde-ef2345678901',
+    'code_snippet',
+    'What will this code output?',
+    'text = "hello world"
+print(text.upper())',
+    '[
+      {"id": "a", "text": "hello world"},
+      {"id": "b", "text": "HELLO WORLD"},
+      {"id": "c", "text": "Hello World"},
+      {"id": "d", "text": "Error"}
+    ]',
+    'b',
+    'The .upper() method converts all characters in a string to uppercase.',
+    1,
+    'easy',
+    'String Methods',
+    1
+  ),
+
+  (
+    'QuizID',
+    'theoretical',     --- ATENTEI theoretical sau code_snippet daca implica cod
+    'What is the main advantage of list comprehensions over traditional loops?',
+    NULL,
+    '[
+      {"id": "a", "text": "They are always faster"},
+      {"id": "b", "text": "They are more concise and readable for simple transformations"},
+      {"id": "c", "text": "They use less memory"},
+      {"id": "d", "text": "They can handle more data"}
+    ]',
+    'b',
+    'List comprehensions provide a concise, readable syntax for creating lists from existing sequences.',
+    1,
+    'easy',
+    'List Comprehensions',
+    7
+  )
+]
 
 -- ============================================================================
 -- QUIZ 2: Python Fundamentals - Phase II

@@ -44,6 +44,8 @@ import MatplotlibMasteryArtifact from "./pages/Artifacts/MatplotlibMasteryArtifa
 import SeabornMasteryArtifact from "./pages/Artifacts/SeabornMasteryArtifact";
 import PlotlyInteractiveArtifact from "./pages/Artifacts/PlotlyInteractiveArtifact";
 import StreamlitUnifiedArtifact from "./pages/Artifacts/StreamlitUnifiedArtifact";
+import ComputerVisionSession28 from "./pages/Artifacts/ComputerVisionSession28";
+import DlibSession29 from "./pages/Artifacts/DlibSession29";
 import TestPage from "./pages/TestPage";
 import LiveQuizPage from "./pages/LiveQuizPage";
 
@@ -96,6 +98,8 @@ const App = () => (
                   <Route path="/artifacts/seaborn-mastery" element={<SeabornMasteryArtifact />} />
                   <Route path="/artifacts/plotly-interactive" element={<PlotlyInteractiveArtifact />} />
                   <Route path="/artifacts/streamlit-unified" element={<StreamlitUnifiedArtifact />} />
+                  <Route path="/artifacts/computer-vision-session28" element={<ComputerVisionSession28 />} />
+                  <Route path="/artifacts/dlib-session29" element={<DlibSession29 />} />
                   <Route path="/auth" element={<AuthPage />} />
                   <Route path="/profile" element={<ProfilePage />} />
                   <Route path="/admin" element={<AdminPage />} />
