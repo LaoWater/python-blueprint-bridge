@@ -16,23 +16,27 @@ export default function GroupProjects() {
   const [selectedProject, setSelectedProject] = useState<string | null>(null);
   const { projects, teams, loading, error, fetchTeams, clearError } = useGroupProjects();
   const { user } = useAuth();
+  const teamsFetchedRef = useRef<Set<string>>(new Set());
 
-  // Auto-select first project with debouncing
+  // Auto-select first project - only once
   useEffect(() => {
     if (projects.length > 0 && !selectedProject) {
-      const timer = setTimeout(() => {
-        const firstProject = projects[0];
-        if (firstProject) {
-          setSelectedProject(firstProject.id);
-          // Only fetch teams if we're in the teams section
-          if (activeView === 'overview' || activeView === 'philosophy') {
-            fetchTeams(firstProject.id);
-          }
-        }
-      }, 500);
-      return () => clearTimeout(timer);
+      const firstProject = projects[0];
+      setSelectedProject(firstProject.id);
     }
-  }, [projects, selectedProject, activeView, fetchTeams]);
+  }, [projects.length]); // Only depend on length
+
+  // Fetch teams only when needed and not already fetched
+  useEffect(() => {
+    if (selectedProject && !teamsFetchedRef.current.has(selectedProject)) {
+      if (activeView === 'overview' || activeView === 'philosophy' || 
+          activeView === 'wellness-oracle' || activeView === 'ai-study-buddy' || 
+          activeView === 'dj-blue') {
+        fetchTeams(selectedProject);
+        teamsFetchedRef.current.add(selectedProject);
+      }
+    }
+  }, [selectedProject, activeView]); // Controlled dependencies
 
   useEffect(() => {
     if (error) {
