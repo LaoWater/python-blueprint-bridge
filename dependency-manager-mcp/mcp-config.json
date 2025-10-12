@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "dependency-manager": {
+      "command": "node",
+      "args": ["dependency-manager-mcp/index.js"],
+      "cwd": "C:\\Users\\baciu\\Desktop\\Neo Study\\BluePigeon\\python-blueprint-bridge",
+      "env": {}
+    }
+  }
+}

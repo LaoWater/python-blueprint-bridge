@@ -1,0 +1,25 @@
+{
+  "name": "dependency-manager-mcp",
+  "version": "1.0.0",
+  "description": "MCP server for managing and updating project dependencies to latest stable versions",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node --watch index.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "npm-check-updates": "^17.1.0",
+    "semver": "^7.6.3"
+  },
+  "keywords": [
+    "mcp",
+    "dependencies",
+    "npm",
+    "updates",
+    "versions"
+  ],
+  "author": "Your Name",
+  "license": "MIT"
+}
