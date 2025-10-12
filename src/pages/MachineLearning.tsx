@@ -264,20 +264,28 @@ const MachineLearning = () => {
                 </div>
               </div>
 
-              <div className="space-y-8">
-                <div className="bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-900/20 dark:to-blue-900/20 rounded-lg p-6">
-                  <h3 className="text-xl font-semibold mb-4 text-green-800 dark:text-green-200">
-                    Session 28 – Advanced OpenCV: Image Processing, Contours & Segmentation
-                  </h3>
-                  <p className="mb-4 text-sm text-muted-foreground">
-                    In autonomous vehicles, computer vision processes thousands of frames per second to identify 
-                    lane markings, traffic signs, and obstacles. OpenCV provides the foundational tools for this 
-                    real-time visual processing.
-                  </p>
-                  <EditableCodeBlock
-                    title="Real-time Object Detection Pipeline"
-                    language="python"
-                    code={`import cv2
+              <details className="space-y-8 bg-gradient-to-r from-green-50/50 to-blue-50/50 dark:from-green-900/10 dark:to-blue-900/10 rounded-lg border border-green-200 dark:border-green-800">
+                <summary className="cursor-pointer p-6 hover:bg-green-50/50 dark:hover:bg-green-900/20 rounded-lg transition-colors">
+                  <span className="text-lg font-semibold text-green-700 dark:text-green-300">
+                    📚 Additional Code Examples & Implementation Details
+                  </span>
+                  <span className="text-sm text-muted-foreground ml-2">(Click to expand)</span>
+                </summary>
+
+                <div className="px-6 pb-6 space-y-8">
+                  <div className="bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-900/20 dark:to-blue-900/20 rounded-lg p-6">
+                    <h3 className="text-xl font-semibold mb-4 text-green-800 dark:text-green-200">
+                      Session 28 – Advanced OpenCV: Image Processing, Contours & Segmentation
+                    </h3>
+                    <p className="mb-4 text-sm text-muted-foreground">
+                      In autonomous vehicles, computer vision processes thousands of frames per second to identify
+                      lane markings, traffic signs, and obstacles. OpenCV provides the foundational tools for this
+                      real-time visual processing.
+                    </p>
+                    <EditableCodeBlock
+                      title="Real-time Object Detection Pipeline"
+                      language="python"
+                      code={`import cv2
 import numpy as np
 
 # Initialize camera for real-time processing
@@ -484,7 +492,8 @@ if __name__ == "__main__":
                     section="dlib-face-recognition"
                   />
                 </div>
-              </div>
+                </div>
+              </details>
             </div>
           </section>
 

@@ -46,6 +46,10 @@ import PlotlyInteractiveArtifact from "./pages/Artifacts/PlotlyInteractiveArtifa
 import StreamlitUnifiedArtifact from "./pages/Artifacts/StreamlitUnifiedArtifact";
 import ComputerVisionSession28 from "./pages/Artifacts/ComputerVisionSession28";
 import DlibSession29 from "./pages/Artifacts/DlibSession29";
+import SklearnDiscovery from "./pages/Artifacts/Layer2Artifacts/sklearn-discovery";
+import OpenCVConvolutionLab from "./pages/Artifacts/Layer2Artifacts/filters_and_edges";
+import ContoursSegmentationLab from "./pages/Artifacts/Layer2Artifacts/contours-segmentation-lab";
+import MediaPipeLab from "./pages/Artifacts/Layer2Artifacts/mediapipe-lab";
 import TestPage from "./pages/TestPage";
 import LiveQuizPage from "./pages/LiveQuizPage";
 
@@ -100,6 +104,10 @@ const App = () => (
                   <Route path="/artifacts/streamlit-unified" element={<StreamlitUnifiedArtifact />} />
                   <Route path="/artifacts/computer-vision-session28" element={<ComputerVisionSession28 />} />
                   <Route path="/artifacts/dlib-session29" element={<DlibSession29 />} />
+                  <Route path="/artifacts/layer2/sklearn-discovery" element={<SklearnDiscovery />} />
+                  <Route path="/artifacts/layer2/filters-and-edges" element={<OpenCVConvolutionLab />} />
+                  <Route path="/artifacts/layer2/contours-segmentation" element={<ContoursSegmentationLab />} />
+                  <Route path="/artifacts/layer2/mediapipe-lab" element={<MediaPipeLab />} />
                   <Route path="/auth" element={<AuthPage />} />
                   <Route path="/profile" element={<ProfilePage />} />
                   <Route path="/admin" element={<AdminPage />} />
