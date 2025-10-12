@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Users, Rocket, Brain, Code, Globe, ChevronRight, ChevronLeft, Star, GitBranch, MessageSquare, Target, Loader2, Heart, BookOpen, Trophy, Medal, Award } from 'lucide-react';
 import MoodMusicProject from '../components/group-projects/dj_blue';
 import WellnessOracle from '../components/group-projects/WellnessOracle';
