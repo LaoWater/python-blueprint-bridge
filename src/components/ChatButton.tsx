@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input'; // Assuming this is your custom S
 import { supabase } from '@/integrations/supabase/client';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import { useTestMode } from './TestModeContext';
 
 interface Message {
   content: string;
@@ -12,8 +13,19 @@ interface Message {
   timestamp: Date;
 }
 
+interface ChatButtonProps {
+  disabled?: boolean;
+  disabledMessage?: string;
+}
+
 const INITIAL_ASSISTANT_MESSAGE: Message = {
   content: "Ask me anything about Python, and I'll do my best to help you with clear explanations and code examples.",
+  sender: 'assistant',
+  timestamp: new Date()
+};
+
+const DISABLED_MESSAGE: Message = {
+  content: "**Blue Pigeon Assistant is disabled during coding tests and quizzes.**\n\nGood luck! 🍀",
   sender: 'assistant',
   timestamp: new Date()
 };
@@ -53,16 +65,20 @@ const markdownProseClasses = (sender: 'user' | 'assistant') => `
   prose-p:my-1.5
   prose-ul:my-1.5 prose-ol:my-1.5 prose-li:my-0.5 prose-li:leading-snug
   prose-blockquote:my-1.5 prose-blockquote:pl-3 prose-blockquote:border-l-2 prose-blockquote:italic
-  ${sender === 'user' ? 'prose-blockquote:border-white/50' : 'dark:prose-blockquote:border-gray-600 prose-blockquote:border-gray-300'}
+  ${sender === 'user' ? 'prose-blockquote:border-white/50' : 'prose-blockquote:border-gray-300'}
   prose-code:font-mono prose-code:text-xs prose-code:px-1 prose-code:py-0.5 prose-code:rounded-sm
   prose-code:before:content-[''] prose-code:after:content-['']
   prose-pre:font-mono prose-pre:text-xs prose-pre:my-2 prose-pre:p-0 prose-pre:bg-transparent prose-pre:rounded-md prose-pre:overflow-x-auto
-  ${sender === 'user' ? 'prose-invert' : 'dark:prose-invert'}
+  ${sender === 'user' ? 'prose-invert !text-white prose-p:!text-white prose-headings:!text-white prose-li:!text-white prose-strong:!text-white prose-em:!text-white prose-a:!text-white' : ''}
 `;
 
-const ChatButton = () => {
+const ChatButton: React.FC<ChatButtonProps> = ({ disabled: propDisabled = false, disabledMessage }) => {
+  const { isTestMode } = useTestMode();
+  const disabled = propDisabled || isTestMode;
+
   const [isOpen, setIsOpen] = useState(false);
-  const [messages, setMessages] = useState<Message[]>([INITIAL_ASSISTANT_MESSAGE]);
+  const initialMessage = disabled ? DISABLED_MESSAGE : INITIAL_ASSISTANT_MESSAGE;
+  const [messages, setMessages] = useState<Message[]>([initialMessage]);
   const [inputText, setInputText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -72,6 +88,12 @@ const ChatButton = () => {
   const toggleChat = () => setIsOpen(!isOpen);
 
   const scrollToBottom = () => messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+
+  // Update initial message when disabled state changes
+  useEffect(() => {
+    const newInitialMessage = disabled ? DISABLED_MESSAGE : INITIAL_ASSISTANT_MESSAGE;
+    setMessages([newInitialMessage]);
+  }, [disabled]);
 
   useEffect(() => {
     if (isOpen && messages.length > 0) {
@@ -91,7 +113,7 @@ const ChatButton = () => {
 
 
   const handleClearChat = () => {
-    setMessages([INITIAL_ASSISTANT_MESSAGE]);
+    setMessages([initialMessage]);
     setInputText('');
     // Optionally, re-focus input after clearing
     setTimeout(() => inputRef.current?.focus(), 0);
@@ -99,6 +121,22 @@ const ChatButton = () => {
 
   const handleSendMessage = async () => {
     if (!inputText.trim() || isLoading) return; // isLoading check here prevents multiple rapid sends
+
+    // If disabled, show disabled message
+    if (disabled) {
+      const newUserMessage: Message = { content: inputText, sender: 'user', timestamp: new Date() };
+      setMessages(prev => [...prev, newUserMessage]);
+      setInputText('');
+
+      setTimeout(() => {
+        setMessages(prev => [...prev, {
+          content: disabledMessage || "**Blue Pigeon Assistant is disabled during coding tests and quizzes.**\n\nGood luck! 🍀",
+          sender: 'assistant',
+          timestamp: new Date()
+        }]);
+      }, 500);
+      return;
+    }
 
     const newUserMessage: Message = { content: inputText, sender: 'user', timestamp: new Date() };
     setMessages(prev => [...prev, newUserMessage]);
@@ -113,30 +151,30 @@ const ChatButton = () => {
 
       if (error) {
         console.error("Error calling chat assistant:", error);
-        setMessages(prev => [...prev, { 
-          content: "Sorry, I encountered an error. Please try again.", 
-          sender: 'assistant', 
-          timestamp: new Date() 
+        setMessages(prev => [...prev, {
+          content: "Sorry, I encountered an error. Please try again.",
+          sender: 'assistant',
+          timestamp: new Date()
         }]);
       } else if (data?.response) {
-        setMessages(prev => [...prev, { 
-          content: data.response, 
-          sender: 'assistant', 
-          timestamp: new Date() 
+        setMessages(prev => [...prev, {
+          content: data.response,
+          sender: 'assistant',
+          timestamp: new Date()
         }]);
       } else {
-        setMessages(prev => [...prev, { 
-          content: "I received an empty response. Please try again.", 
-          sender: 'assistant', 
-          timestamp: new Date() 
+        setMessages(prev => [...prev, {
+          content: "I received an empty response. Please try again.",
+          sender: 'assistant',
+          timestamp: new Date()
         }]);
       }
     } catch (error) {
       console.error("Error calling chat assistant:", error);
-      setMessages(prev => [...prev, { 
-        content: "Sorry, I encountered an error. Please try again.", 
-        sender: 'assistant', 
-        timestamp: new Date() 
+      setMessages(prev => [...prev, {
+        content: "Sorry, I encountered an error. Please try again.",
+        sender: 'assistant',
+        timestamp: new Date()
       }]);
     } finally {
       setIsLoading(false); // Reset loading for the button
@@ -163,8 +201,8 @@ const ChatButton = () => {
   return (
     <div className="fixed bottom-12 right-8 z-[999]">
       {isOpen && (
-        <div className="mb-4 w-[90vw] max-w-[900px] h-[80vh] max-h-[800px] bg-white dark:bg-gray-950 rounded-lg shadow-2xl border border-border animate-fade-in overflow-hidden flex flex-col">
-          <div className="p-4 bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-indigo-800 dark:to-blue-900 text-white dark:text-blue-100 flex justify-between items-center shrink-0">
+        <div className="mb-4 w-[90vw] max-w-[900px] h-[80vh] max-h-[800px] bg-white rounded-lg shadow-2xl border border-gray-200 animate-fade-in overflow-hidden flex flex-col">
+          <div className="p-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white flex justify-between items-center shrink-0">
             <div className="flex items-center">
               <div className="w-7 h-7 bg-white/20 rounded-full flex items-center justify-center mr-3"><Bot size={16} className="text-white" /></div>
               <h3 className="font-medium text-lg">Blue Pigeon Assistant</h3>
@@ -184,14 +222,14 @@ const ChatButton = () => {
             </div>
           </div>
 
-          <div className="flex-grow p-4 sm:p-6 overflow-y-auto bg-gray-50 dark:bg-gray-900 scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-700">
+          <div className="flex-grow p-4 sm:p-6 overflow-y-auto bg-gray-50 scrollbar-thin scrollbar-thumb-gray-300">
             <div className="flex flex-col space-y-4">
               {messages.map((message, index) => (
                 <div key={index} className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
                   <div className={`p-3 rounded-lg max-w-[85%] shadow-md text-sm ${
                       message.sender === 'user'
-                        ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white dark:from-blue-700 dark:to-indigo-700'
-                        : 'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-800 dark:text-gray-100'
+                        ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white'
+                        : 'bg-white border border-gray-200 text-gray-800'
                   }`}>
                     <div className={markdownProseClasses(message.sender)}>
                       <ReactMarkdown
@@ -226,8 +264,8 @@ const ChatButton = () => {
                         {message.content}
                       </ReactMarkdown>
                     </div>
-                    <p className={`text-xs mt-2 pt-1 border-t ${message.sender === 'user' ? 'border-white/20' : 'border-gray-200 dark:border-gray-700/50'} text-right ${
-                      message.sender === 'user' ? 'text-blue-100 dark:text-indigo-200 opacity-75' : 'text-gray-400 dark:text-gray-500'
+                    <p className={`text-xs mt-2 pt-1 border-t ${message.sender === 'user' ? 'border-white/20' : 'border-gray-200'} text-right ${
+                      message.sender === 'user' ? 'text-blue-100 opacity-75' : 'text-gray-400'
                     }`}>
                       {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </p>
@@ -235,13 +273,13 @@ const ChatButton = () => {
                 </div>
               ))}
               {isLoading && ( /* This is now just a visual cue, doesn't reflect input state */
-                 <div className="flex justify-start"><div className="p-3 rounded-lg max-w-[85%] bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-md"><div className="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400"><Loader2 size={16} className="animate-spin" /><span>Assistant is typing...</span></div></div></div>
+                 <div className="flex justify-start"><div className="p-3 rounded-lg max-w-[85%] bg-white border border-gray-200 shadow-md"><div className="flex items-center space-x-2 text-sm text-gray-500"><Loader2 size={16} className="animate-spin" /><span>Assistant is typing...</span></div></div></div>
               )}
               <div ref={messagesEndRef} />
             </div>
           </div>
 
-          <div className="p-3 border-t border-border bg-white dark:bg-gray-900 shrink-0">
+          <div className="p-3 border-t border-gray-200 bg-white shrink-0">
             <div className="flex items-center space-x-2">
               <Input
                 ref={inputRef} // Assign ref to input
@@ -249,7 +287,7 @@ const ChatButton = () => {
                 onChange={(e) => setInputText(e.target.value)}
                 onKeyDown={handleKeyPress}
                 placeholder="Ask about Python..."
-                className="flex-grow dark:bg-gray-800 dark:text-gray-50"
+                className="flex-grow bg-white text-gray-900"
                 // Input is NOT disabled by isLoading anymore
               />
               <Button

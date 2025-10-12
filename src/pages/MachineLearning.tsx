@@ -130,25 +130,162 @@ const MachineLearning = () => {
                 Computer Vision: Teaching Machines to See
               </h2>
               <p className="text-lg mb-8 text-muted-foreground">
-                Before neural networks dominated the field, computer vision relied on carefully crafted algorithms 
-                to detect edges, find contours, and recognize patterns. Understanding these fundamentals gives us 
+                Before neural networks dominated the field, computer vision relied on carefully crafted algorithms
+                to detect edges, find contours, and recognize patterns. Understanding these fundamentals gives us
                 insight into how machines process visual information.
               </p>
 
-              <div className="space-y-8">
-                <div className="bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-900/20 dark:to-blue-900/20 rounded-lg p-6">
-                  <h3 className="text-xl font-semibold mb-4 text-green-800 dark:text-green-200">
-                    Session 28 – Advanced OpenCV: Image Processing, Contours & Segmentation
-                  </h3>
-                  <p className="mb-4 text-sm text-muted-foreground">
-                    In autonomous vehicles, computer vision processes thousands of frames per second to identify 
-                    lane markings, traffic signs, and obstacles. OpenCV provides the foundational tools for this 
-                    real-time visual processing.
-                  </p>
-                  <EditableCodeBlock
-                    title="Real-time Object Detection Pipeline"
-                    language="python"
-                    code={`import cv2
+              {/* Featured Artifact - Session 28 */}
+              <div className="mb-12 bg-gradient-to-br from-green-50 via-blue-50 to-indigo-50 dark:from-green-900/20 dark:via-blue-900/20 dark:to-indigo-900/20 rounded-xl p-8 border-2 border-green-300 dark:border-green-700 shadow-xl">
+                <div className="flex items-start gap-4 mb-6">
+                  <div className="text-5xl">👁️</div>
+                  <div>
+                    <h3 className="text-2xl font-bold mb-2 bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent">
+                      Session 28: Computer Vision - Where Data Meets Sight
+                    </h3>
+                    <p className="text-muted-foreground mb-4">
+                      From pixels to intelligence. OpenCV is nothing but great Data:Calculus (pixel Vectors), Data Models,
+                      Imagination and Visualizing it. Experience the full journey from need to solution.
+                    </p>
+                    <div className="flex flex-wrap gap-2 mb-4">
+                      <span className="px-3 py-1 bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-200 rounded-full text-sm font-medium">
+                        OpenCV Advanced
+                      </span>
+                      <span className="px-3 py-1 bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-200 rounded-full text-sm font-medium">
+                        MediaPipe
+                      </span>
+                      <span className="px-3 py-1 bg-indigo-100 dark:bg-indigo-900/50 text-indigo-800 dark:text-indigo-200 rounded-full text-sm font-medium">
+                        Pixel Algorithms
+                      </span>
+                      <span className="px-3 py-1 bg-purple-100 dark:bg-purple-900/50 text-purple-800 dark:text-purple-200 rounded-full text-sm font-medium">
+                        Interactive Story
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <button
+                  onClick={() => window.location.href = '/artifacts/computer-vision-session28'}
+                  className="w-full bg-gradient-to-r from-green-500 via-blue-500 to-indigo-600 hover:from-green-600 hover:via-blue-600 hover:to-indigo-700 text-white font-bold py-4 px-6 rounded-lg transition-all duration-300 transform hover:scale-[1.02] shadow-lg hover:shadow-xl flex items-center justify-center gap-3 text-lg"
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                  </svg>
+                  <span>Enter Computer Vision Session 28 Artifact</span>
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                  </svg>
+                </button>
+
+                <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                  <div className="bg-white/50 dark:bg-gray-800/50 rounded-lg p-4">
+                    <h4 className="font-semibold text-green-800 dark:text-green-200 mb-2">🏥 Health Applications</h4>
+                    <ul className="space-y-1 text-gray-600 dark:text-gray-400">
+                      <li>• Meal variety analyzer for nutrition tracking</li>
+                      <li>• Workout form analysis with MediaPipe</li>
+                      <li>• Posture monitoring & rep counting</li>
+                      <li>• Progress tracking with before/after comparison</li>
+                    </ul>
+                  </div>
+                  <div className="bg-white/50 dark:bg-gray-800/50 rounded-lg p-4">
+                    <h4 className="font-semibold text-blue-800 dark:text-blue-200 mb-2">💰 Finance Applications</h4>
+                    <ul className="space-y-1 text-gray-600 dark:text-gray-400">
+                      <li>• Receipt scanning with gesture control</li>
+                      <li>• Security system with motion detection</li>
+                      <li>• Document processing & automation</li>
+                      <li>• Contour detection for expense tracking</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              {/* Featured Artifact - Session 29 */}
+              <div className="mb-12 bg-gradient-to-br from-purple-50 via-pink-50 to-indigo-50 dark:from-purple-900/20 dark:via-pink-900/20 dark:to-indigo-900/20 rounded-xl p-8 border-2 border-purple-300 dark:border-purple-700 shadow-xl">
+                <div className="flex items-start gap-4 mb-6">
+                  <div className="text-5xl">🔐</div>
+                  <div>
+                    <h3 className="text-2xl font-bold mb-2 bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+                      Session 29: Dlib - Face Recognition & Biometric Intelligence
+                    </h3>
+                    <p className="text-muted-foreground mb-4">
+                      From detecting faces to recognizing identity. Dlib is the convergence of Linear Algebra (128D vectors),
+                      Computer Vision (landmarks), and Security. Your phone unlocks with your face - here's how it works.
+                    </p>
+                    <div className="flex flex-wrap gap-2 mb-4">
+                      <span className="px-3 py-1 bg-purple-100 dark:bg-purple-900/50 text-purple-800 dark:text-purple-200 rounded-full text-sm font-medium">
+                        Face Detection
+                      </span>
+                      <span className="px-3 py-1 bg-pink-100 dark:bg-pink-900/50 text-pink-800 dark:text-pink-200 rounded-full text-sm font-medium">
+                        68 Landmarks
+                      </span>
+                      <span className="px-3 py-1 bg-indigo-100 dark:bg-indigo-900/50 text-indigo-800 dark:text-indigo-200 rounded-full text-sm font-medium">
+                        Face Recognition
+                      </span>
+                      <span className="px-3 py-1 bg-violet-100 dark:bg-violet-900/50 text-violet-800 dark:text-violet-200 rounded-full text-sm font-medium">
+                        Interactive Story
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <button
+                  onClick={() => window.location.href = '/artifacts/dlib-session29'}
+                  className="w-full bg-gradient-to-r from-purple-500 via-pink-500 to-indigo-600 hover:from-purple-600 hover:via-pink-600 hover:to-indigo-700 text-white font-bold py-4 px-6 rounded-lg transition-all duration-300 transform hover:scale-[1.02] shadow-lg hover:shadow-xl flex items-center justify-center gap-3 text-lg"
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                  </svg>
+                  <span>Enter Dlib Session 29 Artifact</span>
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                  </svg>
+                </button>
+
+                <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                  <div className="bg-white/50 dark:bg-gray-800/50 rounded-lg p-4">
+                    <h4 className="font-semibold text-purple-800 dark:text-purple-200 mb-2">🏥 Health Applications</h4>
+                    <ul className="space-y-1 text-gray-600 dark:text-gray-400">
+                      <li>• Fatigue detection for workout safety</li>
+                      <li>• Posture monitoring for ergonomic health</li>
+                      <li>• Mood tracking for mental wellness</li>
+                      <li>• Focus monitoring for productivity</li>
+                    </ul>
+                  </div>
+                  <div className="bg-white/50 dark:bg-gray-800/50 rounded-lg p-4">
+                    <h4 className="font-semibold text-pink-800 dark:text-pink-200 mb-2">💰 Finance Applications</h4>
+                    <ul className="space-y-1 text-gray-600 dark:text-gray-400">
+                      <li>• Biometric authentication for banking</li>
+                      <li>• Secure payment verification</li>
+                      <li>• Gesture-controlled receipt scanning</li>
+                      <li>• Focus time tracking for billing</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <details className="space-y-8 bg-gradient-to-r from-green-50/50 to-blue-50/50 dark:from-green-900/10 dark:to-blue-900/10 rounded-lg border border-green-200 dark:border-green-800">
+                <summary className="cursor-pointer p-6 hover:bg-green-50/50 dark:hover:bg-green-900/20 rounded-lg transition-colors">
+                  <span className="text-lg font-semibold text-green-700 dark:text-green-300">
+                    📚 Additional Code Examples & Implementation Details
+                  </span>
+                  <span className="text-sm text-muted-foreground ml-2">(Click to expand)</span>
+                </summary>
+
+                <div className="px-6 pb-6 space-y-8">
+                  <div className="bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-900/20 dark:to-blue-900/20 rounded-lg p-6">
+                    <h3 className="text-xl font-semibold mb-4 text-green-800 dark:text-green-200">
+                      Session 28 – Advanced OpenCV: Image Processing, Contours & Segmentation
+                    </h3>
+                    <p className="mb-4 text-sm text-muted-foreground">
+                      In autonomous vehicles, computer vision processes thousands of frames per second to identify
+                      lane markings, traffic signs, and obstacles. OpenCV provides the foundational tools for this
+                      real-time visual processing.
+                    </p>
+                    <EditableCodeBlock
+                      title="Real-time Object Detection Pipeline"
+                      language="python"
+                      code={`import cv2
 import numpy as np
 
 # Initialize camera for real-time processing
@@ -355,7 +492,8 @@ if __name__ == "__main__":
                     section="dlib-face-recognition"
                   />
                 </div>
-              </div>
+                </div>
+              </details>
             </div>
           </section>
 

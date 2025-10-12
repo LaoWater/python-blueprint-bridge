@@ -23,6 +23,7 @@ import Navbar from "./components/Navbar";
 import ChatButton from "./components/ChatButton";
 import { AuthProvider } from "./components/AuthContext";
 import { ContentProvider } from "./components/ContentProvider";
+import { TestModeProvider } from "./components/TestModeContext";
 import PersonalFilesPage from "./pages/PersonalFilesPage";
 import GitBlueprints from "./pages/GitBlueprints";
 import GroupProjects from "./pages/GroupProjects";
@@ -44,6 +45,14 @@ import MatplotlibMasteryArtifact from "./pages/Artifacts/MatplotlibMasteryArtifa
 import SeabornMasteryArtifact from "./pages/Artifacts/SeabornMasteryArtifact";
 import PlotlyInteractiveArtifact from "./pages/Artifacts/PlotlyInteractiveArtifact";
 import StreamlitUnifiedArtifact from "./pages/Artifacts/StreamlitUnifiedArtifact";
+import ComputerVisionSession28 from "./pages/Artifacts/ComputerVisionSession28";
+import DlibSession29 from "./pages/Artifacts/DlibSession29";
+import SklearnDiscovery from "./pages/Artifacts/Layer2Artifacts/sklearn-discovery";
+import OpenCVConvolutionLab from "./pages/Artifacts/Layer2Artifacts/filters_and_edges";
+import ContoursSegmentationLab from "./pages/Artifacts/Layer2Artifacts/contours-segmentation-lab";
+import MediaPipeLab from "./pages/Artifacts/Layer2Artifacts/mediapipe-lab";
+import TestPage from "./pages/TestPage";
+import LiveQuizPage from "./pages/LiveQuizPage";
 
 
 const queryClient = new QueryClient();
@@ -53,13 +62,14 @@ const App = () => (
     <ThemeProvider defaultTheme="light" storageKey="bluepigeon-theme">
       <AuthProvider>
         <ContentProvider>
-          <TooltipProvider>
-            <Toaster />
-            <Sonner />
-            <BrowserRouter>
-              <div className="min-h-screen bg-background transition-colors duration-300">
-                <Navbar />
-                <Routes>
+          <TestModeProvider>
+            <TooltipProvider>
+              <Toaster />
+              <Sonner />
+              <BrowserRouter>
+                <div className="min-h-screen bg-background transition-colors duration-300">
+                  <Navbar />
+                  <Routes>
                   <Route path="/" element={<LandingPage />} />
                   <Route path="/python" element={<Index />} />
                   <Route path="/blueprints" element={<Blueprints />} />
@@ -76,6 +86,8 @@ const App = () => (
                   <Route path="/advanced-machine-learning" element={<AdvancedMachineLearning />} />
 
                   <Route path="/personal-files" element={<PersonalFilesPage />} />
+                  <Route path="/test" element={<TestPage />} />
+                  <Route path="/live-quiz" element={<LiveQuizPage />} />
                   <Route path="/artifacts/ifelse" element={<IfElseArtifact />} />
                   <Route path="/artifacts/loops" element={<LoopsArtifact />} />
                   <Route path="/artifacts/collections" element={<CollectionsArtifact />} />
@@ -93,15 +105,22 @@ const App = () => (
                   <Route path="/artifacts/seaborn-mastery" element={<SeabornMasteryArtifact />} />
                   <Route path="/artifacts/plotly-interactive" element={<PlotlyInteractiveArtifact />} />
                   <Route path="/artifacts/streamlit-unified" element={<StreamlitUnifiedArtifact />} />
+                  <Route path="/artifacts/computer-vision-session28" element={<ComputerVisionSession28 />} />
+                  <Route path="/artifacts/dlib-session29" element={<DlibSession29 />} />
+                  <Route path="/artifacts/layer2/sklearn-discovery" element={<SklearnDiscovery />} />
+                  <Route path="/artifacts/layer2/filters-and-edges" element={<OpenCVConvolutionLab />} />
+                  <Route path="/artifacts/layer2/contours-segmentation" element={<ContoursSegmentationLab />} />
+                  <Route path="/artifacts/layer2/mediapipe-lab" element={<MediaPipeLab />} />
                   <Route path="/auth" element={<AuthPage />} />
                   <Route path="/profile" element={<ProfilePage />} />
                   <Route path="/admin" element={<AdminPage />} />
                   <Route path="*" element={<NotFound />} />
-                </Routes>
-                <ChatButton />
-              </div>
-            </BrowserRouter>
-          </TooltipProvider>
+                  </Routes>
+                  <ChatButton />
+                </div>
+              </BrowserRouter>
+            </TooltipProvider>
+          </TestModeProvider>
         </ContentProvider>
       </AuthProvider>
     </ThemeProvider>
