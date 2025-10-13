@@ -4,10 +4,10 @@ import { useGroupProjectContext } from '@/contexts/GroupProjectContext';
 import { useAuth } from '@/components/AuthContext';
 
 export default function UserTeamsDisplay() {
-  const { userTeams } = useGroupProjectContext();
+  const { userTeams, isLoading } = useGroupProjectContext();
   const { user } = useAuth();
 
-  if (!user || userTeams.length === 0) {
+  if (!user || (userTeams.length === 0 && !isLoading)) {
     return null;
   }
 

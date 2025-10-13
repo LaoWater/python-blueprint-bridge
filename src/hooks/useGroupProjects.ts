@@ -128,7 +128,10 @@ export const useGroupProjects = () => {
           max_participants: 32,
           current_participants: 0,
           status: 'active',
-          project_data: {}
+          project_data: {},
+          votes_up: 0,
+          votes_down: 0,
+          vote_score: 0
         },
         {
           id: 'ai-study-buddy',
@@ -139,7 +142,10 @@ export const useGroupProjects = () => {
           max_participants: 32,
           current_participants: 0,
           status: 'active',
-          project_data: {}
+          project_data: {},
+          votes_up: 0,
+          votes_down: 0,
+          vote_score: 0
         },
         {
           id: 'dj-blue',
@@ -150,7 +156,10 @@ export const useGroupProjects = () => {
           max_participants: 24,
           current_participants: 0,
           status: 'active',
-          project_data: {}
+          project_data: {},
+          votes_up: 0,
+          votes_down: 0,
+          vote_score: 0
         }
       ]);
     }
