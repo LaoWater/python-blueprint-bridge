@@ -1,11 +1,11 @@
-const express = require('express');
-const WebSocket = require('ws');
-const k8s = require('@kubernetes/client-node');
-const { v4: uuidv4 } = require('uuid');
-const { PassThrough } = require('stream');
-const cors = require('cors');
-const fs = require('fs');
-const path = require('path');
+import express from 'express';
+import WebSocket from 'ws';
+import * as k8s from '@kubernetes/client-node';
+import { v4 as uuidv4 } from 'uuid';
+import { PassThrough } from 'stream';
+import cors from 'cors';
+import fs from 'fs';
+import path from 'path';
 
 const app = express();
 app.use(cors());
@@ -627,7 +627,7 @@ async function executeCommand(sessionId, command, returnOutput = true) {
 }
 
 // WebSocket server for terminal streaming
-const WS_PORT = process.env.WS_PORT || 8082;
+const WS_PORT = process.env.WS_PORT || 3001;
 const wss = new WebSocket.Server({ port: WS_PORT });
 
 wss.on('connection', (ws, req) => {
@@ -936,4 +936,4 @@ app.listen(PORT, () => {
     console.log(`☸️  Kubernetes namespace: ${NAMESPACE}`);
 });
 
-module.exports = app;
+export default app;

@@ -2,6 +2,7 @@
     "name": "python-terminal-backend",
     "version": "1.0.0",
     "description": "Backend API for Python terminal platform with Kubernetes integration",
+    "type": "module",
     "main": "server.js",
     "scripts": {
         "start": "node server.js",
