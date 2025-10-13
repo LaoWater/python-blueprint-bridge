@@ -39,6 +39,16 @@ export interface TeamMember {
   role: string;
   joined_at: string;
   contribution_score: number;
+  admin_level?: number;
+  avatar_url?: string;
+  avatar_data?: {
+    type: 'url' | 'initials';
+    value: string;
+  };
+}
+
+export interface ProjectTeamWithMembers extends ProjectTeam {
+  members: TeamMember[];
 }
 
 export interface User {
@@ -52,6 +62,7 @@ export const useGroupProjects = () => {
   const [projects, setProjects] = useState<GroupProject[]>([]);
   const [teams, setTeams] = useState<ProjectTeam[]>([]);
   const [teamMembers, setTeamMembers] = useState<Record<string, TeamMember[]>>({});
+  const [teamsWithMembers, setTeamsWithMembers] = useState<ProjectTeamWithMembers[]>([]);
   const [availableUsers, setAvailableUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -165,6 +176,55 @@ export const useGroupProjects = () => {
       setTeams([]);
     }
   };
+
+  // NEW: Fetch teams WITH all their members in ONE efficient call
+  // This prevents thousands of API requests by fetching everything at once
+  const fetchTeamsWithMembers = useCallback(async (projectId: string) => {
+    try {
+      const { data, error } = await supabase
+        .rpc('get_project_teams_with_members', { p_project_id: projectId });
+
+      if (error) throw error;
+
+      // Transform the data to match our interface
+      const teamsData: ProjectTeamWithMembers[] = (data || []).map((team: any) => ({
+        id: team.team_id,
+        project_id: projectId,
+        name: team.team_name,
+        description: team.team_description,
+        icon: team.team_icon,
+        color_scheme: team.team_color_scheme,
+        max_members: team.team_max_members,
+        current_members: team.team_current_members,
+        difficulty_stars: team.team_difficulty_stars,
+        mission: team.team_mission,
+        tasks: team.team_tasks,
+        team_vibe: team.team_vibe,
+        sort_order: team.team_sort_order,
+        members: team.members || []
+      }));
+
+      setTeamsWithMembers(teamsData);
+
+      // Also populate the regular teams state for backwards compatibility
+      setTeams(teamsData.map(({ members, ...team }) => team));
+
+      // Populate teamMembers cache for individual team access
+      const membersCache: Record<string, TeamMember[]> = {};
+      teamsData.forEach(team => {
+        membersCache[team.id] = team.members;
+      });
+      setTeamMembers(membersCache);
+
+      return teamsData;
+    } catch (err) {
+      console.error('Error fetching teams with members:', err);
+      setError('Teams temporarily unavailable');
+      setTeamsWithMembers([]);
+      setTeams([]);
+      return [];
+    }
+  }, []);
 
   // Fetch team members
   const fetchTeamMembers = useCallback(async (teamId: string) => {
@@ -436,11 +496,13 @@ export const useGroupProjects = () => {
     projects,
     teams,
     teamMembers,
+    teamsWithMembers,
     availableUsers,
     loading,
     error,
     fetchProjects,
     fetchTeams,
+    fetchTeamsWithMembers,
     fetchTeamMembers,
     fetchAvailableUsers,
     joinTeam,

@@ -29,7 +29,7 @@ export default function WellnessOracle() {
   const [userTeams, setUserTeams] = useState<string[]>([]);
   const [joinSuccess, setJoinSuccess] = useState<string | null>(null);
   const [joinError, setJoinError] = useState<string | null>(null);
-  const { projects, teams, fetchTeams, joinTeam, leaveTeam, getUserTeams, loading, error } = useGroupProjects();
+  const { projects, teams, teamsWithMembers, fetchTeamsWithMembers, joinTeam, leaveTeam, getUserTeams, loading, error } = useGroupProjects();
 
   // Get the wellness project
   const wellnessProject = projects.find(p => p.name === 'Personal Wellness Oracle');
@@ -53,17 +53,18 @@ export default function WellnessOracle() {
     }
   }, [wellnessProject?.id, getUserTeams]);
 
-  // Fetch teams and user's teams when component mounts or project changes
+  // Fetch teams WITH MEMBERS (efficient single call) and user's teams when component mounts or project changes
   useEffect(() => {
     if (wellnessProject?.id) {
       // Add a small delay to prevent rapid fire requests
       const timer = setTimeout(() => {
-        fetchTeams(wellnessProject.id);
+        // Use the NEW efficient function that fetches teams with all members in ONE call
+        fetchTeamsWithMembers(wellnessProject.id);
         loadUserTeams();
       }, 300);
       return () => clearTimeout(timer);
     }
-  }, [wellnessProject?.id, fetchTeams, loadUserTeams]);
+  }, [wellnessProject?.id, fetchTeamsWithMembers, loadUserTeams]);
 
   // Handle page visibility changes to prevent unnecessary requests
   useEffect(() => {
@@ -432,8 +433,67 @@ export default function WellnessOracle() {
                       </div>
 
                       <div className="border-t border-border dark:border-purple-500/20 pt-4 transition-colors duration-300">
+                        <p className="font-semibold text-sm text-purple-300 mb-3">Team Members ({team.current_members}/{team.max_members}):</p>
+
+                        {/* Display team members */}
+                        {(() => {
+                          const teamWithMembers = teamsWithMembers.find(t => t.id === team.id);
+                          const members = teamWithMembers?.members || [];
+
+                          return members.length > 0 ? (
+                            <div className="space-y-2 mb-4">
+                              {members.map((member) => (
+                                <div key={member.user_id} className="flex items-center gap-3 p-2 rounded-lg bg-secondary/30 dark:bg-gray-700/20 hover:bg-secondary/50 dark:hover:bg-gray-700/30 transition-colors duration-200">
+                                  {/* Avatar */}
+                                  <div className="flex-shrink-0">
+                                    {member.avatar_data?.type === 'url' ? (
+                                      <img
+                                        src={member.avatar_data.value}
+                                        alt={member.username}
+                                        className="w-8 h-8 rounded-full object-cover border-2 border-purple-400/30"
+                                      />
+                                    ) : (
+                                      <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white bg-gradient-to-br ${team.color_scheme}`}>
+                                        {member.avatar_data?.value || member.username.substring(0, 2).toUpperCase()}
+                                      </div>
+                                    )}
+                                  </div>
+
+                                  {/* Member Info */}
+                                  <div className="flex-1 min-w-0">
+                                    <div className="flex items-center gap-2">
+                                      <span className="text-sm font-medium text-foreground dark:text-gray-200 truncate">
+                                        {member.username}
+                                      </span>
+                                      {member.admin_level && member.admin_level > 0 && (
+                                        <span className="text-xs bg-gradient-to-r from-yellow-500/20 to-orange-500/20 px-2 py-0.5 rounded text-yellow-600 dark:text-yellow-400 border border-yellow-500/30">
+                                          Admin
+                                        </span>
+                                      )}
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                      <span className="text-xs text-muted-foreground dark:text-gray-400">{member.role}</span>
+                                      {member.contribution_score > 0 && (
+                                        <>
+                                          <span className="text-xs text-muted-foreground dark:text-gray-500">•</span>
+                                          <span className="text-xs bg-purple-500/20 px-2 py-0.5 rounded text-purple-600 dark:text-purple-300">
+                                            {member.contribution_score} pts
+                                          </span>
+                                        </>
+                                      )}
+                                    </div>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          ) : (
+                            <div className="text-center py-3 mb-4">
+                              <p className="text-sm text-muted-foreground dark:text-gray-400">No members yet - be the first to join!</p>
+                            </div>
+                          );
+                        })()}
+
                         <div className="flex items-center justify-between mb-3">
-                          <span className="text-sm text-muted-foreground dark:text-gray-400">({team.current_members}/{team.max_members} members)</span>
                           {getTeamStatus(team) === 'joined' && (
                             <span className="text-xs bg-green-500/20 text-green-300 px-2 py-1 rounded-full">✓ Joined</span>
                           )}

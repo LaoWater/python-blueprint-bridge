@@ -28,7 +28,7 @@ export default function AIStudyBuddy() {
   const [userTeams, setUserTeams] = useState<string[]>([]);
   const [joinSuccess, setJoinSuccess] = useState<string | null>(null);
   const [joinError, setJoinError] = useState<string | null>(null);
-  const { projects, teams, fetchTeams, joinTeam, leaveTeam, getUserTeams, loading, error } = useGroupProjects();
+  const { projects, teams, teamsWithMembers, fetchTeamsWithMembers, joinTeam, leaveTeam, getUserTeams, loading, error } = useGroupProjects();
 
   // Get the AI Study Buddy project
   const studyBuddyProject = projects.find(p => p.name === 'AI Study Buddy');
@@ -52,12 +52,13 @@ export default function AIStudyBuddy() {
     if (studyBuddyProject?.id) {
       // Add a small delay to prevent rapid fire requests
       const timer = setTimeout(() => {
-        fetchTeams(studyBuddyProject.id);
+        // Use the NEW efficient function that fetches teams with all members in ONE call
+        fetchTeamsWithMembers(studyBuddyProject.id);
         loadUserTeams();
       }, 300);
       return () => clearTimeout(timer);
     }
-  }, [studyBuddyProject?.id, fetchTeams, loadUserTeams]);
+  }, [studyBuddyProject?.id, fetchTeamsWithMembers, loadUserTeams]);
 
   // Team icons mapping
   const getTeamIcon = (iconName: string) => {
@@ -394,8 +395,54 @@ export default function AIStudyBuddy() {
                       </div>
 
                       <div className="border-t border-border dark:border-green-500/20 pt-4 transition-colors">
+                        <p className="font-semibold text-sm text-green-300 mb-3">Team Members ({team.current_members}/{team.max_members}):</p>
+
+                        {/* Display team members */}
+                        {(() => {
+                          const teamWithMembers = teamsWithMembers.find(t => t.id === team.id);
+                          const members = teamWithMembers?.members || [];
+
+                          return members.length > 0 ? (
+                            <div className="space-y-2 mb-4">
+                              {members.map((member) => (
+                                <div key={member.user_id} className="flex items-center gap-3 p-2 rounded-lg bg-secondary/30 dark:bg-gray-700/20 hover:bg-secondary/50 dark:hover:bg-gray-700/30 transition-colors duration-200">
+                                  <div className="flex-shrink-0">
+                                    {member.avatar_data?.type === 'url' ? (
+                                      <img src={member.avatar_data.value} alt={member.username} className="w-8 h-8 rounded-full object-cover border-2 border-green-400/30" />
+                                    ) : (
+                                      <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white bg-gradient-to-br ${team.color_scheme}`}>
+                                        {member.avatar_data?.value || member.username.substring(0, 2).toUpperCase()}
+                                      </div>
+                                    )}
+                                  </div>
+                                  <div className="flex-1 min-w-0">
+                                    <div className="flex items-center gap-2">
+                                      <span className="text-sm font-medium text-foreground dark:text-gray-200 truncate">{member.username}</span>
+                                      {member.admin_level && member.admin_level > 0 && (
+                                        <span className="text-xs bg-gradient-to-r from-yellow-500/20 to-orange-500/20 px-2 py-0.5 rounded text-yellow-600 dark:text-yellow-400 border border-yellow-500/30">Admin</span>
+                                      )}
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                      <span className="text-xs text-muted-foreground dark:text-gray-400">{member.role}</span>
+                                      {member.contribution_score > 0 && (
+                                        <>
+                                          <span className="text-xs text-muted-foreground dark:text-gray-500">•</span>
+                                          <span className="text-xs bg-green-500/20 px-2 py-0.5 rounded text-green-600 dark:text-green-300">{member.contribution_score} pts</span>
+                                        </>
+                                      )}
+                                    </div>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          ) : (
+                            <div className="text-center py-3 mb-4">
+                              <p className="text-sm text-muted-foreground dark:text-gray-400">No members yet - be the first to join!</p>
+                            </div>
+                          );
+                        })()}
+
                         <div className="flex items-center justify-between mb-3">
-                          <span className="text-sm text-muted-foreground dark:text-gray-400 transition-colors">({team.current_members}/{team.max_members} members)</span>
                           {getTeamStatus(team) === 'joined' && (
                             <span className="text-xs bg-green-500/20 text-green-300 px-2 py-1 rounded-full">✓ Joined</span>
                           )}

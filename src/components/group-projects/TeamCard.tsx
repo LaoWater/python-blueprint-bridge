@@ -1,19 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { Users, Plus, Check, AlertCircle, Mic, FileAudio, Brain, Sparkles, Headphones, Volume2, Palette, Puzzle } from 'lucide-react';
-import { ProjectTeam, TeamMember, useGroupProjects } from '@/hooks/useGroupProjects';
+import { Users, Plus, Check, AlertCircle, Mic, FileAudio, Brain, Sparkles, Headphones, Volume2, Palette, Puzzle, User } from 'lucide-react';
+import { ProjectTeam, TeamMember, useGroupProjects, ProjectTeamWithMembers } from '@/hooks/useGroupProjects';
 import { useAuth } from '@/components/AuthContext';
 import { useGroupProjectContext } from '@/contexts/GroupProjectContext';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 
 interface TeamCardProps {
-  team: ProjectTeam;
+  team: ProjectTeam | ProjectTeamWithMembers;
   projectId: string;
+  initialMembers?: TeamMember[];
 }
 
-export default function TeamCard({ team, projectId }: TeamCardProps) {
+export default function TeamCard({ team, projectId, initialMembers }: TeamCardProps) {
   const [expanded, setExpanded] = useState(false);
-  const [members, setMembers] = useState<TeamMember[]>([]);
+  const [members, setMembers] = useState<TeamMember[]>(initialMembers || []);
   const [isJoining, setIsJoining] = useState(false);
   const [isLeaving, setIsLeaving] = useState(false);
   const { fetchTeamMembers, teamMembers, joinTeam, leaveTeam, updateTeamCounts } = useGroupProjects();
@@ -42,15 +43,21 @@ export default function TeamCard({ team, projectId }: TeamCardProps) {
     return IconComponent ? <IconComponent className="w-8 h-8" /> : <Users className="w-8 h-8" />;
   };
 
+  // Update members when initialMembers change or when fetched
   useEffect(() => {
-    if (expanded && !teamMembers[team.id]) {
+    if (initialMembers && initialMembers.length > 0) {
+      setMembers(initialMembers);
+    } else if (teamMembers[team.id]) {
+      setMembers(teamMembers[team.id]);
+    }
+  }, [initialMembers, teamMembers, team.id]);
+
+  // Only fetch if we need to (when expanded and no members cached)
+  useEffect(() => {
+    if (expanded && !initialMembers && !teamMembers[team.id]) {
       fetchTeamMembers(team.id);
     }
-  }, [expanded, team.id]); // Removed fetchTeamMembers from dependencies
-
-  useEffect(() => {
-    setMembers(teamMembers[team.id] || []);
-  }, [teamMembers, team.id]);
+  }, [expanded, team.id, initialMembers]); // Removed fetchTeamMembers from dependencies
 
   const handleJoinTeam = async () => {
     if (!user) {
@@ -154,11 +161,50 @@ export default function TeamCard({ team, projectId }: TeamCardProps) {
           )}
         </div>
 
+        {/* Member Avatars Preview (when collapsed) */}
+        {!expanded && members.length > 0 && (
+          <div className="mb-4">
+            <div className="flex items-center gap-2">
+              <div className="flex -space-x-2">
+                {members.slice(0, 5).map((member, idx) => (
+                  <div
+                    key={member.user_id}
+                    className="relative"
+                    title={member.username}
+                  >
+                    {member.avatar_data?.type === 'url' ? (
+                      <img
+                        src={member.avatar_data.value}
+                        alt={member.username}
+                        className="w-8 h-8 rounded-full object-cover border-2 border-card dark:border-gray-800"
+                      />
+                    ) : (
+                      <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white border-2 border-card dark:border-gray-800 bg-gradient-to-br ${team.color_scheme}`}>
+                        {member.avatar_data?.value || member.username.substring(0, 2).toUpperCase()}
+                      </div>
+                    )}
+                  </div>
+                ))}
+                {members.length > 5 && (
+                  <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-muted-foreground dark:text-gray-400 bg-secondary dark:bg-slate-700 border-2 border-card dark:border-gray-800">
+                    +{members.length - 5}
+                  </div>
+                )}
+              </div>
+              {members.length > 0 && (
+                <span className="text-xs text-muted-foreground dark:text-gray-400">
+                  {members.length === 1 ? '1 member' : `${members.length} members`}
+                </span>
+              )}
+            </div>
+          </div>
+        )}
+
         <button
           onClick={() => setExpanded(!expanded)}
           className="w-full text-left mb-4 text-sm text-purple-600 dark:text-purple-300 hover:text-purple-700 dark:hover:text-purple-200 transition-colors duration-300"
         >
-          {expanded ? '▼ Hide Details' : '▶ View Tasks & Members'}
+          {expanded ? '▼ Hide Details' : '▶ View Tasks & All Members'}
         </button>
 
         {expanded && (
@@ -178,25 +224,58 @@ export default function TeamCard({ team, projectId }: TeamCardProps) {
 
             {/* Members */}
             <div className="border-t border-border dark:border-purple-500/20 pt-4 transition-colors duration-300">
-              <p className="font-semibold text-sm text-purple-600 dark:text-purple-300 mb-2">Team Members:</p>
+              <p className="font-semibold text-sm text-purple-600 dark:text-purple-300 mb-3">Team Members ({members.length}/{team.max_members}):</p>
               {members.length > 0 ? (
-                <div className="space-y-2">
+                <div className="space-y-3">
                   {members.map((member) => (
-                    <div key={member.user_id} className="flex items-center justify-between text-sm">
-                      <span className="text-foreground dark:text-gray-300">{member.username}</span>
-                      <div className="flex items-center gap-2">
-                        <span className="text-xs text-muted-foreground dark:text-gray-400">{member.role}</span>
-                        {member.contribution_score > 0 && (
-                          <span className="text-xs bg-purple-500/20 px-2 py-1 rounded text-purple-600 dark:text-purple-300">
-                            {member.contribution_score} pts
-                          </span>
+                    <div key={member.user_id} className="flex items-center gap-3 p-2 rounded-lg hover:bg-secondary/50 dark:hover:bg-slate-700/30 transition-colors duration-200">
+                      {/* Avatar */}
+                      <div className="flex-shrink-0">
+                        {member.avatar_data?.type === 'url' ? (
+                          <img
+                            src={member.avatar_data.value}
+                            alt={member.username}
+                            className="w-10 h-10 rounded-full object-cover border-2 border-purple-400/30"
+                          />
+                        ) : (
+                          <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold text-white bg-gradient-to-br ${team.color_scheme}`}>
+                            {member.avatar_data?.value || member.username.substring(0, 2).toUpperCase()}
+                          </div>
                         )}
+                      </div>
+
+                      {/* Member Info */}
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm font-medium text-foreground dark:text-gray-200 truncate">
+                            {member.username}
+                          </span>
+                          {member.admin_level && member.admin_level > 0 && (
+                            <span className="text-xs bg-gradient-to-r from-yellow-500/20 to-orange-500/20 px-2 py-0.5 rounded text-yellow-600 dark:text-yellow-400 border border-yellow-500/30">
+                              Admin
+                            </span>
+                          )}
+                        </div>
+                        <div className="flex items-center gap-2 mt-0.5">
+                          <span className="text-xs text-muted-foreground dark:text-gray-400">{member.role}</span>
+                          {member.contribution_score > 0 && (
+                            <>
+                              <span className="text-xs text-muted-foreground dark:text-gray-500">•</span>
+                              <span className="text-xs bg-purple-500/20 px-2 py-0.5 rounded text-purple-600 dark:text-purple-300">
+                                {member.contribution_score} pts
+                              </span>
+                            </>
+                          )}
+                        </div>
                       </div>
                     </div>
                   ))}
                 </div>
               ) : (
-                <p className="text-sm text-muted-foreground dark:text-gray-400">No members yet</p>
+                <div className="text-center py-4">
+                  <User className="w-8 h-8 mx-auto mb-2 text-muted-foreground dark:text-gray-500 opacity-50" />
+                  <p className="text-sm text-muted-foreground dark:text-gray-400">No members yet - be the first to join!</p>
+                </div>
               )}
 
               {/* Action Buttons */}
