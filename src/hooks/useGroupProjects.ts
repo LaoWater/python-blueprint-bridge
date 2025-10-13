@@ -29,6 +29,8 @@ export interface ProjectTeam {
   difficulty_stars: number;
   mission: string;
   tasks: string[];
+  deliverables: string[];
+  required_skills: string[];
   team_vibe: string;
   sort_order: number;
 }
@@ -207,7 +209,9 @@ export const useGroupProjects = () => {
         current_members: team.team_current_members,
         difficulty_stars: team.team_difficulty_stars,
         mission: team.team_mission,
-        tasks: team.team_tasks,
+        tasks: team.team_tasks || [],
+        deliverables: team.team_deliverables || [],
+        required_skills: team.team_required_skills || [],
         team_vibe: team.team_vibe,
         sort_order: team.team_sort_order,
         members: team.members || []

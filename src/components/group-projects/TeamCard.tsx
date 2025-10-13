@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Users, Plus, Check, AlertCircle, Mic, FileAudio, Brain, Sparkles, Headphones, Volume2, Palette, Puzzle, User } from 'lucide-react';
+import { Users, Plus, Check, AlertCircle, Mic, FileAudio, Brain, Sparkles, Headphones, Volume2, Palette, Puzzle, User, Package } from 'lucide-react';
 import { ProjectTeam, TeamMember, useGroupProjects, ProjectTeamWithMembers } from '@/hooks/useGroupProjects';
 import { useAuth } from '@/components/AuthContext';
 import { useGroupProjectContext } from '@/contexts/GroupProjectContext';
@@ -148,9 +148,9 @@ export default function TeamCard({ team, projectId, initialMembers }: TeamCardPr
             </span>
           </div>
           {isUserInThisTeam && (
-            <div className="flex items-center gap-1 text-green-600 dark:text-green-400">
+            <div className="flex items-center gap-1 text-green-800 dark:text-green-400">
               <Check className="w-4 h-4" />
-              <span className="text-xs">Joined</span>
+              <span className="text-xs font-semibold">Joined</span>
             </div>
           )}
           {teamIsFull && (
@@ -222,6 +222,35 @@ export default function TeamCard({ team, projectId, initialMembers }: TeamCardPr
               </ul>
             </div>
 
+            {/* Deliverables - Highlighted Card */}
+            {(() => {
+              console.log('🔍 Team deliverables debug:', {
+                teamName: team.name,
+                hasDeliverables: !!team.deliverables,
+                deliverablesType: typeof team.deliverables,
+                deliverablesLength: team.deliverables?.length,
+                deliverables: team.deliverables,
+                fullTeam: team
+              });
+              return null;
+            })()}
+            {team.deliverables && team.deliverables.length > 0 && (
+              <div className="bg-gradient-to-br from-amber-500/10 to-orange-500/10 dark:from-amber-500/20 dark:to-orange-500/20 border-2 border-amber-500/30 dark:border-amber-500/40 rounded-xl p-4 shadow-lg">
+                <div className="flex items-center gap-2 mb-3">
+                  <Package className="w-5 h-5 text-amber-600 dark:text-amber-400" />
+                  <p className="font-bold text-sm text-amber-800 dark:text-amber-300">Team Deliverables:</p>
+                </div>
+                <ul className="text-sm text-gray-800 dark:text-gray-200 space-y-2">
+                  {team.deliverables.map((deliverable, idx) => (
+                    <li key={idx} className="flex items-start gap-2 bg-white/50 dark:bg-slate-800/50 px-3 py-2 rounded-lg">
+                      <span className="text-amber-600 dark:text-amber-400 font-bold">✓</span>
+                      <span className="font-medium">{deliverable}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
             {/* Members */}
             <div className="border-t border-border dark:border-purple-500/20 pt-4 transition-colors duration-300">
               <p className="font-semibold text-sm text-purple-600 dark:text-purple-300 mb-3">Team Members ({members.length}/{team.max_members}):</p>
@@ -286,7 +315,7 @@ export default function TeamCard({ team, projectId, initialMembers }: TeamCardPr
                   </p>
                 ) : isUserInThisTeam ? (
                   <>
-                    <Button disabled className="w-full bg-green-600/50 dark:bg-green-600/50 text-green-700 dark:text-green-200">
+                    <Button disabled className="w-full bg-green-600/50 dark:bg-green-600/50 text-green-900 dark:text-green-200 font-semibold">
                       <Check className="w-4 h-4 mr-2" />
                       Joined
                     </Button>

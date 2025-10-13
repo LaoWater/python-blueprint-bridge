@@ -114,8 +114,8 @@ export default function ProjectVoting({ projectId, projectName, currentVotes, cl
     if (voteType === 'up') {
       return `${baseClass} ${
         isActive
-          ? 'bg-green-500/30 text-green-700 dark:text-green-300 border-2 border-green-600 dark:border-green-500/30'
-          : 'bg-secondary/80 dark:bg-gray-700/50 text-foreground dark:text-gray-300 hover:bg-green-500/20 dark:hover:bg-green-500/10 hover:text-green-700 dark:hover:text-green-300 border border-border dark:border-transparent'
+          ? 'bg-green-500/30 text-green-900 dark:text-green-300 border-2 border-green-600 dark:border-green-500/30 font-semibold'
+          : 'bg-secondary/80 dark:bg-gray-700/50 text-foreground dark:text-gray-300 hover:bg-green-500/20 dark:hover:bg-green-500/10 hover:text-green-900 dark:hover:text-green-300 border border-border dark:border-transparent'
       }`;
     } else {
       return `${baseClass} ${
@@ -128,12 +128,12 @@ export default function ProjectVoting({ projectId, projectName, currentVotes, cl
 
   const getScoreColor = () => {
     const score = localVotes.vote_score;
-    if (score > 10) return 'text-green-600 dark:text-green-400';
-    if (score > 5) return 'text-green-600 dark:text-green-300';
-    if (score > 0) return 'text-blue-600 dark:text-blue-300';
+    if (score > 10) return 'text-green-800 dark:text-green-400 font-bold';
+    if (score > 5) return 'text-green-800 dark:text-green-300 font-bold';
+    if (score > 0) return 'text-blue-700 dark:text-blue-300 font-semibold';
     if (score === 0) return 'text-muted-foreground dark:text-gray-300';
-    if (score > -5) return 'text-orange-600 dark:text-orange-300';
-    return 'text-red-600 dark:text-red-300';
+    if (score > -5) return 'text-orange-700 dark:text-orange-300 font-semibold';
+    return 'text-red-700 dark:text-red-300 font-semibold';
   };
 
   const getScoreIcon = () => {

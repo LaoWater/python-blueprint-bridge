@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, Save, Plus, Trash2, AlertCircle } from 'lucide-react';
+import { X, Save, Plus, Trash2, AlertCircle, Edit2, Check } from 'lucide-react';
 import { ProjectTeam } from '@/hooks/useGroupProjects';
 import { Button } from '@/components/ui/button';
 
@@ -40,6 +40,12 @@ export default function TeamEditorModal({
   const [skillInput, setSkillInput] = useState('');
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [editingTaskIndex, setEditingTaskIndex] = useState<number | null>(null);
+  const [editingTaskText, setEditingTaskText] = useState('');
+  const [editingDeliverableIndex, setEditingDeliverableIndex] = useState<number | null>(null);
+  const [editingDeliverableText, setEditingDeliverableText] = useState('');
+  const [editingSkillIndex, setEditingSkillIndex] = useState<number | null>(null);
+  const [editingSkillText, setEditingSkillText] = useState('');
 
   // Initialize form data when team changes
   useEffect(() => {
@@ -112,6 +118,34 @@ export default function TeamEditorModal({
       ...prev,
       tasks: (prev.tasks || []).filter((_, i) => i !== index)
     }));
+    // Cancel editing if we're deleting the task being edited
+    if (editingTaskIndex === index) {
+      setEditingTaskIndex(null);
+      setEditingTaskText('');
+    }
+  };
+
+  const startEditTask = (index: number) => {
+    setEditingTaskIndex(index);
+    setEditingTaskText((formData.tasks || [])[index] || '');
+  };
+
+  const saveEditTask = () => {
+    if (editingTaskIndex !== null && editingTaskText.trim()) {
+      setFormData(prev => ({
+        ...prev,
+        tasks: (prev.tasks || []).map((task, i) =>
+          i === editingTaskIndex ? editingTaskText.trim() : task
+        )
+      }));
+      setEditingTaskIndex(null);
+      setEditingTaskText('');
+    }
+  };
+
+  const cancelEditTask = () => {
+    setEditingTaskIndex(null);
+    setEditingTaskText('');
   };
 
   const addDeliverable = () => {
@@ -129,6 +163,33 @@ export default function TeamEditorModal({
       ...prev,
       deliverables: (prev.deliverables || []).filter((_, i) => i !== index)
     }));
+    if (editingDeliverableIndex === index) {
+      setEditingDeliverableIndex(null);
+      setEditingDeliverableText('');
+    }
+  };
+
+  const startEditDeliverable = (index: number) => {
+    setEditingDeliverableIndex(index);
+    setEditingDeliverableText((formData.deliverables || [])[index] || '');
+  };
+
+  const saveEditDeliverable = () => {
+    if (editingDeliverableIndex !== null && editingDeliverableText.trim()) {
+      setFormData(prev => ({
+        ...prev,
+        deliverables: (prev.deliverables || []).map((deliverable, i) =>
+          i === editingDeliverableIndex ? editingDeliverableText.trim() : deliverable
+        )
+      }));
+      setEditingDeliverableIndex(null);
+      setEditingDeliverableText('');
+    }
+  };
+
+  const cancelEditDeliverable = () => {
+    setEditingDeliverableIndex(null);
+    setEditingDeliverableText('');
   };
 
   const addSkill = () => {
@@ -146,6 +207,33 @@ export default function TeamEditorModal({
       ...prev,
       required_skills: (prev.required_skills || []).filter((_, i) => i !== index)
     }));
+    if (editingSkillIndex === index) {
+      setEditingSkillIndex(null);
+      setEditingSkillText('');
+    }
+  };
+
+  const startEditSkill = (index: number) => {
+    setEditingSkillIndex(index);
+    setEditingSkillText((formData.required_skills || [])[index] || '');
+  };
+
+  const saveEditSkill = () => {
+    if (editingSkillIndex !== null && editingSkillText.trim()) {
+      setFormData(prev => ({
+        ...prev,
+        required_skills: (prev.required_skills || []).map((skill, i) =>
+          i === editingSkillIndex ? editingSkillText.trim() : skill
+        )
+      }));
+      setEditingSkillIndex(null);
+      setEditingSkillText('');
+    }
+  };
+
+  const cancelEditSkill = () => {
+    setEditingSkillIndex(null);
+    setEditingSkillText('');
   };
 
   if (!isOpen) return null;
@@ -309,13 +397,53 @@ export default function TeamEditorModal({
             <div className="space-y-2">
               {(formData.tasks || []).map((task, index) => (
                 <div key={index} className="flex items-center gap-2 bg-secondary dark:bg-slate-700 px-3 py-2 rounded-lg">
-                  <span className="flex-1 text-sm">{task}</span>
-                  <button
-                    onClick={() => removeTask(index)}
-                    className="p-1 hover:bg-red-500/20 rounded transition-colors"
-                  >
-                    <Trash2 className="w-4 h-4 text-red-500" />
-                  </button>
+                  {editingTaskIndex === index ? (
+                    <>
+                      <input
+                        type="text"
+                        value={editingTaskText}
+                        onChange={(e) => setEditingTaskText(e.target.value)}
+                        onKeyPress={(e) => {
+                          if (e.key === 'Enter') saveEditTask();
+                          if (e.key === 'Escape') cancelEditTask();
+                        }}
+                        className="flex-1 px-2 py-1 bg-background dark:bg-slate-600 border border-purple-500 rounded focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm"
+                        autoFocus
+                      />
+                      <button
+                        onClick={saveEditTask}
+                        className="p-1 hover:bg-green-500/20 rounded transition-colors"
+                        title="Save changes"
+                      >
+                        <Check className="w-4 h-4 text-green-600 dark:text-green-400" />
+                      </button>
+                      <button
+                        onClick={cancelEditTask}
+                        className="p-1 hover:bg-gray-500/20 rounded transition-colors"
+                        title="Cancel editing"
+                      >
+                        <X className="w-4 h-4 text-gray-600 dark:text-gray-400" />
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <span className="flex-1 text-sm">{task}</span>
+                      <button
+                        onClick={() => startEditTask(index)}
+                        className="p-1 hover:bg-blue-500/20 rounded transition-colors"
+                        title="Edit task"
+                      >
+                        <Edit2 className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                      </button>
+                      <button
+                        onClick={() => removeTask(index)}
+                        className="p-1 hover:bg-red-500/20 rounded transition-colors"
+                        title="Delete task"
+                      >
+                        <Trash2 className="w-4 h-4 text-red-500" />
+                      </button>
+                    </>
+                  )}
                 </div>
               ))}
               <div className="flex gap-2">
@@ -340,13 +468,53 @@ export default function TeamEditorModal({
             <div className="space-y-2">
               {(formData.deliverables || []).map((deliverable, index) => (
                 <div key={index} className="flex items-center gap-2 bg-secondary dark:bg-slate-700 px-3 py-2 rounded-lg">
-                  <span className="flex-1 text-sm">{deliverable}</span>
-                  <button
-                    onClick={() => removeDeliverable(index)}
-                    className="p-1 hover:bg-red-500/20 rounded transition-colors"
-                  >
-                    <Trash2 className="w-4 h-4 text-red-500" />
-                  </button>
+                  {editingDeliverableIndex === index ? (
+                    <>
+                      <input
+                        type="text"
+                        value={editingDeliverableText}
+                        onChange={(e) => setEditingDeliverableText(e.target.value)}
+                        onKeyPress={(e) => {
+                          if (e.key === 'Enter') saveEditDeliverable();
+                          if (e.key === 'Escape') cancelEditDeliverable();
+                        }}
+                        className="flex-1 px-2 py-1 bg-background dark:bg-slate-600 border border-purple-500 rounded focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm"
+                        autoFocus
+                      />
+                      <button
+                        onClick={saveEditDeliverable}
+                        className="p-1 hover:bg-green-500/20 rounded transition-colors"
+                        title="Save changes"
+                      >
+                        <Check className="w-4 h-4 text-green-600 dark:text-green-400" />
+                      </button>
+                      <button
+                        onClick={cancelEditDeliverable}
+                        className="p-1 hover:bg-gray-500/20 rounded transition-colors"
+                        title="Cancel editing"
+                      >
+                        <X className="w-4 h-4 text-gray-600 dark:text-gray-400" />
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <span className="flex-1 text-sm">{deliverable}</span>
+                      <button
+                        onClick={() => startEditDeliverable(index)}
+                        className="p-1 hover:bg-blue-500/20 rounded transition-colors"
+                        title="Edit deliverable"
+                      >
+                        <Edit2 className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                      </button>
+                      <button
+                        onClick={() => removeDeliverable(index)}
+                        className="p-1 hover:bg-red-500/20 rounded transition-colors"
+                        title="Delete deliverable"
+                      >
+                        <Trash2 className="w-4 h-4 text-red-500" />
+                      </button>
+                    </>
+                  )}
                 </div>
               ))}
               <div className="flex gap-2">
@@ -371,14 +539,54 @@ export default function TeamEditorModal({
             <div className="space-y-2">
               <div className="flex flex-wrap gap-2">
                 {(formData.required_skills || []).map((skill, index) => (
-                  <div key={index} className="flex items-center gap-1 bg-secondary dark:bg-slate-700 px-3 py-1 rounded-full">
-                    <span className="text-sm">{skill}</span>
-                    <button
-                      onClick={() => removeSkill(index)}
-                      className="p-0.5 hover:bg-red-500/20 rounded-full transition-colors"
-                    >
-                      <X className="w-3 h-3 text-red-500" />
-                    </button>
+                  <div key={index}>
+                    {editingSkillIndex === index ? (
+                      <div className="flex items-center gap-1 bg-secondary dark:bg-slate-700 px-2 py-1 rounded-full border-2 border-purple-500">
+                        <input
+                          type="text"
+                          value={editingSkillText}
+                          onChange={(e) => setEditingSkillText(e.target.value)}
+                          onKeyPress={(e) => {
+                            if (e.key === 'Enter') saveEditSkill();
+                            if (e.key === 'Escape') cancelEditSkill();
+                          }}
+                          className="w-32 px-1 py-0.5 bg-background dark:bg-slate-600 border-0 rounded text-sm focus:ring-0 focus:outline-none"
+                          autoFocus
+                        />
+                        <button
+                          onClick={saveEditSkill}
+                          className="p-0.5 hover:bg-green-500/20 rounded-full transition-colors"
+                          title="Save changes"
+                        >
+                          <Check className="w-3 h-3 text-green-600 dark:text-green-400" />
+                        </button>
+                        <button
+                          onClick={cancelEditSkill}
+                          className="p-0.5 hover:bg-gray-500/20 rounded-full transition-colors"
+                          title="Cancel editing"
+                        >
+                          <X className="w-3 h-3 text-gray-600 dark:text-gray-400" />
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="flex items-center gap-1 bg-secondary dark:bg-slate-700 px-3 py-1 rounded-full group">
+                        <span className="text-sm">{skill}</span>
+                        <button
+                          onClick={() => startEditSkill(index)}
+                          className="p-0.5 hover:bg-blue-500/20 rounded-full transition-colors opacity-0 group-hover:opacity-100"
+                          title="Edit skill"
+                        >
+                          <Edit2 className="w-3 h-3 text-blue-600 dark:text-blue-400" />
+                        </button>
+                        <button
+                          onClick={() => removeSkill(index)}
+                          className="p-0.5 hover:bg-red-500/20 rounded-full transition-colors"
+                          title="Delete skill"
+                        >
+                          <X className="w-3 h-3 text-red-500" />
+                        </button>
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>

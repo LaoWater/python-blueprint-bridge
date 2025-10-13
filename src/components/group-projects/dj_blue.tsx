@@ -514,7 +514,7 @@ export default function MoodMusicProject() {
                       {team.current_members}/{team.max_members} members
                     </span>
                     {isInTeam(team.id) && (
-                      <span className="text-xs bg-green-500/20 text-green-300 px-2 py-1 rounded-full">✓ Joined</span>
+                      <span className="text-xs bg-green-500/20 text-green-500 px-2 py-1 rounded-full">✓ Joined</span>
                     )}
                     {team.current_members >= team.max_members && !isInTeam(team.id) && (
                       <span className="text-xs bg-red-500/20 text-red-300 px-2 py-1 rounded-full">Full</span>
@@ -592,7 +592,7 @@ export default function MoodMusicProject() {
 
                         <div className="flex items-center justify-between mb-3">
                           {getTeamStatus(team) === 'joined' && (
-                            <span className="text-xs bg-green-500/20 text-green-300 px-2 py-1 rounded-full">✓ Joined</span>
+                            <span className="text-xs bg-green-500/20 text-green-500 px-2 py-1 rounded-full">✓ Joined</span>
                           )}
                           {getTeamStatus(team) === 'full' && (
                             <span className="text-xs bg-red-500/20 text-red-300 px-2 py-1 rounded-full">Full</span>
@@ -600,7 +600,7 @@ export default function MoodMusicProject() {
                         </div>
 
                         {joinSuccess && expandedTeam === team.id && (
-                          <div className="mb-3 p-2 bg-green-500/20 border border-green-500/30 rounded-lg text-green-300 text-sm text-center transition-colors">
+                          <div className="mb-3 p-2 bg-green-500/20 border border-green-500/30 rounded-lg text-green-500 text-sm text-center transition-colors">
                             {joinSuccess}
                           </div>
                         )}
