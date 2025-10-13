@@ -501,6 +501,99 @@ export const useGroupProjects = () => {
     }
   }, [user?.id]);
 
+  // ADMIN FUNCTIONS - for managing project teams
+
+  // Update a team (admin only)
+  const updateTeam = useCallback(async (teamId: string, updates: Partial<ProjectTeam>) => {
+    try {
+      const { data, error } = await supabase
+        .from('project_teams')
+        .update({
+          ...updates,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', teamId)
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      // Update local state
+      setTeams(prevTeams =>
+        prevTeams.map(team => team.id === teamId ? { ...team, ...updates } : team)
+      );
+
+      return { success: true, data };
+    } catch (err) {
+      console.error('Error updating team:', err);
+      setError('Failed to update team');
+      return { success: false, error: err };
+    }
+  }, []);
+
+  // Create a new team (admin only)
+  const createTeam = useCallback(async (projectId: string, teamData: Omit<ProjectTeam, 'id' | 'created_at' | 'updated_at' | 'current_members'>) => {
+    try {
+      const { data, error } = await supabase
+        .from('project_teams')
+        .insert({
+          project_id: projectId,
+          ...teamData,
+          current_members: 0,
+        })
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      // Add to local state
+      setTeams(prevTeams => [...prevTeams, data as ProjectTeam]);
+
+      return { success: true, data };
+    } catch (err) {
+      console.error('Error creating team:', err);
+      setError('Failed to create team');
+      return { success: false, error: err };
+    }
+  }, []);
+
+  // Delete a team (admin only)
+  const deleteTeam = useCallback(async (teamId: string) => {
+    try {
+      // Check if team has members
+      const { data: participants, error: checkError } = await supabase
+        .from('project_participants')
+        .select('id')
+        .eq('team_id', teamId)
+        .eq('status', 'active');
+
+      if (checkError) throw checkError;
+
+      if (participants && participants.length > 0) {
+        return {
+          success: false,
+          error: 'Cannot delete team with active members. Please remove all members first.'
+        };
+      }
+
+      const { error } = await supabase
+        .from('project_teams')
+        .delete()
+        .eq('id', teamId);
+
+      if (error) throw error;
+
+      // Remove from local state
+      setTeams(prevTeams => prevTeams.filter(team => team.id !== teamId));
+
+      return { success: true };
+    } catch (err) {
+      console.error('Error deleting team:', err);
+      setError('Failed to delete team');
+      return { success: false, error: err };
+    }
+  }, []);
+
   return {
     projects,
     teams,
@@ -522,6 +615,10 @@ export const useGroupProjects = () => {
     castVote,
     removeVote,
     getUserVote,
+    // Admin functions
+    updateTeam,
+    createTeam,
+    deleteTeam,
     clearError: () => setError(null)
   };
 };

@@ -17,10 +17,18 @@ import {
   Bot,
   Users,
   Code,
-  Cpu
+  Cpu,
+  Edit,
+  Plus,
+  Trash2,
+  Settings
 } from 'lucide-react';
 
 import { useGroupProjects } from '../../hooks/useGroupProjects';
+import { useAuth } from '../AuthContext';
+import { toast } from 'sonner';
+import TeamEditorModal from './TeamEditorModal';
+import { ProjectTeam } from '@/hooks/useGroupProjects';
 
 export default function WellnessOracle() {
   const [activeSection, setActiveSection] = useState('teams');
@@ -29,7 +37,16 @@ export default function WellnessOracle() {
   const [userTeams, setUserTeams] = useState<string[]>([]);
   const [joinSuccess, setJoinSuccess] = useState<string | null>(null);
   const [joinError, setJoinError] = useState<string | null>(null);
-  const { projects, teams, teamsWithMembers, fetchTeamsWithMembers, joinTeam, leaveTeam, getUserTeams, loading, error } = useGroupProjects();
+
+  // Admin state
+  const [adminEditMode, setAdminEditMode] = useState(false);
+  const [editorModalOpen, setEditorModalOpen] = useState(false);
+  const [editorMode, setEditorMode] = useState<'create' | 'edit'>('edit');
+  const [selectedTeamForEdit, setSelectedTeamForEdit] = useState<ProjectTeam | null>(null);
+  const [deletingTeam, setDeletingTeam] = useState<string | null>(null);
+
+  const { projects, teams, teamsWithMembers, fetchTeamsWithMembers, joinTeam, leaveTeam, getUserTeams, updateTeam, createTeam, deleteTeam, loading, error } = useGroupProjects();
+  const { isAdmin, profile } = useAuth();
 
   // Get the wellness project
   const wellnessProject = projects.find(p => p.name === 'Personal Wellness Oracle');
@@ -145,6 +162,72 @@ export default function WellnessOracle() {
     if (team.current_members >= team.max_members) return 'full';
     return 'available';
   }, [isInTeam]);
+
+  // Admin handlers
+  const handleCreateTeam = () => {
+    setEditorMode('create');
+    setSelectedTeamForEdit(null);
+    setEditorModalOpen(true);
+  };
+
+  const handleEditTeam = (team: ProjectTeam) => {
+    setEditorMode('edit');
+    setSelectedTeamForEdit(team);
+    setEditorModalOpen(true);
+  };
+
+  const handleSaveTeam = async (teamId: string | null, teamData: Partial<ProjectTeam>) => {
+    if (!wellnessProject?.id) return;
+
+    try {
+      if (teamId) {
+        // Update existing team
+        const result = await updateTeam(teamId, teamData);
+        if (result.success) {
+          toast.success('Team updated successfully!');
+          fetchTeamsWithMembers(wellnessProject.id);
+          setEditorModalOpen(false);
+        } else {
+          toast.error('Failed to update team');
+        }
+      } else {
+        // Create new team
+        const result = await createTeam(wellnessProject.id, teamData as any);
+        if (result.success) {
+          toast.success('Team created successfully!');
+          fetchTeamsWithMembers(wellnessProject.id);
+          setEditorModalOpen(false);
+        } else {
+          toast.error('Failed to create team');
+        }
+      }
+    } catch (err) {
+      toast.error('An error occurred while saving the team');
+    }
+  };
+
+  const handleDeleteTeam = async (teamId: string, teamName: string) => {
+    if (!confirm(`Are you sure you want to delete "${teamName}"? This action cannot be undone.`)) {
+      return;
+    }
+
+    setDeletingTeam(teamId);
+    try {
+      const result = await deleteTeam(teamId);
+      if (result.success) {
+        toast.success('Team deleted successfully');
+        if (wellnessProject?.id) {
+          fetchTeamsWithMembers(wellnessProject.id);
+        }
+      } else {
+        toast.error(result.error || 'Failed to delete team');
+      }
+    } catch (err) {
+      toast.error('An error occurred while deleting the team');
+    } finally {
+      setDeletingTeam(null);
+    }
+  };
 
   // Removed auto-scroll for better UX - let users stay where they are
 
@@ -359,6 +442,46 @@ export default function WellnessOracle() {
             <p className="text-xl text-muted-foreground dark:text-gray-300">Each team owns their piece of the AI puzzle. Trust others with theirs. Together, we build magic.</p>
           </div>
 
+          {/* Admin Controls */}
+          {isAdmin && (
+            <div className="mb-6 flex flex-col items-center justify-center gap-3">
+              <button
+                onClick={() => setAdminEditMode(!adminEditMode)}
+                className={`flex items-center gap-2 px-8 py-4 rounded-full transition-all duration-300 font-bold text-lg ${
+                  adminEditMode
+                    ? 'bg-gradient-to-r from-yellow-500 to-orange-500 text-white shadow-lg shadow-yellow-500/30 animate-pulse'
+                    : 'bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:from-blue-600 hover:to-purple-600 shadow-lg'
+                }`}
+              >
+                <Settings className="w-6 h-6" />
+                {adminEditMode ? '✓ ADMIN MODE ACTIVE - Click to Exit' : '🔓 Click to Enable Admin Edit Mode'}
+              </button>
+              {!adminEditMode && (
+                <p className="text-sm text-muted-foreground dark:text-gray-400 italic">
+                  👆 Click the button above to show Edit/Delete buttons on team cards
+                </p>
+              )}
+
+              {adminEditMode && (
+                <>
+                  <button
+                    onClick={handleCreateTeam}
+                    className="flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white shadow-lg shadow-green-500/30 font-semibold transition-all duration-300"
+                  >
+                    <Plus className="w-5 h-5" />
+                    Create New Team
+                  </button>
+                  <div className="px-4 py-2 bg-green-500/20 border border-green-500/50 rounded-lg">
+                    <p className="text-sm text-green-300 font-semibold">
+                      ✓ Admin Mode Active: Edit (blue) and Delete (red) buttons now visible on each team card below
+                    </p>
+                  </div>
+                </>
+              )}
+            </div>
+          )}
+        
+
           {/* Status Info */}
           {loading && <div className="text-center text-muted-foreground dark:text-gray-400 mb-8">Loading teams...</div>}
           {error && (
@@ -385,6 +508,31 @@ export default function WellnessOracle() {
                 className="relative bg-card/50 dark:bg-gray-800/50 backdrop-blur-lg rounded-2xl border border-border dark:border-purple-500/20 overflow-hidden transition-all duration-300 hover:shadow-xl hover:shadow-purple-500/20"
               >
                 <div className={`absolute inset-0 bg-gradient-to-br ${team.color_scheme} opacity-10 rounded-2xl`}></div>
+
+                {/* Admin Edit/Delete Controls */}
+                {isAdmin && adminEditMode && (
+                  <div className="absolute top-3 right-3 z-20 flex gap-2">
+                    <button
+                      onClick={() => handleEditTeam(team)}
+                      className="p-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg shadow-lg transition-colors duration-200"
+                      title="Edit Team"
+                    >
+                      <Edit className="w-4 h-4" />
+                    </button>
+                    <button
+                      onClick={() => handleDeleteTeam(team.id, team.name)}
+                      disabled={deletingTeam === team.id}
+                      className="p-2 bg-red-500 hover:bg-red-600 text-white rounded-lg shadow-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                      title="Delete Team"
+                    >
+                      {deletingTeam === team.id ? (
+                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                      ) : (
+                        <Trash2 className="w-4 h-4" />
+                      )}
+                    </button>
+                  </div>
+                )}
 
                 <div className="relative z-10 p-6">
                   <div className="flex items-center justify-between mb-4">
@@ -593,6 +741,16 @@ export default function WellnessOracle() {
           </div>
         </div>
       )}
+
+      {/* Team Editor Modal */}
+      <TeamEditorModal
+        team={selectedTeamForEdit}
+        projectId={wellnessProject?.id || ''}
+        isOpen={editorModalOpen}
+        onClose={() => setEditorModalOpen(false)}
+        onSave={handleSaveTeam}
+        mode={editorMode}
+      />
     </div>
   );
 }
