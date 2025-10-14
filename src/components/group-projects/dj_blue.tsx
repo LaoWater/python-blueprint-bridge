@@ -542,6 +542,24 @@ export default function MoodMusicProject() {
                         </ul>
                       </div>
 
+                      {/* Deliverables Section */}
+                      {team.deliverables && team.deliverables.length > 0 && (
+                        <div className="bg-gradient-to-br from-amber-500/10 to-orange-500/10 dark:from-amber-500/20 dark:to-orange-500/20 border-2 border-amber-500/30 dark:border-amber-500/40 rounded-xl p-4 shadow-lg">
+                          <div className="flex items-center gap-2 mb-3">
+                            <Database className="w-5 h-5 text-amber-600 dark:text-amber-400" />
+                            <p className="font-bold text-sm text-amber-800 dark:text-amber-300">Team Deliverables:</p>
+                          </div>
+                          <ul className="text-sm text-gray-800 dark:text-gray-200 space-y-2">
+                            {team.deliverables.map((deliverable, idx) => (
+                              <li key={idx} className="flex items-start gap-2 bg-white/50 dark:bg-slate-800/50 px-3 py-2 rounded-lg">
+                                <span className="text-amber-600 dark:text-amber-400 font-bold">✓</span>
+                                <span className="font-medium">{deliverable}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+
                       <div className="border-t border-purple-500/20 pt-4">
                         <p className="font-semibold text-sm text-purple-300 mb-3">Team Members ({team.current_members}/{team.max_members}):</p>
 

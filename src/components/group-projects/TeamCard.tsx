@@ -234,6 +234,14 @@ export default function TeamCard({ team, projectId, initialMembers }: TeamCardPr
               });
               return null;
             })()}
+            {/* FORCE RENDER TEST - Remove this after confirming it works */}
+            {true && (
+              <div className="bg-gradient-to-br from-red-500/10 to-red-500/10 border-2 border-red-500/30 rounded-xl p-4 shadow-lg">
+                <p className="font-bold text-sm text-red-800 dark:text-red-300">🧪 TEST: Force render - If you see this, front-end rendering works!</p>
+                <p className="text-xs">Deliverables length: {team.deliverables?.length || 0}</p>
+                <p className="text-xs">Deliverables: {JSON.stringify(team.deliverables)}</p>
+              </div>
+            )}
             {team.deliverables && team.deliverables.length > 0 && (
               <div className="bg-gradient-to-br from-amber-500/10 to-orange-500/10 dark:from-amber-500/20 dark:to-orange-500/20 border-2 border-amber-500/30 dark:border-amber-500/40 rounded-xl p-4 shadow-lg">
                 <div className="flex items-center gap-2 mb-3">
