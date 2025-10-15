@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Play, Pause, RotateCcw, Search, ArrowUpDown, Filter, Database, Zap, Clock, Target, Users } from 'lucide-react';
-
 import { CodeBlockR } from '@/components/CodeBlockR';
+import { BinderRun } from "@/components/BinderRun";
+
 
 const DataStructuresArtifact = () => {
   const navigate = useNavigate();
@@ -785,15 +786,9 @@ const DataStructuresArtifact = () => {
                 <div className="space-y-4">
                   <div className="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm">
                     <div className="text-yellow-300 mb-2"># Bubble Sort - Algoritm educațional O(n²)</div>
-                      <CodeBlockR>
-{`def bubble_sort(comenzi, key):
-    n = len(comenzi)
-    for i in range(n):
-        for j in range(0, n-i-1):
-            if comenzi[j][key] > comenzi[j+1][key]:
-                comenzi[j], comenzi[j+1] = comenzi[j+1], comenzi[j]
-    return comenzi`}
-                    </CodeBlockR>
+                      <BinderRun>
+{`print("Hello World")`}
+                      </BinderRun>
                   </div>
                   
                   <div className="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm">
