@@ -16,14 +16,53 @@ export function CodeBlockR({
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
-    if (!ref.current) return;
-    const bg = getComputedStyle(ref.current.parentElement!).backgroundColor;
-    const match = bg.match(/\d+(\.\d+)?/g)?.map(Number);
-    if (match && match.length >= 3) {
-      const [r, g, b] = match;
-      const brightness = (r * 299 + g * 587 + b * 114) / 1000;
-      setIsDark(brightness < 128);
-    }
+    const detectTheme = () => {
+      const html = document.documentElement;
+
+      // Tailwind dark mode detection
+      const tailwindDark =
+        html.classList.contains('dark') ||
+        html.dataset.theme === 'dark' ||
+        document.body.classList.contains('dark');
+
+      // Detect if Dark Reader is active (modern versions modify <meta name="darkreader-lock"> or <style id="dark-reader-style">)
+      const darkReaderActive =
+        document.querySelector('style[id^="dark-reader"]') ||
+        document.querySelector('meta[name="darkreader-lock"]') ||
+        document.querySelector('link[title="darkreader"]');
+
+      // Compute brightness of background
+      let brightness = 255;
+      if (ref.current?.parentElement) {
+        const bg = getComputedStyle(ref.current.parentElement).backgroundColor;
+        const match = bg.match(/\d+(\.\d+)?/g)?.map(Number);
+        if (match && match.length >= 3) {
+          const [r, g, b] = match;
+          brightness = (r * 299 + g * 587 + b * 114) / 1000;
+        }
+      }
+
+      // Adjust logic: if Dark Reader is active, always assume dark theme is handled externally
+      const dark =
+        (tailwindDark && !darkReaderActive) ||
+        (!darkReaderActive && brightness < 128);
+
+      setIsDark(Boolean(dark));
+    };
+
+    detectTheme();
+
+    const observer = new MutationObserver(detectTheme);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['class', 'data-theme', 'style'],
+    });
+
+    const interval = setInterval(detectTheme, 1000);
+    return () => {
+      observer.disconnect();
+      clearInterval(interval);
+    };
   }, []);
 
   const handleCopy = async () => {
@@ -43,6 +82,7 @@ export function CodeBlockR({
           margin: 0,
           background: 'transparent',
           overflowX: 'auto',
+          transition: 'background-color 0.3s ease',
         }}
         codeTagProps={{
           style: { fontSize: '1rem', lineHeight: 1.5 },
