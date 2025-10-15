@@ -303,11 +303,11 @@ const PandasArtifact = () => {
         <div className="flex items-center justify-between mb-8">
           <Button
             onClick={() => navigate('/data-calculus')}
-            variant="ghost"
-            className="flex items-center gap-2 text-blue-600 hover:text-blue-800 dark:text-blue-400"
+            variant="outline"
+            className="bg-white/90 backdrop-blur-sm hover:bg-white"
           >
-            <ArrowLeft size={20} />
-            Înapoi la Data Calculus
+            <ArrowLeft size={20} className="mr-2" />
+            Back to Data: Calculus
           </Button>
           
           <div className="text-center">
