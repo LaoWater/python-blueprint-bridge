@@ -504,25 +504,99 @@ if __name__ == "__main__":
                 Classical Machine Learning & NLP: The Foundation of Intelligence
               </h2>
               <p className="text-lg mb-8 text-muted-foreground">
-                Before deep learning revolutionized AI, classical machine learning algorithms powered countless 
-                real-world applications. Understanding these fundamentals is crucial for choosing the right 
+                Before deep learning revolutionized AI, classical machine learning algorithms powered countless
+                real-world applications. Understanding these fundamentals is crucial for choosing the right
                 approach for each problem.
               </p>
 
               <div className="space-y-8">
-                <div className="bg-gradient-to-r from-orange-50 to-yellow-50 dark:from-orange-900/20 dark:to-yellow-900/20 rounded-lg p-6">
-                  <h3 className="text-xl font-semibold mb-4 text-orange-800 dark:text-orange-200">
-                    Sessions 30-33 – Scikit-learn: From Basics to Production
-                  </h3>
-                  <p className="mb-4 text-sm text-muted-foreground">
-                    Netflix uses machine learning to predict which movies you'll enjoy. Banks use it to detect 
-                    fraudulent transactions. E-commerce platforms use it to optimize pricing. Scikit-learn 
-                    provides the tools to build these systems.
-                  </p>
-                  <EditableCodeBlock
-                    title="Production ML Pipeline - Real Estate Price Prediction"
-                    language="python"
-                    code={`import pandas as pd
+                {/* Featured Artifact - Session 30 */}
+                <div className="mb-12 bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50 dark:from-orange-900/20 dark:via-amber-900/20 dark:to-yellow-900/20 rounded-xl p-8 border-2 border-orange-300 dark:border-orange-700 shadow-xl">
+                  <div className="flex items-start gap-4 mb-6">
+                    <div className="text-5xl">🤖</div>
+                    <div>
+                      <h3 className="text-2xl font-bold mb-2 bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">
+                        Session 30: Introduction to Scikit-learn - The Moment Machines Started Learning
+                      </h3>
+                      <p className="text-muted-foreground mb-4">
+                        From the question "How do I make data PREDICT?" to building your first ML model. Experience the complete journey
+                        from need to solution with real Health & Finance projects.
+                      </p>
+                      <div className="flex flex-wrap gap-2 mb-4">
+                        <span className="px-3 py-1 bg-orange-100 dark:bg-orange-900/50 text-orange-800 dark:text-orange-200 rounded-full text-sm font-medium">
+                          sklearn Origins
+                        </span>
+                        <span className="px-3 py-1 bg-amber-100 dark:bg-amber-900/50 text-amber-800 dark:text-amber-200 rounded-full text-sm font-medium">
+                          Math Foundations
+                        </span>
+                        <span className="px-3 py-1 bg-yellow-100 dark:bg-yellow-900/50 text-yellow-800 dark:text-yellow-200 rounded-full text-sm font-medium">
+                          First ML Model
+                        </span>
+                        <span className="px-3 py-1 bg-red-100 dark:bg-red-900/50 text-red-800 dark:text-red-200 rounded-full text-sm font-medium">
+                          Interactive Story
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={() => window.location.href = '/artifacts/sklearn-session30'}
+                    className="w-full bg-gradient-to-r from-orange-500 via-amber-500 to-yellow-600 hover:from-orange-600 hover:via-amber-600 hover:to-yellow-700 text-white font-bold py-4 px-6 rounded-lg transition-all duration-300 transform hover:scale-[1.02] shadow-lg hover:shadow-xl flex items-center justify-center gap-3 text-lg"
+                  >
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                    </svg>
+                    <span>Enter Scikit-learn Session 30 Artifact</span>
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                    </svg>
+                  </button>
+
+                  <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                    <div className="bg-white/50 dark:bg-gray-800/50 rounded-lg p-4">
+                      <h4 className="font-semibold text-orange-800 dark:text-orange-200 mb-2">💰 Personal Finance Applications</h4>
+                      <ul className="space-y-1 text-gray-600 dark:text-gray-400">
+                        <li>• House price prediction - Should I buy this apartment?</li>
+                        <li>• Expense category prediction</li>
+                        <li>• Investment return forecasting</li>
+                        <li>• Budget optimization with ML</li>
+                      </ul>
+                    </div>
+                    <div className="bg-white/50 dark:bg-gray-800/50 rounded-lg p-4">
+                      <h4 className="font-semibold text-amber-800 dark:text-amber-200 mb-2">🏥 Health Applications</h4>
+                      <ul className="space-y-1 text-gray-600 dark:text-gray-400">
+                        <li>• Energy level prediction from sleep data</li>
+                        <li>• Workout performance forecasting</li>
+                        <li>• Nutrition impact analysis</li>
+                        <li>• Health metric trend prediction</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Additional sklearn sessions collapsed */}
+                <details className="space-y-8 bg-gradient-to-r from-orange-50/50 to-yellow-50/50 dark:from-orange-900/10 dark:to-yellow-900/10 rounded-lg border border-orange-200 dark:border-orange-800">
+                  <summary className="cursor-pointer p-6 hover:bg-orange-50/50 dark:hover:bg-orange-900/20 rounded-lg transition-colors">
+                    <span className="text-lg font-semibold text-orange-700 dark:text-orange-300">
+                      📚 Sessions 31-33: Advanced Scikit-learn & Additional Code Examples
+                    </span>
+                    <span className="text-sm text-muted-foreground ml-2">(Click to expand)</span>
+                  </summary>
+
+                  <div className="px-6 pb-6 space-y-8">
+                    <div className="bg-gradient-to-r from-orange-50 to-yellow-50 dark:from-orange-900/20 dark:to-yellow-900/20 rounded-lg p-6">
+                      <h3 className="text-xl font-semibold mb-4 text-orange-800 dark:text-orange-200">
+                        Sessions 30-33 – Scikit-learn: From Basics to Production
+                      </h3>
+                      <p className="mb-4 text-sm text-muted-foreground">
+                        Netflix uses machine learning to predict which movies you'll enjoy. Banks use it to detect
+                        fraudulent transactions. E-commerce platforms use it to optimize pricing. Scikit-learn
+                        provides the tools to build these systems.
+                      </p>
+                      <EditableCodeBlock
+                        title="Production ML Pipeline - Real Estate Price Prediction"
+                        language="python"
+                        code={`import pandas as pd
 import numpy as np
 from sklearn.model_selection import train_test_split, GridSearchCV, cross_val_score
 from sklearn.preprocessing import StandardScaler, LabelEncoder
@@ -611,14 +685,16 @@ def main():
 
 if __name__ == "__main__":
     main()`}
-                    page="machine-learning"
-                    section="sklearn-production"
-                  />
-                </div>
+                        page="machine-learning"
+                        section="sklearn-production"
+                      />
+                    </div>
+                  </div>
+                </details>
 
                 <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-lg p-6">
                   <h3 className="text-xl font-semibold mb-4 text-blue-800 dark:text-blue-200">
-                    Sesiunea 34-35 – NLP: Understanding Human Language
+                    Sessions 34-35 – NLP: Understanding Human Language
                   </h3>
                   <p className="mb-4 text-sm text-muted-foreground">
                     Customer service chatbots, sentiment analysis for brand monitoring, and document 
