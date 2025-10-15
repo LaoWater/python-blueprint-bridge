@@ -413,7 +413,7 @@ const AdvancedAlgorithmsArtifact = () => {
             
             <div className="bg-gradient-to-br from-green-500 to-emerald-600 text-white p-6 rounded-2xl text-center transform hover:scale-105 transition-all">
               <div className="text-3xl mb-3">💾</div>
-              <h4 className="font-bold text-lg mb-2">Memoizare</h4>
+              <h4 className="font-bold text-lg mb-2">Memorizare</h4>
               <p className="text-sm opacity-90">Amintește-ți ce ai făcut ca să nu repeți inutil</p>
             </div>
             
