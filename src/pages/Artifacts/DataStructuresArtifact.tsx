@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Play, Pause, RotateCcw, Search, ArrowUpDown, Filter, Database, Zap, Clock, Target, Users } from 'lucide-react';
-// import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-// import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 import { CodeBlockR } from '@/components/CodeBlockR';
 
