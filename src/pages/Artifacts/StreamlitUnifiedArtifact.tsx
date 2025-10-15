@@ -4,16 +4,16 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Progress } from '@/components/ui/progress';
-import { 
-  Heart, 
-  DollarSign, 
-  Brain, 
-  Smartphone, 
-  Clock, 
-  TrendingUp, 
-  Users, 
-  Database, 
-  Cloud, 
+import {
+  Heart,
+  DollarSign,
+  Brain,
+  Smartphone,
+  Clock,
+  TrendingUp,
+  Users,
+  Database,
+  Cloud,
   Shield,
   Code,
   Play,
@@ -23,7 +23,8 @@ import {
   Zap,
   BarChart3,
   LineChart,
-  PieChart
+  PieChart,
+  ArrowLeft
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
@@ -127,6 +128,20 @@ const StreamlitUnifiedArtifact = () => {
       <div className="relative overflow-hidden bg-gradient-to-r from-indigo-600 to-purple-600 text-white">
         <div className="absolute inset-0 bg-black/20" />
         <div className="relative z-10 max-w-7xl mx-auto px-4 py-16">
+          {/* Back Button and Badge */}
+          <div className="flex items-center justify-between mb-8">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => navigate('/data-visualizing')}
+              className="bg-white/20 text-white border-white/30 hover:bg-white/30 backdrop-blur-sm"
+            >
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Back to Data Visualizing
+            </Button>
+            <Badge className="bg-white/20 text-white">Sessions 23-26</Badge>
+          </div>
+
           <div className="text-center">
             <div className="inline-flex items-center gap-3 mb-6">
               <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-sm">
@@ -4688,18 +4703,29 @@ if __name__ == "__main__":
                         run reliably in the cloud, and can scale to serve more users.
                       </p>
                       
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <Button 
+                      <div className="flex flex-col sm:flex-row gap-4">
+                        <Button
+                          variant="outline"
+                          onClick={() => navigate('/data-visualizing')}
+                          className="flex items-center gap-2"
+                        >
+                          <ArrowLeft className="w-4 h-4" />
+                          Back to Data Visualizing
+                        </Button>
+
+                        <Button
                           onClick={() => markSectionComplete('session-26')}
-                          className="bg-gradient-to-r from-emerald-500 to-green-500 hover:from-emerald-600 hover:to-green-600"
+                          className="bg-gradient-to-r from-emerald-500 to-green-500 hover:from-emerald-600 hover:to-green-600 flex-1"
                         >
                           Mark Complete <Target className="w-4 h-4 ml-2" />
                         </Button>
-                        <Button 
-                          variant="outline"
+
+                        <Button
                           onClick={() => navigate('/machine-learning')}
+                          className="bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white flex items-center gap-2"
                         >
-                          Next: Machine Learning <ChevronRight className="w-4 h-4 ml-2" />
+                          Next: Machine Learning
+                          <ChevronRight className="w-4 h-4" />
                         </Button>
                       </div>
                     </div>
