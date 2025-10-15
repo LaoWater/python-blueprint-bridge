@@ -925,64 +925,64 @@ comenzi.sort(key=lambda x: x['${sortBy}'], reverse=True)`}
                 <div className="space-y-4">
                   <div className="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm">
                     <div className="text-yellow-300 mb-2"># Linear Search - Căutare secvențială O(n)</div>
-                    <pre>
-        {`def linear_search(comenzi, termen):
-            rezultate = []
-            pasi = 0
-            
-            for comanda in comenzi:  # Verific fiecare element
-                pasi += 1
-                if termen.lower() in comanda['restaurant'].lower():
-                    rezultate.append(comanda)
-            
-            return rezultate, pasi
+                    <CodeBlockR>
+{`def linear_search(comenzi, termen):
+    rezultate = []
+    pasi = 0
+    
+    for comanda in comenzi:  # Verific fiecare element
+        pasi += 1
+        if termen.lower() in comanda['restaurant'].lower():
+            rezultate.append(comanda)
+    
+    return rezultate, pasi
 
-        # Timp: O(n) - Trebuie să verific toată lista
-        # Avantaj: Funcționează pe orice listă
-        # Dezavantaj: Lent pentru liste mari`}
-                    </pre>
+# Timp: O(n) - Trebuie să verific toată lista
+# Avantaj: Funcționează pe orice listă
+# Dezavantaj: Lent pentru liste mari`}
+                    </CodeBlockR>
                   </div>
                   
                   <div className="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm">
                     <div className="text-yellow-300 mb-2"># Binary Search - Căutare binară O(log n)</div>
-                    <pre>
-            {`def binary_search(comenzi_sortate, termen):
-                left, right = 0, len(comenzi_sortate) - 1
-                pasi = 0
-                
-                while left <= right:
-                    pasi += 1
-                    mid = (left + right) // 2
-                    
-                    if termen in comenzi_sortate[mid]['restaurant']:
-                        return comenzi_sortate[mid], pasi
-                    elif termen < comenzi_sortate[mid]['restaurant']:
-                        right = mid - 1
-                    else:
-                        left = mid + 1
-                
-                return None, pasi
+                    <CodeBlockR>
+{`def binary_search(comenzi_sortate, termen):
+    left, right = 0, len(comenzi_sortate) - 1
+    pasi = 0
+    
+    while left <= right:
+        pasi += 1
+        mid = (left + right) // 2
+        
+        if termen in comenzi_sortate[mid]['restaurant']:
+            return comenzi_sortate[mid], pasi
+        elif termen < comenzi_sortate[mid]['restaurant']:
+            right = mid - 1
+        else:
+            left = mid + 1
+    
+    return None, pasi
 
-            # Timp: O(log n) - Înjumătățesc zona de căutare
-            # Avantaj: Foarte rapid pentru liste mari
-            # Dezavantaj: Lista TREBUIE să fie sortată`}
-                    </pre>
+# Timp: O(log n) - Înjumătățesc zona de căutare
+# Avantaj: Foarte rapid pentru liste mari
+# Dezavantaj: Lista TREBUIE să fie sortată`}
+                    </CodeBlockR>
                   </div>
                   
                   <div className="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm">
                     <div className="text-yellow-300 mb-2"># Căutări optimizate în Python</div>
-                    <pre>
-          {`# Folosind built-in functions
-          rezultate = [c for c in comenzi if termen in c['restaurant']]
+                    <CodeBlockR>
+{`# Folosind built-in functions
+rezultate = [c for c in comenzi if termen in c['restaurant']]
 
-          # Căutare cu bisect (pentru liste sortate)
-          import bisect
-          index = bisect.bisect_left(comenzi_sortate, termen)
+# Căutare cu bisect (pentru liste sortate)
+import bisect
+index = bisect.bisect_left(comenzi_sortate, termen)
 
-          # Set lookup O(1) - pentru verificări de existență
-          restaurante_set = set(c['restaurant'] for c in comenzi)
-          existe = termen in restaurante_set  # Instant!`}
-                    </pre>
+# Set lookup O(1) - pentru verificări de existență
+restaurante_set = set(c['restaurant'] for c in comenzi)
+existe = termen in restaurante_set  # Instant!`}
+                    </CodeBlockR>
                   </div>
                 </div>
                 

@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Copy, Check } from 'lucide-react';
 import { useContent } from './ContentProvider';
 import EditableContent from './EditableContent';
+import { CodeBlockR } from '@/components/CodeBlockR';
 
 interface CodeBlockProps {
   title?: string;
@@ -52,7 +53,7 @@ const EditableCodeBlock = ({ title, language = 'python', code, page, section }: 
         className="relative"
       >
         <pre className="p-4 bg-gray-50 dark:bg-gray-800 rounded-md overflow-x-auto">
-          <code className="language-python">{displayCode}</code>
+          <CodeBlockR language={language}>{displayCode}</CodeBlockR>
         </pre>
       </EditableContent>
       
