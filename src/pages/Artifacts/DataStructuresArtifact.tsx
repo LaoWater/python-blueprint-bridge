@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Play, Pause, RotateCcw, Search, ArrowUpDown, Filter, Database, Zap, Clock, Target, Users } from 'lucide-react';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
+// import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+// import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
+
+import { CodeBlockR } from '@/components/CodeBlockR';
 
 const DataStructuresArtifact = () => {
   const navigate = useNavigate();
@@ -179,7 +181,7 @@ const DataStructuresArtifact = () => {
   // Sort orders
   const sortOrders = () => {
     setIsAnimatingSorts(true);
-    
+
     setTimeout(() => {
       const sorted = [...orders].sort((a, b) => {
         let comparison = 0;
@@ -785,20 +787,7 @@ const DataStructuresArtifact = () => {
                 <div className="space-y-4">
                   <div className="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm">
                     <div className="text-yellow-300 mb-2"># Bubble Sort - Algoritm educațional O(n²)</div>
-                      <SyntaxHighlighter 
-                        language="python" 
-                        style={vscDarkPlus}
-                        showLineNumbers
-                        wrapLongLines    
-                        customStyle={{
-                        borderRadius: '0.75rem',
-                        padding: '1rem',
-                        margin: 0,
-                        background: 'transparent', // use parent bg
-                        overflowX: 'auto',
-                        fontSize: '0.9rem',
-                        }}
-                        lineNumberStyle={{ color: '#6b7280', paddingRight: '1em' }}>
+                      <CodeBlockR>
 {`def bubble_sort(comenzi, key):
     n = len(comenzi)
     for i in range(n):
@@ -806,26 +795,12 @@ const DataStructuresArtifact = () => {
             if comenzi[j][key] > comenzi[j+1][key]:
                 comenzi[j], comenzi[j+1] = comenzi[j+1], comenzi[j]
     return comenzi`}
-                    </SyntaxHighlighter>
+                    </CodeBlockR>
                   </div>
                   
                   <div className="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm">
                     <div className="text-yellow-300 mb-2"># Quick Sort - Algoritm eficient O(n log n)</div>
-                      <SyntaxHighlighter 
-                      language="python" 
-                      style={vscDarkPlus}
-                      showLineNumbers
-                      wrapLongLines    
-                      customStyle={{
-                      borderRadius: '0.75rem',
-                      padding: '1rem',
-                      margin: 0,
-                      background: 'transparent', // use parent bg
-                      overflowX: 'auto',
-                      fontSize: '0.9rem',
-                      }}
-                      lineNumberStyle={{ color: '#6b7280', paddingRight: '1em' }} // Tailwind gray-500
-                      >
+                      <CodeBlockR>
 {`def quick_sort(comenzi, key):
 if len(comenzi) <= 1:
     return comenzi
@@ -836,26 +811,12 @@ middle = [x for x in comenzi if x[key] == pivot[key]]
 right = [x for x in comenzi if x[key] > pivot[key]]
 
 return quick_sort(left, key) + middle + quick_sort(right, key)`}
-                    </SyntaxHighlighter>
+                    </CodeBlockR>
                   </div>
                   
                   <div className="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm">
                     <div className="text-yellow-300 mb-2"># Python Built-in - TimSort O(n log n), optimizat</div>
-                      <SyntaxHighlighter 
-                      language="python" 
-                      style={vscDarkPlus}
-                      showLineNumbers
-                      wrapLongLines    
-                      customStyle={{
-                      borderRadius: '0.75rem',
-                      padding: '1rem',
-                      margin: 0,
-                      background: 'transparent', // use parent bg
-                      overflowX: 'auto',
-                      fontSize: '0.9rem',
-                      }}
-                      lineNumberStyle={{ color: '#6b7280', paddingRight: '1em' }} // Tailwind gray-500
-                      >
+                      <CodeBlockR>
 {`# Sortare simplă
 comenzi.sort(key=lambda x: x['${sortBy}'])
 
@@ -864,7 +825,7 @@ comenzi.sort(key=lambda x: (x['priority'], x['time']))
 
 # Sortare descrescătoare
 comenzi.sort(key=lambda x: x['${sortBy}'], reverse=True)`}
-                    </SyntaxHighlighter>
+                    </CodeBlockR>
                   </div>
                 </div>
                 
