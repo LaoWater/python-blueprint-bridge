@@ -367,12 +367,12 @@ const AdvancedAlgorithmsArtifact = () => {
       {/* Back Button */}
       <div className="sticky top-4 left-4 z-10 p-4">
         <Button
-          onClick={() => navigate('/foundations')}
+          onClick={() => navigate('/data-calculus')}
           variant="outline"
           className="bg-white/90 backdrop-blur-sm hover:bg-white"
         >
           <ArrowLeft className="w-4 h-4 mr-2" />
-          Back to Foundations
+          Back to Data: Calculus
         </Button>
       </div>
 

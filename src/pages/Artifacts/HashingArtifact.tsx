@@ -1,13 +1,15 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Progress } from '@/components/ui/progress';
-import { AlertCircle, Hash, Users, Search, FileText, BarChart3, Clock, Zap, Shield, Database, CheckCircle } from 'lucide-react';
+import { AlertCircle, Hash, Users, Search, FileText, BarChart3, Clock, Zap, Shield, Database, CheckCircle, ArrowLeft } from 'lucide-react';
 
 const HashingArtifact = () => {
+  const navigate = useNavigate();
   const [currentSection, setCurrentSection] = useState('overview');
   const [animationStep, setAnimationStep] = useState(0);
   const [userInput, setUserInput] = useState('');
@@ -132,6 +134,18 @@ const HashingArtifact = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 p-4">
+      {/* Back Button */}
+      <div className="sticky top-4 left-4 z-10 p-4">
+        <Button
+          onClick={() => navigate('/data-calculus')}
+          variant="outline"
+          className="bg-white/90 backdrop-blur-sm hover:bg-white"
+        >
+          <ArrowLeft className="w-4 h-4 mr-2" />
+          Back to Data: Calculus
+        </Button>
+      </div>
+
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
