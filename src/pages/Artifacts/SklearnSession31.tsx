@@ -947,7 +947,7 @@ print("""
                             ❌ Când SVM Nu Este Ideal
                           </h4>
                           <ul className="text-sm space-y-1">
-                            <li>• Dataset-uri FOARTE mari (>100K samples) - prea lent</li>
+                            <li>• Dataset-uri FOARTE mari (&gt;100K samples) - prea lent</li>
                             <li>• Când interpretabilitatea e crucială</li>
                             <li>• Când vrei feature importance (Random Forest e mai bun)</li>
                             <li>• Real-time prediction cu latență critică</li>

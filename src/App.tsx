@@ -50,6 +50,8 @@ import DlibSession29 from "./pages/Artifacts/DlibSession29";
 import SklearnSession30 from "./pages/Artifacts/SklearnSession30";
 import SklearnSession31 from "./pages/Artifacts/SklearnSession31";
 import SklearnSession32 from "./pages/Artifacts/SklearnSession32";
+import SklearnSession33 from "./pages/Artifacts/SklearnSession33";
+import NLPSessions3435 from "./pages/Artifacts/NLPSessions34-35";
 import SklearnDiscovery from "./pages/Artifacts/Layer2Artifacts/sklearn-discovery";
 import OpenCVConvolutionLab from "./pages/Artifacts/Layer2Artifacts/filters_and_edges";
 import ContoursSegmentationLab from "./pages/Artifacts/Layer2Artifacts/contours-segmentation-lab";
@@ -113,6 +115,8 @@ const App = () => (
                   <Route path="/artifacts/sklearn-session30" element={<SklearnSession30 />} />
                   <Route path="/artifacts/sklearn-session31" element={<SklearnSession31 />} />
                   <Route path="/artifacts/sklearn-session32" element={<SklearnSession32 />} />
+                  <Route path="/artifacts/sklearn-session33" element={<SklearnSession33 />} />
+                  <Route path="/artifacts/nlp-sessions34-35" element={<NLPSessions3435 />} />
                   <Route path="/artifacts/layer2/sklearn-discovery" element={<SklearnDiscovery />} />
                   <Route path="/artifacts/layer2/filters-and-edges" element={<OpenCVConvolutionLab />} />
                   <Route path="/artifacts/layer2/contours-segmentation" element={<ContoursSegmentationLab />} />

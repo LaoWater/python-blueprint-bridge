@@ -12,7 +12,8 @@ const MachineLearning = () => {
   const tocItems = [
     { id: 'introduction', title: 'The Intelligence Revolution', sessions: 'Philosophy & Overview' },
     { id: 'computer-vision', title: 'Computer Vision', sessions: 'Sessions 28-29' },
-    { id: 'ml-classic', title: 'Classical Machine Learning & NLP', sessions: 'Sessions 30-35' },
+    { id: 'ml-classic', title: 'Classical Machine Learning', sessions: 'Sessions 30-33' },
+    { id: 'nlp', title: 'Natural Language Processing', sessions: 'Sessions 34-35' },
     { id: 'deep-learning', title: 'Deep Learning with TensorFlow', sessions: 'Sessions 36-40' },
     { id: 'next-chapter', title: 'The Road to Advanced ML', sessions: 'What\'s Next' }
   ];
@@ -501,12 +502,12 @@ if __name__ == "__main__":
           <section id="ml-classic" className="mb-16">
             <div className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-md rounded-xl p-8 border border-border shadow-lg animate-fade-in">
               <h2 className="text-3xl font-bold mb-6 bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">
-                Classical Machine Learning & NLP: The Foundation of Intelligence
+                Classical Machine Learning with Scikit-learn
               </h2>
               <p className="text-lg mb-8 text-muted-foreground">
                 Before deep learning revolutionized AI, classical machine learning algorithms powered countless
-                real-world applications. Understanding these fundamentals is crucial for choosing the right
-                approach for each problem.
+                real-world applications. Scikit-learn provides the essential toolkit for regression, classification,
+                and predictive modeling.
               </p>
 
               <div className="space-y-8">
@@ -702,11 +703,75 @@ if __name__ == "__main__":
                   </div>
                 </div>
 
-                {/* Additional sklearn sessions collapsed */}
+                {/* Featured Artifact - Session 33 */}
+                <div className="mb-12 bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 dark:from-green-900/20 dark:via-emerald-900/20 dark:to-teal-900/20 rounded-xl p-8 border-2 border-green-300 dark:border-green-700 shadow-xl">
+                  <div className="flex items-start gap-4 mb-6">
+                    <div className="text-5xl">🌸</div>
+                    <div>
+                      <h3 className="text-2xl font-bold mb-2 bg-gradient-to-r from-green-600 to-teal-600 bg-clip-text text-transparent">
+                        Session 33: Classification on Iris Dataset - The Most Famous ML Story
+                      </h3>
+                      <p className="text-muted-foreground mb-4">
+                        From "Can machines learn to see patterns like humans?" to building your first KNN classifier.
+                        Experience Ronald Fisher's 1936 breakthrough that changed statistics and ML forever.
+                      </p>
+                      <div className="flex flex-wrap gap-2 mb-4">
+                        <span className="px-3 py-1 bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-200 rounded-full text-sm font-medium">
+                          Iris Dataset - 1936
+                        </span>
+                        <span className="px-3 py-1 bg-emerald-100 dark:bg-emerald-900/50 text-emerald-800 dark:text-emerald-200 rounded-full text-sm font-medium">
+                          KNN Classifier
+                        </span>
+                        <span className="px-3 py-1 bg-teal-100 dark:bg-teal-900/50 text-teal-800 dark:text-teal-200 rounded-full text-sm font-medium">
+                          Confusion Matrix
+                        </span>
+                        <span className="px-3 py-1 bg-cyan-100 dark:bg-cyan-900/50 text-cyan-800 dark:text-cyan-200 rounded-full text-sm font-medium">
+                          Interactive Story
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={() => window.location.href = '/artifacts/sklearn-session33'}
+                    className="w-full bg-gradient-to-r from-green-500 via-emerald-500 to-teal-600 hover:from-green-600 hover:via-emerald-600 hover:to-teal-700 text-white font-bold py-4 px-6 rounded-lg transition-all duration-300 transform hover:scale-[1.02] shadow-lg hover:shadow-xl flex items-center justify-center gap-3 text-lg"
+                  >
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                    </svg>
+                    <span>Enter Scikit-learn Session 33 Artifact</span>
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                    </svg>
+                  </button>
+
+                  <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                    <div className="bg-white/50 dark:bg-gray-800/50 rounded-lg p-4">
+                      <h4 className="font-semibold text-green-800 dark:text-green-200 mb-2">🏥 Health Applications</h4>
+                      <ul className="space-y-1 text-gray-600 dark:text-gray-400">
+                        <li>• Symptom pattern classification</li>
+                        <li>• Patient similarity matching for treatment</li>
+                        <li>• Disease type prediction from measurements</li>
+                        <li>• Health metric categorization</li>
+                      </ul>
+                    </div>
+                    <div className="bg-white/50 dark:bg-gray-800/50 rounded-lg p-4">
+                      <h4 className="font-semibold text-emerald-800 dark:text-emerald-200 mb-2">💰 Finance Applications</h4>
+                      <ul className="space-y-1 text-gray-600 dark:text-gray-400">
+                        <li>• Customer segmentation for targeting</li>
+                        <li>• Expense category prediction</li>
+                        <li>• Investment risk classification</li>
+                        <li>• Fraud pattern recognition</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Additional sklearn code examples collapsed */}
                 <details className="space-y-8 bg-gradient-to-r from-orange-50/50 to-yellow-50/50 dark:from-orange-900/10 dark:to-yellow-900/10 rounded-lg border border-orange-200 dark:border-orange-800">
                   <summary className="cursor-pointer p-6 hover:bg-orange-50/50 dark:hover:bg-orange-900/20 rounded-lg transition-colors">
                     <span className="text-lg font-semibold text-orange-700 dark:text-orange-300">
-                      📚 Sessions 31-33: Advanced Scikit-learn & Additional Code Examples
+                      📚 Additional Code Examples & Implementation Details
                     </span>
                     <span className="text-sm text-muted-foreground ml-2">(Click to expand)</span>
                   </summary>
@@ -819,20 +884,109 @@ if __name__ == "__main__":
                     </div>
                   </div>
                 </details>
+              </div>
+            </div>
+          </section>
 
-                <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-lg p-6">
-                  <h3 className="text-xl font-semibold mb-4 text-blue-800 dark:text-blue-200">
-                    Sessions 34-35 – NLP: Understanding Human Language
-                  </h3>
-                  <p className="mb-4 text-sm text-muted-foreground">
-                    Customer service chatbots, sentiment analysis for brand monitoring, and document 
-                    classification systems all rely on Natural Language Processing to understand and 
-                    respond to human language.
-                  </p>
-                  <EditableCodeBlock
-                    title="Enterprise Sentiment Analysis System"
-                    language="python"
-                    code={`import pandas as pd
+          {/* NLP Section - NEW DEDICATED SECTION */}
+          <section id="nlp" className="mb-16">
+            <div className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-md rounded-xl p-8 border border-border shadow-lg animate-fade-in">
+              <h2 className="text-3xl font-bold mb-6 bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                Natural Language Processing: Teaching Machines to Understand Language
+              </h2>
+              <p className="text-lg mb-8 text-muted-foreground">
+                From sentiment analysis to chatbots, NLP enables machines to understand, interpret, and generate
+                human language. This is the foundation of modern AI assistants, translation systems, and text analytics.
+              </p>
+
+              <div className="space-y-8">
+                {/* Featured Artifact - Sessions 34-35 */}
+                <div className="bg-gradient-to-br from-blue-50 via-indigo-50 to-cyan-50 dark:from-blue-900/20 dark:via-indigo-900/20 dark:to-cyan-900/20 rounded-xl p-8 border-2 border-blue-300 dark:border-blue-700 shadow-xl">
+                  <div className="flex items-start gap-4 mb-6">
+                    <div className="text-5xl">💬</div>
+                    <div>
+                      <h3 className="text-2xl font-bold mb-2 bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                        Sessions 34-35: Natural Language Processing - Teaching Machines to Speak
+                      </h3>
+                      <p className="text-muted-foreground mb-4">
+                        From "Can machines understand human language?" to Word2Vec's geometric revelation: King - Man + Woman = Queen.
+                        Experience 70 years of the AI-complete problem that transformers finally solved.
+                      </p>
+                      <div className="flex flex-wrap gap-2 mb-4">
+                        <span className="px-3 py-1 bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-200 rounded-full text-sm font-medium">
+                          Word2Vec Magic
+                        </span>
+                        <span className="px-3 py-1 bg-indigo-100 dark:bg-indigo-900/50 text-indigo-800 dark:text-indigo-200 rounded-full text-sm font-medium">
+                          TF-IDF & Embeddings
+                        </span>
+                        <span className="px-3 py-1 bg-cyan-100 dark:bg-cyan-900/50 text-cyan-800 dark:text-cyan-200 rounded-full text-sm font-medium">
+                          Sentiment Analysis
+                        </span>
+                        <span className="px-3 py-1 bg-teal-100 dark:bg-teal-900/50 text-teal-800 dark:text-teal-200 rounded-full text-sm font-medium">
+                          Interactive Story
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={() => window.location.href = '/artifacts/nlp-sessions34-35'}
+                    className="w-full bg-gradient-to-r from-blue-500 via-indigo-500 to-cyan-600 hover:from-blue-600 hover:via-indigo-600 hover:to-cyan-700 text-white font-bold py-4 px-6 rounded-lg transition-all duration-300 transform hover:scale-[1.02] shadow-lg hover:shadow-xl flex items-center justify-center gap-3 text-lg"
+                  >
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                    </svg>
+                    <span>Enter NLP Sessions 34-35 Artifact</span>
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                    </svg>
+                  </button>
+
+                  <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                    <div className="bg-white/50 dark:bg-gray-800/50 rounded-lg p-4">
+                      <h4 className="font-semibold text-blue-800 dark:text-blue-200 mb-2">🏥 Health Applications</h4>
+                      <ul className="space-y-1 text-gray-600 dark:text-gray-400">
+                        <li>• Medical note analysis & symptom extraction</li>
+                        <li>• Patient sentiment tracking for mental health</li>
+                        <li>• Health query chatbot for preliminary advice</li>
+                        <li>• Clinical trial matching from descriptions</li>
+                      </ul>
+                    </div>
+                    <div className="bg-white/50 dark:bg-gray-800/50 rounded-lg p-4">
+                      <h4 className="font-semibold text-indigo-800 dark:text-indigo-200 mb-2">💰 Finance Applications</h4>
+                      <ul className="space-y-1 text-gray-600 dark:text-gray-400">
+                        <li>• Transaction description categorization</li>
+                        <li>• Financial news sentiment analysis</li>
+                        <li>• Customer review mining for insights</li>
+                        <li>• Chatbot for budget queries & advice</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
+                {/* NLP Code Examples - Collapsed */}
+                <details className="space-y-8 bg-gradient-to-r from-blue-50/50 to-indigo-50/50 dark:from-blue-900/10 dark:to-indigo-900/10 rounded-lg border border-blue-200 dark:border-blue-800">
+                  <summary className="cursor-pointer p-6 hover:bg-blue-50/50 dark:hover:bg-blue-900/20 rounded-lg transition-colors">
+                    <span className="text-lg font-semibold text-blue-700 dark:text-blue-300">
+                      📚 Additional Code Examples & Implementation Details
+                    </span>
+                    <span className="text-sm text-muted-foreground ml-2">(Click to expand)</span>
+                  </summary>
+
+                  <div className="px-6 pb-6 space-y-8">
+                    <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-lg p-6">
+                      <h3 className="text-xl font-semibold mb-4 text-blue-800 dark:text-blue-200">
+                        Sessions 34-35 – NLP: Understanding Human Language
+                      </h3>
+                      <p className="mb-4 text-sm text-muted-foreground">
+                        Customer service chatbots, sentiment analysis for brand monitoring, and document
+                        classification systems all rely on Natural Language Processing to understand and
+                        respond to human language.
+                      </p>
+                      <EditableCodeBlock
+                        title="Enterprise Sentiment Analysis System"
+                        language="python"
+                        code={`import pandas as pd
 import numpy as np
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.model_selection import train_test_split
@@ -974,10 +1128,12 @@ def main():
 
 if __name__ == "__main__":
     main()`}
-                    page="machine-learning"
-                    section="nlp-sentiment"
-                  />
-                </div>
+                        page="machine-learning"
+                        section="nlp-sentiment"
+                      />
+                    </div>
+                  </div>
+                </details>
               </div>
             </div>
           </section>
@@ -989,21 +1145,151 @@ if __name__ == "__main__":
                 Deep Learning with TensorFlow: Neural Networks Revolution
               </h2>
               <p className="text-lg mb-8 text-muted-foreground">
-                Deep learning has revolutionized computer vision, enabling systems that can diagnose diseases 
-                from medical images, enable autonomous vehicles, and create art. TensorFlow provides the 
+                Deep learning has revolutionized computer vision, enabling systems that can diagnose diseases
+                from medical images, enable autonomous vehicles, and create art. TensorFlow provides the
                 infrastructure to build these powerful neural networks.
               </p>
 
               <div className="space-y-8">
-                <div className="bg-gradient-to-r from-red-50 to-pink-50 dark:from-red-900/20 dark:to-pink-900/20 rounded-lg p-6">
-                  <h3 className="text-xl font-semibold mb-4 text-red-800 dark:text-red-200">
-                    Sesiunea 36-38 – CNN & Transfer Learning
-                  </h3>
-                  <p className="mb-4 text-sm text-muted-foreground">
-                    Medical imaging AI systems use Convolutional Neural Networks to detect cancer, fractures, 
-                    and other conditions. Transfer learning allows us to leverage pre-trained models for 
-                    specialized applications.
-                  </p>
+                {/* Placeholder Artifact - Session 36 */}
+                <div className="mb-12 bg-gradient-to-br from-red-50 via-orange-50 to-pink-50 dark:from-red-900/20 dark:via-orange-900/20 dark:to-pink-900/20 rounded-xl p-8 border-2 border-red-300 dark:border-red-700 shadow-xl">
+                  <div className="flex items-start gap-4 mb-6">
+                    <div className="text-5xl">🧠</div>
+                    <div>
+                      <h3 className="text-2xl font-bold mb-2 bg-gradient-to-r from-red-600 to-orange-600 bg-clip-text text-transparent">
+                        Session 36: Introduction to Deep Learning & Neural Networks
+                      </h3>
+                      <p className="text-muted-foreground mb-4">
+                        From "How do brains compute?" to building your first neural network. Experience the convergence of
+                        Linear Algebra (matrix multiplication), Calculus (backpropagation), and Intelligence.
+                      </p>
+                      <div className="flex flex-wrap gap-2 mb-4">
+                        <span className="px-3 py-1 bg-red-100 dark:bg-red-900/50 text-red-800 dark:text-red-200 rounded-full text-sm font-medium">
+                          TensorFlow Basics
+                        </span>
+                        <span className="px-3 py-1 bg-orange-100 dark:bg-orange-900/50 text-orange-800 dark:text-orange-200 rounded-full text-sm font-medium">
+                          Neural Network Architecture
+                        </span>
+                        <span className="px-3 py-1 bg-pink-100 dark:bg-pink-900/50 text-pink-800 dark:text-pink-200 rounded-full text-sm font-medium">
+                          Backpropagation
+                        </span>
+                        <span className="px-3 py-1 bg-purple-100 dark:bg-purple-900/50 text-purple-800 dark:text-purple-200 rounded-full text-sm font-medium">
+                          Interactive Story
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="bg-gradient-to-r from-amber-50 to-yellow-50 dark:from-amber-900/20 dark:to-yellow-900/20 p-6 rounded-lg border-l-4 border-amber-500">
+                    <p className="text-sm font-semibold text-amber-800 dark:text-amber-200 mb-2">
+                      🚀 Coming Soon: Interactive Deep Learning Artifacts
+                    </p>
+                    <p className="text-sm text-amber-700 dark:text-amber-300">
+                      Full Romanian language interactive artifacts for Sessions 36-40 are in development.
+                      Meanwhile, explore the code examples below to get started with Deep Learning!
+                    </p>
+                  </div>
+                </div>
+
+                {/* Placeholder Artifact - Session 37-38 */}
+                <div className="mb-12 bg-gradient-to-br from-purple-50 via-indigo-50 to-blue-50 dark:from-purple-900/20 dark:via-indigo-900/20 dark:to-blue-900/20 rounded-xl p-8 border-2 border-purple-300 dark:border-purple-700 shadow-xl">
+                  <div className="flex items-start gap-4 mb-6">
+                    <div className="text-5xl">🏥</div>
+                    <div>
+                      <h3 className="text-2xl font-bold mb-2 bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">
+                        Sessions 37-38: CNN & Transfer Learning - Medical Image Classification
+                      </h3>
+                      <p className="text-muted-foreground mb-4">
+                        From "How can AI detect cancer?" to building production medical imaging systems. Master Convolutional
+                        Neural Networks, Transfer Learning with EfficientNet, and real-world diagnostic AI.
+                      </p>
+                      <div className="flex flex-wrap gap-2 mb-4">
+                        <span className="px-3 py-1 bg-purple-100 dark:bg-purple-900/50 text-purple-800 dark:text-purple-200 rounded-full text-sm font-medium">
+                          CNN Architecture
+                        </span>
+                        <span className="px-3 py-1 bg-indigo-100 dark:bg-indigo-900/50 text-indigo-800 dark:text-indigo-200 rounded-full text-sm font-medium">
+                          Transfer Learning
+                        </span>
+                        <span className="px-3 py-1 bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-200 rounded-full text-sm font-medium">
+                          EfficientNet
+                        </span>
+                        <span className="px-3 py-1 bg-cyan-100 dark:bg-cyan-900/50 text-cyan-800 dark:text-cyan-200 rounded-full text-sm font-medium">
+                          Medical AI
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="bg-gradient-to-r from-amber-50 to-yellow-50 dark:from-amber-900/20 dark:to-yellow-900/20 p-6 rounded-lg border-l-4 border-amber-500">
+                    <p className="text-sm font-semibold text-amber-800 dark:text-amber-200 mb-2">
+                      🚀 Coming Soon: Interactive CNN & Transfer Learning Artifacts
+                    </p>
+                    <p className="text-sm text-amber-700 dark:text-amber-300">
+                      Full Romanian language interactive artifacts for Sessions 37-38 are in development.
+                      Meanwhile, explore the code examples below for CNN and Transfer Learning!
+                    </p>
+                  </div>
+                </div>
+
+                {/* Placeholder Artifact - Session 39-40 */}
+                <div className="mb-12 bg-gradient-to-br from-green-50 via-teal-50 to-cyan-50 dark:from-green-900/20 dark:via-teal-900/20 dark:to-cyan-900/20 rounded-xl p-8 border-2 border-green-300 dark:border-green-700 shadow-xl">
+                  <div className="flex items-start gap-4 mb-6">
+                    <div className="text-5xl">🚗</div>
+                    <div>
+                      <h3 className="text-2xl font-bold mb-2 bg-gradient-to-r from-green-600 to-teal-600 bg-clip-text text-transparent">
+                        Sessions 39-40: YOLO - Real-time Object Detection
+                      </h3>
+                      <p className="text-muted-foreground mb-4">
+                        From "How do self-driving cars see?" to building real-time object detection systems. Master YOLO architecture,
+                        real-time inference, and autonomous vehicle perception systems processing 60+ FPS.
+                      </p>
+                      <div className="flex flex-wrap gap-2 mb-4">
+                        <span className="px-3 py-1 bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-200 rounded-full text-sm font-medium">
+                          YOLO Architecture
+                        </span>
+                        <span className="px-3 py-1 bg-teal-100 dark:bg-teal-900/50 text-teal-800 dark:text-teal-200 rounded-full text-sm font-medium">
+                          Real-time Detection
+                        </span>
+                        <span className="px-3 py-1 bg-cyan-100 dark:bg-cyan-900/50 text-cyan-800 dark:text-cyan-200 rounded-full text-sm font-medium">
+                          Autonomous Driving
+                        </span>
+                        <span className="px-3 py-1 bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-200 rounded-full text-sm font-medium">
+                          FPS Optimization
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="bg-gradient-to-r from-amber-50 to-yellow-50 dark:from-amber-900/20 dark:to-yellow-900/20 p-6 rounded-lg border-l-4 border-amber-500">
+                    <p className="text-sm font-semibold text-amber-800 dark:text-amber-200 mb-2">
+                      🚀 Coming Soon: Interactive YOLO & Real-time Detection Artifacts
+                    </p>
+                    <p className="text-sm text-amber-700 dark:text-amber-300">
+                      Full Romanian language interactive artifacts for Sessions 39-40 are in development.
+                      Meanwhile, explore the code examples below for YOLO and real-time detection!
+                    </p>
+                  </div>
+                </div>
+
+                {/* Deep Learning Code Examples - Collapsed */}
+                <details className="space-y-8 bg-gradient-to-r from-red-50/50 to-purple-50/50 dark:from-red-900/10 dark:to-purple-900/10 rounded-lg border border-red-200 dark:border-red-800">
+                  <summary className="cursor-pointer p-6 hover:bg-red-50/50 dark:hover:bg-red-900/20 rounded-lg transition-colors">
+                    <span className="text-lg font-semibold text-red-700 dark:text-red-300">
+                      📚 Additional Code Examples & Implementation Details
+                    </span>
+                    <span className="text-sm text-muted-foreground ml-2">(Click to expand)</span>
+                  </summary>
+
+                  <div className="px-6 pb-6 space-y-8">
+                    <div className="bg-gradient-to-r from-red-50 to-pink-50 dark:from-red-900/20 dark:to-pink-900/20 rounded-lg p-6">
+                      <h3 className="text-xl font-semibold mb-4 text-red-800 dark:text-red-200">
+                        Sessions 36-38 – CNN & Transfer Learning
+                      </h3>
+                      <p className="mb-4 text-sm text-muted-foreground">
+                        Medical imaging AI systems use Convolutional Neural Networks to detect cancer, fractures,
+                        and other conditions. Transfer learning allows us to leverage pre-trained models for
+                        specialized applications.
+                      </p>
                   <EditableCodeBlock
                     title="Medical Image Classification with Transfer Learning"
                     language="python"
@@ -1162,19 +1448,19 @@ if __name__ == "__main__":
                   />
                 </div>
 
-                <div className="bg-gradient-to-r from-purple-50 to-indigo-50 dark:from-purple-900/20 dark:to-indigo-900/20 rounded-lg p-6">
-                  <h3 className="text-xl font-semibold mb-4 text-purple-800 dark:text-purple-200">
-                    Sesiunea 39-40 – YOLO: Real-time Object Detection
-                  </h3>
-                  <p className="mb-4 text-sm text-muted-foreground">
-                    Autonomous vehicles, security systems, and industrial automation rely on real-time 
-                    object detection. YOLO (You Only Look Once) enables processing thousands of frames 
-                    per second for critical applications.
-                  </p>
-                  <EditableCodeBlock
-                    title="Production YOLO Object Detection System"
-                    language="python"
-                    code={`import tensorflow as tf
+                    <div className="bg-gradient-to-r from-purple-50 to-indigo-50 dark:from-purple-900/20 dark:to-indigo-900/20 rounded-lg p-6">
+                      <h3 className="text-xl font-semibold mb-4 text-purple-800 dark:text-purple-200">
+                        Sessions 39-40 – YOLO: Real-time Object Detection
+                      </h3>
+                      <p className="mb-4 text-sm text-muted-foreground">
+                        Autonomous vehicles, security systems, and industrial automation rely on real-time
+                        object detection. YOLO (You Only Look Once) enables processing thousands of frames
+                        per second for critical applications.
+                      </p>
+                      <EditableCodeBlock
+                        title="Production YOLO Object Detection System"
+                        language="python"
+                        code={`import tensorflow as tf
 import cv2
 import numpy as np
 from collections import defaultdict
@@ -1295,10 +1581,12 @@ def main():
 
 if __name__ == "__main__":
     main()`}
-                    page="machine-learning"
-                    section="yolo-detection"
-                  />
-                </div>
+                        page="machine-learning"
+                        section="yolo-detection"
+                      />
+                    </div>
+                  </div>
+                </details>
               </div>
             </div>
           </section>
