@@ -574,6 +574,70 @@ if __name__ == "__main__":
                   </div>
                 </div>
 
+                {/* Featured Artifact - Session 31 */}
+                <div className="mb-12 bg-gradient-to-br from-red-50 via-pink-50 to-purple-50 dark:from-red-900/20 dark:via-pink-900/20 dark:to-purple-900/20 rounded-xl p-8 border-2 border-red-300 dark:border-red-700 shadow-xl">
+                  <div className="flex items-start gap-4 mb-6">
+                    <div className="text-5xl">🏥</div>
+                    <div>
+                      <h3 className="text-2xl font-bold mb-2 bg-gradient-to-r from-red-600 to-purple-600 bg-clip-text text-transparent">
+                        Session 31: Advanced Classification, Pipelines & Tuning
+                      </h3>
+                      <p className="text-muted-foreground mb-4">
+                        From "How do we detect cancer?" to building secure, optimized classification systems.
+                        Learn SVM, Random Forest, KNN, Pipelines, and GridSearchCV with real medical applications.
+                      </p>
+                      <div className="flex flex-wrap gap-2 mb-4">
+                        <span className="px-3 py-1 bg-red-100 dark:bg-red-900/50 text-red-800 dark:text-red-200 rounded-full text-sm font-medium">
+                          Breast Cancer Dataset
+                        </span>
+                        <span className="px-3 py-1 bg-pink-100 dark:bg-pink-900/50 text-pink-800 dark:text-pink-200 rounded-full text-sm font-medium">
+                          SVM, RF, KNN
+                        </span>
+                        <span className="px-3 py-1 bg-purple-100 dark:bg-purple-900/50 text-purple-800 dark:text-purple-200 rounded-full text-sm font-medium">
+                          Pipelines & Data Leakage
+                        </span>
+                        <span className="px-3 py-1 bg-indigo-100 dark:bg-indigo-900/50 text-indigo-800 dark:text-indigo-200 rounded-full text-sm font-medium">
+                          GridSearchCV
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={() => window.location.href = '/artifacts/sklearn-session31'}
+                    className="w-full bg-gradient-to-r from-red-500 via-pink-500 to-purple-600 hover:from-red-600 hover:via-pink-600 hover:to-purple-700 text-white font-bold py-4 px-6 rounded-lg transition-all duration-300 transform hover:scale-[1.02] shadow-lg hover:shadow-xl flex items-center justify-center gap-3 text-lg"
+                  >
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                    </svg>
+                    <span>Enter Scikit-learn Session 31 Artifact</span>
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                    </svg>
+                  </button>
+
+                  <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                    <div className="bg-white/50 dark:bg-gray-800/50 rounded-lg p-4">
+                      <h4 className="font-semibold text-red-800 dark:text-red-200 mb-2">🏥 Health: Cancer Detection</h4>
+                      <ul className="space-y-1 text-gray-600 dark:text-gray-400">
+                        <li>• Breast cancer classification (malignant vs benign)</li>
+                        <li>• Medical decision support systems</li>
+                        <li>• Understanding diagnostic metrics (Recall critical!)</li>
+                        <li>• Building trust in ML predictions</li>
+                      </ul>
+                    </div>
+                    <div className="bg-white/50 dark:bg-gray-800/50 rounded-lg p-4">
+                      <h4 className="font-semibold text-pink-800 dark:text-pink-200 mb-2">🔒 Advanced Techniques</h4>
+                      <ul className="space-y-1 text-gray-600 dark:text-gray-400">
+                        <li>• Pipelines prevent data leakage</li>
+                        <li>• Cross-validation for reliable evaluation</li>
+                        <li>• GridSearchCV for hyperparameter tuning</li>
+                        <li>• Production-ready deployment strategies</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
                 {/* Additional sklearn sessions collapsed */}
                 <details className="space-y-8 bg-gradient-to-r from-orange-50/50 to-yellow-50/50 dark:from-orange-900/10 dark:to-yellow-900/10 rounded-lg border border-orange-200 dark:border-orange-800">
                   <summary className="cursor-pointer p-6 hover:bg-orange-50/50 dark:hover:bg-orange-900/20 rounded-lg transition-colors">
