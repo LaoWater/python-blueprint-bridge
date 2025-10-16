@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
-import { Copy, Check, Play, Pause } from 'lucide-react';
+import { Copy, Check, Play, Pause, ArrowLeft, Brain, Target } from 'lucide-react';
 
 const SklearnSession31 = () => {
+  const navigate = useNavigate();
   const [copiedCode, setCopiedCode] = useState<string | null>(null);
   const [currentStory, setCurrentStory] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -148,6 +150,42 @@ Acesta este testul suprem al oricărui model de Machine Learning.`,
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-orange-50/30 to-amber-50/30 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+      {/* Header Navigation */}
+      <div className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-4 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => navigate('/machine-learning')}
+                className="flex items-center gap-2"
+              >
+                <ArrowLeft className="w-4 h-4" />
+                Back to Course
+              </Button>
+              <div className="w-px h-6 bg-border" />
+              <div>
+                <h1 className="text-2xl font-bold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">
+                  Clasificare Avansată, Pipelines & Tuning
+                </h1>
+                <p className="text-sm text-muted-foreground">Session 31: Advanced Classification with sklearn</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <Badge variant="secondary" className="bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200">
+                <Brain className="w-3 h-3 mr-1" />
+                Classification
+              </Badge>
+              <Badge variant="secondary" className="bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">
+                <Target className="w-3 h-3 mr-1" />
+                Pipelines
+              </Badge>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div className="max-w-6xl mx-auto px-4 py-12">
 
         {/* Header */}
@@ -165,22 +203,33 @@ Acesta este testul suprem al oricărui model de Machine Learning.`,
           </p>
         </div>
 
-        {/* Origin Story */}
-        <Card className="mb-12 p-8 bg-white/90 dark:bg-gray-800/90 backdrop-blur border-2 border-orange-200 dark:border-orange-700 shadow-2xl">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-3xl font-bold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">
-              📖 Povestea Clasificării Avansate
-            </h2>
-            <Button
-              onClick={() => setIsPlaying(!isPlaying)}
-              className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600"
-            >
-              {isPlaying ? <Pause className="h-5 w-5 mr-2" /> : <Play className="h-5 w-5 mr-2" />}
-              {isPlaying ? 'Pauză' : 'Redare Auto'}
-            </Button>
-          </div>
+        {/* Origin Story - Collapsible */}
+        <details open className="mb-12">
+          <summary className="cursor-pointer list-none">
+            <Card className="p-8 bg-white/90 dark:bg-gray-800/90 backdrop-blur border-2 border-orange-200 dark:border-orange-700 shadow-2xl hover:shadow-xl transition-shadow">
+              <div className="flex items-center justify-between">
+                <h2 className="text-3xl font-bold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">
+                  📖 Povestea Clasificării Avansate
+                </h2>
+                <div className="flex items-center gap-3">
+                  <Button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setIsPlaying(!isPlaying);
+                    }}
+                    className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600"
+                  >
+                    {isPlaying ? <Pause className="h-5 w-5 mr-2" /> : <Play className="h-5 w-5 mr-2" />}
+                    {isPlaying ? 'Pauză' : 'Redare Auto'}
+                  </Button>
+                  <span className="text-sm text-gray-500 dark:text-gray-400">(Click to collapse/expand)</span>
+                </div>
+              </div>
+            </Card>
+          </summary>
 
-          <div className="space-y-4">
+          <Card className="mt-4 p-8 bg-white/90 dark:bg-gray-800/90 backdrop-blur border-2 border-orange-200 dark:border-orange-700">
+            <div className="space-y-4">
             {storyChapters.map((chapter, index) => (
               <div
                 key={index}
@@ -208,18 +257,19 @@ Acesta este testul suprem al oricărui model de Machine Learning.`,
             ))}
           </div>
 
-          <div className="flex gap-2 mt-6 justify-center">
-            {storyChapters.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => setCurrentStory(index)}
-                className={`h-2 rounded-full transition-all duration-300 ${
-                  currentStory === index ? 'w-12 bg-orange-500' : 'w-2 bg-gray-300'
-                }`}
-              />
-            ))}
-          </div>
-        </Card>
+            <div className="flex gap-2 mt-6 justify-center">
+              {storyChapters.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentStory(index)}
+                  className={`h-2 rounded-full transition-all duration-300 ${
+                    currentStory === index ? 'w-12 bg-orange-500' : 'w-2 bg-gray-300'
+                  }`}
+                />
+              ))}
+            </div>
+          </Card>
+        </details>
 
         {/* Main Content */}
         <Tabs defaultValue="part1" className="space-y-8">

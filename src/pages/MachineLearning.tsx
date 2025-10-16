@@ -638,6 +638,70 @@ if __name__ == "__main__":
                   </div>
                 </div>
 
+                {/* Featured Artifact - Session 32 */}
+                <div className="mb-12 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-blue-900/20 dark:via-indigo-900/20 dark:to-purple-900/20 rounded-xl p-8 border-2 border-blue-300 dark:border-blue-700 shadow-xl">
+                  <div className="flex items-start gap-4 mb-6">
+                    <div className="text-5xl">🏠</div>
+                    <div>
+                      <h3 className="text-2xl font-bold mb-2 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                        Session 32: Advanced Regression Project - Real Estate Prices
+                      </h3>
+                      <p className="text-muted-foreground mb-4">
+                        From "Should I buy this apartment?" to building a complete ML system. Master end-to-end regression with
+                        messy data, ColumnTransformer, multiple models, and professional visualizations.
+                      </p>
+                      <div className="flex flex-wrap gap-2 mb-4">
+                        <span className="px-3 py-1 bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-200 rounded-full text-sm font-medium">
+                          Real Estate Dataset
+                        </span>
+                        <span className="px-3 py-1 bg-indigo-100 dark:bg-indigo-900/50 text-indigo-800 dark:text-indigo-200 rounded-full text-sm font-medium">
+                          ColumnTransformer
+                        </span>
+                        <span className="px-3 py-1 bg-purple-100 dark:bg-purple-900/50 text-purple-800 dark:text-purple-200 rounded-full text-sm font-medium">
+                          Missing Values
+                        </span>
+                        <span className="px-3 py-1 bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-200 rounded-full text-sm font-medium">
+                          Model Comparison
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={() => window.location.href = '/artifacts/sklearn-session32'}
+                    className="w-full bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-600 hover:from-blue-600 hover:via-indigo-600 hover:to-purple-700 text-white font-bold py-4 px-6 rounded-lg transition-all duration-300 transform hover:scale-[1.02] shadow-lg hover:shadow-xl flex items-center justify-center gap-3 text-lg"
+                  >
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                    </svg>
+                    <span>Enter Scikit-learn Session 32 Artifact</span>
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                    </svg>
+                  </button>
+
+                  <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                    <div className="bg-white/50 dark:bg-gray-800/50 rounded-lg p-4">
+                      <h4 className="font-semibold text-blue-800 dark:text-blue-200 mb-2">💰 Real Estate Applications</h4>
+                      <ul className="space-y-1 text-gray-600 dark:text-gray-400">
+                        <li>• Apartment price prediction with zone analysis</li>
+                        <li>• Handling realistic missing data (30-40%)</li>
+                        <li>• Mixed features: numerical + categorical</li>
+                        <li>• Investment decision support system</li>
+                      </ul>
+                    </div>
+                    <div className="bg-white/50 dark:bg-gray-800/50 rounded-lg p-4">
+                      <h4 className="font-semibold text-purple-800 dark:text-purple-200 mb-2">🔧 Advanced Techniques</h4>
+                      <ul className="space-y-1 text-gray-600 dark:text-gray-400">
+                        <li>• ColumnTransformer for complex preprocessing</li>
+                        <li>• Linear, Ridge, Random Forest comparison</li>
+                        <li>• Prediction vs Actual & Residuals plots</li>
+                        <li>• Feature importance & diagnostic analysis</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
                 {/* Additional sklearn sessions collapsed */}
                 <details className="space-y-8 bg-gradient-to-r from-orange-50/50 to-yellow-50/50 dark:from-orange-900/10 dark:to-yellow-900/10 rounded-lg border border-orange-200 dark:border-orange-800">
                   <summary className="cursor-pointer p-6 hover:bg-orange-50/50 dark:hover:bg-orange-900/20 rounded-lg transition-colors">
