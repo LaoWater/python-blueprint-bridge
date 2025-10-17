@@ -4,7 +4,9 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ArrowLeft, Play, Pause, RotateCcw, Zap, Target, Eye, Activity, Calendar, DollarSign, Briefcase, Heart, Brain, TrendingUp, BarChart3, LineChart, PieChart, Lightbulb, Coffee, Moon, Droplets, Footprints, Copy, Code, Download } from 'lucide-react';
+import { ArrowLeft, Play, Pause, RotateCcw, Zap, Target, Eye, Activity, Calendar, DollarSign, Briefcase, Heart, Brain, TrendingUp, BarChart3, LineChart, PieChart, Lightbulb, Coffee, Moon, Droplets, Footprints, Copy, Code, Download, Check } from 'lucide-react';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 const PlotlyInteractiveArtifact = () => {
   const navigate = useNavigate();
@@ -1437,9 +1439,25 @@ const PlotlyInteractiveArtifact = () => {
               </TabsList>
 
               <TabsContent value="basic">
-                <div className="bg-gray-900 rounded-lg p-4 overflow-x-auto">
-                  <pre className="text-green-400 text-sm">
-                    <code>{`# 🚀 Primul tău grafic Plotly interactiv
+                <div className="rounded-lg overflow-hidden border border-gray-700">
+                  <SyntaxHighlighter
+                    language="python"
+                    style={vscDarkPlus}
+                    customStyle={{
+                      margin: 0,
+                      padding: '1.5rem',
+                      fontSize: '0.875rem',
+                      maxHeight: '32rem',
+                      borderRadius: '0.5rem',
+                    }}
+                    showLineNumbers={true}
+                    lineNumberStyle={{
+                      minWidth: '3em',
+                      paddingRight: '1em',
+                      color: '#6e7681',
+                      userSelect: 'none',
+                    }}
+                  >{`# 🚀 Primul tău grafic Plotly interactiv
 import plotly.express as px
 import plotly.graph_objects as go
 import pandas as pd
@@ -1482,15 +1500,30 @@ fig.show()
 # - Click pe legend pentru hide/show
 # - Zoom cu scroll wheel
 # - Pan cu drag
-# - Download ca PNG/HTML`}</code>
-                  </pre>
+# - Download ca PNG/HTML`}</SyntaxHighlighter>
                 </div>
               </TabsContent>
 
               <TabsContent value="finance">
-                <div className="bg-gray-900 rounded-lg p-4 overflow-x-auto">
-                  <pre className="text-green-400 text-sm">
-                    <code>{`# 💰 Dashboard Finanțe Complet cu Plotly
+                <div className="rounded-lg overflow-hidden border border-gray-700">
+                  <SyntaxHighlighter
+                    language="python"
+                    style={vscDarkPlus}
+                    customStyle={{
+                      margin: 0,
+                      padding: '1.5rem',
+                      fontSize: '0.875rem',
+                      maxHeight: '32rem',
+                      borderRadius: '0.5rem',
+                    }}
+                    showLineNumbers={true}
+                    lineNumberStyle={{
+                      minWidth: '3em',
+                      paddingRight: '1em',
+                      color: '#6e7681',
+                      userSelect: 'none',
+                    }}
+                  >{`# 💰 Dashboard Finanțe Complet cu Plotly
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import pandas as pd
@@ -1594,15 +1627,30 @@ fig.show()
 # - Alertă automată pentru categoriile problematice
 # 
 # 💡 BONUS: Salvează ca HTML pentru acces permanent
-fig.write_html("finance_dashboard.html")`}</code>
-                  </pre>
+fig.write_html("finance_dashboard.html")`}</SyntaxHighlighter>
                 </div>
               </TabsContent>
 
               <TabsContent value="health">
-                <div className="bg-gray-900 rounded-lg p-4 overflow-x-auto">
-                  <pre className="text-green-400 text-sm">
-                    <code>{`# 🏥 Health & Wellness Interactive Tracker
+                <div className="rounded-lg overflow-hidden border border-gray-700">
+                  <SyntaxHighlighter
+                    language="python"
+                    style={vscDarkPlus}
+                    customStyle={{
+                      margin: 0,
+                      padding: '1.5rem',
+                      fontSize: '0.875rem',
+                      maxHeight: '32rem',
+                      borderRadius: '0.5rem',
+                    }}
+                    showLineNumbers={true}
+                    lineNumberStyle={{
+                      minWidth: '3em',
+                      paddingRight: '1em',
+                      color: '#6e7681',
+                      userSelect: 'none',
+                    }}
+                  >{`# 🏥 Health & Wellness Interactive Tracker
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import pandas as pd
@@ -1768,8 +1816,7 @@ print("💡 Insight: Somn de calitate = Energie ridicată!")
 
 # Salvează dashboard-ul pentru tracking continuu
 fig.write_html("health_dashboard.html")
-print("✅ Dashboard salvat ca 'health_dashboard.html'")`}</code>
-                  </pre>
+print("✅ Dashboard salvat ca 'health_dashboard.html'")`}</SyntaxHighlighter>
                 </div>
               </TabsContent>
             </Tabs>

@@ -1151,7 +1151,7 @@ if __name__ == "__main__":
               </p>
 
               <div className="space-y-8">
-                {/* Placeholder Artifact - Session 36 */}
+                {/* Featured Artifact - Session 36 */}
                 <div className="mb-12 bg-gradient-to-br from-red-50 via-orange-50 to-pink-50 dark:from-red-900/20 dark:via-orange-900/20 dark:to-pink-900/20 rounded-xl p-8 border-2 border-red-300 dark:border-red-700 shadow-xl">
                   <div className="flex items-start gap-4 mb-6">
                     <div className="text-5xl">🧠</div>
@@ -1160,18 +1160,18 @@ if __name__ == "__main__":
                         Session 36: Introduction to Deep Learning & Neural Networks
                       </h3>
                       <p className="text-muted-foreground mb-4">
-                        From "How do brains compute?" to building your first neural network. Experience the convergence of
-                        Linear Algebra (matrix multiplication), Calculus (backpropagation), and Intelligence.
+                        From "How do brains compute?" to backpropagation's elegant solution. This is the convergence:
+                        your Linear Algebra becomes weights, your Calculus becomes learning, your code becomes intelligence.
                       </p>
                       <div className="flex flex-wrap gap-2 mb-4">
                         <span className="px-3 py-1 bg-red-100 dark:bg-red-900/50 text-red-800 dark:text-red-200 rounded-full text-sm font-medium">
-                          TensorFlow Basics
+                          Perceptron to Backprop
                         </span>
                         <span className="px-3 py-1 bg-orange-100 dark:bg-orange-900/50 text-orange-800 dark:text-orange-200 rounded-full text-sm font-medium">
-                          Neural Network Architecture
+                          TensorFlow First Network
                         </span>
                         <span className="px-3 py-1 bg-pink-100 dark:bg-pink-900/50 text-pink-800 dark:text-pink-200 rounded-full text-sm font-medium">
-                          Backpropagation
+                          Gradient Descent Mastery
                         </span>
                         <span className="px-3 py-1 bg-purple-100 dark:bg-purple-900/50 text-purple-800 dark:text-purple-200 rounded-full text-sm font-medium">
                           Interactive Story
@@ -1180,14 +1180,38 @@ if __name__ == "__main__":
                     </div>
                   </div>
 
-                  <div className="bg-gradient-to-r from-amber-50 to-yellow-50 dark:from-amber-900/20 dark:to-yellow-900/20 p-6 rounded-lg border-l-4 border-amber-500">
-                    <p className="text-sm font-semibold text-amber-800 dark:text-amber-200 mb-2">
-                      🚀 Coming Soon: Interactive Deep Learning Artifacts
-                    </p>
-                    <p className="text-sm text-amber-700 dark:text-amber-300">
-                      Full Romanian language interactive artifacts for Sessions 36-40 are in development.
-                      Meanwhile, explore the code examples below to get started with Deep Learning!
-                    </p>
+                  <button
+                    onClick={() => window.location.href = '/artifacts/deep-learning-session36'}
+                    className="w-full bg-gradient-to-r from-red-500 via-orange-500 to-pink-600 hover:from-red-600 hover:via-orange-600 hover:to-pink-700 text-white font-bold py-4 px-6 rounded-lg transition-all duration-300 transform hover:scale-[1.02] shadow-lg hover:shadow-xl flex items-center justify-center gap-3 text-lg"
+                  >
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                    </svg>
+                    <span>Enter Deep Learning Session 36 Artifact</span>
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                    </svg>
+                  </button>
+
+                  <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                    <div className="bg-white/50 dark:bg-gray-800/50 rounded-lg p-4">
+                      <h4 className="font-semibold text-red-800 dark:text-red-200 mb-2">🏥 Health Applications</h4>
+                      <ul className="space-y-1 text-gray-600 dark:text-gray-400">
+                        <li>• Disease diagnosis from symptoms (neural classifier)</li>
+                        <li>• Energy level prediction from health metrics</li>
+                        <li>• Patient risk stratification</li>
+                        <li>• Treatment response prediction</li>
+                      </ul>
+                    </div>
+                    <div className="bg-white/50 dark:bg-gray-800/50 rounded-lg p-4">
+                      <h4 className="font-semibold text-orange-800 dark:text-orange-200 mb-2">💰 Finance Applications</h4>
+                      <ul className="space-y-1 text-gray-600 dark:text-gray-400">
+                        <li>• Credit risk assessment (deep neural nets)</li>
+                        <li>• Stock price prediction from multiple features</li>
+                        <li>• Fraud detection with neural classifiers</li>
+                        <li>• Portfolio optimization with ML</li>
+                      </ul>
+                    </div>
                   </div>
                 </div>
 

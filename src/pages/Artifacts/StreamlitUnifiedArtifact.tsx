@@ -27,11 +27,13 @@ import {
   ArrowLeft
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 // Interactive Code Block Component
 const CodeBlock = ({ title, code, language = "python", runnable = false, filename = "" }) => {
   const [copied, setCopied] = useState(false);
-  
+
   const copyToClipboard = () => {
     navigator.clipboard.writeText(code);
     setCopied(true);
@@ -39,7 +41,7 @@ const CodeBlock = ({ title, code, language = "python", runnable = false, filenam
   };
 
   return (
-    <div className="bg-gray-900 rounded-lg overflow-hidden border border-gray-700">
+    <div className="rounded-lg overflow-hidden border border-gray-700">
       {(title || runnable) && (
         <div className="bg-gray-800 px-4 py-2 flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -56,18 +58,33 @@ const CodeBlock = ({ title, code, language = "python", runnable = false, filenam
               variant="ghost"
               size="sm"
               onClick={copyToClipboard}
-              className="text-gray-400 hover:text-white h-6 px-2"
+              className="text-gray-400 hover:text-white h-6 px-2 bg-gray-800/80 hover:bg-gray-700/80"
             >
               {copied ? '✓' : '📋'}
             </Button>
           </div>
         </div>
       )}
-      <pre className="p-4 overflow-x-auto">
-        <code className="text-green-400 text-sm font-mono whitespace-pre-wrap">
-          {code}
-        </code>
-      </pre>
+      <SyntaxHighlighter
+        language={language}
+        style={vscDarkPlus}
+        customStyle={{
+          margin: 0,
+          padding: '1.5rem',
+          fontSize: '0.875rem',
+          maxHeight: '32rem',
+          borderRadius: title || runnable ? '0' : '0.5rem',
+        }}
+        showLineNumbers={true}
+        lineNumberStyle={{
+          minWidth: '3em',
+          paddingRight: '1em',
+          color: '#6e7681',
+          userSelect: 'none',
+        }}
+      >
+        {code}
+      </SyntaxHighlighter>
     </div>
   );
 };

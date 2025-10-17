@@ -5,6 +5,8 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { Copy, Check, Play, Pause, ArrowLeft, Brain, Target } from 'lucide-react';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 const SklearnSession31 = () => {
   const navigate = useNavigate();
@@ -132,18 +134,43 @@ Acesta este testul suprem al oricărui model de Machine Learning.`,
           {title}
         </div>
       )}
-      <div className="bg-gray-900 rounded-b-lg p-4 relative">
+      <div className="relative">
         <Button
           onClick={() => copyToClipboard(code, id)}
-          className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
+          className="absolute top-2 right-2 z-10 bg-gray-800/80 hover:bg-gray-700/80 opacity-0 group-hover:opacity-100 transition-opacity"
           size="sm"
           variant="secondary"
         >
-          {copiedCode === id ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+          {copiedCode === id ? (
+            <span className="text-green-400 text-xs flex items-center gap-1">
+              <Check className="h-4 w-4" /> Copied!
+            </span>
+          ) : (
+            <Copy className="h-4 w-4 text-gray-300" />
+          )}
         </Button>
-        <pre className="text-sm text-gray-100 overflow-x-auto">
-          <code>{code}</code>
-        </pre>
+        <div className={`rounded-lg overflow-hidden border border-gray-700 ${title ? 'rounded-t-none' : ''}`}>
+          <SyntaxHighlighter
+            language="python"
+            style={vscDarkPlus}
+            customStyle={{
+              margin: 0,
+              padding: '1.5rem',
+              fontSize: '0.875rem',
+              maxHeight: '32rem',
+              borderRadius: title ? '0 0 0.5rem 0.5rem' : '0.5rem',
+            }}
+            showLineNumbers={true}
+            lineNumberStyle={{
+              minWidth: '3em',
+              paddingRight: '1em',
+              color: '#6e7681',
+              userSelect: 'none',
+            }}
+          >
+            {code}
+          </SyntaxHighlighter>
+        </div>
       </div>
     </div>
   );
