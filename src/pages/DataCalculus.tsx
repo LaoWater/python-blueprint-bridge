@@ -1521,8 +1521,8 @@ print("\\n  → Toate cu NumPy! Tu poți! 🚀")
                         ✨ Momentul Revelației: Când Matematica Devine Conștiință
                       </summary>
                       <div className="text-sm text-muted-foreground mb-4">
-                        Descoperă cum algebra liniară din secolului XVIII devine inteligența artificială modernă. 
-                        De la matrici simple la ChatGPT, Tesla, și face recognition - totul este algebră liniară aplicată magistral!
+                        Discover how 18th century linear algebra becomes modern artificial intelligence.
+                        From simple matrices to ChatGPT, Tesla, and face recognition - it's all linear algebra applied masterfully!
                       </div>
                       
                       <div className="space-y-3">

@@ -606,7 +606,7 @@ const DataVisualizing = () => {
               </div>
               <div>
                 <h2 className="text-2xl font-bold text-foreground">Session 22: Plotly Interactive Mastery</h2>
-                <p className="text-muted-foreground">Vizualizări Interactive cu Plotly - Când datele iau viață prin atingere</p>
+                <p className="text-muted-foreground">Interactive Visualizations with Plotly - When data comes alive through touch</p>
               </div>
             </div>
 
@@ -614,43 +614,43 @@ const DataVisualizing = () => {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-emerald-700 dark:text-emerald-300">
                   <Target className="w-5 h-5" />
-                  🕒 Durată: 3 ore
+                  🕒 Duration: 3 hours
                 </CardTitle>
                 <CardDescription className="text-lg">
-                  🎯 De la necesitatea reală la instrumente interactive care transformă consumul pasiv în explorare activă
+                  🎯 From real needs to interactive tools that transform passive consumption into active exploration
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
                 <div className="prose dark:prose-invert max-w-none">
                   <p className="text-foreground leading-relaxed">
-                    În această lecție explorăm Plotly – o bibliotecă modernă care aduce datele la viață prin grafice interactive. 
-                    Scopul nu este doar să creezi vizualizări, ci să înveți cum să le aplici în viața de zi cu zi, 
-                    în afaceri, în sănătate sau în deciziile personale.
+                    In this lesson we explore Plotly – a modern library that brings data to life through interactive graphics.
+                    The goal is not just to create visualizations, but to learn how to apply them in daily life,
+                    in business, in health, or in personal decisions.
                   </p>
 
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
                     <div className="bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-950/20 dark:to-teal-950/20 p-4 rounded-lg border border-emerald-200 dark:border-emerald-800">
-                      <h4 className="font-semibold text-emerald-800 dark:text-emerald-200 mb-2">🔍 Interactivitate</h4>
-                      <p className="text-sm text-emerald-700 dark:text-emerald-300">Zoom, hover tooltips, filtrare dinamică</p>
+                      <h4 className="font-semibold text-emerald-800 dark:text-emerald-200 mb-2">🔍 Interactivity</h4>
+                      <p className="text-sm text-emerald-700 dark:text-emerald-300">Zoom, hover tooltips, dynamic filtering</p>
                     </div>
-                    
+
                     <div className="bg-gradient-to-br from-teal-50 to-cyan-50 dark:from-teal-950/20 dark:to-cyan-950/20 p-4 rounded-lg border border-teal-200 dark:border-teal-800">
-                      <h4 className="font-semibold text-teal-800 dark:text-teal-200 mb-2">💰 Finanțe Personale</h4>
-                      <p className="text-sm text-teal-700 dark:text-teal-300">Dashboard-uri interactive pentru cheltuieli și economii</p>
+                      <h4 className="font-semibold text-teal-800 dark:text-teal-200 mb-2">💰 Personal Finance</h4>
+                      <p className="text-sm text-teal-700 dark:text-teal-300">Interactive dashboards for expenses and savings</p>
                     </div>
 
                     <div className="bg-gradient-to-br from-cyan-50 to-blue-50 dark:from-cyan-950/20 dark:to-blue-950/20 p-4 rounded-lg border border-cyan-200 dark:border-cyan-800">
-                      <h4 className="font-semibold text-cyan-800 dark:text-cyan-200 mb-2">🏥 Sănătate & Wellness</h4>
-                      <p className="text-sm text-cyan-700 dark:text-cyan-300">Monitorizare interactivă - somn, pași, hidratare</p>
+                      <h4 className="font-semibold text-cyan-800 dark:text-cyan-200 mb-2">🏥 Health & Wellness</h4>
+                      <p className="text-sm text-cyan-700 dark:text-cyan-300">Interactive monitoring - sleep, steps, hydration</p>
                     </div>
                   </div>
 
                   <div className="mt-6 p-4 bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-950/20 dark:to-orange-950/20 rounded-lg border border-amber-200 dark:border-amber-800">
-                    <h4 className="font-semibold text-amber-800 dark:text-amber-200 mb-2">🎯 Aplicații cu Impact Real</h4>
+                    <h4 className="font-semibold text-amber-800 dark:text-amber-200 mb-2">🎯 Real Impact Applications</h4>
                     <p className="text-sm text-amber-700 dark:text-amber-300">
-                      <strong>💡 Task 1 – Finanțe:</strong> Dashboard interactiv cu cheltuielile lunare pe categorii<br/>
-                      <strong>💡 Task 2 – Sănătate:</strong> Heatmap interactiv pentru tiparele de somn și energie<br/>
-                      <strong>💡 Task 3 – Viața personală:</strong> Tracking progress pentru hobby-uri și proiecte creative
+                      <strong>💡 Task 1 – Finance:</strong> Interactive dashboard with monthly expenses by category<br/>
+                      <strong>💡 Task 2 – Health:</strong> Interactive heatmap for sleep and energy patterns<br/>
+                      <strong>💡 Task 3 – Personal life:</strong> Progress tracking for hobbies and creative projects
                     </p>
                   </div>
                 </div>
@@ -667,7 +667,7 @@ const DataVisualizing = () => {
                     </div>
                   </Button>
                   <p className="text-center text-sm text-gray-600 dark:text-gray-400 mt-3">
-                    👉 După această lecție, vei putea să-ți construiești propriile instrumente de auto-analiză
+                    👉 After this lesson, you'll be able to build your own self-analysis tools
                   </p>
                 </div>
               </CardContent>
@@ -682,7 +682,7 @@ const DataVisualizing = () => {
               </div>
               <div>
                 <h2 className="text-2xl font-bold text-foreground">Sessions 23-26: Streamlit Unified Mastery</h2>
-                <p className="text-muted-foreground">Lecție Unificată: Construirea de Dashboarduri Interactive cu Streamlit</p>
+                <p className="text-muted-foreground">Unified Lesson: Building Interactive Dashboards with Streamlit</p>
               </div>
             </div>
 
@@ -690,29 +690,29 @@ const DataVisualizing = () => {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-indigo-700 dark:text-indigo-300">
                   <Target className="w-5 h-5" />
-                  🕒 Durată totală: ~10 ore (4 sesiuni combinate)
+                  🕒 Total Duration: ~10 hours (4 combined sessions)
                 </CardTitle>
                 <CardDescription className="text-lg">
-                  🎯 Obiectiv: Învățăm să construim aplicații interactive cu Streamlit – de la prototipuri simple la dashboarduri profesionale conectate la baze de date și gata de deployment în cloud
+                  🎯 Objective: Learn to build interactive applications with Streamlit – from simple prototypes to professional dashboards connected to databases and ready for cloud deployment
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
                 <div className="prose dark:prose-invert max-w-none">
                   <p className="text-foreground leading-relaxed">
-                    Transformăm analizele Python în aplicații web interactive pentru probleme reale din viața ta: 
-                    <strong className="text-indigo-600 dark:text-indigo-400">Health & Personal Finance</strong>. 
-                    Scopul nu este să învățăm încă un tool, ci să simți nevoia de a crea aplicații care schimbă cu adevărat viețile.
+                    We transform Python analyses into interactive web applications for real problems in your life:
+                    <strong className="text-indigo-600 dark:text-indigo-400">Health & Personal Finance</strong>.
+                    The goal is not to learn yet another tool, but to feel the need to create applications that truly change lives.
                   </p>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
                     <div className="bg-gradient-to-br from-red-50 to-pink-50 dark:from-red-950/20 dark:to-pink-950/20 p-4 rounded-lg border border-red-200 dark:border-red-800">
                       <h4 className="font-semibold text-red-800 dark:text-red-200 mb-2">🏥 Health Tracking Crisis</h4>
-                      <p className="text-sm text-red-700 dark:text-red-300">Date de sănătate împrăștiate prin aplicații - nu poți vedea corelațiile</p>
+                      <p className="text-sm text-red-700 dark:text-red-300">Health data scattered across apps - you can't see correlations</p>
                     </div>
-                    
+
                     <div className="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-950/20 dark:to-emerald-950/20 p-4 rounded-lg border border-green-200 dark:border-green-800">
                       <h4 className="font-semibold text-green-800 dark:text-green-200 mb-2">💰 Financial Insight Gap</h4>
-                      <p className="text-sm text-green-700 dark:text-green-300">Grafice frumoase care nu ajută la decizii financiare zilnice</p>
+                      <p className="text-sm text-green-700 dark:text-green-300">Beautiful charts that don't help with daily financial decisions</p>
                     </div>
                   </div>
 
@@ -729,9 +729,9 @@ const DataVisualizing = () => {
                   <div className="mt-6 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/20 dark:to-indigo-950/20 rounded-lg border border-blue-200 dark:border-blue-800">
                     <h4 className="font-semibold text-blue-800 dark:text-blue-200 mb-2">💡 Real Impact Outcome</h4>
                     <p className="text-sm text-blue-700 dark:text-blue-300">
-                      <strong>💡 Task 1 – Buget personal inteligent:</strong> Construiește un dashboard cu autentificare unde utilizatorii își loghează cheltuielile zilnice<br/>
-                      <strong>💡 Task 2 – Jurnal de sănătate:</strong> Creează o aplicație în care utilizatorii își introduc somnul, apa băută, antrenamentele<br/>
-                      <strong>💡 Task 3 – Dashboard pentru hobby/proiecte:</strong> Dacă studiezi sau creezi ceva, creează un tool în care loghezi timpul dedicat
+                      <strong>💡 Task 1 – Smart personal budget:</strong> Build a dashboard with authentication where users log their daily expenses<br/>
+                      <strong>💡 Task 2 – Health journal:</strong> Create an application where users track their sleep, water intake, workouts<br/>
+                      <strong>💡 Task 3 – Dashboard for hobbies/projects:</strong> If you're studying or creating something, build a tool to log your dedicated time
                     </p>
                   </div>
                 </div>
@@ -748,7 +748,7 @@ const DataVisualizing = () => {
                     </div>
                   </Button>
                   <p className="text-center text-sm text-gray-600 dark:text-gray-400 mt-3">
-                    🎯 Experiența completă: de la necesitatea reală la aplicații care rulează în cloud și sunt folosite zilnic de familia ta
+                    🎯 Complete experience: from real needs to applications running in the cloud and used daily by your family
                   </p>
                 </div>
               </CardContent>
@@ -877,270 +877,9 @@ const DataVisualizing = () => {
             </div>
           </div>
 
-          {/* Data Visualization Section */}
-          <section id="data-visualization" className="mb-12">
-            <div className="flex items-center gap-3 mb-6">
-              <TrendingUp className="w-8 h-8 text-violet-600" />
-              <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100">Data Visualization</h2>
-            </div>
-            
-            <div className="flex items-center gap-4 mb-8">
-              <p className="flex-1 text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
-                The art and science of transforming raw data into compelling visual stories that drive decisions, 
-                reveal insights, and communicate complex patterns to both technical and non-technical audiences.
-              </p>
-              
-              {/* Inline mini chart */}
-              <div className="w-48 h-24 bg-white dark:bg-gray-900 rounded-lg p-3 border border-violet-100 dark:border-violet-800">
-                <ResponsiveContainer width="100%" height="100%">
-                  <AreaChart data={sessionProgressData.slice(0, 5)}>
-                    <defs>
-                      <linearGradient id="sectionGradient" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.3}/>
-                        <stop offset="95%" stopColor="#8b5cf6" stopOpacity={0}/>
-                      </linearGradient>
-                    </defs>
-                    <Area type="monotone" dataKey="completion" stroke="#8b5cf6" fill="url(#sectionGradient)" strokeWidth={2} />
-                    <Tooltip formatter={(value) => [`${value}%`, 'Progress']} />
-                  </AreaChart>
-                </ResponsiveContainer>
-              </div>
-            </div>
 
-            {/* Sessions 18-22 */}
-            <div className="grid gap-6">
-              {[18, 19, 20, 21, 22].map((sessionNum) => (
-                <Card key={sessionNum} id={`session-${sessionNum}`} className="overflow-hidden hover:shadow-lg transition-all duration-300 border-violet-100 dark:border-violet-800">
-                  <CardHeader className="bg-gradient-to-r from-violet-50 to-purple-50 dark:from-violet-950 dark:to-purple-950">
-                    <div className="flex items-center justify-between">
-                      <CardTitle className="text-xl font-semibold text-violet-800 dark:text-violet-200">
-                        Sesiunea {sessionNum} – {sessionContent[sessionNum]?.title}
-                      </CardTitle>
-                      <div className="flex items-center gap-3">
-                        <div className="w-16 h-8 bg-white dark:bg-gray-900 rounded border border-violet-200 dark:border-violet-700 p-1">
-                          <ResponsiveContainer width="100%" height="100%">
-                            <RechartsLineChart data={[
-                              { value: sessionProgressData[sessionNum - 18]?.completion || 0 },
-                              { value: (sessionProgressData[sessionNum - 18]?.completion || 0) * 0.9 },
-                              { value: sessionProgressData[sessionNum - 18]?.completion || 0 },
-                            ]}>
-                              <Line type="monotone" dataKey="value" stroke="#8b5cf6" strokeWidth={1} dot={false} />
-                            </RechartsLineChart>
-                          </ResponsiveContainer>
-                        </div>
-                        <Badge className="bg-violet-600 text-white">Published</Badge>
-                      </div>
-                    </div>
-                  </CardHeader>
-                  <CardContent className="p-6">
-                    <Tabs defaultValue="story" className="w-full">
-                      <TabsList className="grid w-full grid-cols-4 mb-4">
-                        <TabsTrigger value="story">Story</TabsTrigger>
-                        <TabsTrigger value="real-world">Real World</TabsTrigger>
-                        <TabsTrigger value="code">Code</TabsTrigger>
-                        <TabsTrigger value="insights">Insights</TabsTrigger>
-                      </TabsList>
-                      
-                       <TabsContent value="story" className="space-y-4">
-                         <EditableContent>
-                          <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
-                            {sessionContent[sessionNum]?.story || ""}
-                          </p>
-                        </EditableContent>
-                      </TabsContent>
-                      
-                      <TabsContent value="real-world" className="space-y-4">
-                        <div className="flex items-start gap-3">
-                          <Activity className="w-6 h-6 text-violet-600 mt-1" />
-                           <EditableContent>
-                            <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
-                              {sessionContent[sessionNum]?.realWorld || ""}
-                            </p>
-                          </EditableContent>
-                        </div>
-                      </TabsContent>
-                      
-                      <TabsContent value="code" className="space-y-4">
-                        <EditableCodeBlock
-                           code={`# Session ${sessionNum} - ${sessionContent[sessionNum]?.title}
-import matplotlib.pyplot as plt
-import seaborn as sns
-import plotly.express as px
-import pandas as pd
-import numpy as np
 
-# Professional visualization example
-def create_professional_visualization():
-    # Generate sample data
-    data = pd.DataFrame({
-        'x': np.random.randn(1000),
-        'y': np.random.randn(1000),
-        'category': np.random.choice(['A', 'B', 'C'], 1000)
-    })
-    
-    # Create publication-ready plot
-    fig, ax = plt.subplots(figsize=(10, 6))
-    sns.scatterplot(data=data, x='x', y='y', hue='category', ax=ax)
-    plt.title('Professional Data Visualization', fontsize=16, fontweight='bold')
-    plt.show()
 
-create_professional_visualization()`}
-                           language="python"
-                        />
-                      </TabsContent>
-                      
-                      <TabsContent value="insights" className="space-y-4">
-                        <div className="space-y-3">
-                          {sessionContent[sessionNum]?.keyInsights.map((insight, idx) => (
-                            <div key={idx} className="flex items-start gap-3">
-                              <Zap className="w-5 h-5 text-violet-600 mt-0.5" />
-                              <p className="text-gray-700 dark:text-gray-300">{insight}</p>
-                            </div>
-                          ))}
-                        </div>
-                      </TabsContent>
-                    </Tabs>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </section>
-
-          {/* Dashboards & Apps Section */}
-          <section id="dashboards-apps" className="mb-12">
-            <div className="flex items-center gap-3 mb-6">
-              <Layers className="w-8 h-8 text-purple-600" />
-              <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100">Dashboards & Apps cu Streamlit</h2>
-            </div>
-            
-            <div className="flex items-center gap-4 mb-8">
-              <p className="flex-1 text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
-                Transform your data science code into production-ready web applications that serve real users, 
-                handle real-time data, and integrate with enterprise systems. This is where analysis becomes application.
-              </p>
-              
-              {/* Inline mini chart for dashboards section */}
-              <div className="w-48 h-24 bg-white dark:bg-gray-900 rounded-lg p-3 border border-purple-100 dark:border-purple-800">
-                <ResponsiveContainer width="100%" height="100%">
-                  <RechartsBarChart data={sessionProgressData.slice(5)}>
-                    <Bar dataKey="engagement" fill="#a855f7" radius={[2, 2, 0, 0]} />
-                    <Tooltip formatter={(value) => [`${value}%`, 'Engagement']} />
-                  </RechartsBarChart>
-                </ResponsiveContainer>
-              </div>
-            </div>
-
-            {/* Sessions 23-27 */}
-            <div className="grid gap-6">
-              {[23, 24, 25, 26, 27].map((sessionNum) => (
-                <Card key={sessionNum} id={`session-${sessionNum}`} className="overflow-hidden hover:shadow-lg transition-all duration-300 border-purple-100 dark:border-purple-800">
-                  <CardHeader className="bg-gradient-to-r from-purple-50 to-indigo-50 dark:from-purple-950 dark:to-indigo-950">
-                    <div className="flex items-center justify-between">
-                      <CardTitle className="text-xl font-semibold text-purple-800 dark:text-purple-200">
-                        Sesiunea {sessionNum} – {sessionContent[sessionNum]?.title}
-                      </CardTitle>
-                      <div className="flex items-center gap-3">
-                        <div className="w-16 h-8 bg-white dark:bg-gray-900 rounded border border-purple-200 dark:border-purple-700 p-1">
-                          <ResponsiveContainer width="100%" height="100%">
-                            <RechartsBarChart data={[
-                              { value: sessionProgressData[sessionNum - 18]?.engagement || 0 },
-                            ]}>
-                              <Bar dataKey="value" fill="#a855f7" radius={[1, 1, 0, 0]} />
-                            </RechartsBarChart>
-                          </ResponsiveContainer>
-                        </div>
-                        <Badge className="bg-purple-600 text-white">Published</Badge>
-                      </div>
-                    </div>
-                  </CardHeader>
-                  <CardContent className="p-6">
-                    <Tabs defaultValue="story" className="w-full">
-                      <TabsList className="grid w-full grid-cols-4 mb-4">
-                        <TabsTrigger value="story">Story</TabsTrigger>
-                        <TabsTrigger value="real-world">Real World</TabsTrigger>
-                        <TabsTrigger value="code">Code</TabsTrigger>
-                        <TabsTrigger value="insights">Insights</TabsTrigger>
-                      </TabsList>
-                      
-                      <TabsContent value="story" className="space-y-4">
-                         <EditableContent>
-                          <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
-                            {sessionContent[sessionNum]?.story || ""}
-                          </p>
-                        </EditableContent>
-                      </TabsContent>
-                      
-                      <TabsContent value="real-world" className="space-y-4">
-                        <div className="flex items-start gap-3">
-                          <Database className="w-6 h-6 text-purple-600 mt-1" />
-                           <EditableContent>
-                            <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
-                              {sessionContent[sessionNum]?.realWorld || ""}
-                            </p>
-                          </EditableContent>
-                        </div>
-                      </TabsContent>
-                      
-                      <TabsContent value="code" className="space-y-4">
-                        <EditableCodeBlock
-                           code={`# Session ${sessionNum} - ${sessionContent[sessionNum]?.title}
-import streamlit as st
-import pandas as pd
-import plotly.express as px
-import numpy as np
-
-# Professional Streamlit application example
-def main():
-    st.set_page_config(
-        page_title="Professional Dashboard",
-        page_icon="📊",
-        layout="wide"
-    )
-    
-    st.title("${sessionContent[sessionNum]?.title}")
-    
-    # Sample interactive dashboard
-    col1, col2 = st.columns(2)
-    
-    with col1:
-        st.subheader("Real-time Data")
-        data = pd.DataFrame({
-            'timestamp': pd.date_range('2024-01-01', periods=100, freq='D'),
-            'value': np.random.randn(100).cumsum()
-        })
-        
-        fig = px.line(data, x='timestamp', y='value', 
-                     title='Live Data Stream')
-        st.plotly_chart(fig, use_container_width=True)
-    
-    with col2:
-        st.subheader("Interactive Controls")
-        threshold = st.slider("Threshold", 0.0, 10.0, 5.0)
-        filtered_data = data[data['value'] > threshold]
-        st.write(f"Data points above threshold: {len(filtered_data)}")
-
-if __name__ == "__main__":
-    main()`}
-                           language="python"
-                        />
-                      </TabsContent>
-                      
-                      <TabsContent value="insights" className="space-y-4">
-                        <div className="space-y-3">
-                          {sessionContent[sessionNum]?.keyInsights.map((insight, idx) => (
-                            <div key={idx} className="flex items-start gap-3">
-                              <Cloud className="w-5 h-5 text-purple-600 mt-0.5" />
-                              <p className="text-gray-700 dark:text-gray-300">{insight}</p>
-                            </div>
-                          ))}
-                        </div>
-                      </TabsContent>
-                    </Tabs>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </section>
 
           {/* Enhanced Final Progress Section */}
           <Card className="mb-8 border-gradient-to-r from-violet-200 to-purple-200 dark:from-violet-800 dark:to-purple-800 bg-gradient-to-r from-violet-50 to-purple-50 dark:from-violet-950 dark:to-purple-950">
