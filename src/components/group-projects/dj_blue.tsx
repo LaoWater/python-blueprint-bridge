@@ -77,23 +77,57 @@ export default function MoodMusicProject() {
 
   // Handle team join
   const handleJoinTeam = async (teamId: string) => {
-    if (!djBlueProject?.id || joiningTeam) return;
+    if (!djBlueProject?.id || joiningTeam) {
+      console.log('🚫 DJ Blue - Join blocked:', { 
+        hasProject: !!djBlueProject?.id, 
+        joiningTeam, 
+        teamId 
+      });
+      return;
+    }
+
+    console.log('🎵 DJ Blue - Starting team join:', {
+      projectId: djBlueProject.id,
+      teamId,
+      projectName: djBlueProject.name,
+      userId: profile?.id,
+      userTeams: userTeams.length
+    });
 
     setJoiningTeam(teamId);
     setJoinError(null);
     setJoinSuccess(null);
 
-    const result = await joinTeam(djBlueProject.id, teamId);
-    if (result && 'success' in result && result.success) {
-      // Refresh user teams (fetchTeams is called automatically by hook)
-      await loadUserTeams();
-      setJoinSuccess('Successfully joined team! 🎵');
-      setTimeout(() => setJoinSuccess(null), 3000);
-    } else {
-      setJoinError('Failed to join team. You may already be a member or the team may be full.');
+    try {
+      const result = await joinTeam(djBlueProject.id, teamId);
+      
+      console.log('🎵 DJ Blue - Join result:', {
+        result,
+        resultType: typeof result,
+        hasSuccess: result && 'success' in result,
+        successValue: result && 'success' in result ? result.success : 'N/A',
+        error: result && 'error' in result ? result.error : 'N/A'
+      });
+      
+      if (result && 'success' in result && result.success) {
+        console.log('✅ DJ Blue - Join successful, refreshing user teams...');
+        // Refresh user teams (fetchTeams is called automatically by hook)
+        await loadUserTeams();
+        setJoinSuccess('Successfully joined team! 🎵');
+        setTimeout(() => setJoinSuccess(null), 3000);
+      } else {
+        const errorMessage = (result && 'error' in result) ? result.error : 'Failed to join team. You may already be a member or the team may be full.';
+        console.error('❌ DJ Blue - Join failed:', errorMessage);
+        setJoinError(errorMessage);
+        setTimeout(() => setJoinError(null), 5000);
+      }
+    } catch (error) {
+      console.error('💥 DJ Blue - Join exception:', error);
+      setJoinError('An unexpected error occurred while joining the team.');
       setTimeout(() => setJoinError(null), 5000);
+    } finally {
+      setJoiningTeam(null);
     }
-    setJoiningTeam(null);
   };
 
   // Handle team leave
