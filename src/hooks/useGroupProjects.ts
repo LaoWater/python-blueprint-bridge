@@ -285,35 +285,52 @@ export const useGroupProjects = () => {
 
   // Join a project team
   const joinTeam = useCallback(async (projectId: string, teamId?: string) => {
+    console.log('🔍 useGroupProjects - joinTeam called:', {
+      projectId,
+      teamId,
+      userId: user?.id,
+      userEmail: user?.email
+    });
+
     if (!user) {
+      console.error('❌ useGroupProjects - No user authenticated');
       setError('You must be logged in to join a team');
-      return false;
+      return { success: false, error: 'You must be logged in to join a team' };
     }
 
     try {
+      console.log('📤 useGroupProjects - Calling join_project_team RPC...');
       const { data, error } = await supabase
         .rpc('join_project_team', {
           p_project_id: projectId,
           p_team_id: teamId
         });
 
-      if (error) throw error;
+      console.log('📥 useGroupProjects - RPC Response:', { data, error });
 
-      const result = data as { success: boolean; error?: string; message?: string };
-
-      if (!result.success) {
-        setError(result.error || 'Failed to join team');
-        return false;
+      if (error) {
+        console.error('❌ useGroupProjects - Supabase error:', error);
+        throw error;
       }
 
+      const result = data as { success: boolean; error?: string; message?: string };
+      console.log('📋 useGroupProjects - Parsed result:', result);
+
+      if (!result.success) {
+        console.error('❌ useGroupProjects - Join failed:', result.error);
+        setError(result.error || 'Failed to join team');
+        return { success: false, error: result.error || 'Failed to join team' };
+      }
+
+      console.log('✅ useGroupProjects - Join successful, refreshing teams...');
       // Automatically refresh teams after successful join
       await fetchTeams(projectId);
 
       return { success: true, teamId };
     } catch (err) {
-      console.error('Error joining team:', err);
+      console.error('💥 useGroupProjects - Exception in joinTeam:', err);
       setError('Failed to join team');
-      return false;
+      return { success: false, error: 'Failed to join team' };
     }
   }, [user, fetchTeams]);
 
