@@ -770,7 +770,7 @@ def health_disease_prediction():
     predictions = model.predict(X_test_scaled[:5], verbose=0)
 
     print("Sample Predictions:")
-    print(f"{'Patient':<8} {'Age':<5} {'BP':<5} {'Chol':<6} {'BMI':<6} {'Gluc':<6} {'FamHist':<8} {'Pred Risk':<10} {'Actual':<8}")
+    print("Patient  Age   BP    Chol   BMI    Gluc   FamHist  Pred Risk  Actual")
     print("-" * 80)
 
     for i in range(5):
@@ -779,9 +779,9 @@ def health_disease_prediction():
         pred_class = 1 if pred_prob > 0.5 else 0
         actual = y_test[i]
 
-        print(f"{i+1:<8} {patient_data[0]:<5.0f} {patient_data[1]:<5.0f} {patient_data[2]:<6.0f} " +
-              f"{patient_data[3]:<6.1f} {patient_data[4]:<6.0f} {patient_data[5]:<8.0f} " +
-              f"{pred_prob*100:<10.1f}% {actual:<8}")
+        print(f"{i+1}  {patient_data[0]:.0f}  {patient_data[1]:.0f}  {patient_data[2]:.0f}  " +
+              f"{patient_data[3]:.1f}  {patient_data[4]:.0f}  {patient_data[5]:.0f}  " +
+              f"{pred_prob*100:.1f}%  {actual}")
 
     # Plot training history
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 5))
@@ -938,7 +938,7 @@ def finance_credit_risk():
     predictions = model.predict(X_test_scaled[:5], verbose=0)
 
     print("Sample Loan Application Predictions:")
-    print(f"{'App':<5} {'Income':<10} {'Age':<5} {'DTI':<6} {'Credit':<8} {'Loan Amt':<10} {'Risk %':<10} {'Decision':<10}")
+    print("App   Income      Age   DTI    Credit    Loan Amt    Risk %      Decision")
     print("-" * 85)
 
     for i in range(5):
@@ -946,8 +946,8 @@ def finance_credit_risk():
         pred_prob = predictions[i, 0]
         decision = "RISKY" if pred_prob > 0.5 else "SAFE"
 
-        print(f"{i+1:<5} ${app_data[0]:<9.0f} {app_data[1]:<5.0f} {app_data[2]:<6.2f} " +
-              f"{app_data[3]:<8.0f} ${app_data[4]:<9.0f} {pred_prob*100:<10.1f}% {decision:<10}")
+        print(f"{i+1}  {app_data[0]:.0f}  {app_data[1]:.0f}  {app_data[2]:.2f}  " +
+              f"{app_data[3]:.0f}  {app_data[4]:.0f}  {pred_prob*100:.1f}%  {decision}")
 
     print()
     print("💰 FINANCE AI DEPLOYED!")
@@ -1372,3 +1372,4 @@ print("=" * 80)
 };
 
 export default DeepLearningSession36;
+
