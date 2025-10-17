@@ -22,17 +22,19 @@ const ProfilePage = () => {
   useEffect(() => {
     if (!user) {
       navigate('/auth');
+      return;
     }
     
     if (profile) {
       setUsername(profile.username || '');
+      setLoading(false);
     }
   }, [user, profile, navigate]);
 
-  if (!user || !profile) {
+  if (loading || !user || !profile) {
     return (
       <div className="flex items-center justify-center min-h-[calc(100vh-4rem)]">
-        <Loader2 className="h-8 w-8 animate-spin" />
+        <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
       </div>
     );
   }
