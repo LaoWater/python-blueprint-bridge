@@ -1228,8 +1228,7 @@ def fibonacci_memo(n, memo={}):
                 board[row][col] = 1
                 
                 # Recursia: încearcă rândul următor
-                if backtrack(board, row + 1):
-                    return True
+                backtrack(board, row + 1)
                 
                 # BACKTRACK: elimină regina și încearcă următoarea poziție
                 board[row][col] = 0
