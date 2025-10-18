@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { ArrowLeft, Play, Pause, RotateCcw, Search, ArrowUpDown, Filter, Database, Zap, Clock, Target, Users } from 'lucide-react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { CodeBlockR } from '@/components/CodeBlockR';
 
 const DataStructuresArtifact = () => {
   const navigate = useNavigate();
