@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Play, Pause, RotateCcw, Search, ArrowUpDown, Filter, Database, Zap, Clock, Target, Users } from 'lucide-react';
+import { CodeBlockR } from '@/components/CodeBlockR';
+import { BinderRun } from "@/components/BinderRun";
+
 
 const DataStructuresArtifact = () => {
   const navigate = useNavigate();
@@ -177,7 +180,7 @@ const DataStructuresArtifact = () => {
   // Sort orders
   const sortOrders = () => {
     setIsAnimatingSorts(true);
-    
+
     setTimeout(() => {
       const sorted = [...orders].sort((a, b) => {
         let comparison = 0;
@@ -747,7 +750,7 @@ const DataStructuresArtifact = () => {
                     )}
                   </Button>
                   
-                  <div className="space-y-2 max-h-64 overflow-y-auto">
+                  <div className="space-y-4 max-h-[32rem] overflow-y-auto">
                     {sortedOrders.map((order, index) => (
                       <div
                         key={order.id}
@@ -783,45 +786,39 @@ const DataStructuresArtifact = () => {
                 <div className="space-y-4">
                   <div className="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm">
                     <div className="text-yellow-300 mb-2"># Bubble Sort - Algoritm educațional O(n²)</div>
-                    <pre>
-      {`def bubble_sort(comenzi, key):
-          n = len(comenzi)
-          for i in range(n):
-              for j in range(0, n-i-1):
-                  if comenzi[j][key] > comenzi[j+1][key]:
-                      comenzi[j], comenzi[j+1] = comenzi[j+1], comenzi[j]
-          return comenzi`}
-                    </pre>
+                      <BinderRun>
+{`print("Hello World")`}
+                      </BinderRun>
                   </div>
                   
                   <div className="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm">
                     <div className="text-yellow-300 mb-2"># Quick Sort - Algoritm eficient O(n log n)</div>
-                    <pre>
-        {`def quick_sort(comenzi, key):
-            if len(comenzi) <= 1:
-                return comenzi
-            
-            pivot = comenzi[len(comenzi) // 2]
-            left = [x for x in comenzi if x[key] < pivot[key]]
-            middle = [x for x in comenzi if x[key] == pivot[key]]
-            right = [x for x in comenzi if x[key] > pivot[key]]
-            
-            return quick_sort(left, key) + middle + quick_sort(right, key)`}
-                    </pre>
+                      <CodeBlockR>
+{`def quick_sort(comenzi, key):
+if len(comenzi) <= 1:
+    return comenzi
+
+pivot = comenzi[len(comenzi) // 2]
+left = [x for x in comenzi if x[key] < pivot[key]]
+middle = [x for x in comenzi if x[key] == pivot[key]]
+right = [x for x in comenzi if x[key] > pivot[key]]
+
+return quick_sort(left, key) + middle + quick_sort(right, key)`}
+                    </CodeBlockR>
                   </div>
                   
                   <div className="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm">
                     <div className="text-yellow-300 mb-2"># Python Built-in - TimSort O(n log n), optimizat</div>
-                    <pre>
-            {`# Sortare simplă
-            comenzi.sort(key=lambda x: x['${sortBy}'])
+                      <CodeBlockR>
+{`# Sortare simplă
+comenzi.sort(key=lambda x: x['${sortBy}'])
 
-            # Sortare cu mai multe criterii
-            comenzi.sort(key=lambda x: (x['priority'], x['time']))
+# Sortare cu mai multe criterii
+comenzi.sort(key=lambda x: (x['priority'], x['time']))
 
-            # Sortare descrescătoare
-            comenzi.sort(key=lambda x: x['${sortBy}'], reverse=True)`}
-                    </pre>
+# Sortare descrescătoare
+comenzi.sort(key=lambda x: x['${sortBy}'], reverse=True)`}
+                    </CodeBlockR>
                   </div>
                 </div>
                 
@@ -921,64 +918,64 @@ const DataStructuresArtifact = () => {
                 <div className="space-y-4">
                   <div className="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm">
                     <div className="text-yellow-300 mb-2"># Linear Search - Căutare secvențială O(n)</div>
-                    <pre>
-        {`def linear_search(comenzi, termen):
-            rezultate = []
-            pasi = 0
-            
-            for comanda in comenzi:  # Verific fiecare element
-                pasi += 1
-                if termen.lower() in comanda['restaurant'].lower():
-                    rezultate.append(comanda)
-            
-            return rezultate, pasi
+                    <CodeBlockR>
+{`def linear_search(comenzi, termen):
+    rezultate = []
+    pasi = 0
+    
+    for comanda in comenzi:  # Verific fiecare element
+        pasi += 1
+        if termen.lower() in comanda['restaurant'].lower():
+            rezultate.append(comanda)
+    
+    return rezultate, pasi
 
-        # Timp: O(n) - Trebuie să verific toată lista
-        # Avantaj: Funcționează pe orice listă
-        # Dezavantaj: Lent pentru liste mari`}
-                    </pre>
+# Timp: O(n) - Trebuie să verific toată lista
+# Avantaj: Funcționează pe orice listă
+# Dezavantaj: Lent pentru liste mari`}
+                    </CodeBlockR>
                   </div>
                   
                   <div className="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm">
                     <div className="text-yellow-300 mb-2"># Binary Search - Căutare binară O(log n)</div>
-                    <pre>
-            {`def binary_search(comenzi_sortate, termen):
-                left, right = 0, len(comenzi_sortate) - 1
-                pasi = 0
-                
-                while left <= right:
-                    pasi += 1
-                    mid = (left + right) // 2
-                    
-                    if termen in comenzi_sortate[mid]['restaurant']:
-                        return comenzi_sortate[mid], pasi
-                    elif termen < comenzi_sortate[mid]['restaurant']:
-                        right = mid - 1
-                    else:
-                        left = mid + 1
-                
-                return None, pasi
+                    <CodeBlockR>
+{`def binary_search(comenzi_sortate, termen):
+    left, right = 0, len(comenzi_sortate) - 1
+    pasi = 0
+    
+    while left <= right:
+        pasi += 1
+        mid = (left + right) // 2
+        
+        if termen in comenzi_sortate[mid]['restaurant']:
+            return comenzi_sortate[mid], pasi
+        elif termen < comenzi_sortate[mid]['restaurant']:
+            right = mid - 1
+        else:
+            left = mid + 1
+    
+    return None, pasi
 
-            # Timp: O(log n) - Înjumătățesc zona de căutare
-            # Avantaj: Foarte rapid pentru liste mari
-            # Dezavantaj: Lista TREBUIE să fie sortată`}
-                    </pre>
+# Timp: O(log n) - Înjumătățesc zona de căutare
+# Avantaj: Foarte rapid pentru liste mari
+# Dezavantaj: Lista TREBUIE să fie sortată`}
+                    </CodeBlockR>
                   </div>
                   
                   <div className="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm">
                     <div className="text-yellow-300 mb-2"># Căutări optimizate în Python</div>
-                    <pre>
-          {`# Folosind built-in functions
-          rezultate = [c for c in comenzi if termen in c['restaurant']]
+                    <CodeBlockR>
+{`# Folosind built-in functions
+rezultate = [c for c in comenzi if termen in c['restaurant']]
 
-          # Căutare cu bisect (pentru liste sortate)
-          import bisect
-          index = bisect.bisect_left(comenzi_sortate, termen)
+# Căutare cu bisect (pentru liste sortate)
+import bisect
+index = bisect.bisect_left(comenzi_sortate, termen)
 
-          # Set lookup O(1) - pentru verificări de existență
-          restaurante_set = set(c['restaurant'] for c in comenzi)
-          existe = termen in restaurante_set  # Instant!`}
-                    </pre>
+# Set lookup O(1) - pentru verificări de existență
+restaurante_set = set(c['restaurant'] for c in comenzi)
+existe = termen in restaurante_set  # Instant!`}
+                    </CodeBlockR>
                   </div>
                 </div>
                 
