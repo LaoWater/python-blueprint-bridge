@@ -202,6 +202,7 @@ const DataCalculus = () => {
 from collections import deque, defaultdict
 from datetime import datetime, timedelta
 import heapq
+import uuid
 
 class SocialMediaFeed:
     """
@@ -244,9 +245,10 @@ class SocialMediaFeed:
         
         # Add to trending if high engagement potential
         if len(content) > 100:  # Longer posts might trend
+            unique_id = uuid.uuid4()
             heapq.heappush(self.trending_posts, 
-                          (-post['engagement_score'], post))
-    
+                          (-post['engagement_score'], unique_id, post))
+
     def add_notification(self, message):
         """Add notification - why use deque?"""
         # Deque automatically removes old notifications
@@ -255,14 +257,14 @@ class SocialMediaFeed:
             'message': message,
             'timestamp': datetime.now()
         })
-    
+
     def add_friend(self, user1, user2):
         """Add friendship - why use a graph structure?"""
         # Social networks are graphs by nature!
         # Each person is a node, friendships are edges
         self.friend_network[user1].add(user2)
         self.friend_network[user2].add(user1)  # Bidirectional
-    
+
     def get_mutual_friends(self, user1, user2):
         """Find mutual friends - set intersection is perfect here"""
         friends1 = self.friend_network[user1]
@@ -270,7 +272,7 @@ class SocialMediaFeed:
         
         # Set intersection: O(min(len(friends1), len(friends2)))
         return friends1 & friends2
-    
+
     def get_feed_for_user(self, user_id, limit=20):
         """Generate personalized feed"""
         user_friends = self.friend_network[user_id]
