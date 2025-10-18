@@ -1280,7 +1280,7 @@ if __name__ == "__main__":
                   </div>
                 </div>
 
-                {/* Placeholder Artifact - Session 39-40 */}
+                {/* Featured Artifact - Sessions 39-40 */}
                 <div className="mb-12 bg-gradient-to-br from-green-50 via-teal-50 to-cyan-50 dark:from-green-900/20 dark:via-teal-900/20 dark:to-cyan-900/20 rounded-xl p-8 border-2 border-green-300 dark:border-green-700 shadow-xl">
                   <div className="flex items-start gap-4 mb-6">
                     <div className="text-5xl">🚗</div>
@@ -1289,8 +1289,9 @@ if __name__ == "__main__":
                         Sessions 39-40: YOLO - Real-time Object Detection
                       </h3>
                       <p className="text-muted-foreground mb-4">
-                        From "How do self-driving cars see?" to building real-time object detection systems. Master YOLO architecture,
-                        real-time inference, and autonomous vehicle perception systems processing 60+ FPS.
+                        From "Our dashboards feel late" to deploying real-time object detection. These sessions bind
+                        everything we learned in Data:Visualizing, Computer Vision, and Deep Learning to create
+                        perception loops inspired by autonomous vehicles and applied to Health & Personal Finance.
                       </p>
                       <div className="flex flex-wrap gap-2 mb-4">
                         <span className="px-3 py-1 bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-200 rounded-full text-sm font-medium">
@@ -1303,20 +1304,51 @@ if __name__ == "__main__":
                           Autonomous Driving
                         </span>
                         <span className="px-3 py-1 bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-200 rounded-full text-sm font-medium">
-                          FPS Optimization
+                          Health & Finance Ops
                         </span>
                       </div>
                     </div>
                   </div>
 
-                  <div className="bg-gradient-to-r from-amber-50 to-yellow-50 dark:from-amber-900/20 dark:to-yellow-900/20 p-6 rounded-lg border-l-4 border-amber-500">
-                    <p className="text-sm font-semibold text-amber-800 dark:text-amber-200 mb-2">
-                      🚀 Coming Soon: Interactive YOLO & Real-time Detection Artifacts
-                    </p>
-                    <p className="text-sm text-amber-700 dark:text-amber-300">
-                      Full Romanian language interactive artifacts for Sessions 39-40 are in development.
-                      Meanwhile, explore the code examples below for YOLO and real-time detection!
-                    </p>
+                  <button
+                    onClick={() => window.location.href = '/artifacts/yolo-sessions39-40'}
+                    className="w-full bg-gradient-to-r from-green-500 via-teal-500 to-cyan-600 hover:from-green-600 hover:via-teal-600 hover:to-cyan-700 text-white font-bold py-4 px-6 rounded-lg transition-all duration-300 transform hover:scale-[1.02] shadow-lg hover:shadow-xl flex items-center justify-center gap-3 text-lg"
+                  >
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h5l2 3h8a1 1 0 011 1v11a1 1 0 01-1 1H4a1 1 0 01-1-1V4z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 9l3 3-3 3m-3-6l-3 3 3 3" />
+                    </svg>
+                    <span>Enter Sessions 39-40 YOLO Artifact</span>
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                    </svg>
+                  </button>
+
+                  <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                    <div className="bg-white/50 dark:bg-gray-800/50 rounded-lg p-4">
+                      <h4 className="font-semibold text-green-800 dark:text-green-200 mb-2">🏥 Health Momentum</h4>
+                      <ul className="space-y-1 text-gray-600 dark:text-gray-400">
+                        <li>• Detect risky reps and push alerts to the coach dashboard.</li>
+                        <li>• Track hydration habits by spotting bottles during sessions.</li>
+                        <li>• Overlay YOLO events on heart-rate charts for context.</li>
+                      </ul>
+                    </div>
+                    <div className="bg-white/50 dark:bg-gray-800/50 rounded-lg p-4">
+                      <h4 className="font-semibold text-teal-800 dark:text-teal-200 mb-2">💰 Finance Safeguards</h4>
+                      <ul className="space-y-1 text-gray-600 dark:text-gray-400">
+                        <li>• Auto-capture receipts before they leave the office.</li>
+                        <li>• Monitor shop shelves to prevent revenue leakage.</li>
+                        <li>• Log every detection into Supabase for Plotly dashboards.</li>
+                      </ul>
+                    </div>
+                    <div className="bg-white/50 dark:bg-gray-800/50 rounded-lg p-4">
+                      <h4 className="font-semibold text-cyan-800 dark:text-cyan-200 mb-2">🚗 Car Intelligence Thread</h4>
+                      <ul className="space-y-1 text-gray-600 dark:text-gray-400">
+                        <li>• YOLO mirrors the perception stack used by Tesla & Waymo.</li>
+                        <li>• Need-first thinking: loss prevention drives model choice.</li>
+                        <li>• Export to TensorRT & CoreML for edge deployments.</li>
+                      </ul>
+                    </div>
                   </div>
                 </div>
 
