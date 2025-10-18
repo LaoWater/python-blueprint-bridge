@@ -285,7 +285,7 @@ const YOLOSessions3940 = () => {
                   </div>
                   <CardDescription className="text-slate-300">
                     Autonomous vehicle systems are our north star for responsiveness. We translate the same
-                    pattern -- perception -> decision -> action -- into our domains.
+                    pattern -- perception -&gt; decision -&gt; action -- into our domains.
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-3 text-sm text-slate-300">
