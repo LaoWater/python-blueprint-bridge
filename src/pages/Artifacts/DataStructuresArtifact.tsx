@@ -1034,7 +1034,7 @@ def binary_search(comenzi_sortate, termen):
         pasi += 1
         mid = (left + right) // 2
 
-        if termen in comenzi_sortate[mid]['restaurant']:
+        if termen == comenzi_sortate[mid]['restaurant']:
             return comenzi_sortate[mid], pasi
         elif termen < comenzi_sortate[mid]['restaurant']:
             right = mid - 1
