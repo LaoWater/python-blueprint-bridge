@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 const IfElseArtifact = () => {
   const navigate = useNavigate();
@@ -121,11 +123,21 @@ const IfElseArtifact = () => {
           </div>
 
           <h3 className="text-xl font-semibold text-purple-700 mb-3">Cum scrii în Python:</h3>
-          <div className="bg-gray-900 text-green-400 p-6 rounded-xl font-mono text-sm overflow-x-auto">
-            <span className="text-blue-400">if</span> ploua:<br/>
-            &nbsp;&nbsp;&nbsp;&nbsp;print(<span className="text-yellow-300">"Iau umbrela"</span>)<br/>
-            &nbsp;&nbsp;&nbsp;&nbsp;<span className="text-blue-400">if</span> temperatura &lt; <span className="text-purple-400">15</span>:<br/>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print(<span className="text-yellow-300">"Iau și geaca"</span>)
+          <div className="rounded-lg overflow-hidden border border-gray-700">
+            <SyntaxHighlighter
+              language="python"
+              style={vscDarkPlus}
+              customStyle={{
+                margin: 0,
+                padding: '1.5rem',
+                fontSize: '0.875rem',
+                borderRadius: '0.5rem',
+              }}
+              showLineNumbers={false}
+            >{`if ploua:
+    print("Iau umbrela")
+    if temperatura < 15:
+        print("Iau și geaca")`}</SyntaxHighlighter>
           </div>
 
           <div className="flex items-center justify-center gap-4 mt-8 flex-wrap">
@@ -218,22 +230,32 @@ const IfElseArtifact = () => {
           </div>
 
           <h3 className="text-xl font-semibold text-green-700 mb-3">Codul din spate:</h3>
-          <div className="bg-gray-900 text-green-400 p-6 rounded-xl font-mono text-sm overflow-x-auto">
-            ore_vizionate = <span className="text-purple-400">{hours}</span><br/>
-            gen_preferat = <span className="text-yellow-300">"{genre}"</span><br/><br/>
-            
-            <span className="text-blue-400">if</span> ore_vizionate &gt; <span className="text-purple-400">10</span>:<br/>
-            &nbsp;&nbsp;&nbsp;&nbsp;<span className="text-gray-500"># Utilizator foarte activ</span><br/>
-            &nbsp;&nbsp;&nbsp;&nbsp;<span className="text-blue-400">if</span> gen_preferat == <span className="text-yellow-300">"action"</span>:<br/>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;recomandare = <span className="text-yellow-300">"Top 10 filme de acțiune exclusive"</span><br/>
-            &nbsp;&nbsp;&nbsp;&nbsp;<span className="text-blue-400">elif</span> gen_preferat == <span className="text-yellow-300">"comedy"</span>:<br/>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;recomandare = <span className="text-yellow-300">"Stand-up comedy specials noi"</span><br/>
-            &nbsp;&nbsp;&nbsp;&nbsp;<span className="text-blue-400">else</span>:<br/>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;recomandare = <span className="text-yellow-300">"Seriale premiate recent"</span><br/>
-            <span className="text-blue-400">elif</span> ore_vizionate &gt; <span className="text-purple-400">3</span>:<br/>
-            &nbsp;&nbsp;&nbsp;&nbsp;recomandare = <span className="text-yellow-300">f"Continuă să vezi {genre}"</span><br/>
-            <span className="text-blue-400">else</span>:<br/>
-            &nbsp;&nbsp;&nbsp;&nbsp;recomandare = <span className="text-yellow-300">"Top 5 trending acum"</span>
+          <div className="rounded-lg overflow-hidden border border-gray-700">
+            <SyntaxHighlighter
+              language="python"
+              style={vscDarkPlus}
+              customStyle={{
+                margin: 0,
+                padding: '1.5rem',
+                fontSize: '0.875rem',
+                borderRadius: '0.5rem',
+              }}
+              showLineNumbers={false}
+            >{`ore_vizionate = ${hours}
+gen_preferat = "${genre}"
+
+if ore_vizionate > 10:
+    # Utilizator foarte activ
+    if gen_preferat == "action":
+        recomandare = "Top 10 filme de acțiune exclusive"
+    elif gen_preferat == "comedy":
+        recomandare = "Stand-up comedy specials noi"
+    else:
+        recomandare = "Seriale premiate recent"
+elif ore_vizionate > 3:
+    recomandare = f"Continuă să vezi {gen_preferat}"
+else:
+    recomandare = "Top 5 trending acum"`}</SyntaxHighlighter>
           </div>
         </div>
 
@@ -260,11 +282,21 @@ const IfElseArtifact = () => {
               >
                 Vezi Codul
               </Button>
-              <div id="code1" className="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm hidden">
-                <span className="text-blue-400">if</span> e_weekend <span className="text-blue-400">and</span> treaba_terminata:<br/>
-                &nbsp;&nbsp;&nbsp;&nbsp;print(<span className="text-yellow-300">"Film time! 🎬"</span>)<br/>
-                <span className="text-blue-400">else</span>:<br/>
-                &nbsp;&nbsp;&nbsp;&nbsp;print(<span className="text-yellow-300">"La muncă! 💼"</span>)
+              <div id="code1" className="rounded-lg overflow-hidden border border-gray-700 hidden">
+                <SyntaxHighlighter
+                  language="python"
+                  style={vscDarkPlus}
+                  customStyle={{
+                    margin: 0,
+                    padding: '1rem',
+                    fontSize: '0.875rem',
+                    borderRadius: '0.5rem',
+                  }}
+                  showLineNumbers={false}
+                >{`if e_weekend and treaba_terminata:
+    print("Film time! 🎬")
+else:
+    print("La muncă! 💼")`}</SyntaxHighlighter>
               </div>
             </div>
 
@@ -277,12 +309,22 @@ const IfElseArtifact = () => {
               >
                 Vezi Codul
               </Button>
-              <div id="code2" className="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm hidden">
-                <span className="text-blue-400">if</span> total &gt; <span className="text-purple-400">100</span> <span className="text-blue-400">or</span> client_premium <span className="text-blue-400">or</span> prima_comanda:<br/>
-                &nbsp;&nbsp;&nbsp;&nbsp;transport = <span className="text-purple-400">0</span><br/>
-                &nbsp;&nbsp;&nbsp;&nbsp;print(<span className="text-yellow-300">"Transport gratuit! 🚚"</span>)<br/>
-                <span className="text-blue-400">else</span>:<br/>
-                &nbsp;&nbsp;&nbsp;&nbsp;transport = <span className="text-purple-400">15</span>
+              <div id="code2" className="rounded-lg overflow-hidden border border-gray-700 hidden">
+                <SyntaxHighlighter
+                  language="python"
+                  style={vscDarkPlus}
+                  customStyle={{
+                    margin: 0,
+                    padding: '1rem',
+                    fontSize: '0.875rem',
+                    borderRadius: '0.5rem',
+                  }}
+                  showLineNumbers={false}
+                >{`if total > 100 or client_premium or prima_comanda:
+    transport = 0
+    print("Transport gratuit! 🚚")
+else:
+    transport = 15`}</SyntaxHighlighter>
               </div>
             </div>
           </div>

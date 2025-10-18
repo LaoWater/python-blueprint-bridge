@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Play, Pause, RotateCcw, Plus, Minus, Search } from 'lucide-react';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 const CollectionsArtifact = () => {
   const navigate = useNavigate();
@@ -280,22 +282,32 @@ const CollectionsArtifact = () => {
                 
                 <div>
                   <h4 className="font-semibold text-green-700 mb-3">💻 Codul din spate:</h4>
-                  <div className="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm">
-                    <span className="text-gray-500"># Crearea unei liste</span><br/>
-                    lista_cumparaturi = [<span className="text-yellow-300">"🍎 Mere"</span>, <span className="text-yellow-300">"🥛 Lapte"</span>]<br/><br/>
-                    
-                    <span className="text-gray-500"># Adăugarea unui element</span><br/>
-                    lista_cumparaturi.append(<span className="text-yellow-300">"🍞 Pâine"</span>)<br/><br/>
-                    
-                    <span className="text-gray-500"># Accesarea unui element</span><br/>
-                    primul_produs = lista_cumparaturi[<span className="text-purple-400">0</span>]<br/><br/>
-                    
-                    <span className="text-gray-500"># Numărul de elemente</span><br/>
-                    numar_produse = len(lista_cumparaturi)<br/><br/>
-                    
-                    <span className="text-gray-500"># Parcurgerea listei</span><br/>
-                    <span className="text-blue-400">for</span> produs <span className="text-blue-400">in</span> lista_cumparaturi:<br/>
-                    &nbsp;&nbsp;&nbsp;&nbsp;print(<span className="text-yellow-300">f"Cumpără: </span>{'{'}produs{'}'}<span className="text-yellow-300">"</span>)
+                  <div className="rounded-lg overflow-hidden border border-gray-700">
+                    <SyntaxHighlighter
+                      language="python"
+                      style={vscDarkPlus}
+                      customStyle={{
+                        margin: 0,
+                        padding: '1rem',
+                        fontSize: '0.875rem',
+                        borderRadius: '0.5rem',
+                      }}
+                      showLineNumbers={false}
+                    >{`# Crearea unei liste
+lista_cumparaturi = ["🍎 Mere", "🥛 Lapte"]
+
+# Adăugarea unui element
+lista_cumparaturi.append("🍞 Pâine")
+
+# Accesarea unui element
+primul_produs = lista_cumparaturi[0]
+
+# Numărul de elemente
+numar_produse = len(lista_cumparaturi)
+
+# Parcurgerea listei
+for produs in lista_cumparaturi:
+    print(f"Cumpără: {produs}")`}</SyntaxHighlighter>
                   </div>
                 </div>
               </div>
@@ -343,25 +355,35 @@ const CollectionsArtifact = () => {
                 
                 <div>
                   <h4 className="font-semibold text-blue-700 mb-3">💻 Codul din spate:</h4>
-                  <div className="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm">
-                    <span className="text-gray-500"># Crearea unui tuplu (coordonate fixe)</span><br/>
-                    casa = (<span className="text-purple-400">44.4268</span>, <span className="text-purple-400">26.1025</span>)<br/>
-                    scoala = (<span className="text-purple-400">44.4378</span>, <span className="text-purple-400">26.0967</span>)<br/><br/>
-                    
-                    <span className="text-gray-500"># Accesarea elementelor</span><br/>
-                    latitudine = casa[<span className="text-purple-400">0</span>]<br/>
-                    longitudine = casa[<span className="text-purple-400">1</span>]<br/><br/>
-                    
-                    <span className="text-gray-500"># Tuplurile nu se pot modifica!</span><br/>
-                    <span className="text-gray-500"># casa[0] = 45.0  # Eroare!</span><br/><br/>
-                    
-                    <span className="text-gray-500"># Parcurgerea unui tuplu</span><br/>
-                    <span className="text-blue-400">for</span> coordonata <span className="text-blue-400">in</span> casa:<br/>
-                    &nbsp;&nbsp;&nbsp;&nbsp;print(coordonata)<br/><br/>
-                    
-                    <span className="text-gray-500"># Unpacking (destructurare)</span><br/>
-                    lat, lon = casa<br/>
-                    print(<span className="text-yellow-300">f"Lat: </span>{'{'}lat{'}'}, <span className="text-yellow-300">Long: </span>{'{'}lon{'}'}<span className="text-yellow-300">"</span>)
+                  <div className="rounded-lg overflow-hidden border border-gray-700">
+                    <SyntaxHighlighter
+                      language="python"
+                      style={vscDarkPlus}
+                      customStyle={{
+                        margin: 0,
+                        padding: '1rem',
+                        fontSize: '0.875rem',
+                        borderRadius: '0.5rem',
+                      }}
+                      showLineNumbers={false}
+                    >{`# Crearea unui tuplu (coordonate fixe)
+casa = (44.4268, 26.1025)
+scoala = (44.4378, 26.0967)
+
+# Accesarea elementelor
+latitudine = casa[0]
+longitudine = casa[1]
+
+# Tuplurile nu se pot modifica!
+# casa[0] = 45.0  # Eroare!
+
+# Parcurgerea unui tuplu
+for coordonata in casa:
+    print(coordonata)
+
+# Unpacking (destructurare)
+lat, lon = casa
+print(f"Lat: {lat}, Long: {lon}")`}</SyntaxHighlighter>
                   </div>
                 </div>
               </div>
@@ -437,27 +459,37 @@ const CollectionsArtifact = () => {
                 
                 <div>
                   <h4 className="font-semibold text-purple-700 mb-3">💻 Codul din spate:</h4>
-                  <div className="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm">
-                    <span className="text-gray-500"># Lista cu duplicate</span><br/>
-                    raspunsuri = [<span className="text-yellow-300">"Da"</span>, <span className="text-yellow-300">"Nu"</span>, <span className="text-yellow-300">"Da"</span>, <span className="text-yellow-300">"Poate"</span>]<br/><br/>
-                    
-                    <span className="text-gray-500"># Crearea unui set (elimină automat duplicatele)</span><br/>
-                    raspunsuri_unice = set(raspunsuri)<br/><br/>
-                    
-                    <span className="text-gray-500"># Adăugarea unui element în set</span><br/>
-                    raspunsuri_unice.add(<span className="text-yellow-300">"Da"</span>)  <span className="text-gray-500"># Nu se va duplica!</span><br/><br/>
-                    
-                    <span className="text-gray-500"># Verificarea existenței</span><br/>
-                    <span className="text-blue-400">if</span> <span className="text-yellow-300">"Da"</span> <span className="text-blue-400">in</span> raspunsuri_unice:<br/>
-                    &nbsp;&nbsp;&nbsp;&nbsp;print(<span className="text-yellow-300">"Răspunsul 'Da' există"</span>)<br/><br/>
-                    
-                    <span className="text-gray-500"># Numărul de elemente unice</span><br/>
-                    numar_unic = len(raspunsuri_unice)<br/><br/>
-                    
-                    <span className="text-gray-500"># Operații pe seturi</span><br/>
-                    set1 = {'{'}1, 2, 3{'}'}<br/>
-                    set2 = {'{'}3, 4, 5{'}'}<br/>
-                    intersectie = set1 & set2  <span className="text-gray-500"># {3}</span>
+                  <div className="rounded-lg overflow-hidden border border-gray-700">
+                    <SyntaxHighlighter
+                      language="python"
+                      style={vscDarkPlus}
+                      customStyle={{
+                        margin: 0,
+                        padding: '1rem',
+                        fontSize: '0.875rem',
+                        borderRadius: '0.5rem',
+                      }}
+                      showLineNumbers={false}
+                    >{`# Lista cu duplicate
+raspunsuri = ["Da", "Nu", "Da", "Poate"]
+
+# Crearea unui set (elimină automat duplicatele)
+raspunsuri_unice = set(raspunsuri)
+
+# Adăugarea unui element în set
+raspunsuri_unice.add("Da")  # Nu se va duplica!
+
+# Verificarea existenței
+if "Da" in raspunsuri_unice:
+    print("Răspunsul 'Da' există")
+
+# Numărul de elemente unice
+numar_unic = len(raspunsuri_unice)
+
+# Operații pe seturi
+set1 = {1, 2, 3}
+set2 = {3, 4, 5}
+intersectie = set1 & set2  # {3}`}</SyntaxHighlighter>
                   </div>
                 </div>
               </div>
@@ -546,32 +578,42 @@ const CollectionsArtifact = () => {
                 
                 <div>
                   <h4 className="font-semibold text-orange-700 mb-3">💻 Codul din spate:</h4>
-                  <div className="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm">
-                    <span className="text-gray-500"># Crearea unui dicționar</span><br/>
-                    studenti = {'{'}<br/>
-                    &nbsp;&nbsp;&nbsp;&nbsp;<span className="text-yellow-300">"Ana123"</span>: {'{'}<br/>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span className="text-yellow-300">"nume"</span>: <span className="text-yellow-300">"Ana Popescu"</span>,<br/>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span className="text-yellow-300">"clasa"</span>: <span className="text-yellow-300">"10A"</span>,<br/>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span className="text-yellow-300">"note"</span>: [<span className="text-purple-400">9</span>, <span className="text-purple-400">8</span>, <span className="text-purple-400">10</span>]<br/>
-                    &nbsp;&nbsp;&nbsp;&nbsp;{'}'}<br/>
-                    {'}'}<br/><br/>
-                    
-                    <span className="text-gray-500"># Accesarea datelor</span><br/>
-                    nume = studenti[<span className="text-yellow-300">"Ana123"</span>][<span className="text-yellow-300">"nume"</span>]<br/>
-                    note = studenti[<span className="text-yellow-300">"Ana123"</span>][<span className="text-yellow-300">"note"</span>]<br/><br/>
-                    
-                    <span className="text-gray-500"># Calcularea mediei</span><br/>
-                    medie = sum(note) / len(note)<br/><br/>
-                    
-                    <span className="text-gray-500"># Parcurgerea dicționarului</span><br/>
-                    <span className="text-blue-400">for</span> id_student, date <span className="text-blue-400">in</span> studenti.items():<br/>
-                    &nbsp;&nbsp;&nbsp;&nbsp;print(<span className="text-yellow-300">f"</span>{'{'}id_student{'}'}: <span className="text-yellow-300">{'{'}date['nume']{'}'}"</span>)<br/><br/>
-                    
-                    <span className="text-gray-500"># Adăugarea unui student nou</span><br/>
-                    studenti[<span className="text-yellow-300">"Maria999"</span>] = {'{'}<br/>
-                    &nbsp;&nbsp;&nbsp;&nbsp;<span className="text-yellow-300">"nume"</span>: <span className="text-yellow-300">"Maria Vasile"</span>,<br/>
-                    &nbsp;&nbsp;&nbsp;&nbsp;<span className="text-yellow-300">"clasa"</span>: <span className="text-yellow-300">"10C"</span><br/>
-                    {'}'}
+                  <div className="rounded-lg overflow-hidden border border-gray-700">
+                    <SyntaxHighlighter
+                      language="python"
+                      style={vscDarkPlus}
+                      customStyle={{
+                        margin: 0,
+                        padding: '1rem',
+                        fontSize: '0.875rem',
+                        borderRadius: '0.5rem',
+                      }}
+                      showLineNumbers={false}
+                    >{`# Crearea unui dicționar
+studenti = {
+    "Ana123": {
+        "nume": "Ana Popescu",
+        "clasa": "10A",
+        "note": [9, 8, 10]
+    }
+}
+
+# Accesarea datelor
+nume = studenti["Ana123"]["nume"]
+note = studenti["Ana123"]["note"]
+
+# Calcularea mediei
+medie = sum(note) / len(note)
+
+# Parcurgerea dicționarului
+for id_student, date in studenti.items():
+    print(f"{id_student}: {date['nume']}")
+
+# Adăugarea unui student nou
+studenti["Maria999"] = {
+    "nume": "Maria Vasile",
+    "clasa": "10C"
+}`}</SyntaxHighlighter>
                   </div>
                 </div>
               </div>

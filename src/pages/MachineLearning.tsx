@@ -1215,43 +1215,68 @@ if __name__ == "__main__":
                   </div>
                 </div>
 
-                {/* Placeholder Artifact - Session 37-38 */}
+                {/* Featured Artifact - Sessions 37-38 */}
                 <div className="mb-12 bg-gradient-to-br from-purple-50 via-indigo-50 to-blue-50 dark:from-purple-900/20 dark:via-indigo-900/20 dark:to-blue-900/20 rounded-xl p-8 border-2 border-purple-300 dark:border-purple-700 shadow-xl">
                   <div className="flex items-start gap-4 mb-6">
-                    <div className="text-5xl">🏥</div>
+                    <div className="text-5xl">👁️</div>
                     <div>
                       <h3 className="text-2xl font-bold mb-2 bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">
-                        Sessions 37-38: CNN & Transfer Learning - Medical Image Classification
+                        Sessions 37-38: CNN & Transfer Learning - When Machines Learned to See
                       </h3>
                       <p className="text-muted-foreground mb-4">
-                        From "How can AI detect cancer?" to building production medical imaging systems. Master Convolutional
-                        Neural Networks, Transfer Learning with EfficientNet, and real-world diagnostic AI.
+                        From parameter explosion to hierarchical perception. Build CNNs that detect diseases, monitor air quality
+                        from satellites, find manufacturing defects, and understand the multi-modal AI future. Transfer learning with 500 images.
                       </p>
                       <div className="flex flex-wrap gap-2 mb-4">
                         <span className="px-3 py-1 bg-purple-100 dark:bg-purple-900/50 text-purple-800 dark:text-purple-200 rounded-full text-sm font-medium">
-                          CNN Architecture
+                          Convolution Fundamentals
                         </span>
                         <span className="px-3 py-1 bg-indigo-100 dark:bg-indigo-900/50 text-indigo-800 dark:text-indigo-200 rounded-full text-sm font-medium">
                           Transfer Learning
                         </span>
                         <span className="px-3 py-1 bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-200 rounded-full text-sm font-medium">
-                          EfficientNet
+                          Multi-Modal AI
                         </span>
                         <span className="px-3 py-1 bg-cyan-100 dark:bg-cyan-900/50 text-cyan-800 dark:text-cyan-200 rounded-full text-sm font-medium">
-                          Medical AI
+                          Interactive Story
                         </span>
                       </div>
                     </div>
                   </div>
 
-                  <div className="bg-gradient-to-r from-amber-50 to-yellow-50 dark:from-amber-900/20 dark:to-yellow-900/20 p-6 rounded-lg border-l-4 border-amber-500">
-                    <p className="text-sm font-semibold text-amber-800 dark:text-amber-200 mb-2">
-                      🚀 Coming Soon: Interactive CNN & Transfer Learning Artifacts
-                    </p>
-                    <p className="text-sm text-amber-700 dark:text-amber-300">
-                      Full Romanian language interactive artifacts for Sessions 37-38 are in development.
-                      Meanwhile, explore the code examples below for CNN and Transfer Learning!
-                    </p>
+                  <button
+                    onClick={() => window.location.href = '/artifacts/cnn-sessions37-38'}
+                    className="w-full bg-gradient-to-r from-purple-500 via-indigo-500 to-blue-600 hover:from-purple-600 hover:via-indigo-600 hover:to-blue-700 text-white font-bold py-4 px-6 rounded-lg transition-all duration-300 transform hover:scale-[1.02] shadow-lg hover:shadow-xl flex items-center justify-center gap-3 text-lg"
+                  >
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
+                    <span>Enter CNN Sessions 37-38 Artifact</span>
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                    </svg>
+                  </button>
+
+                  <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                    <div className="bg-white/50 dark:bg-gray-800/50 rounded-lg p-4">
+                      <h4 className="font-semibold text-purple-800 dark:text-purple-200 mb-2">🏥 Health Applications</h4>
+                      <ul className="space-y-1 text-gray-600 dark:text-gray-400">
+                        <li>• Pneumonia detection from chest X-rays</li>
+                        <li>• Diabetic retinopathy screening (preventable blindness)</li>
+                        <li>• Medical imaging with 97% accuracy (500 images)</li>
+                        <li>• FDA-approved diagnostic AI systems</li>
+                      </ul>
+                    </div>
+                    <div className="bg-white/50 dark:bg-gray-800/50 rounded-lg p-4">
+                      <h4 className="font-semibold text-indigo-800 dark:text-indigo-200 mb-2">🌍 Beyond Medical</h4>
+                      <ul className="space-y-1 text-gray-600 dark:text-gray-400">
+                        <li>• Satellite air quality monitoring from space</li>
+                        <li>• Manufacturing defect detection (0.1% defect rate)</li>
+                        <li>• Document classification for finance automation</li>
+                        <li>• Style transfer, CLIP, Vision Transformers</li>
+                      </ul>
+                    </div>
                   </div>
                 </div>
 

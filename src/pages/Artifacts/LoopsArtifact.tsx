@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Play, Pause, RotateCcw } from 'lucide-react';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 const LoopsArtifact = () => {
   const navigate = useNavigate();
@@ -216,11 +218,21 @@ const LoopsArtifact = () => {
                 <p className="text-sm italic">"Cât timp nu știu parola corectă, continuă să întrebi."</p>
                 <p className="text-sm italic">"Cât timp mașina nu e plină cu benzină, continuă să alimentezi."</p>
               </div>
-              <div className="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm">
-                <span className="text-blue-400">while</span> parola_gresita:<br/>
-                &nbsp;&nbsp;&nbsp;&nbsp;parola = input(<span className="text-yellow-300">"Introdu parola:"</span>)<br/>
-                &nbsp;&nbsp;&nbsp;&nbsp;<span className="text-blue-400">if</span> parola == parola_corecta:<br/>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;parola_gresita = <span className="text-purple-400">False</span>
+              <div className="rounded-lg overflow-hidden border border-gray-700">
+                <SyntaxHighlighter
+                  language="python"
+                  style={vscDarkPlus}
+                  customStyle={{
+                    margin: 0,
+                    padding: '1rem',
+                    fontSize: '0.875rem',
+                    borderRadius: '0.5rem',
+                  }}
+                  showLineNumbers={false}
+                >{`while parola_gresita:
+    parola = input("Introdu parola:")
+    if parola == parola_corecta:
+        parola_gresita = False`}</SyntaxHighlighter>
               </div>
             </div>
 
@@ -236,10 +248,20 @@ const LoopsArtifact = () => {
                 <p className="text-sm italic">"Pentru fiecare student din clasă, acordă nota."</p>
                 <p className="text-sm italic">"Pentru fiecare an din 2020-2030, afișează anul."</p>
               </div>
-              <div className="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm">
-                <span className="text-blue-400">for</span> student <span className="text-blue-400">in</span> clasa:<br/>
-                &nbsp;&nbsp;&nbsp;&nbsp;nota = calculeaza_nota(student)<br/>
-                &nbsp;&nbsp;&nbsp;&nbsp;print(<span className="text-yellow-300">f"</span>{'{'}student{'}'}: {'{'}nota{'}'}<span className="text-yellow-300">"</span>)
+              <div className="rounded-lg overflow-hidden border border-gray-700">
+                <SyntaxHighlighter
+                  language="python"
+                  style={vscDarkPlus}
+                  customStyle={{
+                    margin: 0,
+                    padding: '1rem',
+                    fontSize: '0.875rem',
+                    borderRadius: '0.5rem',
+                  }}
+                  showLineNumbers={false}
+                >{`for student in clasa:
+    nota = calculeaza_nota(student)
+    print(f"{student}: {nota}")`}</SyntaxHighlighter>
               </div>
             </div>
           </div>
@@ -314,15 +336,25 @@ const LoopsArtifact = () => {
           </div>
 
           <h3 className="text-xl font-semibold text-red-700 mb-3">Codul din spate:</h3>
-          <div className="bg-gray-900 text-green-400 p-6 rounded-xl font-mono text-sm overflow-x-auto">
-            numaratoare = <span className="text-purple-400">{countdownValue}</span><br/><br/>
-            
-            <span className="text-blue-400">while</span> numaratoare &gt; <span className="text-purple-400">0</span>:<br/>
-            &nbsp;&nbsp;&nbsp;&nbsp;print(numaratoare)<br/>
-            &nbsp;&nbsp;&nbsp;&nbsp;numaratoare = numaratoare - <span className="text-purple-400">1</span><br/>
-            &nbsp;&nbsp;&nbsp;&nbsp;time.sleep(<span className="text-purple-400">1</span>)  <span className="text-gray-500"># Așteaptă o secundă</span><br/><br/>
-            
-            print(<span className="text-yellow-300">"Lansare! 🚀"</span>)
+          <div className="rounded-lg overflow-hidden border border-gray-700">
+            <SyntaxHighlighter
+              language="python"
+              style={vscDarkPlus}
+              customStyle={{
+                margin: 0,
+                padding: '1.5rem',
+                fontSize: '0.875rem',
+                borderRadius: '0.5rem',
+              }}
+              showLineNumbers={false}
+            >{`numaratoare = ${countdownValue}
+
+while numaratoare > 0:
+    print(numaratoare)
+    numaratoare = numaratoare - 1
+    time.sleep(1)  # Așteaptă o secundă
+
+print("Lansare! 🚀")`}</SyntaxHighlighter>
           </div>
         </div>
 
@@ -384,14 +416,24 @@ const LoopsArtifact = () => {
           </div>
 
           <h3 className="text-xl font-semibold text-green-700 mb-3">Codul din spate:</h3>
-          <div className="bg-gray-900 text-green-400 p-6 rounded-xl font-mono text-sm overflow-x-auto">
-            fructe = [<span className="text-yellow-300">"🍎"</span>, <span className="text-yellow-300">"🍌"</span>, <span className="text-yellow-300">"🍊"</span>, <span className="text-yellow-300">"🍓"</span>, <span className="text-yellow-300">"🥝"</span>]<br/><br/>
-            
-            <span className="text-blue-400">for</span> fruct <span className="text-blue-400">in</span> fructe:<br/>
-            &nbsp;&nbsp;&nbsp;&nbsp;print(<span className="text-yellow-300">f"Procesez </span>{'{'}fruct{'}'}<span className="text-yellow-300">"</span>)<br/>
-            &nbsp;&nbsp;&nbsp;&nbsp;time.sleep(<span className="text-purple-400">1</span>)  <span className="text-gray-500"># Simulează procesarea</span><br/><br/>
-            
-            print(<span className="text-yellow-300">"Toate fructele au fost procesate! ✅"</span>)
+          <div className="rounded-lg overflow-hidden border border-gray-700">
+            <SyntaxHighlighter
+              language="python"
+              style={vscDarkPlus}
+              customStyle={{
+                margin: 0,
+                padding: '1.5rem',
+                fontSize: '0.875rem',
+                borderRadius: '0.5rem',
+              }}
+              showLineNumbers={false}
+            >{`fructe = ["🍎", "🍌", "🍊", "🍓", "🥝"]
+
+for fruct in fructe:
+    print(f"Procesez {fruct}")
+    time.sleep(1)  # Simulează procesarea
+
+print("Toate fructele au fost procesate! ✅")`}</SyntaxHighlighter>
           </div>
         </div>
 
@@ -449,13 +491,23 @@ const LoopsArtifact = () => {
           </div>
 
           <h3 className="text-xl font-semibold text-indigo-700 mb-3">Codul din spate:</h3>
-          <div className="bg-gray-900 text-green-400 p-6 rounded-xl font-mono text-sm overflow-x-auto">
-            caracter = <span className="text-yellow-300">"{pattern}"</span><br/>
-            marime = <span className="text-purple-400">{patternSize}</span><br/><br/>
-            
-            <span className="text-blue-400">for</span> i <span className="text-blue-400">in</span> range(<span className="text-purple-400">1</span>, marime + <span className="text-purple-400">1</span>):<br/>
-            &nbsp;&nbsp;&nbsp;&nbsp;linie = caracter * i<br/>
-            &nbsp;&nbsp;&nbsp;&nbsp;print(linie)
+          <div className="rounded-lg overflow-hidden border border-gray-700">
+            <SyntaxHighlighter
+              language="python"
+              style={vscDarkPlus}
+              customStyle={{
+                margin: 0,
+                padding: '1.5rem',
+                fontSize: '0.875rem',
+                borderRadius: '0.5rem',
+              }}
+              showLineNumbers={false}
+            >{`caracter = "${pattern}"
+marime = ${patternSize}
+
+for i in range(1, marime + 1):
+    linie = caracter * i
+    print(linie)`}</SyntaxHighlighter>
           </div>
         </div>
 
@@ -524,20 +576,30 @@ const LoopsArtifact = () => {
           </div>
 
           <h3 className="text-xl font-semibold text-orange-700 mb-3">Codul din spate:</h3>
-          <div className="bg-gray-900 text-green-400 p-6 rounded-xl font-mono text-sm overflow-x-auto">
-            parola_corecta = <span className="text-yellow-300">"1234"</span><br/>
-            incercari = <span className="text-purple-400">0</span><br/>
-            acces_permis = <span className="text-purple-400">False</span><br/><br/>
-            
-            <span className="text-blue-400">while</span> <span className="text-blue-400">not</span> acces_permis:<br/>
-            &nbsp;&nbsp;&nbsp;&nbsp;parola = input(<span className="text-yellow-300">"Introdu parola: "</span>)<br/>
-            &nbsp;&nbsp;&nbsp;&nbsp;incercari = incercari + <span className="text-purple-400">1</span><br/><br/>
-            
-            &nbsp;&nbsp;&nbsp;&nbsp;<span className="text-blue-400">if</span> parola == parola_corecta:<br/>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print(<span className="text-yellow-300">f"Acces permis! Încercări: </span>{'{'}incercari{'}'}<span className="text-yellow-300">"</span>)<br/>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;acces_permis = <span className="text-purple-400">True</span><br/>
-            &nbsp;&nbsp;&nbsp;&nbsp;<span className="text-blue-400">else</span>:<br/>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print(<span className="text-yellow-300">"Parolă greșită. Încearcă din nou!"</span>)
+          <div className="rounded-lg overflow-hidden border border-gray-700">
+            <SyntaxHighlighter
+              language="python"
+              style={vscDarkPlus}
+              customStyle={{
+                margin: 0,
+                padding: '1.5rem',
+                fontSize: '0.875rem',
+                borderRadius: '0.5rem',
+              }}
+              showLineNumbers={false}
+            >{`parola_corecta = "1234"
+incercari = 0
+acces_permis = False
+
+while not acces_permis:
+    parola = input("Introdu parola: ")
+    incercari = incercari + 1
+
+    if parola == parola_corecta:
+        print(f"Acces permis! Încercări: {incercari}")
+        acces_permis = True
+    else:
+        print("Parolă greșită. Încearcă din nou!")`}</SyntaxHighlighter>
           </div>
         </div>
 
