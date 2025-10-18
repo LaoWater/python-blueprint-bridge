@@ -2,6 +2,8 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Play, Pause, RotateCcw, Zap, Brain, Target, Layers, Clock, ChevronRight, ChevronDown } from 'lucide-react';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 const AdvancedAlgorithmsArtifact = () => {
   const navigate = useNavigate();
@@ -670,29 +672,38 @@ const AdvancedAlgorithmsArtifact = () => {
                 </Button>
                 
                 {visibleCode['merge-sort'] && (
-                  <div className="bg-gray-900 text-green-400 rounded-xl p-6 text-sm font-mono">
-                    <pre>
-{`def merge_sort(arr):
+                  <div className="rounded-lg overflow-hidden border border-gray-700">
+                    <SyntaxHighlighter
+                      language="python"
+                      style={vscDarkPlus}
+                      customStyle={{
+                        margin: 0,
+                        padding: '1.5rem',
+                        fontSize: '0.875rem',
+                        borderRadius: '0.5rem',
+                      }}
+                      showLineNumbers={false}
+                    >{`def merge_sort(arr):
     # Base case: array cu 1 element e deja sortat
     if len(arr) <= 1:
         return arr
-    
+
     # Divide: împarte array-ul în două părți
     mid = len(arr) // 2
     left = arr[:mid]
     right = arr[mid:]
-    
+
     # Conquer: sortează recursiv fiecare parte
     left_sorted = merge_sort(left)
     right_sorted = merge_sort(right)
-    
+
     # Combine: îmbină cele două părți sortate
     return merge(left_sorted, right_sorted)
 
 def merge(left, right):
     result = []
     left_idx = right_idx = 0
-    
+
     # Compară elementele și adaugă pe cel mai mic
     while left_idx < len(left) and right_idx < len(right):
         if left[left_idx] <= right[right_idx]:
@@ -701,16 +712,15 @@ def merge(left, right):
         else:
             result.append(right[right_idx])
             right_idx += 1
-    
+
     # Adaugă elementele rămase
     result.extend(left[left_idx:])
     result.extend(right[right_idx:])
-    
+
     return result
 
 # Complexitate: O(n log n) - garantat!
-# Space: O(n) - pentru array-urile temporare`}
-                    </pre>
+# Space: O(n) - pentru array-urile temporare`}</SyntaxHighlighter>
                   </div>
                 )}
                 
@@ -875,24 +885,32 @@ def fibonacci_naive(n):
                     </Button>
                     
                     {visibleCode['fibonacci-memo'] && (
-                      <div className="bg-gray-900 text-green-400 rounded-xl p-4 text-sm font-mono">
-                        <pre>
-{`# Fibonacci Memoized - O(n) - RAPID!
+                      <div className="rounded-lg overflow-hidden border border-gray-700">
+                        <SyntaxHighlighter
+                          language="python"
+                          style={vscDarkPlus}
+                          customStyle={{
+                            margin: 0,
+                            padding: '1rem',
+                            fontSize: '0.875rem',
+                            borderRadius: '0.5rem',
+                          }}
+                          showLineNumbers={false}
+                        >{`# Fibonacci Memoized - O(n) - RAPID!
 def fibonacci_memo(n, memo={}):
     # Dacă deja am calculat, returnez din cache
     if n in memo:
         return memo[n]
-    
+
     if n <= 1:
         return n
-    
+
     # Calculez o singură dată și salvez în cache
     memo[n] = fibonacci_memo(n-1, memo) + fibonacci_memo(n-2, memo)
     return memo[n]
 
 # Pentru orice n: doar n apeluri!
-# Diferența: de la 2^n la n - incredibil!`}
-                        </pre>
+# Diferența: de la 2^n la n - incredibil!`}</SyntaxHighlighter>
                       </div>
                     )}
                   </div>

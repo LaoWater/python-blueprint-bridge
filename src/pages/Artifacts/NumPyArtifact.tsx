@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Play, Pause, RotateCcw, Zap, Calculator, Brain, Target } from 'lucide-react';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 const NumPyArtifact = () => {
   const navigate = useNavigate();
@@ -298,18 +300,28 @@ const NumPyArtifact = () => {
           </div>
 
           <h3 className="text-xl font-semibold text-red-700 mb-3">Codul din spate:</h3>
-          <div className="bg-gray-900 text-green-400 p-6 rounded-xl font-mono text-sm overflow-x-auto">
-            <span className="text-gray-500"># Python Lists - slow and memory hungry</span><br/>
-            stars_python = []<br/>
-            <span className="text-blue-400">for</span> i <span className="text-blue-400">in</span> range(<span className="text-purple-400">{dataSize}</span>):<br/>
-            &nbsp;&nbsp;&nbsp;&nbsp;distance = (i**<span className="text-purple-400">2</span> + (i*<span className="text-purple-400">2</span>)**<span className="text-purple-400">2</span>)**<span className="text-purple-400">0.5</span><br/>
-            &nbsp;&nbsp;&nbsp;&nbsp;stars_python.append(distance)<br/><br/>
-            
-            <span className="text-gray-500"># NumPy - vectorized magic!</span><br/>
-            <span className="text-blue-400">import</span> numpy <span className="text-blue-400">as</span> np<br/>
-            positions = np.arange(<span className="text-purple-400">{dataSize}</span>)<br/>
-            distances = np.sqrt(positions**<span className="text-purple-400">2</span> + (positions*<span className="text-purple-400">2</span>)**<span className="text-purple-400">2</span>)<br/>
-            <span className="text-gray-500"># One line does what {dataSize} steps did!</span>
+          <div className="rounded-lg overflow-hidden border border-gray-700">
+            <SyntaxHighlighter
+              language="python"
+              style={vscDarkPlus}
+              customStyle={{
+                margin: 0,
+                padding: '1.5rem',
+                fontSize: '0.875rem',
+                borderRadius: '0.5rem',
+              }}
+              showLineNumbers={false}
+            >{`# Python Lists - slow and memory hungry
+stars_python = []
+for i in range(${dataSize}):
+    distance = (i**2 + (i*2)**2)**0.5
+    stars_python.append(distance)
+
+# NumPy - vectorized magic!
+import numpy as np
+positions = np.arange(${dataSize})
+distances = np.sqrt(positions**2 + (positions*2)**2)
+# One line does what ${dataSize} steps did!`}</SyntaxHighlighter>
           </div>
         </div>
 
@@ -367,10 +379,20 @@ const NumPyArtifact = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm">
-                    heartbeat = np.array([{arrayData['1D'].join(', ')}])<br/>
-                    print(f"Forma: {'{'}heartbeat.shape{'}'}") <span className="text-gray-500"># ({arrayData['1D'].length},)</span><br/>
-                    print(f"Puls mediu: {'{'}np.mean(heartbeat){'}'} BPM")
+                  <div className="rounded-lg overflow-hidden border border-gray-700">
+                    <SyntaxHighlighter
+                      language="python"
+                      style={vscDarkPlus}
+                      customStyle={{
+                        margin: 0,
+                        padding: '1rem',
+                        fontSize: '0.875rem',
+                        borderRadius: '0.5rem',
+                      }}
+                      showLineNumbers={false}
+                    >{`heartbeat = np.array([${arrayData['1D'].join(', ')}])
+print(f"Forma: {heartbeat.shape}")  # (${arrayData['1D'].length},)
+print(f"Puls mediu: {np.mean(heartbeat)} BPM")`}</SyntaxHighlighter>
                   </div>
                 </div>
               )}
@@ -394,14 +416,24 @@ const NumPyArtifact = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm">
-                    room_temp = np.array([<br/>
-                    &nbsp;&nbsp;&nbsp;&nbsp;[22.5, 23.1],<br/>
-                    &nbsp;&nbsp;&nbsp;&nbsp;[22.7, 24.2],<br/>
-                    &nbsp;&nbsp;&nbsp;&nbsp;[22.4, 23.8]<br/>
-                    ])<br/>
-                    print(f"Forma: {'{'}room_temp.shape{'}'}") <span className="text-gray-500"># (3, 2)</span><br/>
-                    print(f"Temperatura medie: {'{'}np.mean(room_temp){'}'}°C")
+                  <div className="rounded-lg overflow-hidden border border-gray-700">
+                    <SyntaxHighlighter
+                      language="python"
+                      style={vscDarkPlus}
+                      customStyle={{
+                        margin: 0,
+                        padding: '1rem',
+                        fontSize: '0.875rem',
+                        borderRadius: '0.5rem',
+                      }}
+                      showLineNumbers={false}
+                    >{`room_temp = np.array([
+    [22.5, 23.1],
+    [22.7, 24.2],
+    [22.4, 23.8]
+])
+print(f"Forma: {room_temp.shape}")  # (3, 2)
+print(f"Temperatura medie: {np.mean(room_temp)}°C")`}</SyntaxHighlighter>
                   </div>
                 </div>
               )}
@@ -421,11 +453,21 @@ const NumPyArtifact = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm">
-                    rgb_image = np.random.randint(<span className="text-purple-400">0</span>, <span className="text-purple-400">256</span>, (<span className="text-purple-400">64</span>, <span className="text-purple-400">64</span>, <span className="text-purple-400">3</span>))<br/>
-                    print(f"Forma: {'{'}rgb_image.shape{'}'}") <span className="text-gray-500"># (64, 64, 3)</span><br/>
-                    red_channel = rgb_image[:, :, <span className="text-purple-400">0</span>] <span className="text-gray-500"># Extrage canalul roșu</span><br/>
-                    print(f"Valoare pixel (0,0): R={'{'}rgb_image[0,0,0]{'}'} G={'{'}rgb_image[0,0,1]{'}'} B={'{'}rgb_image[0,0,2]{'}'}")
+                  <div className="rounded-lg overflow-hidden border border-gray-700">
+                    <SyntaxHighlighter
+                      language="python"
+                      style={vscDarkPlus}
+                      customStyle={{
+                        margin: 0,
+                        padding: '1rem',
+                        fontSize: '0.875rem',
+                        borderRadius: '0.5rem',
+                      }}
+                      showLineNumbers={false}
+                    >{`rgb_image = np.random.randint(0, 256, (64, 64, 3))
+print(f"Forma: {rgb_image.shape}")  # (64, 64, 3)
+red_channel = rgb_image[:, :, 0]  # Extrage canalul roșu
+print(f"Valoare pixel (0,0): R={rgb_image[0,0,0]} G={rgb_image[0,0,1]} B={rgb_image[0,0,2]}")`}</SyntaxHighlighter>
                   </div>
                 </div>
               )}
@@ -445,11 +487,21 @@ const NumPyArtifact = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm">
-                    batch_images = np.random.rand(<span className="text-purple-400">32</span>, <span className="text-purple-400">64</span>, <span className="text-purple-400">64</span>, <span className="text-purple-400">3</span>)<br/>
-                    print(f"Forma batch: {'{'}batch_images.shape{'}'}") <span className="text-gray-500"># (32, 64, 64, 3)</span><br/>
-                    print(f"Prima imagine: {'{'}batch_images[0].shape{'}'}") <span className="text-gray-500"># (64, 64, 3)</span><br/>
-                    print(f"Total parametri: {'{'}batch_images.size:,{'}'} float-uri") <span className="text-gray-500"># 393,216!</span>
+                  <div className="rounded-lg overflow-hidden border border-gray-700">
+                    <SyntaxHighlighter
+                      language="python"
+                      style={vscDarkPlus}
+                      customStyle={{
+                        margin: 0,
+                        padding: '1rem',
+                        fontSize: '0.875rem',
+                        borderRadius: '0.5rem',
+                      }}
+                      showLineNumbers={false}
+                    >{`batch_images = np.random.rand(32, 64, 64, 3)
+print(f"Forma batch: {batch_images.shape}")  # (32, 64, 64, 3)
+print(f"Prima imagine: {batch_images[0].shape}")  # (64, 64, 3)
+print(f"Total parametri: {batch_images.size:,} float-uri")  # 393,216!`}</SyntaxHighlighter>
                   </div>
                 </div>
               )}
@@ -535,22 +587,32 @@ const NumPyArtifact = () => {
           </div>
 
           <h3 className="text-xl font-semibold text-green-700 mb-3">Codul din spate:</h3>
-          <div className="bg-gray-900 text-green-400 p-6 rounded-xl font-mono text-sm overflow-x-auto">
-            <span className="text-gray-500"># Batch-ul de imagini pentru AI</span><br/>
-            batch = np.random.rand(<span className="text-purple-400">32</span>, <span className="text-purple-400">64</span>, <span className="text-purple-400">64</span>, <span className="text-purple-400">3</span>)<br/>
-            mean = np.array([<span className="text-purple-400">0.485</span>, <span className="text-purple-400">0.456</span>, <span className="text-purple-400">0.406</span>])<br/>
-            std = np.array([<span className="text-purple-400">0.229</span>, <span className="text-purple-400">0.224</span>, <span className="text-purple-400">0.225</span>])<br/><br/>
-            
-            <span className="text-gray-500"># Broadcasting magic - o singură linie!</span><br/>
-            normalized = (batch - mean) / std<br/><br/>
-            
-            <span className="text-gray-500"># Fără NumPy ar fi fost:</span><br/>
-            <span className="text-gray-500"># for i in range(32):           # Pentru fiecare imagine</span><br/>
-            <span className="text-gray-500">#   for y in range(64):         # Pentru fiecare rând</span><br/>
-            <span className="text-gray-500">#     for x in range(64):       # Pentru fiecare pixel</span><br/>
-            <span className="text-gray-500">#       for c in range(3):      # Pentru fiecare canal RGB</span><br/>
-            <span className="text-gray-500">#         normalized[i,y,x,c] = (batch[i,y,x,c] - mean[c]) / std[c]</span><br/>
-            <span className="text-gray-500"># TOTAL: 393,216 operații individuale!</span>
+          <div className="rounded-lg overflow-hidden border border-gray-700">
+            <SyntaxHighlighter
+              language="python"
+              style={vscDarkPlus}
+              customStyle={{
+                margin: 0,
+                padding: '1.5rem',
+                fontSize: '0.875rem',
+                borderRadius: '0.5rem',
+              }}
+              showLineNumbers={false}
+            >{`# Batch-ul de imagini pentru AI
+batch = np.random.rand(32, 64, 64, 3)
+mean = np.array([0.485, 0.456, 0.406])
+std = np.array([0.229, 0.224, 0.225])
+
+# Broadcasting magic - o singură linie!
+normalized = (batch - mean) / std
+
+# Fără NumPy ar fi fost:
+# for i in range(32):           # Pentru fiecare imagine
+#   for y in range(64):         # Pentru fiecare rând
+#     for x in range(64):       # Pentru fiecare pixel
+#       for c in range(3):      # Pentru fiecare canal RGB
+#         normalized[i,y,x,c] = (batch[i,y,x,c] - mean[c]) / std[c]
+# TOTAL: 393,216 operații individuale!`}</SyntaxHighlighter>
           </div>
         </div>
 
@@ -624,19 +686,29 @@ const NumPyArtifact = () => {
                     )}
                   </div>
                   
-                  <div className="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm">
-                    <span className="text-gray-500"># Centrul de masă galactic</span><br/>
-                    star_positions = np.random.normal(<span className="text-purple-400">0</span>, <span className="text-purple-400">25</span>, (<span className="text-purple-400">100000</span>, <span className="text-purple-400">3</span>))<br/>
-                    star_masses = np.random.exponential(<span className="text-purple-400">1</span>, <span className="text-purple-400">100000</span>)<br/><br/>
-                    
-                    <span className="text-gray-500"># Formula: CM = Σ(mi × xi) / Σ(mi)</span><br/>
-                    total_mass = np.sum(star_masses)<br/>
-                    center_of_mass = np.sum(<br/>
-                    &nbsp;&nbsp;&nbsp;&nbsp;star_positions * star_masses[:, np.newaxis],<br/>
-                    &nbsp;&nbsp;&nbsp;&nbsp;axis=<span className="text-purple-400">0</span><br/>
-                    ) / total_mass<br/><br/>
-                    
-                    print(<span className="text-yellow-300">f"Centrul galaxiei: {'{'}center_of_mass{'}'}"</span>)
+                  <div className="rounded-lg overflow-hidden border border-gray-700">
+                    <SyntaxHighlighter
+                      language="python"
+                      style={vscDarkPlus}
+                      customStyle={{
+                        margin: 0,
+                        padding: '1rem',
+                        fontSize: '0.875rem',
+                        borderRadius: '0.5rem',
+                      }}
+                      showLineNumbers={false}
+                    >{`# Centrul de masă galactic
+star_positions = np.random.normal(0, 25, (100000, 3))
+star_masses = np.random.exponential(1, 100000)
+
+# Formula: CM = Σ(mi × xi) / Σ(mi)
+total_mass = np.sum(star_masses)
+center_of_mass = np.sum(
+    star_positions * star_masses[:, np.newaxis],
+    axis=0
+) / total_mass
+
+print(f"Centrul galaxiei: {center_of_mass}")`}</SyntaxHighlighter>
                   </div>
                 </div>
               </div>
@@ -672,23 +744,33 @@ const NumPyArtifact = () => {
                     </div>
                   </div>
                   
-                  <div className="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm">
-                    <span className="text-gray-500"># Analiza EKG cu FFT</span><br/>
-                    time = np.linspace(<span className="text-purple-400">0</span>, <span className="text-purple-400">10</span>, <span className="text-purple-400">1000</span>)<br/>
-                    heart_rate = <span className="text-purple-400">75</span><br/><br/>
-                    
-                    <span className="text-gray-500"># Semnal cardiac cu zgomot</span><br/>
-                    signal = np.sin(<span className="text-purple-400">2</span> * np.pi * heart_rate/<span className="text-purple-400">60</span> * time)<br/>
-                    noise = np.random.normal(<span className="text-purple-400">0</span>, <span className="text-purple-400">0.1</span>, len(time))<br/>
-                    ekg = signal + noise<br/><br/>
-                    
-                    <span className="text-gray-500"># Transformata Fourier</span><br/>
-                    fft_result = np.fft.fft(ekg)<br/>
-                    frequencies = np.fft.fftfreq(len(ekg), <span className="text-purple-400">1</span>/<span className="text-purple-400">100</span>)<br/><br/>
-                    
-                    <span className="text-gray-500"># Detectarea frecvenței dominante</span><br/>
-                    dominant_freq = frequencies[np.argmax(np.abs(fft_result))]<br/>
-                    print(<span className="text-yellow-300">f"Frecvență cardiacă: {'{'}dominant_freq * 60{'}'} BPM"</span>)
+                  <div className="rounded-lg overflow-hidden border border-gray-700">
+                    <SyntaxHighlighter
+                      language="python"
+                      style={vscDarkPlus}
+                      customStyle={{
+                        margin: 0,
+                        padding: '1rem',
+                        fontSize: '0.875rem',
+                        borderRadius: '0.5rem',
+                      }}
+                      showLineNumbers={false}
+                    >{`# Analiza EKG cu FFT
+time = np.linspace(0, 10, 1000)
+heart_rate = 75
+
+# Semnal cardiac cu zgomot
+signal = np.sin(2 * np.pi * heart_rate/60 * time)
+noise = np.random.normal(0, 0.1, len(time))
+ekg = signal + noise
+
+# Transformata Fourier
+fft_result = np.fft.fft(ekg)
+frequencies = np.fft.fftfreq(len(ekg), 1/100)
+
+# Detectarea frecvenței dominante
+dominant_freq = frequencies[np.argmax(np.abs(fft_result))]
+print(f"Frecvență cardiacă: {dominant_freq * 60} BPM")`}</SyntaxHighlighter>
                   </div>
                 </div>
               </div>
@@ -718,20 +800,30 @@ const NumPyArtifact = () => {
                   </div>
                 </div>
                 
-                <div className="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm">
-                  <span className="text-gray-500"># Optimizare portofoliu Markowitz</span><br/>
-                  returns = np.random.normal(<span className="text-purple-400">0.001</span>, <span className="text-purple-400">0.02</span>, (<span className="text-purple-400">252</span>, <span className="text-purple-400">50</span>))<br/>
-                  correlation_matrix = np.corrcoef(returns.T)<br/><br/>
-                  
-                  <span className="text-gray-500"># Calcularea riscului și randamentului</span><br/>
-                  mean_returns = np.mean(returns, axis=<span className="text-purple-400">0</span>) * <span className="text-purple-400">252</span><br/>
-                  volatility = np.std(returns, axis=<span className="text-purple-400">0</span>) * np.sqrt(<span className="text-purple-400">252</span>)<br/><br/>
-                  
-                  <span className="text-gray-500"># Sharpe ratio pentru fiecare activ</span><br/>
-                  risk_free_rate = <span className="text-purple-400">0.03</span><br/>
-                  sharpe_ratios = (mean_returns - risk_free_rate) / volatility<br/><br/>
-                  
-                  print(<span className="text-yellow-300">f"Cel mai bun Sharpe ratio: {'{'}np.max(sharpe_ratios){'}'}:.</span><span className="text-yellow-300">3f"</span>)
+                <div className="rounded-lg overflow-hidden border border-gray-700">
+                  <SyntaxHighlighter
+                    language="python"
+                    style={vscDarkPlus}
+                    customStyle={{
+                      margin: 0,
+                      padding: '1rem',
+                      fontSize: '0.875rem',
+                      borderRadius: '0.5rem',
+                    }}
+                    showLineNumbers={false}
+                  >{`# Optimizare portofoliu Markowitz
+returns = np.random.normal(0.001, 0.02, (252, 50))
+correlation_matrix = np.corrcoef(returns.T)
+
+# Calcularea riscului și randamentului
+mean_returns = np.mean(returns, axis=0) * 252
+volatility = np.std(returns, axis=0) * np.sqrt(252)
+
+# Sharpe ratio pentru fiecare activ
+risk_free_rate = 0.03
+sharpe_ratios = (mean_returns - risk_free_rate) / volatility
+
+print(f"Cel mai bun Sharpe ratio: {np.max(sharpe_ratios):.3f}")`}</SyntaxHighlighter>
                 </div>
               </div>
             )}
@@ -753,22 +845,32 @@ const NumPyArtifact = () => {
                   </div>
                 </div>
                 
-                <div className="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm">
-                  <span className="text-gray-500"># Rețea neuronală simplă cu NumPy</span><br/>
-                  <span className="text-blue-400">class</span> <span className="text-yellow-300">SimpleNeuralNetwork</span>:<br/>
-                  &nbsp;&nbsp;&nbsp;&nbsp;<span className="text-blue-400">def</span> <span className="text-yellow-300">__init__</span>(<span className="text-blue-400">self</span>):<br/>
-                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span className="text-gray-500"># Matrici de greutăți</span><br/>
-                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span className="text-blue-400">self</span>.W1 = np.random.randn(<span className="text-purple-400">784</span>, <span className="text-purple-400">128</span>) * <span className="text-purple-400">0.1</span><br/>
-                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span className="text-blue-400">self</span>.W2 = np.random.randn(<span className="text-purple-400">128</span>, <span className="text-purple-400">10</span>) * <span className="text-purple-400">0.1</span><br/><br/>
-                  
-                  &nbsp;&nbsp;&nbsp;&nbsp;<span className="text-blue-400">def</span> <span className="text-yellow-300">forward</span>(<span className="text-blue-400">self</span>, X):<br/>
-                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span className="text-gray-500"># Propagarea înainte - doar operații NumPy!</span><br/>
-                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.z1 = np.dot(X, <span className="text-blue-400">self</span>.W1)<br/>
-                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.a1 = np.tanh(self.z1)  <span className="text-gray-500"># Activare</span><br/>
-                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.z2 = np.dot(self.a1, <span className="text-blue-400">self</span>.W2)<br/>
-                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span className="text-blue-400">return</span> np.softmax(self.z2)<br/><br/>
-                  
-                  <span className="text-gray-500"># TensorFlow, PyTorch fac exact asta, dar optimizat!</span>
+                <div className="rounded-lg overflow-hidden border border-gray-700">
+                  <SyntaxHighlighter
+                    language="python"
+                    style={vscDarkPlus}
+                    customStyle={{
+                      margin: 0,
+                      padding: '1rem',
+                      fontSize: '0.875rem',
+                      borderRadius: '0.5rem',
+                    }}
+                    showLineNumbers={false}
+                  >{`# Rețea neuronală simplă cu NumPy
+class SimpleNeuralNetwork:
+    def __init__(self):
+        # Matrici de greutăți
+        self.W1 = np.random.randn(784, 128) * 0.1
+        self.W2 = np.random.randn(128, 10) * 0.1
+
+    def forward(self, X):
+        # Propagarea înainte - doar operații NumPy!
+        self.z1 = np.dot(X, self.W1)
+        self.a1 = np.tanh(self.z1)  # Activare
+        self.z2 = np.dot(self.a1, self.W2)
+        return np.softmax(self.z2)
+
+# TensorFlow, PyTorch fac exact asta, dar optimizat!`}</SyntaxHighlighter>
                 </div>
               </div>
             )}

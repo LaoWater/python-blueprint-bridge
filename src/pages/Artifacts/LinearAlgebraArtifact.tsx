@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Play, Pause, RotateCcw, Brain, Zap, Target, Sparkles } from 'lucide-react';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 const LinearAlgebraArtifact = () => {
   const navigate = useNavigate();
@@ -422,23 +424,29 @@ const LinearAlgebraArtifact = () => {
                 
                 <div>
                   <h4 className="font-semibold text-blue-700 mb-3">💻 Codul NumPy:</h4>
-                  <div className="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm">
-                    <span className="text-gray-500"># Operații fundamentale cu matrici</span><br/>
-                    <span className="text-blue-400">import</span> numpy <span className="text-blue-400">as</span> np<br/><br/>
-                    
-                    <span className="text-gray-500"># Definirea matricilor</span><br/>
-                    A = np.array({JSON.stringify(matrixA)})<br/>
-                    B = np.array({JSON.stringify(matrixB)})<br/><br/>
-                    
-                    <span className="text-gray-500"># Operații</span><br/>
-                    {operation === 'multiply' ? (
-                      <>rezultat = np.dot(A, B)  <span className="text-gray-500"># Înmulțire matriceală</span></>
-                    ) : (
-                      <>rezultat = A + B  <span className="text-gray-500"># Adunare element cu element</span></>
-                    )}<br/><br/>
-                    
-                    <span className="text-gray-500"># În spatele fiecărei rețele neuronale!</span><br/>
-                    print(<span className="text-yellow-300">f"Rezultat: \\n</span>{'{'}rezultat{'}'}<span className="text-yellow-300">"</span>)
+                  <div className="rounded-lg overflow-hidden border border-gray-700">
+                    <SyntaxHighlighter
+                      language="python"
+                      style={vscDarkPlus}
+                      customStyle={{
+                        margin: 0,
+                        padding: '1rem',
+                        fontSize: '0.875rem',
+                        borderRadius: '0.5rem',
+                      }}
+                      showLineNumbers={false}
+                    >{`# Operații fundamentale cu matrici
+import numpy as np
+
+# Definirea matricilor
+A = np.array(${JSON.stringify(matrixA)})
+B = np.array(${JSON.stringify(matrixB)})
+
+# Operații
+${operation === 'multiply' ? 'rezultat = np.dot(A, B)  # Înmulțire matriceală' : 'rezultat = A + B  # Adunare element cu element'}
+
+# În spatele fiecărei rețele neuronale!
+print(f"Rezultat: \\n{rezultat}")`}</SyntaxHighlighter>
                   </div>
                 </div>
               </div>
@@ -530,28 +538,38 @@ const LinearAlgebraArtifact = () => {
                 
                 <div>
                   <h4 className="font-semibold text-pink-700 mb-3">💻 Implementare NumPy:</h4>
-                  <div className="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm">
-                    <span className="text-gray-500"># Rețea neuronală simplă</span><br/>
-                    <span className="text-blue-400">import</span> numpy <span className="text-blue-400">as</span> np<br/><br/>
-                    
-                    <span className="text-gray-500"># Date de intrare</span><br/>
-                    inputs = np.array({JSON.stringify(networkData.input)})<br/>
-                    weights = np.array({JSON.stringify(networkData.weights)})<br/><br/>
-                    
-                    <span className="text-gray-500"># Forward pass</span><br/>
-                    <span className="text-blue-400">def</span> <span className="text-yellow-300">forward_pass</span>(x, W):<br/>
-                    &nbsp;&nbsp;&nbsp;&nbsp;<span className="text-gray-500"># Înmulțirea magică!</span><br/>
-                    &nbsp;&nbsp;&nbsp;&nbsp;z = np.dot(x, W.T)<br/>
-                    &nbsp;&nbsp;&nbsp;&nbsp;<span className="text-gray-500"># Funcția de activare</span><br/>
-                    &nbsp;&nbsp;&nbsp;&nbsp;a = np.tanh(z)<br/>
-                    &nbsp;&nbsp;&nbsp;&nbsp;<span className="text-blue-400">return</span> a<br/><br/>
-                    
-                    <span className="text-gray-500"># Rularea rețelei</span><br/>
-                    output = forward_pass(inputs, weights)<br/>
-                    print(<span className="text-yellow-300">f"Output: </span>{'{'}output{'}'}<span className="text-yellow-300">"</span>)<br/><br/>
-                    
-                    <span className="text-gray-500"># ChatGPT face exact asta, dar cu</span><br/>
-                    <span className="text-gray-500"># miliarde de parametri! 🤯</span>
+                  <div className="rounded-lg overflow-hidden border border-gray-700">
+                    <SyntaxHighlighter
+                      language="python"
+                      style={vscDarkPlus}
+                      customStyle={{
+                        margin: 0,
+                        padding: '1rem',
+                        fontSize: '0.875rem',
+                        borderRadius: '0.5rem',
+                      }}
+                      showLineNumbers={false}
+                    >{`# Rețea neuronală simplă
+import numpy as np
+
+# Date de intrare
+inputs = np.array(${JSON.stringify(networkData.input)})
+weights = np.array(${JSON.stringify(networkData.weights)})
+
+# Forward pass
+def forward_pass(x, W):
+    # Înmulțirea magică!
+    z = np.dot(x, W.T)
+    # Funcția de activare
+    a = np.tanh(z)
+    return a
+
+# Rularea rețelei
+output = forward_pass(inputs, weights)
+print(f"Output: {output}")
+
+# ChatGPT face exact asta, dar cu
+# miliarde de parametri! 🤯`}</SyntaxHighlighter>
                   </div>
                 </div>
               </div>
@@ -636,31 +654,41 @@ const LinearAlgebraArtifact = () => {
                 
                 <div>
                   <h4 className="font-semibold text-cyan-700 mb-3">💻 Detectarea Marginilor:</h4>
-                  <div className="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm">
-                    <span className="text-gray-500"># Computer Vision cu NumPy</span><br/>
-                    <span className="text-blue-400">import</span> numpy <span className="text-blue-400">as</span> np<br/><br/>
-                    
-                    <span className="text-gray-500"># Imaginea ca matrice 8×8</span><br/>
-                    imagine = np.array(imagePixels).reshape(<span className="text-purple-400">8</span>, <span className="text-purple-400">8</span>)<br/><br/>
-                    
-                    <span className="text-gray-500"># Filtrul Sobel pentru detectarea marginilor</span><br/>
-                    sobel_x = np.array([<br/>
-                    &nbsp;&nbsp;&nbsp;&nbsp;[-<span className="text-purple-400">1</span>, <span className="text-purple-400">0</span>, <span className="text-purple-400">1</span>],<br/>
-                    &nbsp;&nbsp;&nbsp;&nbsp;[-<span className="text-purple-400">2</span>, <span className="text-purple-400">0</span>, <span className="text-purple-400">2</span>],<br/>
-                    &nbsp;&nbsp;&nbsp;&nbsp;[-<span className="text-purple-400">1</span>, <span className="text-purple-400">0</span>, <span className="text-purple-400">1</span>]<br/>
-                    ])<br/><br/>
-                    
-                    <span className="text-gray-500"># Convoluția - operația fundamentală!</span><br/>
-                    <span className="text-blue-400">def</span> <span className="text-yellow-300">detecteaza_margini</span>(img, filtru):<br/>
-                    &nbsp;&nbsp;&nbsp;&nbsp;<span className="text-gray-500"># Aplicăm filtrul pe toată imaginea</span><br/>
-                    &nbsp;&nbsp;&nbsp;&nbsp;<span className="text-blue-400">return</span> np.abs(np.convolve(img.flatten(), <br/>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;filtru.flatten()))<br/><br/>
-                    
-                    margini = detecteaza_margini(imagine, sobel_x)<br/>
-                    print(<span className="text-yellow-300">"Margini detectate!"</span>)<br/><br/>
-                    
-                    <span className="text-gray-500"># Exact așa funcționează</span><br/>
-                    <span className="text-gray-500"># recunoașterea facială! 📸</span>
+                  <div className="rounded-lg overflow-hidden border border-gray-700">
+                    <SyntaxHighlighter
+                      language="python"
+                      style={vscDarkPlus}
+                      customStyle={{
+                        margin: 0,
+                        padding: '1rem',
+                        fontSize: '0.875rem',
+                        borderRadius: '0.5rem',
+                      }}
+                      showLineNumbers={false}
+                    >{`# Computer Vision cu NumPy
+import numpy as np
+
+# Imaginea ca matrice 8×8
+imagine = np.array(imagePixels).reshape(8, 8)
+
+# Filtrul Sobel pentru detectarea marginilor
+sobel_x = np.array([
+    [-1, 0, 1],
+    [-2, 0, 2],
+    [-1, 0, 1]
+])
+
+# Convoluția - operația fundamentală!
+def detecteaza_margini(img, filtru):
+    # Aplicăm filtrul pe toată imaginea
+    return np.abs(np.convolve(img.flatten(),
+                              filtru.flatten()))
+
+margini = detecteaza_margini(imagine, sobel_x)
+print("Margini detectate!")
+
+# Exact așa funcționează
+# recunoașterea facială! 📸`}</SyntaxHighlighter>
                   </div>
                 </div>
               </div>
@@ -768,53 +796,49 @@ const LinearAlgebraArtifact = () => {
                 
                 <div>
                   <h4 className="font-semibold text-orange-700 mb-3">💻 Matrici de Transformare:</h4>
-                  <div className="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm">
-                    <span className="text-gray-500"># Transformări geometrice</span><br/>
-                    <span className="text-blue-400">import</span> numpy <span className="text-blue-400">as</span> np<br/>
-                    <span className="text-blue-400">import</span> math<br/><br/>
-                    
-                    <span className="text-gray-500"># Puncte originale (4 puncte cardinale)</span><br/>
-                    puncte = np.array({JSON.stringify(originalPoints)})<br/><br/>
-                    
-                    {transformationType === 'rotation' && (
-                      <>
-                        <span className="text-gray-500"># Matricea de rotație</span><br/>
-                        unghi = math.radians(<span className="text-purple-400">{transformationAngle}</span>)<br/>
-                        R = np.array([<br/>
-                        &nbsp;&nbsp;&nbsp;&nbsp;[math.cos(unghi), -math.sin(unghi)],<br/>
-                        &nbsp;&nbsp;&nbsp;&nbsp;[math.sin(unghi), math.cos(unghi)]<br/>
-                        ])<br/><br/>
-                      </>
-                    )}
-                    
-                    {transformationType === 'scaling' && (
-                      <>
-                        <span className="text-gray-500"># Matricea de scalare</span><br/>
-                        factor = <span className="text-purple-400">{(transformationAngle / 45).toFixed(1)}</span><br/>
-                        S = np.array([<br/>
-                        &nbsp;&nbsp;&nbsp;&nbsp;[factor, <span className="text-purple-400">0</span>],<br/>
-                        &nbsp;&nbsp;&nbsp;&nbsp;[<span className="text-purple-400">0</span>, factor]<br/>
-                        ])<br/><br/>
-                      </>
-                    )}
-                    
-                    {transformationType === 'reflection' && (
-                      <>
-                        <span className="text-gray-500"># Matricea de reflexie (pe axa X)</span><br/>
-                        Ref = np.array([<br/>
-                        &nbsp;&nbsp;&nbsp;&nbsp;[<span className="text-purple-400">1</span>, <span className="text-purple-400">0</span>],<br/>
-                        &nbsp;&nbsp;&nbsp;&nbsp;[<span className="text-purple-400">0</span>, -<span className="text-purple-400">1</span>]<br/>
-                        ])<br/><br/>
-                      </>
-                    )}
-                    
-                    <span className="text-gray-500"># Aplicarea transformării</span><br/>
-                    puncte_noi = np.dot(puncte, {transformationType === 'rotation' ? 'R' : transformationType === 'scaling' ? 'S' : 'Ref'}.T)<br/>
-                    print(<span className="text-yellow-300">f"Transformare aplicată: </span>{'{'}puncte_noi{'}'}<span className="text-yellow-300">"</span>)<br/><br/>
-                    
-                    <span className="text-gray-500"># Așa se mișcă personajele în jocuri! 🎮</span><br/>
-                    <span className="text-gray-500"># Unity, Unreal Engine - toate folosesc</span><br/>
-                    <span className="text-gray-500"># aceste matrici de transformare!</span>
+                  <div className="rounded-lg overflow-hidden border border-gray-700">
+                    <SyntaxHighlighter
+                      language="python"
+                      style={vscDarkPlus}
+                      customStyle={{
+                        margin: 0,
+                        padding: '1.5rem',
+                        fontSize: '0.875rem',
+                        borderRadius: '0.5rem',
+                      }}
+                      showLineNumbers={false}
+                    >{`# Transformări geometrice
+import numpy as np
+import math
+
+# Puncte originale (4 puncte cardinale)
+puncte = np.array(${JSON.stringify(originalPoints)})
+
+${transformationType === 'rotation' ? `# Matricea de rotație
+unghi = math.radians(${transformationAngle})
+R = np.array([
+    [math.cos(unghi), -math.sin(unghi)],
+    [math.sin(unghi), math.cos(unghi)]
+])
+` : transformationType === 'scaling' ? `# Matricea de scalare
+factor = ${(transformationAngle / 45).toFixed(1)}
+S = np.array([
+    [factor, 0],
+    [0, factor]
+])
+` : `# Matricea de reflexie (pe axa X)
+Ref = np.array([
+    [1, 0],
+    [0, -1]
+])
+`}
+# Aplicarea transformării
+puncte_noi = np.dot(puncte, ${transformationType === 'rotation' ? 'R' : transformationType === 'scaling' ? 'S' : 'Ref'}.T)
+print(f"Transformare aplicată: {puncte_noi}")
+
+# Așa se mișcă personajele în jocuri! 🎮
+# Unity, Unreal Engine - toate folosesc
+# aceste matrici de transformare!`}</SyntaxHighlighter>
                   </div>
                 </div>
               </div>
@@ -904,34 +928,44 @@ const LinearAlgebraArtifact = () => {
                 
                 <div>
                   <h4 className="font-semibold text-emerald-700 mb-3">💻 Analiza Componentelor Principale:</h4>
-                  <div className="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm">
-                    <span className="text-gray-500"># Principal Component Analysis (PCA)</span><br/>
-                    <span className="text-blue-400">import</span> numpy <span className="text-blue-400">as</span> np<br/>
-                    <span className="text-blue-400">from</span> numpy.linalg <span className="text-blue-400">import</span> eig<br/><br/>
-                    
-                    <span className="text-gray-500"># Matricea de covarianță (date multidimensionale)</span><br/>
-                    A = np.array({JSON.stringify(eigenMatrix)})<br/><br/>
-                    
-                    <span className="text-gray-500"># Calcularea eigenvalori și eigenvectori</span><br/>
-                    eigenvalori, eigenvectori = eig(A)<br/><br/>
-                    
-                    print(<span className="text-yellow-300">f"Eigenvalori: </span>{'{'}eigenvalori{'}'}<span className="text-yellow-300">"</span>)<br/>
-                    print(<span className="text-yellow-300">f"Eigenvectori:\\n</span>{'{'}eigenvectori{'}'}<span className="text-yellow-300">"</span>)<br/><br/>
-                    
-                    <span className="text-gray-500"># Sortăm după importanță</span><br/>
-                    idx = eigenvalori.argsort()[::-<span className="text-purple-400">1</span>]<br/>
-                    eigenvalori_sortati = eigenvalori[idx]<br/>
-                    eigenvectori_sortati = eigenvectori[:, idx]<br/><br/>
-                    
-                    <span className="text-gray-500"># Primele componente principale</span><br/>
-                    componenta_1 = eigenvectori_sortati[:, <span className="text-purple-400">0</span>]<br/>
-                    componenta_2 = eigenvectori_sortati[:, <span className="text-purple-400">1</span>]<br/><br/>
-                    
-                    <span className="text-gray-500"># Folosit în:</span><br/>
-                    <span className="text-gray-500"># • Recunoașterea facială (eigenfaces)</span><br/>
-                    <span className="text-gray-500"># • Compresie imagini</span><br/>
-                    <span className="text-gray-500"># • Analiză big data</span><br/>
-                    <span className="text-gray-500"># • Machine Learning dimensionality reduction</span>
+                  <div className="rounded-lg overflow-hidden border border-gray-700">
+                    <SyntaxHighlighter
+                      language="python"
+                      style={vscDarkPlus}
+                      customStyle={{
+                        margin: 0,
+                        padding: '1.5rem',
+                        fontSize: '0.875rem',
+                        borderRadius: '0.5rem',
+                      }}
+                      showLineNumbers={false}
+                    >{`# Principal Component Analysis (PCA)
+import numpy as np
+from numpy.linalg import eig
+
+# Matricea de covarianță (date multidimensionale)
+A = np.array(${JSON.stringify(eigenMatrix)})
+
+# Calcularea eigenvalori și eigenvectori
+eigenvalori, eigenvectori = eig(A)
+
+print(f"Eigenvalori: {eigenvalori}")
+print(f"Eigenvectori:\\n{eigenvectori}")
+
+# Sortăm după importanță
+idx = eigenvalori.argsort()[::-1]
+eigenvalori_sortati = eigenvalori[idx]
+eigenvectori_sortati = eigenvectori[:, idx]
+
+# Primele componente principale
+componenta_1 = eigenvectori_sortati[:, 0]
+componenta_2 = eigenvectori_sortati[:, 1]
+
+# Folosit în:
+# • Recunoașterea facială (eigenfaces)
+# • Compresie imagini
+# • Analiză big data
+# • Machine Learning dimensionality reduction`}</SyntaxHighlighter>
                   </div>
                 </div>
               </div>

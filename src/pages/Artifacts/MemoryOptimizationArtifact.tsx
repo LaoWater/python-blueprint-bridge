@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Play, Pause, RotateCcw, Zap, Clock, HardDrive } from 'lucide-react';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 const MemoryOptimizationArtifact = () => {
   const navigate = useNavigate();
@@ -318,34 +320,54 @@ const MemoryOptimizationArtifact = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div>
               <h4 className="font-medium text-red-700 mb-2">🔥 Abordarea Naivă:</h4>
-              <div className="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm">
-                <span className="text-blue-400">def</span> proces_user_data(user_id):<br/>
-                &nbsp;&nbsp;<span className="text-gray-500"># Recalculează de fiecare dată</span><br/>
-                &nbsp;&nbsp;raw_data = database.get(user_id)<br/>
-                &nbsp;&nbsp;processed = heavy_calculation(raw_data)<br/>
-                &nbsp;&nbsp;formatted = format_data(processed)<br/>
-                &nbsp;&nbsp;<span className="text-blue-400">return</span> formatted<br/><br/>
-                
-                <span className="text-gray-500"># Pentru același user, recalculează tot!</span><br/>
-                result1 = proces_user_data(<span className="text-purple-400">123</span>)  <span className="text-gray-500"># 200ms</span><br/>
-                result2 = proces_user_data(<span className="text-purple-400">123</span>)  <span className="text-gray-500"># Din nou 200ms!</span>
+              <div className="rounded-lg overflow-hidden border border-gray-700">
+                <SyntaxHighlighter
+                  language="python"
+                  style={vscDarkPlus}
+                  customStyle={{
+                    margin: 0,
+                    padding: '1rem',
+                    fontSize: '0.875rem',
+                    borderRadius: '0.5rem',
+                  }}
+                  showLineNumbers={false}
+                >{`def proces_user_data(user_id):
+    # Recalculează de fiecare dată
+    raw_data = database.get(user_id)
+    processed = heavy_calculation(raw_data)
+    formatted = format_data(processed)
+    return formatted
+
+# Pentru același user, recalculează tot!
+result1 = proces_user_data(123)  # 200ms
+result2 = proces_user_data(123)  # Din nou 200ms!`}</SyntaxHighlighter>
               </div>
             </div>
             
             <div>
               <h4 className="font-medium text-green-700 mb-2">✅ Abordarea Optimizată:</h4>
-              <div className="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm">
-                <span className="text-gray-500"># Dicționar simplu pentru rezultate</span><br/>
-                rezultate_calculate = {'{}'}<br/><br/>
-                
-                <span className="text-blue-400">def</span> proces_user_data(user_id):<br/>
-                &nbsp;&nbsp;<span className="text-blue-400">if</span> user_id <span className="text-blue-400">in</span> rezultate_calculate:<br/>
-                &nbsp;&nbsp;&nbsp;&nbsp;<span className="text-blue-400">return</span> rezultate_calculate[user_id]<br/><br/>
-                
-                &nbsp;&nbsp;<span className="text-gray-500"># Doar dacă nu există în memorie</span><br/>
-                &nbsp;&nbsp;result = heavy_calculation(user_id)<br/>
-                &nbsp;&nbsp;rezultate_calculate[user_id] = result<br/>
-                &nbsp;&nbsp;<span className="text-blue-400">return</span> result
+              <div className="rounded-lg overflow-hidden border border-gray-700">
+                <SyntaxHighlighter
+                  language="python"
+                  style={vscDarkPlus}
+                  customStyle={{
+                    margin: 0,
+                    padding: '1rem',
+                    fontSize: '0.875rem',
+                    borderRadius: '0.5rem',
+                  }}
+                  showLineNumbers={false}
+                >{`# Dicționar simplu pentru rezultate
+rezultate_calculate = {}
+
+def proces_user_data(user_id):
+    if user_id in rezultate_calculate:
+        return rezultate_calculate[user_id]
+
+    # Doar dacă nu există în memorie
+    result = heavy_calculation(user_id)
+    rezultate_calculate[user_id] = result
+    return result`}</SyntaxHighlighter>
               </div>
             </div>
           </div>
@@ -428,11 +450,21 @@ const MemoryOptimizationArtifact = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div>
               <h4 className="font-medium text-red-700 mb-3">🔥 Fără Memorie (Ineficient):</h4>
-              <div className="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm mb-4">
-                <span className="text-blue-400">def</span> fibonacci(n):<br/>
-                &nbsp;&nbsp;<span className="text-blue-400">if</span> n &lt;= <span className="text-purple-400">1</span>:<br/>
-                &nbsp;&nbsp;&nbsp;&nbsp;<span className="text-blue-400">return</span> n<br/>
-                &nbsp;&nbsp;<span className="text-blue-400">return</span> fibonacci(n-<span className="text-purple-400">1</span>) + fibonacci(n-<span className="text-purple-400">2</span>)
+              <div className="rounded-lg overflow-hidden border border-gray-700 mb-4">
+                <SyntaxHighlighter
+                  language="python"
+                  style={vscDarkPlus}
+                  customStyle={{
+                    margin: 0,
+                    padding: '1rem',
+                    fontSize: '0.875rem',
+                    borderRadius: '0.5rem',
+                  }}
+                  showLineNumbers={false}
+                >{`def fibonacci(n):
+    if n <= 1:
+        return n
+    return fibonacci(n-1) + fibonacci(n-2)`}</SyntaxHighlighter>
               </div>
               <div className="text-sm text-red-700 bg-red-50 p-3 rounded">
                 <strong>Problemă:</strong> fibonacci(5) calculează fibonacci(3) de 2 ori,
@@ -442,20 +474,30 @@ const MemoryOptimizationArtifact = () => {
             
             <div>
               <h4 className="font-medium text-green-700 mb-3">✅ Cu Memorie (Efficient):</h4>
-              <div className="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm mb-4">
-                cache = {'{}'}<br/><br/>
-                
-                <span className="text-blue-400">def</span> fibonacci_cu_cache(n):<br/>
-                &nbsp;&nbsp;<span className="text-blue-400">if</span> n <span className="text-blue-400">in</span> cache:<br/>
-                &nbsp;&nbsp;&nbsp;&nbsp;<span className="text-blue-400">return</span> cache[n]<br/><br/>
-                
-                &nbsp;&nbsp;<span className="text-blue-400">if</span> n &lt;= <span className="text-purple-400">1</span>:<br/>
-                &nbsp;&nbsp;&nbsp;&nbsp;result = n<br/>
-                &nbsp;&nbsp;<span className="text-blue-400">else</span>:<br/>
-                &nbsp;&nbsp;&nbsp;&nbsp;result = fibonacci_cu_cache(n-<span className="text-purple-400">1</span>) + fibonacci_cu_cache(n-<span className="text-purple-400">2</span>)<br/><br/>
-                
-                &nbsp;&nbsp;cache[n] = result<br/>
-                &nbsp;&nbsp;<span className="text-blue-400">return</span> result
+              <div className="rounded-lg overflow-hidden border border-gray-700 mb-4">
+                <SyntaxHighlighter
+                  language="python"
+                  style={vscDarkPlus}
+                  customStyle={{
+                    margin: 0,
+                    padding: '1rem',
+                    fontSize: '0.875rem',
+                    borderRadius: '0.5rem',
+                  }}
+                  showLineNumbers={false}
+                >{`cache = {}
+
+def fibonacci_cu_cache(n):
+    if n in cache:
+        return cache[n]
+
+    if n <= 1:
+        result = n
+    else:
+        result = fibonacci_cu_cache(n-1) + fibonacci_cu_cache(n-2)
+
+    cache[n] = result
+    return result`}</SyntaxHighlighter>
               </div>
               <div className="text-sm text-green-700 bg-green-50 p-3 rounded">
                 <strong>Soluție:</strong> Fiecare calcul se face o singură dată și se păstrează în cache.
@@ -533,21 +575,31 @@ const MemoryOptimizationArtifact = () => {
           </div>
 
           <h3 className="text-xl font-semibold text-purple-700 mb-3">Soluția emergentă:</h3>
-          <div className="bg-gray-900 text-green-400 p-6 rounded-xl font-mono text-sm overflow-x-auto">
-            <span className="text-gray-500"># Implementarea primelor cache-uri simple</span><br/>
-            query_cache = {'{}'}  <span className="text-gray-500"># Dicționar pentru rezultate</span><br/><br/>
-            
-            <span className="text-blue-400">def</span> query_database(sql):<br/>
-            &nbsp;&nbsp;<span className="text-gray-500"># Verifică dacă avem rezultatul în cache</span><br/>
-            &nbsp;&nbsp;<span className="text-blue-400">if</span> sql <span className="text-blue-400">in</span> query_cache:<br/>
-            &nbsp;&nbsp;&nbsp;&nbsp;print(<span className="text-yellow-300">"🎯 Cache HIT! Returnez rezultatul instant"</span>)<br/>
-            &nbsp;&nbsp;&nbsp;&nbsp;<span className="text-blue-400">return</span> query_cache[sql]<br/><br/>
-            
-            &nbsp;&nbsp;<span className="text-gray-500"># Dacă nu există, execută query-ul</span><br/>
-            &nbsp;&nbsp;print(<span className="text-yellow-300">"💾 Cache MISS. Execut query-ul..."</span>)<br/>
-            &nbsp;&nbsp;result = database.execute(sql)  <span className="text-gray-500"># Operație scumpă</span><br/>
-            &nbsp;&nbsp;query_cache[sql] = result<br/>
-            &nbsp;&nbsp;<span className="text-blue-400">return</span> result
+          <div className="rounded-lg overflow-hidden border border-gray-700">
+            <SyntaxHighlighter
+              language="python"
+              style={vscDarkPlus}
+              customStyle={{
+                margin: 0,
+                padding: '1.5rem',
+                fontSize: '0.875rem',
+                borderRadius: '0.5rem',
+              }}
+              showLineNumbers={false}
+            >{`# Implementarea primelor cache-uri simple
+query_cache = {}  # Dicționar pentru rezultate
+
+def query_database(sql):
+    # Verifică dacă avem rezultatul în cache
+    if sql in query_cache:
+        print("🎯 Cache HIT! Returnez rezultatul instant")
+        return query_cache[sql]
+
+    # Dacă nu există, execută query-ul
+    print("💾 Cache MISS. Execut query-ul...")
+    result = database.execute(sql)  # Operație scumpă
+    query_cache[sql] = result
+    return result`}</SyntaxHighlighter>
           </div>
         </div>
 

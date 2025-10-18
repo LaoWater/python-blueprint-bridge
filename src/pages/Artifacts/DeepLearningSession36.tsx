@@ -1,17 +1,29 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Copy, Check } from 'lucide-react';
+import { Copy, Check, ChevronDown, ChevronUp, Code } from 'lucide-react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 const DeepLearningSession36 = () => {
   const [copiedSection, setCopiedSection] = useState<string | null>(null);
   const [activeChapter, setActiveChapter] = useState(0);
+  const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({
+    part1: false,
+    part2: false,
+    part3: false
+  });
 
   const copyToClipboard = (text: string, section: string) => {
     navigator.clipboard.writeText(text);
     setCopiedSection(section);
     setTimeout(() => setCopiedSection(null), 2000);
+  };
+
+  const toggleSection = (section: string) => {
+    setExpandedSections(prev => ({
+      ...prev,
+      [section]: !prev[section]
+    }));
   };
 
   const storyChapters = [
@@ -1076,38 +1088,51 @@ print("=" * 80)
             </div>
           </div>
 
-          <div className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-lg p-6 relative">
-            <Button
-              onClick={() => copyToClipboard(part1Content.code, 'part1')}
-              className="absolute top-4 right-4 bg-orange-600 hover:bg-orange-700"
-              size="sm"
-            >
-              {copiedSection === 'part1' ? (
-                <>
-                  <Check className="w-4 h-4 mr-2" />
-                  Copied!
-                </>
-              ) : (
-                <>
-                  <Copy className="w-4 h-4 mr-2" />
-                  Copy Code
-                </>
-              )}
-            </Button>
+          {/* Toggle Button */}
+          <Button
+            onClick={() => toggleSection('part1')}
+            className="w-full bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 text-white font-semibold py-3 px-6 rounded-lg mb-4 flex items-center justify-center gap-2 transition-all"
+          >
+            <Code className="w-5 h-5" />
+            {expandedSections.part1 ? 'Hide' : 'Show'} Python Code
+            {expandedSections.part1 ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+          </Button>
 
-            <SyntaxHighlighter
-              language="python"
-              style={vscDarkPlus}
-              customStyle={{
-                margin: 0,
-                padding: '1.5rem',
-                background: 'transparent',
-                fontSize: '0.9rem'
-              }}
-            >
-              {part1Content.code}
-            </SyntaxHighlighter>
-          </div>
+          {/* Collapsible Code Section */}
+          {expandedSections.part1 && (
+            <div className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-lg p-6 relative animate-fade-in">
+              <Button
+                onClick={() => copyToClipboard(part1Content.code, 'part1')}
+                className="absolute top-4 right-4 bg-orange-600 hover:bg-orange-700 z-10"
+                size="sm"
+              >
+                {copiedSection === 'part1' ? (
+                  <>
+                    <Check className="w-4 h-4 mr-2" />
+                    Copied!
+                  </>
+                ) : (
+                  <>
+                    <Copy className="w-4 h-4 mr-2" />
+                    Copy Code
+                  </>
+                )}
+              </Button>
+
+              <SyntaxHighlighter
+                language="python"
+                style={vscDarkPlus}
+                customStyle={{
+                  margin: 0,
+                  padding: '1.5rem',
+                  background: 'transparent',
+                  fontSize: '0.9rem'
+                }}
+              >
+                {part1Content.code}
+              </SyntaxHighlighter>
+            </div>
+          )}
 
           <div className="mt-6 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-6">
             <p className="text-lg font-semibold text-gray-800 mb-2">
@@ -1140,38 +1165,51 @@ print("=" * 80)
             </div>
           </div>
 
-          <div className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-lg p-6 relative">
-            <Button
-              onClick={() => copyToClipboard(part2Content.code, 'part2')}
-              className="absolute top-4 right-4 bg-orange-600 hover:bg-orange-700"
-              size="sm"
-            >
-              {copiedSection === 'part2' ? (
-                <>
-                  <Check className="w-4 h-4 mr-2" />
-                  Copied!
-                </>
-              ) : (
-                <>
-                  <Copy className="w-4 h-4 mr-2" />
-                  Copy Code
-                </>
-              )}
-            </Button>
+          {/* Toggle Button */}
+          <Button
+            onClick={() => toggleSection('part2')}
+            className="w-full bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-700 hover:to-pink-700 text-white font-semibold py-3 px-6 rounded-lg mb-4 flex items-center justify-center gap-2 transition-all"
+          >
+            <Code className="w-5 h-5" />
+            {expandedSections.part2 ? 'Hide' : 'Show'} Python Code
+            {expandedSections.part2 ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+          </Button>
 
-            <SyntaxHighlighter
-              language="python"
-              style={vscDarkPlus}
-              customStyle={{
-                margin: 0,
-                padding: '1.5rem',
-                background: 'transparent',
-                fontSize: '0.9rem'
-              }}
-            >
-              {part2Content.code}
-            </SyntaxHighlighter>
-          </div>
+          {/* Collapsible Code Section */}
+          {expandedSections.part2 && (
+            <div className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-lg p-6 relative animate-fade-in">
+              <Button
+                onClick={() => copyToClipboard(part2Content.code, 'part2')}
+                className="absolute top-4 right-4 bg-orange-600 hover:bg-orange-700 z-10"
+                size="sm"
+              >
+                {copiedSection === 'part2' ? (
+                  <>
+                    <Check className="w-4 h-4 mr-2" />
+                    Copied!
+                  </>
+                ) : (
+                  <>
+                    <Copy className="w-4 h-4 mr-2" />
+                    Copy Code
+                  </>
+                )}
+              </Button>
+
+              <SyntaxHighlighter
+                language="python"
+                style={vscDarkPlus}
+                customStyle={{
+                  margin: 0,
+                  padding: '1.5rem',
+                  background: 'transparent',
+                  fontSize: '0.9rem'
+                }}
+              >
+                {part2Content.code}
+              </SyntaxHighlighter>
+            </div>
+          )}
 
           <div className="mt-6 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg p-6">
             <p className="text-lg font-semibold text-gray-800 mb-2">
@@ -1204,38 +1242,51 @@ print("=" * 80)
             </div>
           </div>
 
-          <div className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-lg p-6 relative">
-            <Button
-              onClick={() => copyToClipboard(part3Content.code, 'part3')}
-              className="absolute top-4 right-4 bg-orange-600 hover:bg-orange-700"
-              size="sm"
-            >
-              {copiedSection === 'part3' ? (
-                <>
-                  <Check className="w-4 h-4 mr-2" />
-                  Copied!
-                </>
-              ) : (
-                <>
-                  <Copy className="w-4 h-4 mr-2" />
-                  Copy Code
-                </>
-              )}
-            </Button>
+          {/* Toggle Button */}
+          <Button
+            onClick={() => toggleSection('part3')}
+            className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-semibold py-3 px-6 rounded-lg mb-4 flex items-center justify-center gap-2 transition-all"
+          >
+            <Code className="w-5 h-5" />
+            {expandedSections.part3 ? 'Hide' : 'Show'} Python Code
+            {expandedSections.part3 ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+          </Button>
 
-            <SyntaxHighlighter
-              language="python"
-              style={vscDarkPlus}
-              customStyle={{
-                margin: 0,
-                padding: '1.5rem',
-                background: 'transparent',
-                fontSize: '0.9rem'
-              }}
-            >
-              {part3Content.code}
-            </SyntaxHighlighter>
-          </div>
+          {/* Collapsible Code Section */}
+          {expandedSections.part3 && (
+            <div className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-lg p-6 relative animate-fade-in">
+              <Button
+                onClick={() => copyToClipboard(part3Content.code, 'part3')}
+                className="absolute top-4 right-4 bg-orange-600 hover:bg-orange-700 z-10"
+                size="sm"
+              >
+                {copiedSection === 'part3' ? (
+                  <>
+                    <Check className="w-4 h-4 mr-2" />
+                    Copied!
+                  </>
+                ) : (
+                  <>
+                    <Copy className="w-4 h-4 mr-2" />
+                    Copy Code
+                  </>
+                )}
+              </Button>
+
+              <SyntaxHighlighter
+                language="python"
+                style={vscDarkPlus}
+                customStyle={{
+                  margin: 0,
+                  padding: '1.5rem',
+                  background: 'transparent',
+                  fontSize: '0.9rem'
+                }}
+              >
+                {part3Content.code}
+              </SyntaxHighlighter>
+            </div>
+          )}
 
           <div className="mt-6 bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg p-6">
             <p className="text-lg font-semibold text-gray-800 mb-2">
