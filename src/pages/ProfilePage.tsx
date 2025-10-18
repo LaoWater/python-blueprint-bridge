@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { toast } from '@/components/ui/use-toast';
-import { Loader2, User, Mail, Shield, Save, LogOut, Sparkles, CheckCircle2 } from 'lucide-react';
+import { Loader2, User, Mail, Shield, Save, LogOut, Sparkles, CheckCircle2, Lock, Eye, EyeOff } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 
 const ProfilePage = () => {
@@ -14,22 +14,27 @@ const ProfilePage = () => {
   const [username, setUsername] = useState(profile?.username || '');
   const [loading, setLoading] = useState(false);
   const [updating, setUpdating] = useState(false);
+  const [newPassword, setNewPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [updatingPassword, setUpdatingPassword] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
     if (!user) {
       navigate('/auth');
+      return;
     }
     
     if (profile) {
       setUsername(profile.username || '');
+      setLoading(false);
     }
   }, [user, profile, navigate]);
 
-  if (!user || !profile) {
+  if (loading || !user || !profile) {
     return (
       <div className="flex items-center justify-center min-h-[calc(100vh-4rem)]">
-        <Loader2 className="h-8 w-8 animate-spin" />
+        <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
       </div>
     );
   }
@@ -73,6 +78,42 @@ const ProfilePage = () => {
     setLoading(true);
     await signOut();
     navigate('/');
+  };
+
+  const updatePassword = async () => {
+    if (!newPassword || newPassword.length < 6) {
+      toast({
+        title: "Invalid password",
+        description: "Password must be at least 6 characters long",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      setUpdatingPassword(true);
+
+      const { error } = await supabase.auth.updateUser({
+        password: newPassword
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: "Password updated",
+        description: "Your password has been successfully changed",
+      });
+
+      setNewPassword('');
+    } catch (error: any) {
+      toast({
+        title: "Update failed",
+        description: error.message || "Failed to update password",
+        variant: "destructive",
+      });
+    } finally {
+      setUpdatingPassword(false);
+    }
   };
 
   return (
@@ -175,6 +216,51 @@ const ProfilePage = () => {
                   You have elevated privileges to manage content
                 </p>
               )}
+            </div>
+
+            {/* Password Change Field */}
+            <div className="space-y-3 p-4 rounded-lg bg-gradient-to-br from-purple-500/5 to-pink-500/5 backdrop-blur-sm border border-purple-500/20">
+              <label className="flex items-center gap-2 text-sm font-semibold text-foreground">
+                <Lock className="h-4 w-4 text-purple-500" />
+                Change Password
+              </label>
+              <div className="relative group">
+                <Input
+                  type={showPassword ? "text" : "password"}
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  disabled={updatingPassword}
+                  placeholder="Enter new password (min 6 characters)"
+                  className="h-11 text-base pr-12 transition-all focus:ring-2 focus:ring-purple-500/20"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </button>
+              </div>
+              <Button
+                onClick={updatePassword}
+                disabled={updatingPassword || !newPassword || newPassword.length < 6}
+                className="w-full h-10 text-sm font-semibold bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 transition-all duration-300 shadow-lg hover:shadow-xl"
+              >
+                {updatingPassword ? (
+                  <span className="flex items-center gap-2">
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    Updating password...
+                  </span>
+                ) : (
+                  <span className="flex items-center gap-2">
+                    <Lock className="h-4 w-4" />
+                    Update Password
+                  </span>
+                )}
+              </Button>
+              <p className="text-xs text-muted-foreground">
+                Password will be changed immediately without email confirmation
+              </p>
             </div>
           </CardContent>
 

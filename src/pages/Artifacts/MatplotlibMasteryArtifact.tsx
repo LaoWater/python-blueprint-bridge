@@ -4,7 +4,9 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ArrowLeft, Play, Pause, RotateCcw, BarChart3, LineChart, PieChart, TrendingUp, Eye, Palette, Target, Lightbulb, Code, Copy, Download, Zap, Activity, Calendar, DollarSign, Briefcase } from 'lucide-react';
+import { ArrowLeft, Play, Pause, RotateCcw, BarChart3, LineChart, PieChart, TrendingUp, Eye, Palette, Target, Lightbulb, Code, Copy, Download, Zap, Activity, Calendar, DollarSign, Briefcase, Check } from 'lucide-react';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 const MatplotlibMasteryArtifact = () => {
   const navigate = useNavigate();
@@ -498,18 +500,37 @@ plt.show()`
                         variant="ghost"
                         size="sm"
                         onClick={() => copyCode(concept.code)}
-                        className="absolute top-2 right-2 z-10"
+                        className="absolute top-2 right-2 z-10 bg-gray-800/80 hover:bg-gray-700/80"
                       >
                         {copiedCode === concept.code ? (
-                          <span className="text-green-600 text-xs">Copied!</span>
+                          <span className="text-green-400 text-xs flex items-center gap-1">
+                            <Check className="h-4 w-4" /> Copied!
+                          </span>
                         ) : (
-                          <Copy className="w-4 h-4" />
+                          <Copy className="w-4 h-4 text-gray-300" />
                         )}
                       </Button>
-                      <div className="bg-gray-900 rounded-lg p-4 overflow-x-auto">
-                        <pre className="text-green-400 text-sm">
-                          <code>{concept.code}</code>
-                        </pre>
+                      <div className="rounded-lg overflow-hidden border border-gray-700">
+                        <SyntaxHighlighter
+                          language="python"
+                          style={vscDarkPlus}
+                          customStyle={{
+                            margin: 0,
+                            padding: '1.5rem',
+                            fontSize: '0.875rem',
+                            maxHeight: '32rem',
+                            borderRadius: '0.5rem',
+                          }}
+                          showLineNumbers={true}
+                          lineNumberStyle={{
+                            minWidth: '3em',
+                            paddingRight: '1em',
+                            color: '#6e7681',
+                            userSelect: 'none',
+                          }}
+                        >
+                          {concept.code}
+                        </SyntaxHighlighter>
                       </div>
                     </div>
                     
@@ -714,18 +735,37 @@ plt.show()`
                           variant="ghost"
                           size="sm"
                           onClick={() => copyCode(technique.code)}
-                          className="absolute top-2 right-2 z-10"
+                          className="absolute top-2 right-2 z-10 bg-gray-800/80 hover:bg-gray-700/80"
                         >
                           {copiedCode === technique.code ? (
-                            <span className="text-green-600 text-xs">Copied!</span>
+                            <span className="text-green-400 text-xs flex items-center gap-1">
+                              <Check className="h-4 w-4" /> Copied!
+                            </span>
                           ) : (
-                            <Copy className="w-4 h-4" />
+                            <Copy className="w-4 h-4 text-gray-300" />
                           )}
                         </Button>
-                        <div className="bg-gray-900 rounded-lg p-4 overflow-x-auto">
-                          <pre className="text-green-400 text-sm">
-                            <code>{technique.code}</code>
-                          </pre>
+                        <div className="rounded-lg overflow-hidden border border-gray-700">
+                          <SyntaxHighlighter
+                            language="python"
+                            style={vscDarkPlus}
+                            customStyle={{
+                              margin: 0,
+                              padding: '1.5rem',
+                              fontSize: '0.875rem',
+                              maxHeight: '32rem',
+                              borderRadius: '0.5rem',
+                            }}
+                            showLineNumbers={true}
+                            lineNumberStyle={{
+                              minWidth: '3em',
+                              paddingRight: '1em',
+                              color: '#6e7681',
+                              userSelect: 'none',
+                            }}
+                          >
+                            {technique.code}
+                          </SyntaxHighlighter>
                         </div>
                       </div>
                     </TabsContent>

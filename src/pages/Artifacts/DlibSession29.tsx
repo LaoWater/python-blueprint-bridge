@@ -5,6 +5,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ArrowLeft, Play, Pause, RotateCcw, User, Lock, Scan, Eye, Target, Lightbulb, Copy, Heart, DollarSign, Layers, Shield, Fingerprint, Brain } from 'lucide-react';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 const DlibSession29 = () => {
   const navigate = useNavigate();
@@ -1535,18 +1537,37 @@ print("\\n🎯 You're mastering the INTERFACE between humans and machines!")`
                           variant="ghost"
                           size="sm"
                           onClick={() => copyCode(part.code)}
-                          className="absolute top-2 right-2 z-10"
+                          className="absolute top-2 right-2 z-10 bg-gray-800/80 hover:bg-gray-700/80"
                         >
                           {copiedCode === part.code ? (
-                            <span className="text-green-600 text-xs">Copied!</span>
+                            <span className="text-green-400 text-xs flex items-center gap-1">
+                              ✓ Copied!
+                            </span>
                           ) : (
-                            <Copy className="w-4 h-4" />
+                            <Copy className="w-4 h-4 text-gray-300" />
                           )}
                         </Button>
-                        <div className="bg-gray-900 rounded-lg p-4 overflow-x-auto max-h-96 overflow-y-auto">
-                          <pre className="text-green-400 text-sm">
-                            <code>{part.code}</code>
-                          </pre>
+                        <div className="rounded-lg overflow-hidden border border-gray-700">
+                          <SyntaxHighlighter
+                            language="python"
+                            style={vscDarkPlus}
+                            customStyle={{
+                              margin: 0,
+                              padding: '1.5rem',
+                              fontSize: '0.875rem',
+                              maxHeight: '32rem',
+                              borderRadius: '0.5rem',
+                            }}
+                            showLineNumbers={true}
+                            lineNumberStyle={{
+                              minWidth: '3em',
+                              paddingRight: '1em',
+                              color: '#6e7681',
+                              userSelect: 'none',
+                            }}
+                          >
+                            {part.code}
+                          </SyntaxHighlighter>
                         </div>
                       </div>
                     </TabsContent>
