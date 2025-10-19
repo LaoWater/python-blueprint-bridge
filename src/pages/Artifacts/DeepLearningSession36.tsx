@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Copy, Check, ChevronDown, ChevronUp, Code } from 'lucide-react';
+import { Copy, Check, ChevronDown, ChevronUp, Code, ArrowLeft } from 'lucide-react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
@@ -1004,6 +1004,16 @@ print("=" * 80)
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-red-50 to-orange-50 py-8 px-4">
       <div className="max-w-6xl mx-auto">
+        {/* Top Navigation Button */}
+        <div className="mb-8">
+          <Button
+            onClick={() => window.location.href = '/machine-learning'}
+            className="bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white px-6 py-3 gap-2"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Back to Machine Learning Journey
+          </Button>
+        </div>
 
         {/* Header */}
         <div className="mb-8 text-center">
