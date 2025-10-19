@@ -485,7 +485,7 @@ const OpenCVConvolutionLab = () => {
 
       <div className="p-6 bg-white dark:bg-gradient-to-r dark:from-blue-900 dark:to-purple-900 rounded-xl border-2 border-indigo-200 dark:border-blue-700 shadow-xl">
         <h3 className="font-bold text-2xl mb-4 text-indigo-700 dark:text-yellow-300">Current Kernel Matrix</h3>
-        <pre className="font-mono text-lg bg-gray-900 dark:bg-black p-4 rounded mb-4 text-green-400 whitespace-pre">
+        <pre className="font-mono text-lg bg-[#1e1e1e] p-4 rounded mb-4 text-[#d4d4d4] whitespace-pre border border-gray-700">
           {getKernelVisualization()}
         </pre>
 

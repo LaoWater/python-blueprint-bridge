@@ -72,25 +72,26 @@ export function CodeBlockR({
   };
 
   return (
-    <div ref={ref} className="relative group" style={{ fontSize: '1rem', lineHeight: 1.5 }}>
+    <div ref={ref} className="relative group">
       <SyntaxHighlighter
         language={language}
         style={isDark ? vscDarkPlus : prism}
         customStyle={{
           borderRadius: '0.5rem',
-          padding: '1rem',
+          padding: '1.5rem',
           margin: 0,
-          background: 'transparent',
+          fontSize: '0.875rem',
           overflowX: 'auto',
           transition: 'background-color 0.3s ease',
         }}
         codeTagProps={{
-          style: { fontSize: '1rem', lineHeight: 1.5 },
+          style: { fontSize: '0.875rem', lineHeight: 1.5 },
         }}
         lineNumberStyle={{
           color: isDark ? '#9ca3af' : '#6b7280',
           paddingRight: '1em',
         }}
+        showLineNumbers={false}
       >
         {children}
       </SyntaxHighlighter>

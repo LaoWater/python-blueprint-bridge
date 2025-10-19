@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Play, Pause, RotateCcw, Zap, Calculator, Brain, Target } from 'lucide-react';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { CodeBlockR } from '@/components/CodeBlockR';
 
 const NumPyArtifact = () => {
   const navigate = useNavigate();
@@ -301,17 +300,8 @@ const NumPyArtifact = () => {
 
           <h3 className="text-xl font-semibold text-red-700 mb-3">Codul din spate:</h3>
           <div className="rounded-lg overflow-hidden border border-gray-700">
-            <SyntaxHighlighter
-              language="python"
-              style={vscDarkPlus}
-              customStyle={{
-                margin: 0,
-                padding: '1.5rem',
-                fontSize: '0.875rem',
-                borderRadius: '0.5rem',
-              }}
-              showLineNumbers={false}
-            >{`# Python Lists - slow and memory hungry
+            <CodeBlockR language="python">
+{`# Python Lists - slow and memory hungry
 stars_python = []
 for i in range(${dataSize}):
     distance = (i**2 + (i*2)**2)**0.5
@@ -321,7 +311,8 @@ for i in range(${dataSize}):
 import numpy as np
 positions = np.arange(${dataSize})
 distances = np.sqrt(positions**2 + (positions*2)**2)
-# One line does what ${dataSize} steps did!`}</SyntaxHighlighter>
+# One line does what ${dataSize} steps did!`}
+            </CodeBlockR>
           </div>
         </div>
 
@@ -380,19 +371,11 @@ distances = np.sqrt(positions**2 + (positions*2)**2)
                     </div>
                   </div>
                   <div className="rounded-lg overflow-hidden border border-gray-700">
-                    <SyntaxHighlighter
-                      language="python"
-                      style={vscDarkPlus}
-                      customStyle={{
-                        margin: 0,
-                        padding: '1rem',
-                        fontSize: '0.875rem',
-                        borderRadius: '0.5rem',
-                      }}
-                      showLineNumbers={false}
-                    >{`heartbeat = np.array([${arrayData['1D'].join(', ')}])
+                    <CodeBlockR language="python">
+{`heartbeat = np.array([${arrayData['1D'].join(', ')}])
 print(f"Forma: {heartbeat.shape}")  # (${arrayData['1D'].length},)
-print(f"Puls mediu: {np.mean(heartbeat)} BPM")`}</SyntaxHighlighter>
+print(f"Puls mediu: {np.mean(heartbeat)} BPM")`}
+                    </CodeBlockR>
                   </div>
                 </div>
               )}
@@ -417,23 +400,15 @@ print(f"Puls mediu: {np.mean(heartbeat)} BPM")`}</SyntaxHighlighter>
                     </div>
                   </div>
                   <div className="rounded-lg overflow-hidden border border-gray-700">
-                    <SyntaxHighlighter
-                      language="python"
-                      style={vscDarkPlus}
-                      customStyle={{
-                        margin: 0,
-                        padding: '1rem',
-                        fontSize: '0.875rem',
-                        borderRadius: '0.5rem',
-                      }}
-                      showLineNumbers={false}
-                    >{`room_temp = np.array([
+                    <CodeBlockR language="python">
+{`room_temp = np.array([
     [22.5, 23.1],
     [22.7, 24.2],
     [22.4, 23.8]
 ])
 print(f"Forma: {room_temp.shape}")  # (3, 2)
-print(f"Temperatura medie: {np.mean(room_temp)}°C")`}</SyntaxHighlighter>
+print(f"Temperatura medie: {np.mean(room_temp)}°C")`}
+                    </CodeBlockR>
                   </div>
                 </div>
               )}
@@ -454,20 +429,12 @@ print(f"Temperatura medie: {np.mean(room_temp)}°C")`}</SyntaxHighlighter>
                     </div>
                   </div>
                   <div className="rounded-lg overflow-hidden border border-gray-700">
-                    <SyntaxHighlighter
-                      language="python"
-                      style={vscDarkPlus}
-                      customStyle={{
-                        margin: 0,
-                        padding: '1rem',
-                        fontSize: '0.875rem',
-                        borderRadius: '0.5rem',
-                      }}
-                      showLineNumbers={false}
-                    >{`rgb_image = np.random.randint(0, 256, (64, 64, 3))
+                    <CodeBlockR language="python">
+{`rgb_image = np.random.randint(0, 256, (64, 64, 3))
 print(f"Forma: {rgb_image.shape}")  # (64, 64, 3)
 red_channel = rgb_image[:, :, 0]  # Extrage canalul roșu
-print(f"Valoare pixel (0,0): R={rgb_image[0,0,0]} G={rgb_image[0,0,1]} B={rgb_image[0,0,2]}")`}</SyntaxHighlighter>
+print(f"Valoare pixel (0,0): R={rgb_image[0,0,0]} G={rgb_image[0,0,1]} B={rgb_image[0,0,2]}")`}
+                    </CodeBlockR>
                   </div>
                 </div>
               )}
@@ -488,20 +455,12 @@ print(f"Valoare pixel (0,0): R={rgb_image[0,0,0]} G={rgb_image[0,0,1]} B={rgb_im
                     </div>
                   </div>
                   <div className="rounded-lg overflow-hidden border border-gray-700">
-                    <SyntaxHighlighter
-                      language="python"
-                      style={vscDarkPlus}
-                      customStyle={{
-                        margin: 0,
-                        padding: '1rem',
-                        fontSize: '0.875rem',
-                        borderRadius: '0.5rem',
-                      }}
-                      showLineNumbers={false}
-                    >{`batch_images = np.random.rand(32, 64, 64, 3)
+                    <CodeBlockR language="python">
+{`batch_images = np.random.rand(32, 64, 64, 3)
 print(f"Forma batch: {batch_images.shape}")  # (32, 64, 64, 3)
 print(f"Prima imagine: {batch_images[0].shape}")  # (64, 64, 3)
-print(f"Total parametri: {batch_images.size:,} float-uri")  # 393,216!`}</SyntaxHighlighter>
+print(f"Total parametri: {batch_images.size:,} float-uri")  # 393,216!`}
+                    </CodeBlockR>
                   </div>
                 </div>
               )}
@@ -588,17 +547,8 @@ print(f"Total parametri: {batch_images.size:,} float-uri")  # 393,216!`}</Syntax
 
           <h3 className="text-xl font-semibold text-green-700 mb-3">Codul din spate:</h3>
           <div className="rounded-lg overflow-hidden border border-gray-700">
-            <SyntaxHighlighter
-              language="python"
-              style={vscDarkPlus}
-              customStyle={{
-                margin: 0,
-                padding: '1.5rem',
-                fontSize: '0.875rem',
-                borderRadius: '0.5rem',
-              }}
-              showLineNumbers={false}
-            >{`# Batch-ul de imagini pentru AI
+            <CodeBlockR language="python">
+{`# Batch-ul de imagini pentru AI
 batch = np.random.rand(32, 64, 64, 3)
 mean = np.array([0.485, 0.456, 0.406])
 std = np.array([0.229, 0.224, 0.225])
@@ -612,7 +562,8 @@ normalized = (batch - mean) / std
 #     for x in range(64):       # Pentru fiecare pixel
 #       for c in range(3):      # Pentru fiecare canal RGB
 #         normalized[i,y,x,c] = (batch[i,y,x,c] - mean[c]) / std[c]
-# TOTAL: 393,216 operații individuale!`}</SyntaxHighlighter>
+# TOTAL: 393,216 operații individuale!`}
+            </CodeBlockR>
           </div>
         </div>
 
@@ -685,19 +636,10 @@ normalized = (batch - mean) / std
                       </div>
                     )}
                   </div>
-                  
+
                   <div className="rounded-lg overflow-hidden border border-gray-700">
-                    <SyntaxHighlighter
-                      language="python"
-                      style={vscDarkPlus}
-                      customStyle={{
-                        margin: 0,
-                        padding: '1rem',
-                        fontSize: '0.875rem',
-                        borderRadius: '0.5rem',
-                      }}
-                      showLineNumbers={false}
-                    >{`# Centrul de masă galactic
+                    <CodeBlockR language="python">
+{`# Centrul de masă galactic
 star_positions = np.random.normal(0, 25, (100000, 3))
 star_masses = np.random.exponential(1, 100000)
 
@@ -708,7 +650,8 @@ center_of_mass = np.sum(
     axis=0
 ) / total_mass
 
-print(f"Centrul galaxiei: {center_of_mass}")`}</SyntaxHighlighter>
+print(f"Centrul galaxiei: {center_of_mass}")`}
+                    </CodeBlockR>
                   </div>
                 </div>
               </div>
@@ -743,19 +686,10 @@ print(f"Centrul galaxiei: {center_of_mass}")`}</SyntaxHighlighter>
                       <strong>Rezultat FFT:</strong> {fftResult}
                     </div>
                   </div>
-                  
+
                   <div className="rounded-lg overflow-hidden border border-gray-700">
-                    <SyntaxHighlighter
-                      language="python"
-                      style={vscDarkPlus}
-                      customStyle={{
-                        margin: 0,
-                        padding: '1rem',
-                        fontSize: '0.875rem',
-                        borderRadius: '0.5rem',
-                      }}
-                      showLineNumbers={false}
-                    >{`# Analiza EKG cu FFT
+                    <CodeBlockR language="python">
+{`# Analiza EKG cu FFT
 time = np.linspace(0, 10, 1000)
 heart_rate = 75
 
@@ -770,7 +704,8 @@ frequencies = np.fft.fftfreq(len(ekg), 1/100)
 
 # Detectarea frecvenței dominante
 dominant_freq = frequencies[np.argmax(np.abs(fft_result))]
-print(f"Frecvență cardiacă: {dominant_freq * 60} BPM")`}</SyntaxHighlighter>
+print(f"Frecvență cardiacă: {dominant_freq * 60} BPM")`}
+                    </CodeBlockR>
                   </div>
                 </div>
               </div>
@@ -799,19 +734,10 @@ print(f"Frecvență cardiacă: {dominant_freq * 60} BPM")`}</SyntaxHighlighter>
                     </div>
                   </div>
                 </div>
-                
+
                 <div className="rounded-lg overflow-hidden border border-gray-700">
-                  <SyntaxHighlighter
-                    language="python"
-                    style={vscDarkPlus}
-                    customStyle={{
-                      margin: 0,
-                      padding: '1rem',
-                      fontSize: '0.875rem',
-                      borderRadius: '0.5rem',
-                    }}
-                    showLineNumbers={false}
-                  >{`# Optimizare portofoliu Markowitz
+                  <CodeBlockR language="python">
+{`# Optimizare portofoliu Markowitz
 returns = np.random.normal(0.001, 0.02, (252, 50))
 correlation_matrix = np.corrcoef(returns.T)
 
@@ -823,7 +749,8 @@ volatility = np.std(returns, axis=0) * np.sqrt(252)
 risk_free_rate = 0.03
 sharpe_ratios = (mean_returns - risk_free_rate) / volatility
 
-print(f"Cel mai bun Sharpe ratio: {np.max(sharpe_ratios):.3f}")`}</SyntaxHighlighter>
+print(f"Cel mai bun Sharpe ratio: {np.max(sharpe_ratios):.3f}")`}
+                  </CodeBlockR>
                 </div>
               </div>
             )}
@@ -844,19 +771,10 @@ print(f"Cel mai bun Sharpe ratio: {np.max(sharpe_ratios):.3f}")`}</SyntaxHighlig
                     </div>
                   </div>
                 </div>
-                
+
                 <div className="rounded-lg overflow-hidden border border-gray-700">
-                  <SyntaxHighlighter
-                    language="python"
-                    style={vscDarkPlus}
-                    customStyle={{
-                      margin: 0,
-                      padding: '1rem',
-                      fontSize: '0.875rem',
-                      borderRadius: '0.5rem',
-                    }}
-                    showLineNumbers={false}
-                  >{`# Rețea neuronală simplă cu NumPy
+                  <CodeBlockR language="python">
+{`# Rețea neuronală simplă cu NumPy
 class SimpleNeuralNetwork:
     def __init__(self):
         # Matrici de greutăți
@@ -870,7 +788,8 @@ class SimpleNeuralNetwork:
         self.z2 = np.dot(self.a1, self.W2)
         return np.softmax(self.z2)
 
-# TensorFlow, PyTorch fac exact asta, dar optimizat!`}</SyntaxHighlighter>
+# TensorFlow, PyTorch fac exact asta, dar optimizat!`}
+                  </CodeBlockR>
                 </div>
               </div>
             )}
