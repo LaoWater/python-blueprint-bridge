@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Play, Pause, RotateCcw, User, Calculator, Coffee, FileText, Users, Zap } from 'lucide-react';
+import { ArrowLeft, Play, User, Calculator, Coffee, FileText, Users, Zap } from 'lucide-react';
+import { CodeBlockR } from '@/components/CodeBlockR';
 
 const FunctionsArtifact = () => {
   const navigate = useNavigate();
@@ -278,9 +279,8 @@ const FunctionsArtifact = () => {
               
               <div>
                 <h4 className="text-lg font-semibold mb-4 text-gray-700">🐍 Codul Python</h4>
-                <div className="bg-gray-900 rounded-xl p-6 text-sm">
-                  <pre className="text-green-400">
-{`def salut(nume):
+                <div className="rounded-xl overflow-hidden border border-gray-700">
+                  <CodeBlockR language="python">{`def salut(nume):
     """
     Funcție simplă care salută o persoană
     Parametru: nume (string)
@@ -293,7 +293,7 @@ const FunctionsArtifact = () => {
 salut("${greetingName || 'Ana'}")
 
 # Rezultat: ${greetingOutput || 'Salut, Ana! 👋 Bun venit în lumea funcțiilor!'}`}
-                  </pre>
+                  </CodeBlockR>
                 </div>
                 
                 <div className="mt-4 bg-blue-50 rounded-lg p-4">
@@ -371,9 +371,8 @@ salut("${greetingName || 'Ana'}")
               
               <div>
                 <h4 className="text-lg font-semibold mb-4 text-gray-700">🐍 Codul Python</h4>
-                <div className="bg-gray-900 rounded-xl p-6 text-sm">
-                  <pre className="text-green-400">
-{`def comanda_cafea(tip_cafea, nivel_zahar):
+                <div className="rounded-xl overflow-hidden border border-gray-700">
+                  <CodeBlockR language="python">{`def comanda_cafea(tip_cafea, nivel_zahar):
     """
     Funcție cu parametri pentru comenzi personalizate
     Parametri:
@@ -391,7 +390,7 @@ print(rezultat)
 # Același cod, rezultate diferite:
 # comanda_cafea("Espresso", "fără zahăr")
 # comanda_cafea("Cappuccino", "cu zahăr")`}
-                  </pre>
+                  </CodeBlockR>
                 </div>
                 
                 <div className="mt-4 bg-amber-50 rounded-lg p-4">
@@ -477,9 +476,8 @@ print(rezultat)
               
               <div>
                 <h4 className="text-lg font-semibold mb-4 text-gray-700">🐍 Codul Python</h4>
-                <div className="bg-gray-900 rounded-xl p-6 text-sm">
-                  <pre className="text-green-400">
-{`def calculeaza_bonus(salariu, experienta):
+                <div className="rounded-xl overflow-hidden border border-gray-700">
+                  <CodeBlockR language="python">{`def calculeaza_bonus(salariu, experienta):
     """
     Calculează bonusul pe baza experienței
     Returnează: valoarea bonusului
@@ -505,7 +503,7 @@ bonus = calculeaza_bonus(${salary}, ${experience})
 total = salariu_total(${salary}, ${experience})
 print(f"Bonus: {bonus} RON")
 print(f"Total: {total} RON")`}
-                  </pre>
+                  </CodeBlockR>
                 </div>
                 
                 <div className="mt-4 bg-green-50 rounded-lg p-4">
@@ -628,9 +626,8 @@ print(f"Total: {total} RON")`}
                 
                 <div>
                   <h4 className="text-lg font-semibold mb-4 text-gray-700">🐍 Codul Python</h4>
-                  <div className="bg-gray-900 rounded-xl p-6 text-sm">
-                    <pre className="text-green-400">
-{`# Sistem de management angajați
+                <div className="rounded-xl overflow-hidden border border-gray-700">
+                  <CodeBlockR language="python">{`# Sistem de management angajați
 
 def adauga_angajat(lista_angajati, nume, pozitie, salariu, exp):
     """Adaugă un angajat nou în sistem"""
@@ -663,8 +660,8 @@ def afiseaza_raport(angajati):
     print(f"📊 Salariu mediu: {mediu:,.0f} RON")
 
 # Cooperarea funcțiilor pentru sistem complet!`}
-                    </pre>
-                  </div>
+                  </CodeBlockR>
+                </div>
                   
                   <div className="mt-4 bg-purple-50 rounded-lg p-4">
                     <h5 className="font-semibold text-purple-800 mb-2">🏗️ Arhitectură Funcțională</h5>
@@ -750,9 +747,8 @@ def afiseaza_raport(angajati):
               
               <div>
                 <h4 className="text-lg font-semibold mb-4 text-gray-700">🐍 Codul Python</h4>
-                <div className="bg-gray-900 rounded-xl p-6 text-sm">
-                  <pre className="text-green-400">
-{`# Lista produselor
+                <div className="rounded-xl overflow-hidden border border-gray-700">
+                  <CodeBlockR language="python">{`# Lista produselor
 produse = [
     {'nume': 'Laptop', 'pret': 3500, 'rating': 4.5},
     {'nume': 'Mouse', 'pret': 150, 'rating': 4.8},
@@ -781,7 +777,7 @@ scumpe = list(filter(lambda x: x['pret'] > 500, produse))
 nume_produse = list(map(lambda x: x['nume'], produse))
 
 print("Sortate după ${sortBy} (${sortDirection}):")`}
-                  </pre>
+                  </CodeBlockR>
                 </div>
                 
                 <div className="mt-4 bg-yellow-50 rounded-lg p-4">
@@ -866,9 +862,8 @@ print("Sortate după ${sortBy} (${sortDirection}):")`}
               
               <div>
                 <h4 className="text-lg font-semibold mb-4 text-gray-700">🐍 Codul Python</h4>
-                <div className="bg-gray-900 rounded-xl p-6 text-sm">
-                  <pre className="text-green-400">
-{`# Funcții componente care cooperează
+                <div className="rounded-xl overflow-hidden border border-gray-700">
+                  <CodeBlockR language="python">{`# Funcții componente care cooperează
 
 def calculeaza_media(note):
     """
@@ -921,7 +916,7 @@ student = proceseaza_student(
     ${JSON.stringify(studentData[selectedStudent].grades)},
     "${studentData[selectedStudent].subject}"
 )`}
-                  </pre>
+                  </CodeBlockR>
                 </div>
                 
                 <div className="mt-4 bg-teal-50 rounded-lg p-4">

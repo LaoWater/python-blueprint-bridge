@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Play, Pause, RotateCcw, Crown, Factory, Building2, Zap, Settings, Pizza, Car, Book, FileText } from 'lucide-react';
+import { ArrowLeft, Play, RotateCcw, Crown, Factory, Building2, Zap, Pizza, Book, FileText } from 'lucide-react';
+import { CodeBlockR } from '@/components/CodeBlockR';
 
 interface LogEntry {
   id: string;
@@ -463,9 +464,8 @@ const DesignPatternsArtifact = () => {
               
               <div>
                 <h4 className="text-lg font-semibold mb-4 text-gray-700">🐍 Codul Python</h4>
-                <div className="bg-gray-900 rounded-xl p-6 text-sm">
-                  <pre className="text-green-400">
-{`class Logger:
+                <div className="rounded-xl overflow-hidden border border-gray-700">
+                  <CodeBlockR language="python">{`class Logger:
     """
     Singleton Pattern - o singură instanță în toată aplicația
     """
@@ -531,8 +531,7 @@ print(len(logger3.get_logs()))  # 3
 # - Configurații globale
 # - Conexiuni la baza de date
 # - Cache-uri globale
-# - System logs`}
-                  </pre>
+# - System logs`}</CodeBlockR>
                 </div>
                 
                 <div className="mt-4 bg-blue-50 rounded-lg p-4">
@@ -645,9 +644,8 @@ print(len(logger3.get_logs()))  # 3
               
               <div>
                 <h4 className="text-lg font-semibold mb-4 text-gray-700">🐍 Codul Python</h4>
-                <div className="bg-gray-900 rounded-xl p-6 text-sm">
-                  <pre className="text-green-400">
-{`# Clasele de animale (toate au aceeași interfață)
+                <div className="rounded-xl overflow-hidden border border-gray-700">
+                  <CodeBlockR language="python">{`# Clasele de animale (toate au aceeași interfață)
 class Animal:
     def __init__(self, nume):
         self.nume = nume
@@ -722,8 +720,7 @@ def creeaza_ferma():
 # ✅ Centralizează logica de creare
 # ✅ Ușor de extins (adaugi noi animale)  
 # ✅ Codul client nu știe de clase specifice
-# ✅ Respectă principiul "Open/Closed"`}
-                  </pre>
+# ✅ Respectă principiul "Open/Closed"`}</CodeBlockR>
                 </div>
                 
                 <div className="mt-4 bg-green-50 rounded-lg p-4">
@@ -915,9 +912,8 @@ def creeaza_ferma():
               
               <div>
                 <h4 className="text-lg font-semibold mb-4 text-gray-700">🐍 Codul Python</h4>
-                <div className="bg-gray-900 rounded-xl p-6 text-sm">
-                  <pre className="text-green-400">
-{`class Pizza:
+                <div className="rounded-xl overflow-hidden border border-gray-700">
+                  <CodeBlockR language="python">{`class Pizza:
     """Produsul final complex"""
     def __init__(self):
         self.marime = None
@@ -1011,8 +1007,7 @@ pizza2.set_sos("Alb")
 pizza2.add_topping("Șuncă")
 result = pizza2.build()
 
-print(result)`}
-                  </pre>
+print(result)`}</CodeBlockR>
                 </div>
                 
                 <div className="mt-4 bg-orange-50 rounded-lg p-4">
@@ -1231,9 +1226,8 @@ print(result)`}
               
               <div>
                 <h4 className="text-lg font-semibold mb-4 text-gray-700">🐍 Codul Python</h4>
-                <div className="bg-gray-900 rounded-xl p-6 text-sm">
-                  <pre className="text-green-400">
-{`# SISTEM COMPLET cu toate pattern-urile!
+                <div className="rounded-xl overflow-hidden border border-gray-700">
+                  <CodeBlockR language="python">{`# SISTEM COMPLET cu toate pattern-urile!
 
 # 1. SINGLETON - Logger Global
 class SystemLogger:
@@ -1372,8 +1366,7 @@ def main():
         print(f"📝 {log['timestamp']}: {log['message']}")
 
 if __name__ == "__main__":
-    main()`}
-                  </pre>
+    main()`}</CodeBlockR>
                 </div>
                 
                 <div className="mt-4 bg-purple-50 rounded-lg p-4">

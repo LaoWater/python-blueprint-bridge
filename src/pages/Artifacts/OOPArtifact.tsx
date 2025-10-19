@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Play, Pause, RotateCcw, User, Shield, Users, Zap, BookOpen, Building2, Car, Coins, GraduationCap, Lock, Unlock, Eye, EyeOff } from 'lucide-react';
+import { ArrowLeft, Play, User, Shield, Users, Zap, BookOpen, Building2, Car, Coins, GraduationCap, Lock, Unlock, Eye, EyeOff } from 'lucide-react';
+import { CodeBlockR } from '@/components/CodeBlockR';
 
 interface Student {
   nume: string;
@@ -435,9 +436,8 @@ const OOPArtifact = () => {
               
               <div>
                 <h4 className="text-lg font-semibold mb-4 text-gray-700">🐍 Codul Python</h4>
-                <div className="bg-gray-900 rounded-xl p-6 text-sm">
-                  <pre className="text-green-400">
-{`class Student:
+                <div className="rounded-xl overflow-hidden border border-gray-700">
+                  <CodeBlockR language="python">{`class Student:
     """
     Clasa Student - șablonul pentru obiecte student
     """
@@ -473,8 +473,7 @@ student1.adauga_nota(8)
 student2.adauga_nota(7)
 
 print(f"Media lui {student1.nume}: {student1.calculeaza_media():.2f}")
-print(f"Media lui {student2.nume}: {student2.calculeaza_media():.2f}")`}
-                  </pre>
+print(f"Media lui {student2.nume}: {student2.calculeaza_media():.2f}")`}</CodeBlockR>
                 </div>
                 
                 <div className="mt-4 bg-blue-50 rounded-lg p-4">
@@ -603,9 +602,8 @@ print(f"Media lui {student2.nume}: {student2.calculeaza_media():.2f}")`}
               
               <div>
                 <h4 className="text-lg font-semibold mb-4 text-gray-700">🐍 Codul Python</h4>
-                <div className="bg-gray-900 rounded-xl p-6 text-sm">
-                  <pre className="text-green-400">
-{`class ContBancar:
+                <div className="rounded-xl overflow-hidden border border-gray-700">
+                  <CodeBlockR language="python">{`class ContBancar:
     """
     Clasă cu incapsulare - sold privat, acces controlat
     """
@@ -658,8 +656,7 @@ cont = ContBancar("Ana Popescu", 1500)
 # Accesul controlat prin metode:
 print(cont.consulta_sold())    # ✅ 1500
 print(cont.depune(500))        # ✅ Depozit: +500 RON  
-print(cont.retrage(200))       # ✅ Retragere: -200 RON`}
-                  </pre>
+print(cont.retrage(200))       # ✅ Retragere: -200 RON`}</CodeBlockR>
                 </div>
                 
                 <div className="mt-4 bg-emerald-50 rounded-lg p-4">
@@ -762,9 +759,8 @@ print(cont.retrage(200))       # ✅ Retragere: -200 RON`}
               
               <div>
                 <h4 className="text-lg font-semibold mb-4 text-gray-700">🐍 Codul Python</h4>
-                <div className="bg-gray-900 rounded-xl p-6 text-sm">
-                  <pre className="text-green-400">
-{`class Persoana:
+                <div className="rounded-xl overflow-hidden border border-gray-700">
+                  <CodeBlockR language="python">{`class Persoana:
     """
     Clasa de bază (parent class)
     """
@@ -808,8 +804,7 @@ print(profesor.preda())       # ✅ Metodă nouă din Profesor
 
 # Polimorfism - aceeași interfață, comportamente diferite:
 print(persoana.prezinta())    # "👤 Sunt Ana Popescu"
-print(profesor.prezinta())    # "👨‍🏫 Sunt Prof. Ion..."`}
-                  </pre>
+print(profesor.prezinta())    # "👨‍🏫 Sunt Prof. Ion..."`}</CodeBlockR>
                 </div>
                 
                 <div className="mt-4 bg-orange-50 rounded-lg p-4">
@@ -891,9 +886,8 @@ print(profesor.prezinta())    # "👨‍🏫 Sunt Prof. Ion..."`}
               
               <div>
                 <h4 className="text-lg font-semibold mb-4 text-gray-700">🐍 Codul Python</h4>
-                <div className="bg-gray-900 rounded-xl p-6 text-sm">
-                  <pre className="text-green-400">
-{`class Animal:
+                <div className="rounded-xl overflow-hidden border border-gray-700">
+                  <CodeBlockR language="python">{`class Animal:
     """
     Clasa de bază pentru toate animalele
     """
@@ -947,8 +941,7 @@ concert_animal(animale)
 # Rex: Ham ham! 🐕
 # Mimi: Miau! 🐱  
 # Tweety: Polly wants a cracker! 🦜
-# Goldy: Blub blub... (nu face sunet) 🐟`}
-                  </pre>
+# Goldy: Blub blub... (nu face sunet) 🐟`}</CodeBlockR>
                 </div>
                 
                 <div className="mt-4 bg-pink-50 rounded-lg p-4">
@@ -1077,9 +1070,8 @@ concert_animal(animale)
               
               <div>
                 <h4 className="text-lg font-semibold mb-4 text-gray-700">🐍 Codul Python</h4>
-                <div className="bg-gray-900 rounded-xl p-6 text-sm">
-                  <pre className="text-green-400">
-{`class Utilizator:
+                <div className="rounded-xl overflow-hidden border border-gray-700">
+                  <CodeBlockR language="python">{`class Utilizator:
     """
     Clasa de bază pentru utilizatori
     Demonstrează INCAPSULARE cu parolă privată
@@ -1136,8 +1128,7 @@ admin1 = Administrator("Ion Admin", "admin@site.com", "admin123")
 
 print(user1.login("parola123"))    # ✅ Login user
 print(admin1.login("admin123"))    # ✅ Login admin (moștenit)
-print(admin1.sterge_utilizator(user1))  # 🗑️ Doar adminii pot!`}
-                  </pre>
+print(admin1.sterge_utilizator(user1))  # 🗑️ Doar adminii pot!`}</CodeBlockR>
                 </div>
                 
                 <div className="mt-4 bg-indigo-50 rounded-lg p-4">
@@ -1238,9 +1229,8 @@ print(admin1.sterge_utilizator(user1))  # 🗑️ Doar adminii pot!`}
               
               <div>
                 <h4 className="text-lg font-semibold mb-4 text-gray-700">🐍 Codul Python</h4>
-                <div className="bg-gray-900 rounded-xl p-6 text-sm">
-                  <pre className="text-green-400">
-{`class Masina:
+                <div className="rounded-xl overflow-hidden border border-gray-700">
+                  <CodeBlockR language="python">{`class Masina:
     """
     Clasă avansată cu operatori speciali și properties
     """
@@ -1316,8 +1306,7 @@ for masina in masini_sorted:
 # Comparare (folosește __eq__):
 masina1 = Masina("Toyota", "Corolla", 2020, 25000)
 masina2 = Masina("Toyota", "Corolla", 2020, 26000)
-print(masina1 == masina2)  # True (același model, an diferit)`}
-                  </pre>
+print(masina1 == masina2)  # True (același model, an diferit)`}</CodeBlockR>
                 </div>
                 
                 <div className="mt-4 bg-teal-50 rounded-lg p-4">
@@ -2035,9 +2024,7 @@ if __name__ == "__main__":
                     </div>
                   </div>
                   <div className="bg-gray-900 rounded-lg p-3 ml-11">
-                    <pre className="text-green-400 text-xs overflow-x-auto">
-                      <code>{step.code}</code>
-                    </pre>
+                    <CodeBlockR language="python">{step.code}</CodeBlockR>
                   </div>
                 </div>
               ))}
@@ -2133,9 +2120,7 @@ if __name__ == "__main__":
                 <h4 className="text-white font-bold">📖 Code Preview (20% revealed)</h4>
                 <Eye className="w-5 h-5 text-gray-400" />
               </div>
-              <pre className="text-green-400 text-sm overflow-x-auto whitespace-pre-wrap break-words">
-                <code>{previewCode}</code>
-              </pre>
+              <CodeBlockR language="python">{previewCode}</CodeBlockR>
             </div>
           </div>
         ) : (
@@ -2186,9 +2171,7 @@ if __name__ == "__main__":
               </div>
               
               {showFullCode && (
-                <pre className="text-green-400 text-xs overflow-x-auto whitespace-pre-wrap break-words">
-                  <code>{fullCode}</code>
-                </pre>
+                <CodeBlockR language="python">{fullCode}</CodeBlockR>
               )}
               
               {!showFullCode && (

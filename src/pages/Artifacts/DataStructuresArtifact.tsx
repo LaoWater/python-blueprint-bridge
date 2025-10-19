@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Play, Pause, RotateCcw, Search, ArrowUpDown, Filter, Database, Zap, Clock, Target, Users } from 'lucide-react';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { ArrowLeft, Pause, Search, ArrowUpDown, Database, Zap, Clock, Target, Users } from 'lucide-react';
 import { CodeBlockR } from '@/components/CodeBlockR';
 
 const DataStructuresArtifact = () => {
@@ -472,17 +470,7 @@ const DataStructuresArtifact = () => {
                   <div>
                     <h5 className="font-semibold text-green-700 mb-3">💻 Codul Python:</h5>
                     <div className="rounded-lg overflow-hidden border border-gray-700">
-                      <SyntaxHighlighter
-                        language="python"
-                        style={vscDarkPlus}
-                        customStyle={{
-                          margin: 0,
-                          padding: '1rem',
-                          fontSize: '0.875rem',
-                          borderRadius: '0.5rem',
-                        }}
-                        showLineNumbers={false}
-                      >{`# List - secvență mutabilă, ordonată
+                      <CodeBlockR language="python">{`# List - secvență mutabilă, ordonată
 meniu = ["🍕 Pizza", "🍔 Burger"]
 
 # Operații comune
@@ -492,7 +480,7 @@ primul = meniu[0]  # Accesare după index
 meniu.remove("🍔 Burger")  # Șterge primul găsit
 
 # Avantaje: flexibilitate, ordine, accesare rapidă după index
-# Perfect pentru: comenzi, playlist-uri, istoricul navegării`}</SyntaxHighlighter>
+# Perfect pentru: comenzi, playlist-uri, istoricul navegării`}</CodeBlockR>
                     </div>
                   </div>
                 </div>
@@ -545,17 +533,7 @@ meniu.remove("🍔 Burger")  # Șterge primul găsit
                   <div>
                     <h5 className="font-semibold text-purple-700 mb-3">💻 Codul Python:</h5>
                     <div className="rounded-lg overflow-hidden border border-gray-700">
-                      <SyntaxHighlighter
-                        language="python"
-                        style={vscDarkPlus}
-                        customStyle={{
-                          margin: 0,
-                          padding: '1rem',
-                          fontSize: '0.875rem',
-                          borderRadius: '0.5rem',
-                        }}
-                        showLineNumbers={false}
-                      >{`# Set - colecție de valori unice
+                      <CodeBlockR language="python">{`# Set - colecție de valori unice
 restaurante = {"Pizza Express", "Burger King"}
 
 # Operații comune
@@ -568,7 +546,7 @@ numar = len(restaurante)  # Numărul de elemente
 if "McDonald's" in restaurante:
     print("Găsit!")
 
-# Perfect pentru: filtrare duplicate, verificări rapide`}</SyntaxHighlighter>
+# Perfect pentru: filtrare duplicate, verificări rapide`}</CodeBlockR>
                     </div>
                   </div>
                 </div>
@@ -625,17 +603,7 @@ if "McDonald's" in restaurante:
                   <div>
                     <h5 className="font-semibold text-orange-700 mb-3">💻 Codul Python:</h5>
                     <div className="rounded-lg overflow-hidden border border-gray-700">
-                      <SyntaxHighlighter
-                        language="python"
-                        style={vscDarkPlus}
-                        customStyle={{
-                          margin: 0,
-                          padding: '1rem',
-                          fontSize: '0.875rem',
-                          borderRadius: '0.5rem',
-                        }}
-                        showLineNumbers={false}
-                      >{`# Dict - mapări cheie → valoare
+                      <CodeBlockR language="python">{`# Dict - mapări cheie → valoare
 stats = {
     "Pizza Express": {"rating": 4.5, "timp": 25},
     "Burger King": {"rating": 4.2, "timp": 15}
@@ -649,7 +617,7 @@ stats["KFC"] = {"rating": 4.0}  # Adaugă nou
 for restaurant, date in stats.items():
     print(f"{restaurant}: {date['rating']}")
 
-# Perfect pentru: cache, configurări, baze de date simple`}</SyntaxHighlighter>
+# Perfect pentru: cache, configurări, baze de date simple`}</CodeBlockR>
                     </div>
                   </div>
                 </div>
@@ -693,17 +661,7 @@ for restaurant, date in stats.items():
                   <div>
                     <h5 className="font-semibold text-blue-700 mb-3">💻 Codul Python:</h5>
                     <div className="rounded-lg overflow-hidden border border-gray-700">
-                      <SyntaxHighlighter
-                        language="python"
-                        style={vscDarkPlus}
-                        customStyle={{
-                          margin: 0,
-                          padding: '1rem',
-                          fontSize: '0.875rem',
-                          borderRadius: '0.5rem',
-                        }}
-                        showLineNumbers={false}
-                      >{`# Tuple - secvență imutabilă
+                      <CodeBlockR language="python">{`# Tuple - secvență imutabilă
 coordonate = (44.4268, 26.1025, "București", "România")
 
 # Accesare după index
@@ -720,7 +678,7 @@ lat, lng, oras, tara = coordonate
 def calculeaza_distanta(punct1, punct2):
     return math.sqrt((punct1[0] - punct2[0])**2)
 
-# Perfect pentru: coordonate, configurări fixe, returnări multiple`}</SyntaxHighlighter>
+# Perfect pentru: coordonate, configurări fixe, returnări multiple`}</CodeBlockR>
                     </div>
                   </div>
                 </div>
@@ -825,38 +783,18 @@ def calculeaza_distanta(punct1, punct2):
                 <h4 className="text-lg font-semibold mb-4 text-gray-700">💻 Algoritmi de Sortare</h4>
                 <div className="space-y-4">
                   <div className="rounded-lg overflow-hidden border border-gray-700">
-                    <SyntaxHighlighter
-                      language="python"
-                      style={vscDarkPlus}
-                      customStyle={{
-                        margin: 0,
-                        padding: '1rem',
-                        fontSize: '0.875rem',
-                        borderRadius: '0.5rem',
-                      }}
-                      showLineNumbers={false}
-                    >{`# Bubble Sort - Algoritm educațional O(n²)
+                    <CodeBlockR language="python">{`# Bubble Sort - Algoritm educațional O(n²)
 def bubble_sort(comenzi, key):
     n = len(comenzi)
     for i in range(n):
         for j in range(0, n-i-1):
             if comenzi[j][key] > comenzi[j+1][key]:
                 comenzi[j], comenzi[j+1] = comenzi[j+1], comenzi[j]
-    return comenzi`}</SyntaxHighlighter>
+    return comenzi`}</CodeBlockR>
                   </div>
 
                   <div className="rounded-lg overflow-hidden border border-gray-700">
-                    <SyntaxHighlighter
-                      language="python"
-                      style={vscDarkPlus}
-                      customStyle={{
-                        margin: 0,
-                        padding: '1rem',
-                        fontSize: '0.875rem',
-                        borderRadius: '0.5rem',
-                      }}
-                      showLineNumbers={false}
-                    >{`# Quick Sort - Algoritm eficient O(n log n)
+                    <CodeBlockR language="python">{`# Quick Sort - Algoritm eficient O(n log n)
 def quick_sort(comenzi, key):
     if len(comenzi) <= 1:
         return comenzi
@@ -866,21 +804,11 @@ def quick_sort(comenzi, key):
     middle = [x for x in comenzi if x[key] == pivot[key]]
     right = [x for x in comenzi if x[key] > pivot[key]]
 
-    return quick_sort(left, key) + middle + quick_sort(right, key)`}</SyntaxHighlighter>
+    return quick_sort(left, key) + middle + quick_sort(right, key)`}</CodeBlockR>
                   </div>
 
                   <div className="rounded-lg overflow-hidden border border-gray-700">
-                    <SyntaxHighlighter
-                      language="python"
-                      style={vscDarkPlus}
-                      customStyle={{
-                        margin: 0,
-                        padding: '1rem',
-                        fontSize: '0.875rem',
-                        borderRadius: '0.5rem',
-                      }}
-                      showLineNumbers={false}
-                    >{`# Python Built-in - TimSort O(n log n), optimizat
+                    <CodeBlockR language="python">{`# Python Built-in - TimSort O(n log n), optimizat
 # Sortare simplă
 comenzi.sort(key=lambda x: x['${sortBy}'])
 
@@ -888,7 +816,7 @@ comenzi.sort(key=lambda x: x['${sortBy}'])
 comenzi.sort(key=lambda x: (x['priority'], x['time']))
 
 # Sortare descrescătoare
-comenzi.sort(key=lambda x: x['${sortBy}'], reverse=True)`}</SyntaxHighlighter>
+comenzi.sort(key=lambda x: x['${sortBy}'], reverse=True)`}</CodeBlockR>
                   </div>
                 </div>
                 
@@ -987,17 +915,7 @@ comenzi.sort(key=lambda x: x['${sortBy}'], reverse=True)`}</SyntaxHighlighter>
                 <h4 className="text-lg font-semibold mb-4 text-gray-700">💻 Algoritmi de Căutare</h4>
                 <div className="space-y-4">
                   <div className="rounded-lg overflow-hidden border border-gray-700">
-                    <SyntaxHighlighter
-                      language="python"
-                      style={vscDarkPlus}
-                      customStyle={{
-                        margin: 0,
-                        padding: '1rem',
-                        fontSize: '0.875rem',
-                        borderRadius: '0.5rem',
-                      }}
-                      showLineNumbers={false}
-                    >{`# Linear Search - Căutare secvențială O(n)
+                    <CodeBlockR language="python">{`# Linear Search - Căutare secvențială O(n)
 def linear_search(comenzi, termen):
     rezultate = []
     pasi = 0
@@ -1011,21 +929,11 @@ def linear_search(comenzi, termen):
 
 # Timp: O(n) - Trebuie să verific toată lista
 # Avantaj: Funcționează pe orice listă
-# Dezavantaj: Lent pentru liste mari`}</SyntaxHighlighter>
+# Dezavantaj: Lent pentru liste mari`}</CodeBlockR>
                   </div>
 
                   <div className="rounded-lg overflow-hidden border border-gray-700">
-                    <SyntaxHighlighter
-                      language="python"
-                      style={vscDarkPlus}
-                      customStyle={{
-                        margin: 0,
-                        padding: '1rem',
-                        fontSize: '0.875rem',
-                        borderRadius: '0.5rem',
-                      }}
-                      showLineNumbers={false}
-                    >{`# Binary Search - Căutare binară O(log n)
+                    <CodeBlockR language="python">{`# Binary Search - Căutare binară O(log n)
 def binary_search(comenzi_sortate, termen):
     left, right = 0, len(comenzi_sortate) - 1
     pasi = 0
@@ -1045,21 +953,11 @@ def binary_search(comenzi_sortate, termen):
 
 # Timp: O(log n) - Înjumătățesc zona de căutare
 # Avantaj: Foarte rapid pentru liste mari
-# Dezavantaj: Lista TREBUIE să fie sortată`}</SyntaxHighlighter>
+# Dezavantaj: Lista TREBUIE să fie sortată`}</CodeBlockR>
                   </div>
 
                   <div className="rounded-lg overflow-hidden border border-gray-700">
-                    <SyntaxHighlighter
-                      language="python"
-                      style={vscDarkPlus}
-                      customStyle={{
-                        margin: 0,
-                        padding: '1rem',
-                        fontSize: '0.875rem',
-                        borderRadius: '0.5rem',
-                      }}
-                      showLineNumbers={false}
-                    >{`# Căutări optimizate în Python
+                    <CodeBlockR language="python">{`# Căutări optimizate în Python
 # Folosind built-in functions
 rezultate = [c for c in comenzi if termen in c['restaurant']]
 
@@ -1069,7 +967,7 @@ index = bisect.bisect_left(comenzi_sortate, termen)
 
 # Set lookup O(1) - pentru verificări de existență
 restaurante_set = set(c['restaurant'] for c in comenzi)
-existe = termen in restaurante_set  # Instant!`}</SyntaxHighlighter>
+existe = termen in restaurante_set  # Instant!`}</CodeBlockR>
                   </div>
                 </div>
                 
@@ -1170,17 +1068,7 @@ existe = termen in restaurante_set  # Instant!`}</SyntaxHighlighter>
                     <h5 className="font-bold text-green-800 mb-2">🏆 O(1) - Constant</h5>
                     <p className="text-sm mb-2">Acces la dict/set, append la listă</p>
                     <div className="rounded-lg overflow-hidden border border-gray-700">
-                      <SyntaxHighlighter
-                        language="python"
-                        style={vscDarkPlus}
-                        customStyle={{
-                          margin: 0,
-                          padding: '0.5rem',
-                          fontSize: '0.75rem',
-                          borderRadius: '0.5rem',
-                        }}
-                        showLineNumbers={false}
-                      >{`dict_lookup = mydict[key]  # Mereu rapid`}</SyntaxHighlighter>
+                      <CodeBlockR language="python">{`dict_lookup = mydict[key]  # Mereu rapid`}</CodeBlockR>
                     </div>
                   </div>
 
@@ -1188,17 +1076,7 @@ existe = termen in restaurante_set  # Instant!`}</SyntaxHighlighter>
                     <h5 className="font-bold text-blue-800 mb-2">📊 O(log n) - Logaritmic</h5>
                     <p className="text-sm mb-2">Binary search, operații pe arbori</p>
                     <div className="rounded-lg overflow-hidden border border-gray-700">
-                      <SyntaxHighlighter
-                        language="python"
-                        style={vscDarkPlus}
-                        customStyle={{
-                          margin: 0,
-                          padding: '0.5rem',
-                          fontSize: '0.75rem',
-                          borderRadius: '0.5rem',
-                        }}
-                        showLineNumbers={false}
-                      >{`binary_search(sorted_list, target)`}</SyntaxHighlighter>
+                      <CodeBlockR language="python">{`binary_search(sorted_list, target)`}</CodeBlockR>
                     </div>
                   </div>
 
@@ -1206,17 +1084,7 @@ existe = termen in restaurante_set  # Instant!`}</SyntaxHighlighter>
                     <h5 className="font-bold text-orange-800 mb-2">⚡ O(n) - Linear</h5>
                     <p className="text-sm mb-2">Linear search, iterare prin listă</p>
                     <div className="rounded-lg overflow-hidden border border-gray-700">
-                      <SyntaxHighlighter
-                        language="python"
-                        style={vscDarkPlus}
-                        customStyle={{
-                          margin: 0,
-                          padding: '0.5rem',
-                          fontSize: '0.75rem',
-                          borderRadius: '0.5rem',
-                        }}
-                        showLineNumbers={false}
-                      >{`for item in my_list: process(item)`}</SyntaxHighlighter>
+                      <CodeBlockR language="python">{`for item in my_list: process(item)`}</CodeBlockR>
                     </div>
                   </div>
 
@@ -1224,17 +1092,7 @@ existe = termen in restaurante_set  # Instant!`}</SyntaxHighlighter>
                     <h5 className="font-bold text-orange-800 mb-2">🚀 O(n log n) - Linearitmic</h5>
                     <p className="text-sm mb-2">Quick sort, merge sort, Tim sort</p>
                     <div className="rounded-lg overflow-hidden border border-gray-700">
-                      <SyntaxHighlighter
-                        language="python"
-                        style={vscDarkPlus}
-                        customStyle={{
-                          margin: 0,
-                          padding: '0.5rem',
-                          fontSize: '0.75rem',
-                          borderRadius: '0.5rem',
-                        }}
-                        showLineNumbers={false}
-                      >{`my_list.sort()  # TimSort în Python`}</SyntaxHighlighter>
+                      <CodeBlockR language="python">{`my_list.sort()  # TimSort în Python`}</CodeBlockR>
                     </div>
                   </div>
 
@@ -1242,17 +1100,7 @@ existe = termen in restaurante_set  # Instant!`}</SyntaxHighlighter>
                     <h5 className="font-bold text-red-800 mb-2">🐌 O(n²) - Pătratic</h5>
                     <p className="text-sm mb-2">Bubble sort, nested loops</p>
                     <div className="rounded-lg overflow-hidden border border-gray-700">
-                      <SyntaxHighlighter
-                        language="python"
-                        style={vscDarkPlus}
-                        customStyle={{
-                          margin: 0,
-                          padding: '0.5rem',
-                          fontSize: '0.75rem',
-                          borderRadius: '0.5rem',
-                        }}
-                        showLineNumbers={false}
-                      >{`for i in range(n): for j in range(n): ...`}</SyntaxHighlighter>
+                      <CodeBlockR language="python">{`for i in range(n): for j in range(n): ...`}</CodeBlockR>
                     </div>
                   </div>
                 </div>

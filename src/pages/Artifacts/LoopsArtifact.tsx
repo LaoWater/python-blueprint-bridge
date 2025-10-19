@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Play, Pause, RotateCcw } from 'lucide-react';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { ArrowLeft, Play, RotateCcw } from 'lucide-react';
+import { CodeBlockR } from '@/components/CodeBlockR';
 
 const LoopsArtifact = () => {
   const navigate = useNavigate();
@@ -219,20 +218,10 @@ const LoopsArtifact = () => {
                 <p className="text-sm italic">"Cât timp mașina nu e plină cu benzină, continuă să alimentezi."</p>
               </div>
               <div className="rounded-lg overflow-hidden border border-gray-700">
-                <SyntaxHighlighter
-                  language="python"
-                  style={vscDarkPlus}
-                  customStyle={{
-                    margin: 0,
-                    padding: '1rem',
-                    fontSize: '0.875rem',
-                    borderRadius: '0.5rem',
-                  }}
-                  showLineNumbers={false}
-                >{`while parola_gresita:
+                <CodeBlockR language="python">{`while parola_gresita:
     parola = input("Introdu parola:")
     if parola == parola_corecta:
-        parola_gresita = False`}</SyntaxHighlighter>
+        parola_gresita = False`}</CodeBlockR>
               </div>
             </div>
 
@@ -249,19 +238,9 @@ const LoopsArtifact = () => {
                 <p className="text-sm italic">"Pentru fiecare an din 2020-2030, afișează anul."</p>
               </div>
               <div className="rounded-lg overflow-hidden border border-gray-700">
-                <SyntaxHighlighter
-                  language="python"
-                  style={vscDarkPlus}
-                  customStyle={{
-                    margin: 0,
-                    padding: '1rem',
-                    fontSize: '0.875rem',
-                    borderRadius: '0.5rem',
-                  }}
-                  showLineNumbers={false}
-                >{`for student in clasa:
+                <CodeBlockR language="python">{`for student in clasa:
     nota = calculeaza_nota(student)
-    print(f"{student}: {nota}")`}</SyntaxHighlighter>
+    print(f"{student}: {nota}")`}</CodeBlockR>
               </div>
             </div>
           </div>
@@ -337,24 +316,14 @@ const LoopsArtifact = () => {
 
           <h3 className="text-xl font-semibold text-red-700 mb-3">Codul din spate:</h3>
           <div className="rounded-lg overflow-hidden border border-gray-700">
-            <SyntaxHighlighter
-              language="python"
-              style={vscDarkPlus}
-              customStyle={{
-                margin: 0,
-                padding: '1.5rem',
-                fontSize: '0.875rem',
-                borderRadius: '0.5rem',
-              }}
-              showLineNumbers={false}
-            >{`numaratoare = ${countdownValue}
+            <CodeBlockR language="python">{`numaratoare = ${countdownValue}
 
 while numaratoare > 0:
     print(numaratoare)
     numaratoare = numaratoare - 1
     time.sleep(1)  # Așteaptă o secundă
 
-print("Lansare! 🚀")`}</SyntaxHighlighter>
+print("Lansare! 🚀")`}</CodeBlockR>
           </div>
         </div>
 
@@ -417,23 +386,13 @@ print("Lansare! 🚀")`}</SyntaxHighlighter>
 
           <h3 className="text-xl font-semibold text-green-700 mb-3">Codul din spate:</h3>
           <div className="rounded-lg overflow-hidden border border-gray-700">
-            <SyntaxHighlighter
-              language="python"
-              style={vscDarkPlus}
-              customStyle={{
-                margin: 0,
-                padding: '1.5rem',
-                fontSize: '0.875rem',
-                borderRadius: '0.5rem',
-              }}
-              showLineNumbers={false}
-            >{`fructe = ["🍎", "🍌", "🍊", "🍓", "🥝"]
+            <CodeBlockR language="python">{`fructe = ["🍎", "🍌", "🍊", "🍓", "🥝"]
 
 for fruct in fructe:
     print(f"Procesez {fruct}")
     time.sleep(1)  # Simulează procesarea
 
-print("Toate fructele au fost procesate! ✅")`}</SyntaxHighlighter>
+print("Toate fructele au fost procesate! ✅")`}</CodeBlockR>
           </div>
         </div>
 
@@ -492,22 +451,12 @@ print("Toate fructele au fost procesate! ✅")`}</SyntaxHighlighter>
 
           <h3 className="text-xl font-semibold text-indigo-700 mb-3">Codul din spate:</h3>
           <div className="rounded-lg overflow-hidden border border-gray-700">
-            <SyntaxHighlighter
-              language="python"
-              style={vscDarkPlus}
-              customStyle={{
-                margin: 0,
-                padding: '1.5rem',
-                fontSize: '0.875rem',
-                borderRadius: '0.5rem',
-              }}
-              showLineNumbers={false}
-            >{`caracter = "${pattern}"
+            <CodeBlockR language="python">{`caracter = "${pattern}"
 marime = ${patternSize}
 
 for i in range(1, marime + 1):
     linie = caracter * i
-    print(linie)`}</SyntaxHighlighter>
+    print(linie)`}</CodeBlockR>
           </div>
         </div>
 
@@ -577,17 +526,7 @@ for i in range(1, marime + 1):
 
           <h3 className="text-xl font-semibold text-orange-700 mb-3">Codul din spate:</h3>
           <div className="rounded-lg overflow-hidden border border-gray-700">
-            <SyntaxHighlighter
-              language="python"
-              style={vscDarkPlus}
-              customStyle={{
-                margin: 0,
-                padding: '1.5rem',
-                fontSize: '0.875rem',
-                borderRadius: '0.5rem',
-              }}
-              showLineNumbers={false}
-            >{`parola_corecta = "1234"
+            <CodeBlockR language="python">{`parola_corecta = "1234"
 incercari = 0
 acces_permis = False
 
@@ -599,7 +538,7 @@ while not acces_permis:
         print(f"Acces permis! Încercări: {incercari}")
         acces_permis = True
     else:
-        print("Parolă greșită. Încearcă din nou!")`}</SyntaxHighlighter>
+        print("Parolă greșită. Încearcă din nou!")`}</CodeBlockR>
           </div>
         </div>
 

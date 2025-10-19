@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { CodeBlockR } from '@/components/CodeBlockR';
 
 const IfElseArtifact = () => {
   const navigate = useNavigate();
@@ -124,20 +123,10 @@ const IfElseArtifact = () => {
 
           <h3 className="text-xl font-semibold text-purple-700 mb-3">Cum scrii în Python:</h3>
           <div className="rounded-lg overflow-hidden border border-gray-700">
-            <SyntaxHighlighter
-              language="python"
-              style={vscDarkPlus}
-              customStyle={{
-                margin: 0,
-                padding: '1.5rem',
-                fontSize: '0.875rem',
-                borderRadius: '0.5rem',
-              }}
-              showLineNumbers={false}
-            >{`if ploua:
+            <CodeBlockR language="python">{`if ploua:
     print("Iau umbrela")
     if temperatura < 15:
-        print("Iau și geaca")`}</SyntaxHighlighter>
+        print("Iau și geaca")`}</CodeBlockR>
           </div>
 
           <div className="flex items-center justify-center gap-4 mt-8 flex-wrap">
@@ -231,17 +220,7 @@ const IfElseArtifact = () => {
 
           <h3 className="text-xl font-semibold text-green-700 mb-3">Codul din spate:</h3>
           <div className="rounded-lg overflow-hidden border border-gray-700">
-            <SyntaxHighlighter
-              language="python"
-              style={vscDarkPlus}
-              customStyle={{
-                margin: 0,
-                padding: '1.5rem',
-                fontSize: '0.875rem',
-                borderRadius: '0.5rem',
-              }}
-              showLineNumbers={false}
-            >{`ore_vizionate = ${hours}
+            <CodeBlockR language="python">{`ore_vizionate = ${hours}
 gen_preferat = "${genre}"
 
 if ore_vizionate > 10:
@@ -255,7 +234,7 @@ if ore_vizionate > 10:
 elif ore_vizionate > 3:
     recomandare = f"Continuă să vezi {gen_preferat}"
 else:
-    recomandare = "Top 5 trending acum"`}</SyntaxHighlighter>
+    recomandare = "Top 5 trending acum"`}</CodeBlockR>
           </div>
         </div>
 
@@ -283,20 +262,10 @@ else:
                 Vezi Codul
               </Button>
               <div id="code1" className="rounded-lg overflow-hidden border border-gray-700 hidden">
-                <SyntaxHighlighter
-                  language="python"
-                  style={vscDarkPlus}
-                  customStyle={{
-                    margin: 0,
-                    padding: '1rem',
-                    fontSize: '0.875rem',
-                    borderRadius: '0.5rem',
-                  }}
-                  showLineNumbers={false}
-                >{`if e_weekend and treaba_terminata:
+                <CodeBlockR language="python">{`if e_weekend and treaba_terminata:
     print("Film time! 🎬")
 else:
-    print("La muncă! 💼")`}</SyntaxHighlighter>
+    print("La muncă! 💼")`}</CodeBlockR>
               </div>
             </div>
 
@@ -310,21 +279,11 @@ else:
                 Vezi Codul
               </Button>
               <div id="code2" className="rounded-lg overflow-hidden border border-gray-700 hidden">
-                <SyntaxHighlighter
-                  language="python"
-                  style={vscDarkPlus}
-                  customStyle={{
-                    margin: 0,
-                    padding: '1rem',
-                    fontSize: '0.875rem',
-                    borderRadius: '0.5rem',
-                  }}
-                  showLineNumbers={false}
-                >{`if total > 100 or client_premium or prima_comanda:
+                <CodeBlockR language="python">{`if total > 100 or client_premium or prima_comanda:
     transport = 0
     print("Transport gratuit! 🚚")
 else:
-    transport = 15`}</SyntaxHighlighter>
+    transport = 15`}</CodeBlockR>
               </div>
             </div>
           </div>

@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Play, Pause, RotateCcw, Plus, Minus, Search } from 'lucide-react';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { CodeBlockR } from '@/components/CodeBlockR';
 
 const CollectionsArtifact = () => {
   const navigate = useNavigate();
@@ -283,17 +282,7 @@ const CollectionsArtifact = () => {
                 <div>
                   <h4 className="font-semibold text-green-700 mb-3">💻 Codul din spate:</h4>
                   <div className="rounded-lg overflow-hidden border border-gray-700">
-                    <SyntaxHighlighter
-                      language="python"
-                      style={vscDarkPlus}
-                      customStyle={{
-                        margin: 0,
-                        padding: '1rem',
-                        fontSize: '0.875rem',
-                        borderRadius: '0.5rem',
-                      }}
-                      showLineNumbers={false}
-                    >{`# Crearea unei liste
+                    <CodeBlockR language="python">{`# Crearea unei liste
 lista_cumparaturi = ["🍎 Mere", "🥛 Lapte"]
 
 # Adăugarea unui element
@@ -307,7 +296,7 @@ numar_produse = len(lista_cumparaturi)
 
 # Parcurgerea listei
 for produs in lista_cumparaturi:
-    print(f"Cumpără: {produs}")`}</SyntaxHighlighter>
+    print(f"Cumpără: {produs}")`}</CodeBlockR>
                   </div>
                 </div>
               </div>
@@ -356,17 +345,7 @@ for produs in lista_cumparaturi:
                 <div>
                   <h4 className="font-semibold text-blue-700 mb-3">💻 Codul din spate:</h4>
                   <div className="rounded-lg overflow-hidden border border-gray-700">
-                    <SyntaxHighlighter
-                      language="python"
-                      style={vscDarkPlus}
-                      customStyle={{
-                        margin: 0,
-                        padding: '1rem',
-                        fontSize: '0.875rem',
-                        borderRadius: '0.5rem',
-                      }}
-                      showLineNumbers={false}
-                    >{`# Crearea unui tuplu (coordonate fixe)
+                    <CodeBlockR language="python">{`# Crearea unui tuplu (coordonate fixe)
 casa = (44.4268, 26.1025)
 scoala = (44.4378, 26.0967)
 
@@ -383,7 +362,7 @@ for coordonata in casa:
 
 # Unpacking (destructurare)
 lat, lon = casa
-print(f"Lat: {lat}, Long: {lon}")`}</SyntaxHighlighter>
+print(f"Lat: {lat}, Long: {lon}")`}</CodeBlockR>
                   </div>
                 </div>
               </div>
@@ -460,17 +439,7 @@ print(f"Lat: {lat}, Long: {lon}")`}</SyntaxHighlighter>
                 <div>
                   <h4 className="font-semibold text-purple-700 mb-3">💻 Codul din spate:</h4>
                   <div className="rounded-lg overflow-hidden border border-gray-700">
-                    <SyntaxHighlighter
-                      language="python"
-                      style={vscDarkPlus}
-                      customStyle={{
-                        margin: 0,
-                        padding: '1rem',
-                        fontSize: '0.875rem',
-                        borderRadius: '0.5rem',
-                      }}
-                      showLineNumbers={false}
-                    >{`# Lista cu duplicate
+                    <CodeBlockR language="python">{`# Lista cu duplicate
 raspunsuri = ["Da", "Nu", "Da", "Poate"]
 
 # Crearea unui set (elimină automat duplicatele)
@@ -489,7 +458,7 @@ numar_unic = len(raspunsuri_unice)
 # Operații pe seturi
 set1 = {1, 2, 3}
 set2 = {3, 4, 5}
-intersectie = set1 & set2  # {3}`}</SyntaxHighlighter>
+intersectie = set1 & set2  # {3}`}</CodeBlockR>
                   </div>
                 </div>
               </div>
@@ -579,17 +548,7 @@ intersectie = set1 & set2  # {3}`}</SyntaxHighlighter>
                 <div>
                   <h4 className="font-semibold text-orange-700 mb-3">💻 Codul din spate:</h4>
                   <div className="rounded-lg overflow-hidden border border-gray-700">
-                    <SyntaxHighlighter
-                      language="python"
-                      style={vscDarkPlus}
-                      customStyle={{
-                        margin: 0,
-                        padding: '1rem',
-                        fontSize: '0.875rem',
-                        borderRadius: '0.5rem',
-                      }}
-                      showLineNumbers={false}
-                    >{`# Crearea unui dicționar
+                    <CodeBlockR language="python">{`# Crearea unui dicționar
 studenti = {
     "Ana123": {
         "nume": "Ana Popescu",
@@ -613,7 +572,7 @@ for id_student, date in studenti.items():
 studenti["Maria999"] = {
     "nume": "Maria Vasile",
     "clasa": "10C"
-}`}</SyntaxHighlighter>
+}`}</CodeBlockR>
                   </div>
                 </div>
               </div>
