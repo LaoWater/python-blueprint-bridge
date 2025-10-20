@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ArrowLeft, Play, Pause, RotateCcw, Eye, Camera, Zap, Target, Lightbulb, Code, Activity, Heart, DollarSign, Layers, Image as ImageIcon, Box, Move, Scan, Brain } from 'lucide-react';
+import { ArrowLeft, Play, Pause, RotateCcw, Eye, Camera, Zap, Target, Lightbulb, Activity, Heart, DollarSign, Layers, Image as ImageIcon, Box, Move, Scan, Brain } from 'lucide-react';
 import { CodeBlockR } from '@/components/CodeBlockR';
 
 const ComputerVisionSession28 = () => {
@@ -14,9 +14,6 @@ const ComputerVisionSession28 = () => {
   const [storyStep, setStoryStep] = useState(-1);
   const [isStoryRunning, setIsStoryRunning] = useState(false);
   const [showStoryDetails, setShowStoryDetails] = useState(false);
-
-  // Code Snippets State
-  const [expandedCode, setExpandedCode] = useState({});
 
   // Demo State
   const [activeDemo, setActiveDemo] = useState('');
@@ -271,7 +268,7 @@ def show_processing_pipeline(image_path):
     axes[1, 1].axis('off')
     
     axes[1, 2].imshow(binary, cmap='gray')
-    axes[1, 2].set_title('Binary Threshold\n(Otsu\'s Method)', fontweight='bold')
+    axes[1, 2].set_title("Binary Threshold\n(Otsu's Method)", fontweight='bold')
     axes[1, 2].axis('off')
     
     # Row 3: Morphology and contours

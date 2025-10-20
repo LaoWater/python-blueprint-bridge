@@ -15,9 +15,6 @@ const DlibSession29 = () => {
   const [isStoryRunning, setIsStoryRunning] = useState(false);
   const [showStoryDetails, setShowStoryDetails] = useState(false);
 
-  // Code Snippets State
-  const [expandedCode, setExpandedCode] = useState({});
-
   // Story chapters following the NEED-first philosophy
   const storyChapters = [
     {

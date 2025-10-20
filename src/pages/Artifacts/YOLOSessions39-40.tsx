@@ -1,11 +1,9 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Copy, Check, Eye, Video, Zap, Target, Shield, Clock, Activity, Camera, AlertTriangle, ChevronDown, ChevronUp, Code, Brain, Layers, Play, ArrowLeft } from 'lucide-react';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { Eye, Video, Zap, Target, Shield, Clock, Activity, Camera, AlertTriangle, ChevronDown, ChevronUp, Code, Brain, Layers, Play, ArrowLeft } from 'lucide-react';
+import { CodeBlockR } from '@/components/CodeBlockR';
 
 const YOLOSessions3940 = () => {
-  const [copiedSection, setCopiedSection] = useState<string | null>(null);
   const [activeChapter, setActiveChapter] = useState(0);
   const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({
     part1: false,
@@ -13,12 +11,6 @@ const YOLOSessions3940 = () => {
     part3: false,
     part4: false
   });
-
-  const copyToClipboard = (text: string, section: string) => {
-    navigator.clipboard.writeText(text);
-    setCopiedSection(section);
-    setTimeout(() => setCopiedSection(null), 2000);
-  };
 
   const toggleSection = (section: string) => {
     setExpandedSections(prev => ({
@@ -2023,29 +2015,42 @@ print()
                 <p className="text-lg text-blue-600 dark:text-blue-400 mb-4">
                   {storyChapters[activeChapter].content}
                 </p>
-                <div className="text-gray-700 dark:text-gray-300 leading-relaxed space-y-3">
-                  {storyChapters[activeChapter].details.split('. ').map((sentence, idx) => {
-                    // Check if sentence contains a URL
-                    const urlMatch = sentence.match(/\[([^\]]+)\]\(([^)]+)\)/);
-                    if (urlMatch) {
-                      const parts = sentence.split(/\[([^\]]+)\]\(([^)]+)\)/);
-                      return (
-                        <p key={idx}>
-                          {parts[0]}
-                          <a
-                            href={urlMatch[2]}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-blue-600 dark:text-blue-400 hover:underline font-semibold"
-                          >
-                            {urlMatch[1]}
-                          </a>
-                          {parts[3]}{sentence.endsWith('.') ? '' : '.'}
-                        </p>
-                      );
-                    }
-                    return sentence.trim() ? <p key={idx}>{sentence.trim()}.</p> : null;
-                  })}
+                <div className="text-gray-700 dark:text-gray-300 leading-relaxed space-y-2">
+                  {(() => {
+                    const text = storyChapters[activeChapter].details;
+                    // Split by '. ' but keep the periods
+                    const sentences = text.split(/\.\s+/);
+
+                    return sentences.map((sentence, idx) => {
+                      if (!sentence.trim()) return null;
+
+                      // Check if sentence contains a markdown URL
+                      const urlMatch = sentence.match(/\[([^\]]+)\]\(([^)]+)\)/);
+                      if (urlMatch) {
+                        const beforeLink = sentence.substring(0, sentence.indexOf('['));
+                        const linkText = urlMatch[1];
+                        const linkUrl = urlMatch[2];
+                        const afterLink = sentence.substring(sentence.indexOf(')') + 1);
+
+                        return (
+                          <p key={idx} className="mb-2">
+                            {beforeLink}
+                            <a
+                              href={linkUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-blue-500 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 underline font-medium transition-colors"
+                            >
+                              {linkText}
+                            </a>
+                            {afterLink}.
+                          </p>
+                        );
+                      }
+
+                      return <p key={idx} className="mb-2">{sentence}.</p>;
+                    });
+                  })()}
                 </div>
               </div>
             </div>
@@ -2173,20 +2178,8 @@ print()
 
             {expandedSections.part1 && (
               <div className="p-6">
-                <div className="relative">
-                  <Button
-                    onClick={() => copyToClipboard(part1Content.code, 'part1')}
-                    className="absolute top-4 right-4 z-10"
-                    variant="secondary"
-                    size="sm"
-                  >
-                    {copiedSection === 'part1' ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
-                  </Button>
-                  <div className="max-h-[600px] overflow-y-auto">
-                    <SyntaxHighlighter language="python" style={vscDarkPlus} customStyle={{ margin: 0, borderRadius: '0.5rem' }}>
-                      {part1Content.code}
-                    </SyntaxHighlighter>
-                  </div>
+                <div className="max-h-[600px] overflow-y-auto">
+                  <CodeBlockR language="python">{part1Content.code}</CodeBlockR>
                 </div>
               </div>
             )}
@@ -2210,20 +2203,8 @@ print()
 
             {expandedSections.part2 && (
               <div className="p-6">
-                <div className="relative">
-                  <Button
-                    onClick={() => copyToClipboard(part2Content.code, 'part2')}
-                    className="absolute top-4 right-4 z-10"
-                    variant="secondary"
-                    size="sm"
-                  >
-                    {copiedSection === 'part2' ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
-                  </Button>
-                  <div className="max-h-[600px] overflow-y-auto">
-                    <SyntaxHighlighter language="python" style={vscDarkPlus} customStyle={{ margin: 0, borderRadius: '0.5rem' }}>
-                      {part2Content.code}
-                    </SyntaxHighlighter>
-                  </div>
+                <div className="max-h-[600px] overflow-y-auto">
+                  <CodeBlockR language="python">{part2Content.code}</CodeBlockR>
                 </div>
               </div>
             )}
@@ -2247,20 +2228,8 @@ print()
 
             {expandedSections.part3 && (
               <div className="p-6">
-                <div className="relative">
-                  <Button
-                    onClick={() => copyToClipboard(part3Content.code, 'part3')}
-                    className="absolute top-4 right-4 z-10"
-                    variant="secondary"
-                    size="sm"
-                  >
-                    {copiedSection === 'part3' ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
-                  </Button>
-                  <div className="max-h-[600px] overflow-y-auto">
-                    <SyntaxHighlighter language="python" style={vscDarkPlus} customStyle={{ margin: 0, borderRadius: '0.5rem' }}>
-                      {part3Content.code}
-                    </SyntaxHighlighter>
-                  </div>
+                <div className="max-h-[600px] overflow-y-auto">
+                  <CodeBlockR language="python">{part3Content.code}</CodeBlockR>
                 </div>
               </div>
             )}
@@ -2284,20 +2253,8 @@ print()
 
             {expandedSections.part4 && (
               <div className="p-6">
-                <div className="relative">
-                  <Button
-                    onClick={() => copyToClipboard(part4Content.code, 'part4')}
-                    className="absolute top-4 right-4 z-10"
-                    variant="secondary"
-                    size="sm"
-                  >
-                    {copiedSection === 'part4' ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
-                  </Button>
-                  <div className="max-h-[600px] overflow-y-auto">
-                    <SyntaxHighlighter language="python" style={vscDarkPlus} customStyle={{ margin: 0, borderRadius: '0.5rem' }}>
-                      {part4Content.code}
-                    </SyntaxHighlighter>
-                  </div>
+                <div className="max-h-[600px] overflow-y-auto">
+                  <CodeBlockR language="python">{part4Content.code}</CodeBlockR>
                 </div>
               </div>
             )}

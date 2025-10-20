@@ -472,15 +472,24 @@ const DataStructuresArtifact = () => {
                     <div className="rounded-lg overflow-hidden border border-gray-700">
                       <CodeBlockR language="python">{`# List - secvență mutabilă, ordonată
 meniu = ["🍕 Pizza", "🍔 Burger"]
+print(f"Inițial: {meniu}")
+# Output: Inițial: ['🍕 Pizza', '🍔 Burger']
 
-# Operații comune
-meniu.append("🌮 Tacos")  # Adaugă la sfârșitul
+meniu.append("🌮 Tacos")  # Adaugă la sfârșit
+print(f"După append: {meniu}")
+# Output: După append: ['🍕 Pizza', '🍔 Burger', '🌮 Tacos']
+
 meniu.insert(0, "🥗 Salată")  # Inserează la poziția 0
-primul = meniu[0]  # Accesare după index
-meniu.remove("🍔 Burger")  # Șterge primul găsit
+print(f"După insert: {meniu}")
+# Output: După insert: ['🥗 Salată', '🍕 Pizza', '🍔 Burger', '🌮 Tacos']
 
-# Avantaje: flexibilitate, ordine, accesare rapidă după index
-# Perfect pentru: comenzi, playlist-uri, istoricul navegării`}</CodeBlockR>
+primul = meniu[0]
+print(f"Primul element: {primul}")
+# Output: Primul element: 🥗 Salată
+
+meniu.remove("🍔 Burger")
+print(f"După remove: {meniu}")
+# Output: După remove: ['🥗 Salată', '🍕 Pizza', '🌮 Tacos']`}</CodeBlockR>
                     </div>
                   </div>
                 </div>
@@ -535,18 +544,28 @@ meniu.remove("🍔 Burger")  # Șterge primul găsit
                     <div className="rounded-lg overflow-hidden border border-gray-700">
                       <CodeBlockR language="python">{`# Set - colecție de valori unice
 restaurante = {"Pizza Express", "Burger King"}
+print(f"Inițial: {restaurante}")
+# Output: Inițial: {'Pizza Express', 'Burger King'}
 
-# Operații comune
 restaurante.add("KFC")  # Adaugă (nu duplică!)
-restaurante.add("KFC")  # Nu se va adăuga din nou
+print(f"După add KFC: {restaurante}")
+# Output: După add KFC: {'Pizza Express', 'Burger King', 'KFC'}
+
+restaurante.add("KFC")  # Nu se va adăuga din nou!
+print(f"După add KFC din nou: {restaurante}")
+# Output: După add KFC din nou: {'Pizza Express', 'Burger King', 'KFC'}
+
 restaurante.remove("Pizza Express")
-numar = len(restaurante)  # Numărul de elemente
+print(f"După remove: {restaurante}")
+# Output: După remove: {'Burger King', 'KFC'}
 
-# Verificare rapidă existență
-if "McDonald's" in restaurante:
-    print("Găsit!")
+numar = len(restaurante)
+print(f"Total: {numar} restaurante")
+# Output: Total: 2 restaurante
 
-# Perfect pentru: filtrare duplicate, verificări rapide`}</CodeBlockR>
+# Verificare rapidă existență O(1)
+print("McDonald's" in restaurante)  # False
+print("KFC" in restaurante)  # True`}</CodeBlockR>
                     </div>
                   </div>
                 </div>
@@ -608,16 +627,26 @@ stats = {
     "Pizza Express": {"rating": 4.5, "timp": 25},
     "Burger King": {"rating": 4.2, "timp": 15}
 }
+print(f"Stats inițiale: {len(stats)} restaurante")
+# Output: Stats inițiale: 2 restaurante
 
-# Accesare rapidă după cheie
+# Accesare rapidă după cheie O(1)
 rating = stats["Pizza Express"]["rating"]
-stats["KFC"] = {"rating": 4.0}  # Adaugă nou
+print(f"Rating Pizza Express: {rating}")
+# Output: Rating Pizza Express: 4.5
+
+stats["KFC"] = {"rating": 4.0, "timp": 20}
+print(f"După adăugare: {len(stats)} restaurante")
+# Output: După adăugare: 3 restaurante
 
 # Iterare prin toate
+print("Toate restaurantele:")
 for restaurant, date in stats.items():
-    print(f"{restaurant}: {date['rating']}")
-
-# Perfect pentru: cache, configurări, baze de date simple`}</CodeBlockR>
+    print(f"  {restaurant}: ⭐{date['rating']}")
+# Output:
+#   Pizza Express: ⭐4.5
+#   Burger King: ⭐4.2
+#   KFC: ⭐4.0`}</CodeBlockR>
                     </div>
                   </div>
                 </div>
@@ -663,22 +692,33 @@ for restaurant, date in stats.items():
                     <div className="rounded-lg overflow-hidden border border-gray-700">
                       <CodeBlockR language="python">{`# Tuple - secvență imutabilă
 coordonate = (44.4268, 26.1025, "București", "România")
+print(f"Coordonate: {coordonate}")
+# Output: Coordonate: (44.4268, 26.1025, 'București', 'România')
 
 # Accesare după index
-lat = coordonate[0]
-lng = coordonate[1]
+lat, lng = coordonate[0], coordonate[1]
+print(f"Lat: {lat}, Lng: {lng}")
+# Output: Lat: 44.4268, Lng: 26.1025
 
 # Unpacking (destructuring)
 lat, lng, oras, tara = coordonate
+print(f"{oras}, {tara}")
+# Output: București, România
 
 # Încearcă să modifici (va da eroare!):
-# coordonate[0] = 45.0  # TypeError!
+try:
+    coordonate[0] = 45.0
+except TypeError:
+    print("❌ Eroare: tuple-ul este imutabil!")
+# Output: ❌ Eroare: tuple-ul este imutabil!
 
-# Folosire în funcții
-def calculeaza_distanta(punct1, punct2):
-    return math.sqrt((punct1[0] - punct2[0])**2)
+# Folosire în funcții - returnare multiplă
+def get_restaurant_info():
+    return ("Pizza Express", 4.5, 25)  # tuple
 
-# Perfect pentru: coordonate, configurări fixe, returnări multiple`}</CodeBlockR>
+nume, rating, timp = get_restaurant_info()
+print(f"{nume}: {rating}⭐, {timp}min")
+# Output: Pizza Express: 4.5⭐, 25min`}</CodeBlockR>
                     </div>
                   </div>
                 </div>
@@ -785,12 +825,25 @@ def calculeaza_distanta(punct1, punct2):
                   <div className="rounded-lg overflow-hidden border border-gray-700">
                     <CodeBlockR language="python">{`# Bubble Sort - Algoritm educațional O(n²)
 def bubble_sort(comenzi, key):
+    comenzi = comenzi.copy()
     n = len(comenzi)
     for i in range(n):
         for j in range(0, n-i-1):
             if comenzi[j][key] > comenzi[j+1][key]:
                 comenzi[j], comenzi[j+1] = comenzi[j+1], comenzi[j]
-    return comenzi`}</CodeBlockR>
+    return comenzi
+
+# Exemplu real
+orders = [
+    {"id": 1, "timp": 25}, {"id": 2, "timp": 15},
+    {"id": 3, "timp": 30}, {"id": 4, "timp": 12}
+]
+print("Nesortate:", [o["timp"] for o in orders])
+# Output: Nesortate: [25, 15, 30, 12]
+
+sorted_orders = bubble_sort(orders, "timp")
+print("Sortate:", [o["timp"] for o in sorted_orders])
+# Output: Sortate: [12, 15, 25, 30]`}</CodeBlockR>
                   </div>
 
                   <div className="rounded-lg overflow-hidden border border-gray-700">
@@ -804,19 +857,47 @@ def quick_sort(comenzi, key):
     middle = [x for x in comenzi if x[key] == pivot[key]]
     right = [x for x in comenzi if x[key] > pivot[key]]
 
-    return quick_sort(left, key) + middle + quick_sort(right, key)`}</CodeBlockR>
+    return quick_sort(left, key) + middle + quick_sort(right, key)
+
+# Exemplu real
+orders = [
+    {"id": 1, "pret": 45}, {"id": 2, "pret": 35},
+    {"id": 3, "pret": 65}, {"id": 4, "pret": 28}
+]
+print("Nesortate:", [o["pret"] for o in orders])
+# Output: Nesortate: [45, 35, 65, 28]
+
+sorted_orders = quick_sort(orders, "pret")
+print("Sortate:", [o["pret"] for o in sorted_orders])
+# Output: Sortate: [28, 35, 45, 65]
+print("⚡ Rapid chiar și pentru 10,000 elemente!")`}</CodeBlockR>
                   </div>
 
                   <div className="rounded-lg overflow-hidden border border-gray-700">
                     <CodeBlockR language="python">{`# Python Built-in - TimSort O(n log n), optimizat
-# Sortare simplă
-comenzi.sort(key=lambda x: x['${sortBy}'])
+orders = [
+    {"id": 1, "pret": 45, "priority": "normal", "time": 25},
+    {"id": 2, "pret": 35, "priority": "urgent", "time": 15},
+    {"id": 3, "pret": 65, "priority": "normal", "time": 30}
+]
 
-# Sortare cu mai multe criterii
-comenzi.sort(key=lambda x: (x['priority'], x['time']))
+# Sortare simplă
+orders_copy = orders.copy()
+orders_copy.sort(key=lambda x: x['time'])
+print("După timp:", [o['time'] for o in orders_copy])
+# Output: După timp: [15, 25, 30]
+
+# Sortare cu mai multe criterii (prioritate, apoi timp)
+orders_copy = orders.copy()
+orders_copy.sort(key=lambda x: (x['priority'], x['time']))
+print("După priority+time:", [(o['priority'], o['time']) for o in orders_copy])
+# Output: După priority+time: [('normal', 25), ('normal', 30), ('urgent', 15)]
 
 # Sortare descrescătoare
-comenzi.sort(key=lambda x: x['${sortBy}'], reverse=True)`}</CodeBlockR>
+orders_copy = orders.copy()
+orders_copy.sort(key=lambda x: x['pret'], reverse=True)
+print("Preț descrescător:", [o['pret'] for o in orders_copy])
+# Output: Preț descrescător: [65, 45, 35]`}</CodeBlockR>
                   </div>
                 </div>
                 
@@ -927,9 +1008,22 @@ def linear_search(comenzi, termen):
 
     return rezultate, pasi
 
-# Timp: O(n) - Trebuie să verific toată lista
-# Avantaj: Funcționează pe orice listă
-# Dezavantaj: Lent pentru liste mari`}</CodeBlockR>
+# Exemplu real
+orders = [
+    {"id": 1, "restaurant": "Pizza Express"},
+    {"id": 2, "restaurant": "Burger King"},
+    {"id": 3, "restaurant": "Pizza Hut"},
+    {"id": 4, "restaurant": "Sushi Zen"}
+]
+
+rezultate, pasi = linear_search(orders, "Pizza")
+print(f"Găsite {len(rezultate)} în {pasi} pași:")
+for r in rezultate:
+    print(f"  - {r['restaurant']}")
+# Output:
+#   Găsite 2 în 4 pași:
+#   - Pizza Express
+#   - Pizza Hut`}</CodeBlockR>
                   </div>
 
                   <div className="rounded-lg overflow-hidden border border-gray-700">
@@ -951,23 +1045,47 @@ def binary_search(comenzi_sortate, termen):
 
     return None, pasi
 
-# Timp: O(log n) - Înjumătățesc zona de căutare
-# Avantaj: Foarte rapid pentru liste mari
-# Dezavantaj: Lista TREBUIE să fie sortată`}</CodeBlockR>
+# Lista TREBUIE sortată alfabetic!
+sorted_orders = [
+    {"id": 2, "restaurant": "Burger King"},
+    {"id": 4, "restaurant": "McDonald's"},
+    {"id": 1, "restaurant": "Pizza Express"}
+]
+
+result, pasi = binary_search(sorted_orders, "Pizza Express")
+print(f"Găsit în {pasi} pași: {result['restaurant']}")
+# Output: Găsit în 2 pași: Pizza Express
+
+# Pentru 1000 elemente: ~10 pași vs ~1000 la linear!
+print("⚡ Binary search: log₂(1000) ≈ 10 pași")`}</CodeBlockR>
                   </div>
 
                   <div className="rounded-lg overflow-hidden border border-gray-700">
                     <CodeBlockR language="python">{`# Căutări optimizate în Python
-# Folosind built-in functions
-rezultate = [c for c in comenzi if termen in c['restaurant']]
+orders = [
+    {"restaurant": "Pizza Express"}, {"restaurant": "Burger King"},
+    {"restaurant": "Sushi Zen"}, {"restaurant": "KFC"}
+]
 
-# Căutare cu bisect (pentru liste sortate)
+# 1. List comprehension - clean și rapid
+termen = "Pizza"
+rezultate = [c for c in orders if termen in c['restaurant']]
+print(f"List comp: {[r['restaurant'] for r in rezultate]}")
+# Output: List comp: ['Pizza Express']
+
+# 2. Set lookup O(1) - INSTANT pentru verificări!
+restaurante_set = set(c['restaurant'] for c in orders)
+print(f"Burger King există? {('Burger King' in restaurante_set)}")
+# Output: Burger King există? True
+print(f"McDonald's există? {('McDonald\\'s' in restaurante_set)}")
+# Output: McDonald's există? False
+
+# 3. Bisect pentru liste sortate
 import bisect
-index = bisect.bisect_left(comenzi_sortate, termen)
-
-# Set lookup O(1) - pentru verificări de existență
-restaurante_set = set(c['restaurant'] for c in comenzi)
-existe = termen in restaurante_set  # Instant!`}</CodeBlockR>
+preturi = [28, 35, 45, 65]  # TREBUIE sortată!
+poz = bisect.bisect_left(preturi, 40)
+print(f"Câte comenzi sub 40 RON? {poz}")
+# Output: Câte comenzi sub 40 RON? 2`}</CodeBlockR>
                   </div>
                 </div>
                 
@@ -1068,7 +1186,12 @@ existe = termen in restaurante_set  # Instant!`}</CodeBlockR>
                     <h5 className="font-bold text-green-800 mb-2">🏆 O(1) - Constant</h5>
                     <p className="text-sm mb-2">Acces la dict/set, append la listă</p>
                     <div className="rounded-lg overflow-hidden border border-gray-700">
-                      <CodeBlockR language="python">{`dict_lookup = mydict[key]  # Mereu rapid`}</CodeBlockR>
+                      <CodeBlockR language="python">{`# O(1) - Mereu rapid, indiferent de mărime!
+mydict = {f"key{i}": i for i in range(1000000)}
+value = mydict["key500000"]  # Instant!
+print(f"Găsit: {value}")
+# Output: Găsit: 500000
+# Timp: ~0.001ms chiar pentru 1M elemente`}</CodeBlockR>
                     </div>
                   </div>
 
@@ -1076,7 +1199,21 @@ existe = termen in restaurante_set  # Instant!`}</CodeBlockR>
                     <h5 className="font-bold text-blue-800 mb-2">📊 O(log n) - Logaritmic</h5>
                     <p className="text-sm mb-2">Binary search, operații pe arbori</p>
                     <div className="rounded-lg overflow-hidden border border-gray-700">
-                      <CodeBlockR language="python">{`binary_search(sorted_list, target)`}</CodeBlockR>
+                      <CodeBlockR language="python">{`# O(log n) - Foarte eficient pentru liste mari
+def binary_search_count(arr, target):
+    left, right, steps = 0, len(arr) - 1, 0
+    while left <= right:
+        steps += 1
+        mid = (left + right) // 2
+        if arr[mid] == target: return steps
+        elif arr[mid] < target: left = mid + 1
+        else: right = mid - 1
+    return steps
+
+print(f"100 elemente: {binary_search_count(range(100), 99)} pași")
+# Output: 100 elemente: 7 pași
+print(f"10,000 elemente: {binary_search_count(range(10000), 9999)} pași")
+# Output: 10,000 elemente: 14 pași`}</CodeBlockR>
                     </div>
                   </div>
 
@@ -1084,7 +1221,15 @@ existe = termen in restaurante_set  # Instant!`}</CodeBlockR>
                     <h5 className="font-bold text-orange-800 mb-2">⚡ O(n) - Linear</h5>
                     <p className="text-sm mb-2">Linear search, iterare prin listă</p>
                     <div className="rounded-lg overflow-hidden border border-gray-700">
-                      <CodeBlockR language="python">{`for item in my_list: process(item)`}</CodeBlockR>
+                      <CodeBlockR language="python">{`# O(n) - Creștelinear cu dimensiunea
+my_list = list(range(1000))
+count = 0
+for item in my_list:
+    count += 1
+
+print(f"Pentru {len(my_list)} elemente: {count} operații")
+# Output: Pentru 1000 elemente: 1000 operații
+# Dublu date = dublu timp!`}</CodeBlockR>
                     </div>
                   </div>
 
@@ -1092,7 +1237,15 @@ existe = termen in restaurante_set  # Instant!`}</CodeBlockR>
                     <h5 className="font-bold text-orange-800 mb-2">🚀 O(n log n) - Linearitmic</h5>
                     <p className="text-sm mb-2">Quick sort, merge sort, Tim sort</p>
                     <div className="rounded-lg overflow-hidden border border-gray-700">
-                      <CodeBlockR language="python">{`my_list.sort()  # TimSort în Python`}</CodeBlockR>
+                      <CodeBlockR language="python">{`# O(n log n) - Foarte eficient pentru sortare
+import random
+my_list = [random.randint(1, 1000) for _ in range(1000)]
+
+my_list.sort()  # TimSort în Python
+print(f"Sortat {len(my_list)} elemente")
+# Output: Sortat 1000 elemente
+# 1000 elem: ~10,000 ops
+# 10,000 elem: ~130,000 ops (nu 100M!)`}</CodeBlockR>
                     </div>
                   </div>
 
@@ -1100,7 +1253,17 @@ existe = termen in restaurante_set  # Instant!`}</CodeBlockR>
                     <h5 className="font-bold text-red-800 mb-2">🐌 O(n²) - Pătratic</h5>
                     <p className="text-sm mb-2">Bubble sort, nested loops</p>
                     <div className="rounded-lg overflow-hidden border border-gray-700">
-                      <CodeBlockR language="python">{`for i in range(n): for j in range(n): ...`}</CodeBlockR>
+                      <CodeBlockR language="python">{`# O(n²) - Explodează rapid!
+n = 100
+count = 0
+for i in range(n):
+    for j in range(n):
+        count += 1
+
+print(f"Pentru n={n}: {count} operații")
+# Output: Pentru n=100: 10000 operații
+# n=1000 → 1,000,000 ops! 😱
+# Evită nested loops când poți!`}</CodeBlockR>
                     </div>
                   </div>
                 </div>

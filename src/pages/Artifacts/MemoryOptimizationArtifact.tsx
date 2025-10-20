@@ -144,7 +144,7 @@ const MemoryOptimizationArtifact = () => {
 
   return (
     <div className="min-h-screen" style={{
-      background: 'linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%)',
+      background: 'linear-gradient(135deg, #c7787bff 0%, #fecfef 50%, #fecfef 100%)',
       color: '#333'
     }}>
       {/* Back Button */}
@@ -164,7 +164,7 @@ const MemoryOptimizationArtifact = () => {
         <div className="text-center py-16 text-white relative">
           <div className="text-6xl mb-6 animate-pulse">🧠💾</div>
           <h1 className="text-4xl md:text-6xl font-bold mb-4 animate-fadeInUp">
-            Sesiunea 5: Memoria & Eficiența
+            Sesiunea 12: Memoria & Eficiența
           </h1>
           <p className="text-lg md:text-xl opacity-95 max-w-4xl mx-auto leading-relaxed">
             Cum memoria limitată a calculatoarelor a născut nevoile de optimizare<br/>
@@ -634,16 +634,6 @@ def query_database(sql):
             <p className="mb-4">
               Care rezultate păstrăm? Care eliminăm? Cum decidem?
             </p>
-          </div>
-          
-          <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6">
-            <h3 className="text-xl font-bold mb-4">🎯 În Următoarele Sesiuni:</h3>
-            <ul className="space-y-2 text-sm">
-              <li>✨ <strong>Sesiunea 6:</strong> Strategii de eliminare inteligentă (LRU naște din necesitate)</li>
-              <li>✨ <strong>Sesiunea 7:</strong> Cache distribuit și probleme de sincronizare</li>
-              <li>✨ <strong>Sesiunea 8:</strong> Sisteme moderne (Redis, Memcached)</li>
-              <li>✨ <strong>Sesiunea 9:</strong> Cache în AI/ML - de ce ChatGPT nu recalculează tot</li>
-            </ul>
           </div>
           
           <div className="text-center mt-8">
