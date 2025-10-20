@@ -1,11 +1,9 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Copy, Check, Eye, Cpu, Satellite, Factory, Palette, Wind, AlertTriangle, ChevronDown, ChevronUp, Code, ArrowLeft } from 'lucide-react';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { Eye, Cpu, Satellite, Factory, Palette, Wind, AlertTriangle, ChevronDown, ChevronUp, Code, ArrowLeft } from 'lucide-react';
+import { CodeBlockR } from '@/components/CodeBlockR';
 
 const CNNSessions3738 = () => {
-  const [copiedSection, setCopiedSection] = useState<string | null>(null);
   const [activeChapter, setActiveChapter] = useState(0);
   const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({
     part1: false,
@@ -13,12 +11,6 @@ const CNNSessions3738 = () => {
     part3: false,
     part4: false
   });
-
-  const copyToClipboard = (text: string, section: string) => {
-    navigator.clipboard.writeText(text);
-    setCopiedSection(section);
-    setTimeout(() => setCopiedSection(null), 2000);
-  };
 
   const toggleSection = (section: string) => {
     setExpandedSections(prev => ({
@@ -1852,36 +1844,7 @@ print("=" * 70)
           {/* Collapsible Code Section */}
           {expandedSections.part1 && (
             <div className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-lg p-6 relative animate-fade-in">
-              <Button
-                onClick={() => copyToClipboard(part1Content.code, 'part1')}
-                className="absolute top-4 right-4 bg-blue-600 hover:bg-blue-700 z-10"
-                size="sm"
-              >
-                {copiedSection === 'part1' ? (
-                  <>
-                    <Check className="w-4 h-4 mr-2" />
-                    Copied!
-                  </>
-                ) : (
-                  <>
-                    <Copy className="w-4 h-4 mr-2" />
-                    Copy Code
-                  </>
-                )}
-              </Button>
-
-              <SyntaxHighlighter
-                language="python"
-                style={vscDarkPlus}
-                customStyle={{
-                  margin: 0,
-                  padding: '1.5rem',
-                  background: 'transparent',
-                  fontSize: '0.9rem'
-                }}
-              >
-                {part1Content.code}
-              </SyntaxHighlighter>
+              <CodeBlockR language="python">{part1Content.code}</CodeBlockR>
             </div>
           )}
 
@@ -1933,36 +1896,7 @@ print("=" * 70)
           {/* Collapsible Code Section */}
           {expandedSections.part2 && (
             <div className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-lg p-6 relative animate-fade-in">
-              <Button
-                onClick={() => copyToClipboard(part2Content.code, 'part2')}
-                className="absolute top-4 right-4 bg-green-600 hover:bg-green-700 z-10"
-                size="sm"
-              >
-                {copiedSection === 'part2' ? (
-                  <>
-                    <Check className="w-4 h-4 mr-2" />
-                    Copied!
-                  </>
-                ) : (
-                  <>
-                    <Copy className="w-4 h-4 mr-2" />
-                    Copy Code
-                  </>
-                )}
-              </Button>
-
-              <SyntaxHighlighter
-                language="python"
-                style={vscDarkPlus}
-                customStyle={{
-                  margin: 0,
-                  padding: '1.5rem',
-                  background: 'transparent',
-                  fontSize: '0.9rem'
-                }}
-              >
-                {part2Content.code}
-              </SyntaxHighlighter>
+              <CodeBlockR language="python">{part2Content.code}</CodeBlockR>
             </div>
           )}
 
@@ -2044,36 +1978,7 @@ print("=" * 70)
           {/* Collapsible Code Section */}
           {expandedSections.part3 && (
             <div className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-lg p-6 relative animate-fade-in">
-              <Button
-                onClick={() => copyToClipboard(part3Content.code, 'part3')}
-                className="absolute top-4 right-4 bg-purple-600 hover:bg-purple-700 z-10"
-                size="sm"
-              >
-                {copiedSection === 'part3' ? (
-                  <>
-                    <Check className="w-4 h-4 mr-2" />
-                    Copied!
-                  </>
-                ) : (
-                  <>
-                    <Copy className="w-4 h-4 mr-2" />
-                    Copy Code
-                  </>
-                )}
-              </Button>
-
-              <SyntaxHighlighter
-                language="python"
-                style={vscDarkPlus}
-                customStyle={{
-                  margin: 0,
-                  padding: '1.5rem',
-                  background: 'transparent',
-                  fontSize: '0.9rem'
-                }}
-              >
-                {part3Content.code}
-              </SyntaxHighlighter>
+              <CodeBlockR language="python">{part3Content.code}</CodeBlockR>
             </div>
           )}
 
@@ -2135,36 +2040,7 @@ print("=" * 70)
           {/* Collapsible Code Section */}
           {expandedSections.part4 && (
             <div className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-lg p-6 relative animate-fade-in">
-              <Button
-                onClick={() => copyToClipboard(part4Content.code, 'part4')}
-                className="absolute top-4 right-4 bg-pink-600 hover:bg-pink-700 z-10"
-                size="sm"
-              >
-                {copiedSection === 'part4' ? (
-                  <>
-                    <Check className="w-4 h-4 mr-2" />
-                    Copied!
-                  </>
-                ) : (
-                  <>
-                    <Copy className="w-4 h-4 mr-2" />
-                    Copy Code
-                  </>
-                )}
-              </Button>
-
-              <SyntaxHighlighter
-                language="python"
-                style={vscDarkPlus}
-                customStyle={{
-                  margin: 0,
-                  padding: '1.5rem',
-                  background: 'transparent',
-                  fontSize: '0.9rem'
-                }}
-              >
-                {part4Content.code}
-              </SyntaxHighlighter>
+              <CodeBlockR language="python">{part4Content.code}</CodeBlockR>
             </div>
           )}
 

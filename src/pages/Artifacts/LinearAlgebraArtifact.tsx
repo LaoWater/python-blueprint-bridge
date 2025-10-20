@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Play, Pause, RotateCcw, Brain, Zap, Target, Sparkles } from 'lucide-react';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { CodeBlockR } from '@/components/CodeBlockR';
 
 const LinearAlgebraArtifact = () => {
   const navigate = useNavigate();
@@ -425,17 +424,7 @@ const LinearAlgebraArtifact = () => {
                 <div>
                   <h4 className="font-semibold text-blue-700 mb-3">💻 Codul NumPy:</h4>
                   <div className="rounded-lg overflow-hidden border border-gray-700">
-                    <SyntaxHighlighter
-                      language="python"
-                      style={vscDarkPlus}
-                      customStyle={{
-                        margin: 0,
-                        padding: '1rem',
-                        fontSize: '0.875rem',
-                        borderRadius: '0.5rem',
-                      }}
-                      showLineNumbers={false}
-                    >{`# Operații fundamentale cu matrici
+                    <CodeBlockR language="python">{`# Operații fundamentale cu matrici
 import numpy as np
 
 # Definirea matricilor
@@ -446,7 +435,7 @@ B = np.array(${JSON.stringify(matrixB)})
 ${operation === 'multiply' ? 'rezultat = np.dot(A, B)  # Înmulțire matriceală' : 'rezultat = A + B  # Adunare element cu element'}
 
 # În spatele fiecărei rețele neuronale!
-print(f"Rezultat: \\n{rezultat}")`}</SyntaxHighlighter>
+print(f"Rezultat: \\n{rezultat}")`}</CodeBlockR>
                   </div>
                 </div>
               </div>
@@ -539,17 +528,7 @@ print(f"Rezultat: \\n{rezultat}")`}</SyntaxHighlighter>
                 <div>
                   <h4 className="font-semibold text-pink-700 mb-3">💻 Implementare NumPy:</h4>
                   <div className="rounded-lg overflow-hidden border border-gray-700">
-                    <SyntaxHighlighter
-                      language="python"
-                      style={vscDarkPlus}
-                      customStyle={{
-                        margin: 0,
-                        padding: '1rem',
-                        fontSize: '0.875rem',
-                        borderRadius: '0.5rem',
-                      }}
-                      showLineNumbers={false}
-                    >{`# Rețea neuronală simplă
+                    <CodeBlockR language="python">{`# Rețea neuronală simplă
 import numpy as np
 
 # Date de intrare
@@ -569,7 +548,7 @@ output = forward_pass(inputs, weights)
 print(f"Output: {output}")
 
 # ChatGPT face exact asta, dar cu
-# miliarde de parametri! 🤯`}</SyntaxHighlighter>
+# miliarde de parametri! 🤯`}</CodeBlockR>
                   </div>
                 </div>
               </div>
@@ -655,17 +634,7 @@ print(f"Output: {output}")
                 <div>
                   <h4 className="font-semibold text-cyan-700 mb-3">💻 Detectarea Marginilor:</h4>
                   <div className="rounded-lg overflow-hidden border border-gray-700">
-                    <SyntaxHighlighter
-                      language="python"
-                      style={vscDarkPlus}
-                      customStyle={{
-                        margin: 0,
-                        padding: '1rem',
-                        fontSize: '0.875rem',
-                        borderRadius: '0.5rem',
-                      }}
-                      showLineNumbers={false}
-                    >{`# Computer Vision cu NumPy
+                    <CodeBlockR language="python">{`# Computer Vision cu NumPy
 import numpy as np
 
 # Imaginea ca matrice 8×8
@@ -688,7 +657,7 @@ margini = detecteaza_margini(imagine, sobel_x)
 print("Margini detectate!")
 
 # Exact așa funcționează
-# recunoașterea facială! 📸`}</SyntaxHighlighter>
+# recunoașterea facială! 📸`}</CodeBlockR>
                   </div>
                 </div>
               </div>
@@ -797,17 +766,7 @@ print("Margini detectate!")
                 <div>
                   <h4 className="font-semibold text-orange-700 mb-3">💻 Matrici de Transformare:</h4>
                   <div className="rounded-lg overflow-hidden border border-gray-700">
-                    <SyntaxHighlighter
-                      language="python"
-                      style={vscDarkPlus}
-                      customStyle={{
-                        margin: 0,
-                        padding: '1.5rem',
-                        fontSize: '0.875rem',
-                        borderRadius: '0.5rem',
-                      }}
-                      showLineNumbers={false}
-                    >{`# Transformări geometrice
+                    <CodeBlockR language="python">{`# Transformări geometrice
 import numpy as np
 import math
 
@@ -838,7 +797,7 @@ print(f"Transformare aplicată: {puncte_noi}")
 
 # Așa se mișcă personajele în jocuri! 🎮
 # Unity, Unreal Engine - toate folosesc
-# aceste matrici de transformare!`}</SyntaxHighlighter>
+# aceste matrici de transformare!`}</CodeBlockR>
                   </div>
                 </div>
               </div>
@@ -929,17 +888,7 @@ print(f"Transformare aplicată: {puncte_noi}")
                 <div>
                   <h4 className="font-semibold text-emerald-700 mb-3">💻 Analiza Componentelor Principale:</h4>
                   <div className="rounded-lg overflow-hidden border border-gray-700">
-                    <SyntaxHighlighter
-                      language="python"
-                      style={vscDarkPlus}
-                      customStyle={{
-                        margin: 0,
-                        padding: '1.5rem',
-                        fontSize: '0.875rem',
-                        borderRadius: '0.5rem',
-                      }}
-                      showLineNumbers={false}
-                    >{`# Principal Component Analysis (PCA)
+                    <CodeBlockR language="python">{`# Principal Component Analysis (PCA)
 import numpy as np
 from numpy.linalg import eig
 
@@ -965,7 +914,7 @@ componenta_2 = eigenvectori_sortati[:, 1]
 # • Recunoașterea facială (eigenfaces)
 # • Compresie imagini
 # • Analiză big data
-# • Machine Learning dimensionality reduction`}</SyntaxHighlighter>
+# • Machine Learning dimensionality reduction`}</CodeBlockR>
                   </div>
                 </div>
               </div>

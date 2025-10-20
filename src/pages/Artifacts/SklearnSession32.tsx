@@ -4,13 +4,11 @@ import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
-import { Copy, Check, Play, Pause, ArrowLeft, Home, BarChart3 } from 'lucide-react';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { Play, Pause, ArrowLeft, Home, BarChart3 } from 'lucide-react';
+import { CodeBlockR } from '@/components/CodeBlockR';
 
 const SklearnSession32 = () => {
   const navigate = useNavigate();
-  const [copiedCode, setCopiedCode] = useState<string | null>(null);
   const [currentStory, setCurrentStory] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
 
@@ -172,56 +170,15 @@ Cu ele, transformi ML din "black box" în "understood system".
     return () => clearInterval(interval);
   }, [isPlaying, currentStory]);
 
-  const copyToClipboard = (code: string, id: string) => {
-    navigator.clipboard.writeText(code);
-    setCopiedCode(id);
-    setTimeout(() => setCopiedCode(null), 2000);
-  };
-
-  const CodeBlock = ({ code, id, title }: { code: string; id: string; title?: string }) => (
+  const CodeBlock = ({ code, title }: { code: string; title?: string }) => (
     <div className="relative group">
       {title && (
         <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-4 py-2 rounded-t-lg font-semibold text-sm">
           {title}
         </div>
       )}
-      <div className="relative">
-        <Button
-          onClick={() => copyToClipboard(code, id)}
-          className="absolute top-2 right-2 z-10 bg-gray-800/80 hover:bg-gray-700/80 opacity-0 group-hover:opacity-100 transition-opacity"
-          size="sm"
-          variant="secondary"
-        >
-          {copiedCode === id ? (
-            <span className="text-green-400 text-xs flex items-center gap-1">
-              <Check className="h-4 w-4" /> Copied!
-            </span>
-          ) : (
-            <Copy className="h-4 w-4 text-gray-300" />
-          )}
-        </Button>
-        <div className={`rounded-lg overflow-hidden border border-gray-700 ${title ? 'rounded-t-none' : ''}`}>
-          <SyntaxHighlighter
-            language="python"
-            style={vscDarkPlus}
-            customStyle={{
-              margin: 0,
-              padding: '1.5rem',
-              fontSize: '0.875rem',
-              maxHeight: '32rem',
-              borderRadius: title ? '0 0 0.5rem 0.5rem' : '0.5rem',
-            }}
-            showLineNumbers={true}
-            lineNumberStyle={{
-              minWidth: '3em',
-              paddingRight: '1em',
-              color: '#6e7681',
-              userSelect: 'none',
-            }}
-          >
-            {code}
-          </SyntaxHighlighter>
-        </div>
+      <div className={`rounded-lg overflow-hidden border border-gray-700 ${title ? 'rounded-t-none' : ''}`}>
+        <CodeBlockR language="python">{code}</CodeBlockR>
       </div>
     </div>
   );
@@ -435,7 +392,6 @@ Cu ele, transformi ML din "black box" în "understood system".
 
                 <TabsContent value="code" className="mt-6">
                   <CodeBlock
-                    id="data-exploration"
                     title="Crearea și Explorarea Dataset-ului Real Estate"
                     code={`import pandas as pd
 import numpy as np
@@ -783,7 +739,6 @@ print("""
 
                 <TabsContent value="code" className="mt-6">
                   <CodeBlock
-                    id="column-transformer"
                     title="ColumnTransformer - Preprocessing Complex"
                     code={`import pandas as pd
 import numpy as np
@@ -1101,7 +1056,6 @@ print("""
 
                 <TabsContent value="code" className="mt-6">
                   <CodeBlock
-                    id="three-models"
                     title="Trei Modele De Regression - Comparație Completă"
                     code={`import pandas as pd
 import numpy as np
@@ -1526,7 +1480,6 @@ print("""
 
                 <TabsContent value="code" className="mt-6">
                   <CodeBlock
-                    id="visualizations"
                     title="Vizualizări Avansate - Prediction vs Actual & Residuals"
                     code={`import matplotlib.pyplot as plt
 import seaborn as sns

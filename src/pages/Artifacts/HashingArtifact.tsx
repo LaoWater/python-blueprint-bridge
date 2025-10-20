@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Progress } from '@/components/ui/progress';
 import { AlertCircle, Hash, Users, Search, FileText, BarChart3, Clock, Zap, Shield, Database, CheckCircle, ArrowLeft } from 'lucide-react';
+import { CodeBlockR } from '@/components/CodeBlockR';
 
 const HashingArtifact = () => {
   const navigate = useNavigate();
@@ -340,37 +341,37 @@ const HashingArtifact = () => {
                       <div className="space-y-4">
                         <div className="p-3 bg-purple-50 rounded-lg">
                           <h4 className="font-bold text-purple-700">E-commerce: Coș de cumpărături</h4>
-                          <pre className="text-xs mt-2 bg-white p-2 rounded border">
-{`cart = {
+                          <div className="mt-2 rounded-lg overflow-hidden border border-gray-200">
+                            <CodeBlockR language="python">{`cart = {
     "laptop": {"price": 2500, "qty": 1},
     "mouse": {"price": 50, "qty": 2},
     "keyboard": {"price": 150, "qty": 1}
-}`}
-                          </pre>
+}`}</CodeBlockR>
+                          </div>
                         </div>
 
                         <div className="p-3 bg-indigo-50 rounded-lg">
                           <h4 className="font-bold text-indigo-700">Gaming: Statistici jucător</h4>
-                          <pre className="text-xs mt-2 bg-white p-2 rounded border">
-{`player_stats = {
+                          <div className="mt-2 rounded-lg overflow-hidden border border-gray-200">
+                            <CodeBlockR language="python">{`player_stats = {
     "level": 47,
     "exp": 125430,
     "items": {"sword": 1, "potion": 5},
     "location": "Forest Temple"
-}`}
-                          </pre>
+}`}</CodeBlockR>
+                          </div>
                         </div>
 
                         <div className="p-3 bg-green-50 rounded-lg">
                           <h4 className="font-bold text-green-700">Config: Setări aplicație</h4>
-                          <pre className="text-xs mt-2 bg-white p-2 rounded border">
-{`settings = {
+                          <div className="mt-2 rounded-lg overflow-hidden border border-gray-200">
+                            <CodeBlockR language="python">{`settings = {
     "theme": "dark",
     "language": "ro",
     "notifications": True,
     "api_timeout": 30
-}`}
-                          </pre>
+}`}</CodeBlockR>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -493,30 +494,30 @@ const HashingArtifact = () => {
                       <div className="space-y-4">
                         <div className="p-4 bg-yellow-50 rounded-lg border-l-4 border-yellow-400">
                           <h4 className="font-bold text-yellow-800">📧 Detectare Email Duplicate</h4>
-                          <pre className="text-xs mt-2 bg-white p-2 rounded">
-{`emails = ["a@ex.com", "b@ex.com", "a@ex.com"]
+                          <div className="mt-2 rounded-lg overflow-hidden border border-gray-200">
+                            <CodeBlockR language="python">{`emails = ["a@ex.com", "b@ex.com", "a@ex.com"]
 unique_emails = set(emails)
-print(len(unique_emails))  # 2 (nu 3!)`}
-                          </pre>
+print(len(unique_emails))  # 2 (nu 3!)`}</CodeBlockR>
+                          </div>
                         </div>
 
                         <div className="p-4 bg-blue-50 rounded-lg border-l-4 border-blue-400">
                           <h4 className="font-bold text-blue-800">🏷️ Tag-uri Articole</h4>
-                          <pre className="text-xs mt-2 bg-white p-2 rounded">
-{`article1_tags = {"python", "ai", "tech"}
+                          <div className="mt-2 rounded-lg overflow-hidden border border-gray-200">
+                            <CodeBlockR language="python">{`article1_tags = {"python", "ai", "tech"}
 article2_tags = {"python", "data", "science"}
 common_tags = article1_tags & article2_tags
-# {'python'}`}
-                          </pre>
+# {'python'}`}</CodeBlockR>
+                          </div>
                         </div>
 
                         <div className="p-4 bg-green-50 rounded-lg border-l-4 border-green-400">
                           <h4 className="font-bold text-green-800">🎯 Permisiuni Utilizator</h4>
-                          <pre className="text-xs mt-2 bg-white p-2 rounded">
-{`admin_perms = {"read", "write", "delete"}
+                          <div className="mt-2 rounded-lg overflow-hidden border border-gray-200">
+                            <CodeBlockR language="python">{`admin_perms = {"read", "write", "delete"}
 user_perms = {"read", "write"}
-can_delete = "delete" in user_perms  # False`}
-                          </pre>
+can_delete = "delete" in user_perms  # False`}</CodeBlockR>
+                          </div>
                         </div>
                       </div>
 
@@ -767,8 +768,8 @@ can_delete = "delete" in user_perms  # False`}
 
                         <div className="p-4 bg-green-50 rounded-lg border-l-4 border-green-400">
                           <h4 className="font-bold text-green-800">💡 Algoritm Hashing</h4>
-                          <pre className="text-xs mt-2 bg-white p-3 rounded overflow-x-auto">
-{`def find_duplicates(emails):
+                          <div className="mt-2 rounded-lg overflow-hidden border border-gray-200">
+                            <CodeBlockR language="python">{`def find_duplicates(emails):
     seen = set()          # Hash table O(1)
     duplicates = set()
     
@@ -777,8 +778,8 @@ can_delete = "delete" in user_perms  # False`}
             duplicates.add(email)
         seen.add(email)   # O(1) insert!
     
-    return duplicates     # Total: O(n)`}
-                          </pre>
+    return duplicates     # Total: O(n)`}</CodeBlockR>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -826,8 +827,8 @@ can_delete = "delete" in user_perms  # False`}
                       
                       <div className="p-4 bg-green-50 rounded-lg border-l-4 border-green-400">
                         <h4 className="font-bold text-green-700 mb-3">📦 Inventar Dinamic</h4>
-                        <pre className="text-xs bg-white p-3 rounded overflow-x-auto">
-{`from collections import defaultdict
+                        <div className="rounded-lg overflow-hidden border border-gray-200">
+                          <CodeBlockR language="python">{`from collections import defaultdict
 
 # Fără defaultdict - cod verbos
 inventory = {}
@@ -841,8 +842,8 @@ def add_product(category, product, qty):
 # Cu defaultdict - elegant și simplu  
 inventory = defaultdict(lambda: defaultdict(int))
 def add_product(category, product, qty):
-    inventory[category][product] += qty  # That's it!`}
-                        </pre>
+    inventory[category][product] += qty  # That's it!`}</CodeBlockR>
+                        </div>
                       </div>
 
                       <div className="mt-4 space-y-3">
@@ -901,8 +902,8 @@ def add_product(category, product, qty):
 
                         <div className="p-4 bg-yellow-50 rounded-lg border-l-4 border-yellow-400">
                           <h4 className="font-bold text-yellow-800">🔍 Counter în Practice</h4>
-                          <pre className="text-xs mt-2 bg-white p-3 rounded overflow-x-auto">
-{`from collections import Counter
+                          <div className="mt-2 rounded-lg overflow-hidden border border-gray-200">
+                            <CodeBlockR language="python">{`from collections import Counter
 
 # Analiza log-urilor server
 logs = ["GET /home", "GET /about", "POST /login", 
@@ -912,8 +913,8 @@ logs = ["GET /home", "GET /about", "POST /login",
 request_counts = Counter(logs)
 print(request_counts.most_common(3))
 
-# Rezultat: [('GET /home', 3), ('POST /login', 1), ...]`}
-                          </pre>
+# Rezultat: [('GET /home', 3), ('POST /login', 1), ...]`}</CodeBlockR>
+                          </div>
                         </div>
 
                         <div className="p-4 bg-indigo-50 rounded-lg border-l-4 border-indigo-400">
@@ -934,22 +935,22 @@ print(request_counts.most_common(3))
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                       <div>
                         <h5 className="font-bold text-green-700">Manual Counting (Slow)</h5>
-                        <pre className="text-xs bg-white p-2 rounded mt-2">
-{`word_count = {}
+                        <div className="mt-2 rounded-lg overflow-hidden border border-gray-200">
+                          <CodeBlockR language="python">{`word_count = {}
 for word in words:
     if word in word_count:
         word_count[word] += 1
     else:
-        word_count[word] = 1`}
-                        </pre>
+        word_count[word] = 1`}</CodeBlockR>
+                        </div>
                       </div>
                       <div>
                         <h5 className="font-bold text-green-700">Counter (Fast & Clean)</h5>
-                        <pre className="text-xs bg-white p-2 rounded mt-2">
-{`from collections import Counter
+                        <div className="mt-2 rounded-lg overflow-hidden border border-gray-200">
+                          <CodeBlockR language="python">{`from collections import Counter
 word_count = Counter(words)
-# Done! Optimized C implementation`}
-                        </pre>
+# Done! Optimized C implementation`}</CodeBlockR>
+                        </div>
                       </div>
                     </div>
                   </div>

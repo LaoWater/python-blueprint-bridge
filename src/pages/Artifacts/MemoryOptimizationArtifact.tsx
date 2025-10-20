@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Play, Pause, RotateCcw, Zap, Clock, HardDrive } from 'lucide-react';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { CodeBlockR } from '@/components/CodeBlockR';
 
 const MemoryOptimizationArtifact = () => {
   const navigate = useNavigate();
@@ -321,17 +320,7 @@ const MemoryOptimizationArtifact = () => {
             <div>
               <h4 className="font-medium text-red-700 mb-2">🔥 Abordarea Naivă:</h4>
               <div className="rounded-lg overflow-hidden border border-gray-700">
-                <SyntaxHighlighter
-                  language="python"
-                  style={vscDarkPlus}
-                  customStyle={{
-                    margin: 0,
-                    padding: '1rem',
-                    fontSize: '0.875rem',
-                    borderRadius: '0.5rem',
-                  }}
-                  showLineNumbers={false}
-                >{`def proces_user_data(user_id):
+                <CodeBlockR language="python">{`def proces_user_data(user_id):
     # Recalculează de fiecare dată
     raw_data = database.get(user_id)
     processed = heavy_calculation(raw_data)
@@ -340,24 +329,14 @@ const MemoryOptimizationArtifact = () => {
 
 # Pentru același user, recalculează tot!
 result1 = proces_user_data(123)  # 200ms
-result2 = proces_user_data(123)  # Din nou 200ms!`}</SyntaxHighlighter>
+result2 = proces_user_data(123)  # Din nou 200ms!`}</CodeBlockR>
               </div>
             </div>
             
             <div>
               <h4 className="font-medium text-green-700 mb-2">✅ Abordarea Optimizată:</h4>
               <div className="rounded-lg overflow-hidden border border-gray-700">
-                <SyntaxHighlighter
-                  language="python"
-                  style={vscDarkPlus}
-                  customStyle={{
-                    margin: 0,
-                    padding: '1rem',
-                    fontSize: '0.875rem',
-                    borderRadius: '0.5rem',
-                  }}
-                  showLineNumbers={false}
-                >{`# Dicționar simplu pentru rezultate
+                <CodeBlockR language="python">{`# Dicționar simplu pentru rezultate
 rezultate_calculate = {}
 
 def proces_user_data(user_id):
@@ -367,7 +346,7 @@ def proces_user_data(user_id):
     # Doar dacă nu există în memorie
     result = heavy_calculation(user_id)
     rezultate_calculate[user_id] = result
-    return result`}</SyntaxHighlighter>
+    return result`}</CodeBlockR>
               </div>
             </div>
           </div>
@@ -451,20 +430,10 @@ def proces_user_data(user_id):
             <div>
               <h4 className="font-medium text-red-700 mb-3">🔥 Fără Memorie (Ineficient):</h4>
               <div className="rounded-lg overflow-hidden border border-gray-700 mb-4">
-                <SyntaxHighlighter
-                  language="python"
-                  style={vscDarkPlus}
-                  customStyle={{
-                    margin: 0,
-                    padding: '1rem',
-                    fontSize: '0.875rem',
-                    borderRadius: '0.5rem',
-                  }}
-                  showLineNumbers={false}
-                >{`def fibonacci(n):
+                <CodeBlockR language="python">{`def fibonacci(n):
     if n <= 1:
         return n
-    return fibonacci(n-1) + fibonacci(n-2)`}</SyntaxHighlighter>
+    return fibonacci(n-1) + fibonacci(n-2)`}</CodeBlockR>
               </div>
               <div className="text-sm text-red-700 bg-red-50 p-3 rounded">
                 <strong>Problemă:</strong> fibonacci(5) calculează fibonacci(3) de 2 ori,
@@ -475,17 +444,7 @@ def proces_user_data(user_id):
             <div>
               <h4 className="font-medium text-green-700 mb-3">✅ Cu Memorie (Efficient):</h4>
               <div className="rounded-lg overflow-hidden border border-gray-700 mb-4">
-                <SyntaxHighlighter
-                  language="python"
-                  style={vscDarkPlus}
-                  customStyle={{
-                    margin: 0,
-                    padding: '1rem',
-                    fontSize: '0.875rem',
-                    borderRadius: '0.5rem',
-                  }}
-                  showLineNumbers={false}
-                >{`cache = {}
+                <CodeBlockR language="python">{`cache = {}
 
 def fibonacci_cu_cache(n):
     if n in cache:
@@ -497,7 +456,7 @@ def fibonacci_cu_cache(n):
         result = fibonacci_cu_cache(n-1) + fibonacci_cu_cache(n-2)
 
     cache[n] = result
-    return result`}</SyntaxHighlighter>
+    return result`}</CodeBlockR>
               </div>
               <div className="text-sm text-green-700 bg-green-50 p-3 rounded">
                 <strong>Soluție:</strong> Fiecare calcul se face o singură dată și se păstrează în cache.
@@ -576,17 +535,7 @@ def fibonacci_cu_cache(n):
 
           <h3 className="text-xl font-semibold text-purple-700 mb-3">Soluția emergentă:</h3>
           <div className="rounded-lg overflow-hidden border border-gray-700">
-            <SyntaxHighlighter
-              language="python"
-              style={vscDarkPlus}
-              customStyle={{
-                margin: 0,
-                padding: '1.5rem',
-                fontSize: '0.875rem',
-                borderRadius: '0.5rem',
-              }}
-              showLineNumbers={false}
-            >{`# Implementarea primelor cache-uri simple
+            <CodeBlockR language="python">{`# Implementarea primelor cache-uri simple
 query_cache = {}  # Dicționar pentru rezultate
 
 def query_database(sql):
@@ -599,7 +548,7 @@ def query_database(sql):
     print("💾 Cache MISS. Execut query-ul...")
     result = database.execute(sql)  # Operație scumpă
     query_cache[sql] = result
-    return result`}</SyntaxHighlighter>
+    return result`}</CodeBlockR>
           </div>
         </div>
 

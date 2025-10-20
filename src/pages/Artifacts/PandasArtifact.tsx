@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Play, Pause, RotateCcw, Database, FileSpreadsheet, Filter, BarChart3, Calendar, Target, Trash2, Download, Calculator, Copy, Code } from 'lucide-react';
+import { ArrowLeft, Play, Pause, RotateCcw, Database, FileSpreadsheet, Filter, BarChart3, Calendar, Target, Trash2, Download, Calculator, Code } from 'lucide-react';
+import { CodeBlockR } from '@/components/CodeBlockR';
 
 const PandasArtifact = () => {
   const navigate = useNavigate();
@@ -59,7 +60,6 @@ const PandasArtifact = () => {
   
   // Code Snippets State
   const [expandedCode, setExpandedCode] = useState({});
-  const [copiedCode, setCopiedCode] = useState('');
   
   // Story progression
   const storyChapters = [
@@ -249,16 +249,6 @@ const PandasArtifact = () => {
     }));
   };
   
-  const copyToClipboard = async (code: string, codeId: string) => {
-    try {
-      await navigator.clipboard.writeText(code);
-      setCopiedCode(codeId);
-      setTimeout(() => setCopiedCode(''), 2000);
-    } catch (err) {
-      console.error('Failed to copy code:', err);
-    }
-  };
-  
   // CodeSnippet component
   const CodeSnippet = ({ code, title, codeId }: { code: string; title: string; codeId: string }) => (
     <div className="mb-4 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
@@ -281,16 +271,7 @@ const PandasArtifact = () => {
       </div>
       {expandedCode[codeId] && (
         <div className="relative">
-          <pre className="bg-gray-900 text-gray-100 p-4 text-sm overflow-x-auto">
-            <code>{code}</code>
-          </pre>
-          <Button
-            onClick={() => copyToClipboard(code, codeId)}
-            className="absolute top-2 right-2 p-2 bg-gray-700 hover:bg-gray-600 text-white"
-            size="sm"
-          >
-            {copiedCode === codeId ? '✓' : <Copy size={14} />}
-          </Button>
+          <CodeBlockR language="python">{code}</CodeBlockR>
         </div>
       )}
     </div>

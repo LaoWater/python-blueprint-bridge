@@ -4,9 +4,8 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ArrowLeft, Play, Pause, RotateCcw, User, Lock, Scan, Eye, Target, Lightbulb, Copy, Heart, DollarSign, Layers, Shield, Fingerprint, Brain } from 'lucide-react';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { ArrowLeft, Play, Pause, RotateCcw, User, Lock, Scan, Eye, Target, Lightbulb, Heart, DollarSign, Layers, Shield, Fingerprint, Brain } from 'lucide-react';
+import { CodeBlockR } from '@/components/CodeBlockR';
 
 const DlibSession29 = () => {
   const navigate = useNavigate();
@@ -18,7 +17,6 @@ const DlibSession29 = () => {
 
   // Code Snippets State
   const [expandedCode, setExpandedCode] = useState({});
-  const [copiedCode, setCopiedCode] = useState('');
 
   // Story chapters following the NEED-first philosophy
   const storyChapters = [
@@ -1368,11 +1366,6 @@ print("\\n🎯 You're mastering the INTERFACE between humans and machines!")`
     setShowStoryDetails(false);
   };
 
-  const copyCode = (code: string) => {
-    navigator.clipboard.writeText(code);
-    setCopiedCode(code);
-    setTimeout(() => setCopiedCode(''), 2000);
-  };
 
   const toggleCodeExpansion = (index: number) => {
     setExpandedCode(prev => ({
@@ -1532,43 +1525,8 @@ print("\\n🎯 You're mastering the INTERFACE between humans and machines!")`
                     </TabsList>
 
                     <TabsContent value="code" className="space-y-4">
-                      <div className="relative">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => copyCode(part.code)}
-                          className="absolute top-2 right-2 z-10 bg-gray-800/80 hover:bg-gray-700/80"
-                        >
-                          {copiedCode === part.code ? (
-                            <span className="text-green-400 text-xs flex items-center gap-1">
-                              ✓ Copied!
-                            </span>
-                          ) : (
-                            <Copy className="w-4 h-4 text-gray-300" />
-                          )}
-                        </Button>
-                        <div className="rounded-lg overflow-hidden border border-gray-700">
-                          <SyntaxHighlighter
-                            language="python"
-                            style={vscDarkPlus}
-                            customStyle={{
-                              margin: 0,
-                              padding: '1.5rem',
-                              fontSize: '0.875rem',
-                              maxHeight: '32rem',
-                              borderRadius: '0.5rem',
-                            }}
-                            showLineNumbers={true}
-                            lineNumberStyle={{
-                              minWidth: '3em',
-                              paddingRight: '1em',
-                              color: '#6e7681',
-                              userSelect: 'none',
-                            }}
-                          >
-                            {part.code}
-                          </SyntaxHighlighter>
-                        </div>
+                      <div className="rounded-lg overflow-hidden border border-gray-700">
+                        <CodeBlockR language="python">{part.code}</CodeBlockR>
                       </div>
                     </TabsContent>
 

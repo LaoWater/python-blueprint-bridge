@@ -4,13 +4,11 @@ import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
-import { Copy, Check, Play, Pause, ArrowLeft, Brain, Target } from 'lucide-react';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { Play, Pause, ArrowLeft, Brain, Target } from 'lucide-react';
+import { CodeBlockR } from '@/components/CodeBlockR';
 
 const SklearnSession31 = () => {
   const navigate = useNavigate();
-  const [copiedCode, setCopiedCode] = useState<string | null>(null);
   const [currentStory, setCurrentStory] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
 
@@ -121,56 +119,15 @@ Acesta este testul suprem al oricărui model de Machine Learning.`,
     return () => clearInterval(interval);
   }, [isPlaying, currentStory]);
 
-  const copyToClipboard = (code: string, id: string) => {
-    navigator.clipboard.writeText(code);
-    setCopiedCode(id);
-    setTimeout(() => setCopiedCode(null), 2000);
-  };
-
-  const CodeBlock = ({ code, id, title }: { code: string; id: string; title?: string }) => (
+  const CodeBlock = ({ code, title }: { code: string; title?: string }) => (
     <div className="relative group">
       {title && (
         <div className="bg-gradient-to-r from-orange-600 to-red-600 text-white px-4 py-2 rounded-t-lg font-semibold text-sm">
           {title}
         </div>
       )}
-      <div className="relative">
-        <Button
-          onClick={() => copyToClipboard(code, id)}
-          className="absolute top-2 right-2 z-10 bg-gray-800/80 hover:bg-gray-700/80 opacity-0 group-hover:opacity-100 transition-opacity"
-          size="sm"
-          variant="secondary"
-        >
-          {copiedCode === id ? (
-            <span className="text-green-400 text-xs flex items-center gap-1">
-              <Check className="h-4 w-4" /> Copied!
-            </span>
-          ) : (
-            <Copy className="h-4 w-4 text-gray-300" />
-          )}
-        </Button>
-        <div className={`rounded-lg overflow-hidden border border-gray-700 ${title ? 'rounded-t-none' : ''}`}>
-          <SyntaxHighlighter
-            language="python"
-            style={vscDarkPlus}
-            customStyle={{
-              margin: 0,
-              padding: '1.5rem',
-              fontSize: '0.875rem',
-              maxHeight: '32rem',
-              borderRadius: title ? '0 0 0.5rem 0.5rem' : '0.5rem',
-            }}
-            showLineNumbers={true}
-            lineNumberStyle={{
-              minWidth: '3em',
-              paddingRight: '1em',
-              color: '#6e7681',
-              userSelect: 'none',
-            }}
-          >
-            {code}
-          </SyntaxHighlighter>
-        </div>
+      <div className={`rounded-lg overflow-hidden border border-gray-700 ${title ? 'rounded-t-none' : ''}`}>
+        <CodeBlockR language="python">{code}</CodeBlockR>
       </div>
     </div>
   );
@@ -391,7 +348,6 @@ Acesta este testul suprem al oricărui model de Machine Learning.`,
 
                 <TabsContent value="code" className="mt-6">
                   <CodeBlock
-                    id="cancer-dataset"
                     title="Încărcarea și Explorarea Dataset-ului Breast Cancer"
                     code={`import pandas as pd
 import numpy as np
@@ -728,7 +684,6 @@ print("""
 
                 <TabsContent value="code" className="mt-6">
                   <CodeBlock
-                    id="three-classifiers"
                     title="Comparație Între Trei Clasificatori"
                     code={`import numpy as np
 from sklearn.svm import SVC
@@ -1163,7 +1118,6 @@ Actual Malignă    40        2      ← 2 False Negatives (PERICOL!)
 
                 <TabsContent value="code" className="mt-6">
                   <CodeBlock
-                    id="pipelines"
                     title="Construirea Pipelines Sigure"
                     code={`from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
@@ -1363,7 +1317,6 @@ print("""
                       </h3>
 
                       <CodeBlock
-                        id="wrong-approach"
                         title="⚠️ NU FACE AȘA! (Data Leakage)"
                         code={`# ❌❌❌ GREȘIT! NU FACE AȘA! ❌❌❌
 
@@ -1426,7 +1379,6 @@ print("""
                       </h3>
 
                       <CodeBlock
-                        id="correct-approach"
                         title="✅ CORECT! Așa DA!"
                         code={`# ✅✅✅ CORECT! ASA DA! ✅✅✅
 
@@ -1640,7 +1592,6 @@ accuracy = model.score(X_test, y_test)`}</pre>
 
                 <TabsContent value="code" className="mt-6">
                   <CodeBlock
-                    id="gridsearch"
                     title="GridSearchCV - Optimizare Automată De Hyperparametri"
                     code={`from sklearn.model_selection import GridSearchCV
 from sklearn.pipeline import Pipeline

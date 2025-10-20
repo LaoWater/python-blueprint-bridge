@@ -4,9 +4,8 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ArrowLeft, Play, Pause, RotateCcw, TrendingUp, BarChart3, Grid, Target, Lightbulb, Code, Copy, Download, Zap, Activity, Calendar, DollarSign, Briefcase, Heart, Brain, Palette, Eye, LineChart, Check } from 'lucide-react';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { ArrowLeft, Play, Pause, RotateCcw, TrendingUp, BarChart3, Grid, Target, Lightbulb, Code, Download, Zap, Activity, Calendar, DollarSign, Briefcase, Heart, Brain, Palette, Eye, LineChart } from 'lucide-react';
+import { CodeBlockR } from '@/components/CodeBlockR';
 
 const SeabornMasteryArtifact = () => {
   const navigate = useNavigate();
@@ -47,7 +46,6 @@ const SeabornMasteryArtifact = () => {
   
   // Code Snippets State
   const [expandedCode, setExpandedCode] = useState({});
-  const [copiedCode, setCopiedCode] = useState('');
   
   // Story progression
   const storyChapters = [
@@ -556,12 +554,6 @@ print(f"• Recommendation: {'Optimize weekend habits' if weekday_mean > weekend
     setShowFinancialInsights(true);
   };
 
-  const copyCode = (code) => {
-    navigator.clipboard.writeText(code);
-    setCopiedCode(code);
-    setTimeout(() => setCopiedCode(''), 2000);
-  };
-
   const toggleCodeExpansion = (index) => {
     setExpandedCode(prev => ({
       ...prev,
@@ -710,43 +702,8 @@ print(f"• Recommendation: {'Optimize weekend habits' if weekday_mean > weekend
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
-                    <div className="relative">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => copyCode(concept.code)}
-                        className="absolute top-2 right-2 z-10 bg-gray-800/80 hover:bg-gray-700/80"
-                      >
-                        {copiedCode === concept.code ? (
-                          <span className="text-green-400 text-xs flex items-center gap-1">
-                            <Check className="h-4 w-4" /> Copied!
-                          </span>
-                        ) : (
-                          <Copy className="w-4 h-4 text-gray-300" />
-                        )}
-                      </Button>
-                      <div className="rounded-lg overflow-hidden border border-gray-700">
-                        <SyntaxHighlighter
-                          language="python"
-                          style={vscDarkPlus}
-                          customStyle={{
-                            margin: 0,
-                            padding: '1.5rem',
-                            fontSize: '0.875rem',
-                            maxHeight: '32rem',
-                            borderRadius: '0.5rem',
-                          }}
-                          showLineNumbers={true}
-                          lineNumberStyle={{
-                            minWidth: '3em',
-                            paddingRight: '1em',
-                            color: '#6e7681',
-                            userSelect: 'none',
-                          }}
-                        >
-                          {concept.code}
-                        </SyntaxHighlighter>
-                      </div>
+                    <div className="rounded-lg overflow-hidden border border-gray-700">
+                      <CodeBlockR language="python">{concept.code}</CodeBlockR>
                     </div>
                     
                     <div className="flex gap-2">
@@ -953,43 +910,8 @@ print(f"• Recommendation: {'Optimize weekend habits' if weekday_mean > weekend
                     </TabsList>
                     
                     <TabsContent value="code" className="space-y-4">
-                      <div className="relative">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => copyCode(technique.code)}
-                          className="absolute top-2 right-2 z-10 bg-gray-800/80 hover:bg-gray-700/80"
-                        >
-                          {copiedCode === technique.code ? (
-                            <span className="text-green-400 text-xs flex items-center gap-1">
-                              <Check className="h-4 w-4" /> Copied!
-                            </span>
-                          ) : (
-                            <Copy className="w-4 h-4 text-gray-300" />
-                          )}
-                        </Button>
-                        <div className="rounded-lg overflow-hidden border border-gray-700">
-                          <SyntaxHighlighter
-                            language="python"
-                            style={vscDarkPlus}
-                            customStyle={{
-                              margin: 0,
-                              padding: '1.5rem',
-                              fontSize: '0.875rem',
-                              maxHeight: '32rem',
-                              borderRadius: '0.5rem',
-                            }}
-                            showLineNumbers={true}
-                            lineNumberStyle={{
-                              minWidth: '3em',
-                              paddingRight: '1em',
-                              color: '#6e7681',
-                              userSelect: 'none',
-                            }}
-                          >
-                            {technique.code}
-                          </SyntaxHighlighter>
-                        </div>
+                      <div className="rounded-lg overflow-hidden border border-gray-700">
+                        <CodeBlockR language="python">{technique.code}</CodeBlockR>
                       </div>
                     </TabsContent>
                     

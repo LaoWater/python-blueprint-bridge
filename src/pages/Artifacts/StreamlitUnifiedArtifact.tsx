@@ -27,8 +27,7 @@ import {
   ArrowLeft
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { CodeBlockR } from '@/components/CodeBlockR';
 
 // Interactive Code Block Component
 const CodeBlock = ({ title, code, language = "python", runnable = false, filename = "" }) => {
@@ -65,26 +64,9 @@ const CodeBlock = ({ title, code, language = "python", runnable = false, filenam
           </div>
         </div>
       )}
-      <SyntaxHighlighter
-        language={language}
-        style={vscDarkPlus}
-        customStyle={{
-          margin: 0,
-          padding: '1.5rem',
-          fontSize: '0.875rem',
-          maxHeight: '32rem',
-          borderRadius: title || runnable ? '0' : '0.5rem',
-        }}
-        showLineNumbers={true}
-        lineNumberStyle={{
-          minWidth: '3em',
-          paddingRight: '1em',
-          color: '#6e7681',
-          userSelect: 'none',
-        }}
-      >
-        {code}
-      </SyntaxHighlighter>
+      <div className={title || runnable ? 'rounded-b-lg overflow-hidden' : ''}>
+        <CodeBlockR language={language}>{code}</CodeBlockR>
+      </div>
     </div>
   );
 };

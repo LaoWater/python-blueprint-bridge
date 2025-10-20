@@ -2,8 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Play, Pause, RotateCcw, Zap, Brain, Target, Layers, Clock, ChevronRight, ChevronDown } from 'lucide-react';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { CodeBlockR } from '@/components/CodeBlockR';
 
 const AdvancedAlgorithmsArtifact = () => {
   const navigate = useNavigate();
@@ -673,17 +672,7 @@ const AdvancedAlgorithmsArtifact = () => {
                 
                 {visibleCode['merge-sort'] && (
                   <div className="rounded-lg overflow-hidden border border-gray-700">
-                    <SyntaxHighlighter
-                      language="python"
-                      style={vscDarkPlus}
-                      customStyle={{
-                        margin: 0,
-                        padding: '1.5rem',
-                        fontSize: '0.875rem',
-                        borderRadius: '0.5rem',
-                      }}
-                      showLineNumbers={false}
-                    >{`def merge_sort(arr):
+                    <CodeBlockR language="python">{`def merge_sort(arr):
     # Base case: array cu 1 element e deja sortat
     if len(arr) <= 1:
         return arr
@@ -720,7 +709,7 @@ def merge(left, right):
     return result
 
 # Complexitate: O(n log n) - garantat!
-# Space: O(n) - pentru array-urile temporare`}</SyntaxHighlighter>
+# Space: O(n) - pentru array-urile temporare`}</CodeBlockR>
                   </div>
                 )}
                 
@@ -857,9 +846,8 @@ def merge(left, right):
                     </Button>
                     
                     {visibleCode['fibonacci-naive'] && (
-                      <div className="bg-gray-900 text-red-400 rounded-xl p-4 text-sm font-mono">
-                        <pre>
-{`# Fibonacci Naive - O(2^n) - FOARTE LENT!
+                      <div className="rounded-lg overflow-hidden border border-gray-700">
+                        <CodeBlockR language="python">{`# Fibonacci Naive - O(2^n) - FOARTE LENT!
 def fibonacci_naive(n):
     if n <= 1:
         return n
@@ -869,8 +857,7 @@ def fibonacci_naive(n):
 
 # Pentru n=30: ~1.000.000 de apeluri recursive!
 # Pentru n=40: ~1.000.000.000 de apeluri!
-# Crește exponențial - inutil pentru n > 35`}
-                        </pre>
+# Crește exponențial - inutil pentru n > 35`}</CodeBlockR>
                       </div>
                     )}
                   </div>
@@ -886,17 +873,7 @@ def fibonacci_naive(n):
                     
                     {visibleCode['fibonacci-memo'] && (
                       <div className="rounded-lg overflow-hidden border border-gray-700">
-                        <SyntaxHighlighter
-                          language="python"
-                          style={vscDarkPlus}
-                          customStyle={{
-                            margin: 0,
-                            padding: '1rem',
-                            fontSize: '0.875rem',
-                            borderRadius: '0.5rem',
-                          }}
-                          showLineNumbers={false}
-                        >{`# Fibonacci Memoized - O(n) - RAPID!
+                        <CodeBlockR language="python">{`# Fibonacci Memoized - O(n) - RAPID!
 def fibonacci_memo(n, memo={}):
     # Dacă deja am calculat, returnez din cache
     if n in memo:
@@ -910,7 +887,7 @@ def fibonacci_memo(n, memo={}):
     return memo[n]
 
 # Pentru orice n: doar n apeluri!
-# Diferența: de la 2^n la n - incredibil!`}</SyntaxHighlighter>
+# Diferența: de la 2^n la n - incredibil!`}</CodeBlockR>
                       </div>
                     )}
                   </div>
@@ -1036,9 +1013,8 @@ def fibonacci_memo(n, memo={}):
                 </Button>
                 
                 {visibleCode['greedy'] && (
-                  <div className="bg-gray-900 text-orange-400 rounded-xl p-6 text-sm font-mono">
-                    <pre>
-{`def activity_selection(activities):
+                  <div className="rounded-lg overflow-hidden border border-gray-700">
+                    <CodeBlockR language="python">{`def activity_selection(activities):
     """
     Greedy Activity Selection Problem
     Selectează numărul maxim de activități non-overlapping
@@ -1063,8 +1039,7 @@ def fibonacci_memo(n, memo={}):
 # 3. Dovada matematică: această alegere e întotdeauna optimă!
 
 # Complexitate: O(n log n) - din sortare
-# Space: O(1) - în afara spațiului pentru rezultat`}
-                    </pre>
+# Space: O(1) - în afara spațiului pentru rezultat`}</CodeBlockR>
                   </div>
                 )}
                 
@@ -1200,9 +1175,8 @@ def fibonacci_memo(n, memo={}):
                 </Button>
                 
                 {visibleCode['backtracking'] && (
-                  <div className="bg-gray-900 text-purple-400 rounded-xl p-6 text-sm font-mono">
-                    <pre>
-{`def solve_n_queens(n):
+                  <div className="rounded-lg overflow-hidden border border-gray-700">
+                    <CodeBlockR language="python">{`def solve_n_queens(n):
     """
     Rezolvă problema N-Queens folosind backtracking
     """
@@ -1257,8 +1231,7 @@ def fibonacci_memo(n, memo={}):
     return solutions
 
 # Complexitate: O(N!) în worst case
-# Dar cu pruning inteligent, mult mai rapid în practică!`}
-                    </pre>
+# Dar cu pruning inteligent, mult mai rapid în practică!`}</CodeBlockR>
                   </div>
                 )}
                 
