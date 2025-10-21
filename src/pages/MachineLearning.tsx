@@ -1672,6 +1672,55 @@ if __name__ == "__main__":
             </div>
           </section>
 
+          {/* Production Deployment Sessions 48-49 */}
+          <section id="production-deployment" className="mb-16">
+            <div className="bg-gradient-to-br from-indigo-100 via-purple-100 to-rose-100 dark:from-indigo-900/30 dark:via-purple-900/30 dark:to-rose-900/30 rounded-xl p-8 border border-indigo-200 dark:border-indigo-800 shadow-xl animate-fade-in">
+              <div className="flex flex-col lg:flex-row gap-6 lg:items-center">
+                <div className="flex-1">
+                  <h2 className="text-3xl font-bold mb-4 bg-gradient-to-r from-indigo-700 to-purple-700 bg-clip-text text-transparent">
+                    Sessions 48-49: Deploy AI — Streamlit, Flask, Hugging Face
+                  </h2>
+                  <p className="text-base text-muted-foreground mb-4">
+                    The journey from Data:Visualizing and Keras foundations converges here. We listen to real needs from
+                    our health clinic and personal finance partners, then turn models into living services — from a tiny
+                    proof-of-life API to a Streamlit experience and a Hugging Face Space ready for global demos.
+                  </p>
+                  <ul className="grid sm:grid-cols-2 gap-3 text-sm text-muted-foreground">
+                    <li className="flex items-center gap-2">
+                      <span className="text-xl">🩺</span>
+                      Cardio recovery triage with Keras risk tiers
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span className="text-xl">💰</span>
+                      Financial wellbeing signals fused into one score
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span className="text-xl">🧠</span>
+                      Flask inference service with schema validation & API keys
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span className="text-xl">🌍</span>
+                      Streamlit UI + Hugging Face Spaces rollout guide
+                    </li>
+                  </ul>
+                </div>
+                <div className="lg:w-64">
+                  <div className="bg-white/80 dark:bg-gray-900/60 border border-indigo-200 dark:border-indigo-700 rounded-lg p-6 text-center shadow-lg">
+                    <p className="text-sm text-muted-foreground mb-4">
+                      Continue the story and access runnable code, deployment scripts, and stakeholder-ready walkthroughs.
+                    </p>
+                    <a
+                      href="/artifacts/deploy-ai-sessions48-49"
+                      className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-gradient-to-r from-indigo-600 via-purple-600 to-rose-500 text-white font-semibold rounded-lg hover:from-indigo-700 hover:via-purple-700 hover:to-rose-600 transition-all duration-300 shadow-md"
+                    >
+                      Explore Deployment Artifact →
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
           {/* The Road to Advanced ML */}
           <section id="next-chapter" className="mb-16">
             <div className="bg-gradient-to-br from-violet-100 to-purple-100 dark:from-violet-900/30 dark:to-purple-900/30 rounded-xl p-8 border border-violet-200 dark:border-violet-800 shadow-lg animate-fade-in">

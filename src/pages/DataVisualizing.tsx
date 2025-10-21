@@ -260,13 +260,10 @@ const DataVisualizing = () => {
           if (summarySection) {
             const rect = summarySection.getBoundingClientRect();
             // Hide charts when summary section scrolls past viewport (more aggressive)
-            const shouldHide = rect.bottom < 0;
+            const shouldHide = rect.bottom < 2500;
             setHideFirstTwoCharts(shouldHide);
             
-            // Debug info (throttled)
-            if (Math.random() < 0.1) { // Only log 10% of the time
-              console.log('📊 Chart visibility - Summary bottom:', rect.bottom.toFixed(0), 'Hide charts:', shouldHide);
-            }
+
           }
           ticking = false;
         });
@@ -327,7 +324,11 @@ const DataVisualizing = () => {
             {/* Enhanced with mini visualizations */}
             <div className="mt-6 space-y-4">
               
-                <>
+        
+            </div>
+
+          </div>
+                  <>
                   <MiniChart 
                     type="line" 
                     data={sessionProgressData.slice(0, 5)} 
@@ -347,8 +348,6 @@ const DataVisualizing = () => {
                 title="Learning Curve" 
                 className="border border-violet-100 dark:border-violet-800"
               />
-            </div>
-          </div>
         </div>
 
         {/* Main Content */}

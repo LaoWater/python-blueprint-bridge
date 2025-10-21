@@ -377,54 +377,62 @@ const AdvancedMachineLearning = () => {
             {/* Ultra-Advanced Techniques */}
             <section id="keras-ultra" className="mb-16">
               <div className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-md rounded-xl p-8 border border-border shadow-lg animate-fade-in">
-                <h2 className="text-3xl font-bold mb-6 bg-gradient-to-r from-red-600 to-orange-600 bg-clip-text text-transparent">
-                  Session 47 – Ultra-Advanced Keras: Fine-Tuning & Model Deployment
+                <h2 className="text-3xl font-bold mb-6 bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+                  Session 47 – Ultra-Advanced Keras: Fine-Tuning & Cloud Deployment
                 </h2>
                 <p className="text-lg mb-8 text-muted-foreground">
-                  Master the complete lifecycle from training to production deployment with model optimization and serving.
+                  The culminating session: Take your Health & Finance models from Jupyter notebooks to globally-accessible cloud APIs.
+                  From localhost to production in under an hour.
                 </p>
 
                 <div className="space-y-8">
-                  <div className="bg-gradient-to-r from-red-50 to-orange-50 dark:from-red-900/20 dark:to-orange-900/20 rounded-lg p-6">
-                    <h3 className="text-xl font-semibold mb-4 text-red-800 dark:text-red-200">
-                      Enterprise Model Management & Deployment
+                  <div className="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-lg p-6">
+                    <h3 className="text-xl font-semibold mb-4 text-purple-800 dark:text-purple-200">
+                      From Notebook to Global Production API
                     </h3>
-                    
+
                     <div className="grid md:grid-cols-2 gap-6 mb-6">
                       <div>
-                        <h4 className="font-semibold mb-3 text-foreground">Production Deployment:</h4>
+                        <h4 className="font-semibold mb-3 text-foreground">Production Fine-Tuning:</h4>
                         <ul className="space-y-2 text-muted-foreground text-sm">
-                          <li>• Model serialization and versioning</li>
-                          <li>• TensorFlow Serving integration</li>
-                          <li>• Model quantization and optimization</li>
-                          <li>• A/B testing frameworks</li>
-                          <li>• Performance monitoring systems</li>
+                          <li>• Model optimization for deployment</li>
+                          <li>• FastAPI REST service creation</li>
+                          <li>• Docker containerization</li>
+                          <li>• Google Cloud Run deployment</li>
+                          <li>• Auto-scaling & monitoring</li>
                         </ul>
                       </div>
                       <div>
-                        <h4 className="font-semibold mb-3 text-foreground">Enterprise Deployment:</h4>
+                        <h4 className="font-semibold mb-3 text-foreground">Real-World Deployment:</h4>
                         <p className="text-muted-foreground text-sm mb-3">
-                          Deploy a recommendation engine serving millions of users with sub-100ms 
-                          latency, handling 50,000+ requests per second.
+                          Deploy Health Risk Predictor and Personal Finance models to production.
+                          Serve predictions globally with &lt;100ms latency, all from free cloud tier.
                         </p>
                         <div className="text-xs text-muted-foreground">
-                          <p><strong>Scale:</strong> 10M+ users, 99.99% uptime, auto-scaling</p>
+                          <p><strong>Result:</strong> HTTPS API accessible worldwide, auto-scaling</p>
                         </div>
                       </div>
                     </div>
 
                     <div className="bg-muted/50 p-4 rounded-lg">
-                      <h4 className="font-semibold mb-2 text-sm">Production Pipeline Components</h4>
-                      <div className="text-xs text-muted-foreground grid md:grid-cols-2 gap-4">
-                        <div>
-                          <p>• <strong>Model versioning:</strong> Automated deployment pipeline</p>
-                          <p>• <strong>A/B testing:</strong> Safe model rollouts</p>
-                        </div>
-                        <div>
-                          <p>• <strong>Performance monitoring:</strong> Real-time metrics</p>
-                          <p>• <strong>Auto-scaling:</strong> Dynamic resource allocation</p>
-                        </div>
+                      <h4 className="font-semibold mb-2 text-sm">The Complete Deployment Stack</h4>
+                      <div className="text-xs text-muted-foreground space-y-1">
+                        <p>• <strong>Step 1:</strong> Optimize model for production (inference &lt;100ms)</p>
+                        <p>• <strong>Step 2:</strong> Wrap in FastAPI with auto-validation & docs</p>
+                        <p>• <strong>Step 3:</strong> Containerize with Docker for reproducibility</p>
+                        <p>• <strong>Step 4:</strong> Deploy to Google Cloud Run (serverless, auto-scale)</p>
+                        <p>• <strong>Step 5:</strong> Monitor, iterate, and scale to millions</p>
                       </div>
+                    </div>
+
+                    <div className="mt-6 flex justify-center">
+                      <Button
+                        onClick={() => navigate('/keras-session-47')}
+                        className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white"
+                      >
+                        Start Session 47: Production Deployment
+                        <ArrowRight className="ml-2 h-4 w-4" />
+                      </Button>
                     </div>
                   </div>
                 </div>
@@ -485,6 +493,16 @@ const AdvancedMachineLearning = () => {
                         <p>• <strong>Flask/FastAPI:</strong> Production APIs and microservices</p>
                         <p>• <strong>Hugging Face Spaces:</strong> Community sharing and collaboration</p>
                       </div>
+                    </div>
+
+                    <div className="mt-6 flex justify-center">
+                      <Button
+                        onClick={() => navigate('/artifacts/deploy-ai-sessions48-49')}
+                        className="bg-gradient-to-r from-emerald-500 via-cyan-500 to-sky-600 hover:from-emerald-600 hover:via-cyan-600 hover:to-sky-700 text-white shadow-lg"
+                      >
+                        Explore Sessions 48-49 Deployment Artifact
+                        <ArrowRight className="ml-2 h-4 w-4" />
+                      </Button>
                     </div>
                   </div>
 

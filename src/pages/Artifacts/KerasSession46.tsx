@@ -1745,7 +1745,7 @@ print("""
                   <ul className="list-disc list-inside text-sm space-y-1 text-foreground/70">
                     <li>Download full KITTI dataset (12GB)</li>
                     <li>Train for 50+ epochs with data augmentation</li>
-                    <li>Achieve >85% validation accuracy</li>
+                    <li>Achieve &gt;85% validation accuracy</li>
                     <li>Test on KITTI test set</li>
                     <li>Compare with baseline (no transfer learning)</li>
                   </ul>

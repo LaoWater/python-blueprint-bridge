@@ -60,6 +60,8 @@ import KerasSession43 from "./pages/Artifacts/KerasSession43";
 import KerasSession44 from "./pages/Artifacts/KerasSession44";
 import KerasSession45 from "./pages/Artifacts/KerasSession45";
 import KerasSession46 from "./pages/Artifacts/KerasSession46";
+import KerasSession47 from "./pages/Artifacts/KerasSession47";
+import ProductionDeploymentSessions4849 from "./pages/Artifacts/ProductionDeploymentSessions48-49";
 import SklearnDiscovery from "./pages/Artifacts/Layer2Artifacts/sklearn-discovery";
 import OpenCVConvolutionLab from "./pages/Artifacts/Layer2Artifacts/filters_and_edges";
 import ContoursSegmentationLab from "./pages/Artifacts/Layer2Artifacts/contours-segmentation-lab";
@@ -133,6 +135,8 @@ const App = () => (
                   <Route path="/keras-session-44" element={<KerasSession44 />} />
                   <Route path="/keras-session-45" element={<KerasSession45 />} />
                   <Route path="/keras-session-46" element={<KerasSession46 />} />
+                  <Route path="/keras-session-47" element={<KerasSession47 />} />
+                  <Route path="/artifacts/deploy-ai-sessions48-49" element={<ProductionDeploymentSessions4849 />} />
                   <Route path="/artifacts/layer2/sklearn-discovery" element={<SklearnDiscovery />} />
                   <Route path="/artifacts/layer2/filters-and-edges" element={<OpenCVConvolutionLab />} />
                   <Route path="/artifacts/layer2/contours-segmentation" element={<ContoursSegmentationLab />} />
