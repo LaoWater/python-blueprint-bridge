@@ -1,14 +1,18 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useTheme } from '@/components/theme-provider';
 import EditablePageHeader from '@/components/EditablePageHeader';
 import EditableCodeBlock from '@/components/EditableCodeBlock';
 import TableOfContents from '@/components/TableOfContents';
 import CourseNavigation from '@/components/CourseNavigation';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { ArrowRight } from 'lucide-react';
 import advancedMLHero from '@/assets/advanced-ml-hero.jpg';
 
 const AdvancedMachineLearning = () => {
   const { theme } = useTheme();
+  const navigate = useNavigate();
 
   const tocItems = [
     { id: 'introduction', title: 'Advanced ML Journey', sessions: 'Overview' },
@@ -132,6 +136,16 @@ const AdvancedMachineLearning = () => {
                         <p>• <strong>Callbacks:</strong> Early stopping, learning rate scheduling</p>
                       </div>
                     </div>
+
+                    <div className="mt-6 flex justify-center">
+                      <Button
+                        onClick={() => navigate('/keras-session-42')}
+                        className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white"
+                      >
+                        Start Session 42: Keras Foundation
+                        <ArrowRight className="ml-2 h-4 w-4" />
+                      </Button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -186,6 +200,16 @@ const AdvancedMachineLearning = () => {
                         <p>• <strong>Regularization:</strong> Prevent overfitting in complex models</p>
                       </div>
                     </div>
+
+                    <div className="mt-6 flex justify-center">
+                      <Button
+                        onClick={() => navigate('/keras-session-43')}
+                        className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white"
+                      >
+                        Start Session 43: Advanced Keras
+                        <ArrowRight className="ml-2 h-4 w-4" />
+                      </Button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -219,16 +243,7 @@ const AdvancedMachineLearning = () => {
                           <li>• Architecture optimization</li>
                         </ul>
                       </div>
-                      <div>
-                        <h4 className="font-semibold mb-3 text-foreground">Industry Project:</h4>
-                        <p className="text-muted-foreground text-sm mb-3">
-                          Develop a medical image classifier for skin cancer detection that assists 
-                          dermatologists in early diagnosis.
-                        </p>
-                        <div className="text-xs text-muted-foreground">
-                          <p><strong>Impact:</strong> 94% accuracy, potentially saving lives through early detection</p>
-                        </div>
-                      </div>
+
                     </div>
 
                     <div className="bg-muted/50 p-4 rounded-lg">
@@ -245,6 +260,16 @@ const AdvancedMachineLearning = () => {
                           <p>• <strong>Production-ready inference</strong></p>
                         </div>
                       </div>
+                    </div>
+
+                    <div className="mt-6 flex justify-center">
+                      <Button
+                        onClick={() => navigate('/keras-session-44')}
+                        className="bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white"
+                      >
+                        Start Session 44: Computer Vision with CNNs
+                        <ArrowRight className="ml-2 h-4 w-4" />
+                      </Button>
                     </div>
                   </div>
 
@@ -285,44 +310,64 @@ const AdvancedMachineLearning = () => {
                         <p>• <strong>Phase 3:</strong> Domain-specific optimization</p>
                       </div>
                     </div>
+
+                    <div className="mt-6 flex justify-center">
+                      <Button
+                        onClick={() => navigate('/keras-session-45')}
+                        className="bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 text-white"
+                      >
+                        Start Session 45: Transfer Learning
+                        <ArrowRight className="ml-2 h-4 w-4" />
+                      </Button>
+                    </div>
                   </div>
 
                   {/* Session 46 */}
-                  <div className="bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-900/20 dark:to-purple-900/20 rounded-lg p-6">
-                    <h3 className="text-xl font-semibold mb-4 text-indigo-800 dark:text-indigo-200">
+                  <div className="bg-gradient-to-r from-cyan-50 to-blue-50 dark:from-cyan-900/20 dark:to-blue-900/20 rounded-lg p-6">
+                    <h3 className="text-xl font-semibold mb-4 text-cyan-800 dark:text-cyan-200">
                       Session 46 – Advanced Project: Autonomous Vehicle Perception
                     </h3>
-                    
+
                     <div className="grid md:grid-cols-2 gap-6 mb-6">
                       <div>
-                        <h4 className="font-semibold mb-3 text-foreground">Professional Training:</h4>
+                        <h4 className="font-semibold mb-3 text-foreground">AV Perception Stack:</h4>
                         <ul className="space-y-2 text-muted-foreground text-sm">
-                          <li>• Advanced data augmentation pipelines</li>
-                          <li>• Custom callback development</li>
-                          <li>• TensorBoard integration</li>
-                          <li>• Experiment tracking systems</li>
-                          <li>• Distributed training strategies</li>
+                          <li>• Object detection with KITTI dataset</li>
+                          <li>• Real-time inference pipeline</li>
+                          <li>• Multi-task learning (classification + bbox)</li>
+                          <li>• TensorFlow Lite edge deployment</li>
+                          <li>• Raspberry Pi autonomous perception</li>
                         </ul>
                       </div>
                       <div>
                         <h4 className="font-semibold mb-3 text-foreground">Production System:</h4>
                         <p className="text-muted-foreground text-sm mb-3">
-                          Create an autonomous vehicle perception system that identifies road signs, 
-                          pedestrians, and vehicles in real-time with safety-critical accuracy.
+                          Build a complete autonomous vehicle perception system that detects vehicles,
+                          pedestrians, and cyclists in real-time using transfer learning on KITTI dataset.
                         </p>
                         <div className="text-xs text-muted-foreground">
-                          <p><strong>Performance:</strong> 99.7% accuracy, &lt;20ms inference time</p>
+                          <p><strong>Performance:</strong> 10-60 FPS, deployable to $35 Raspberry Pi</p>
                         </div>
                       </div>
                     </div>
 
                     <div className="bg-muted/50 p-4 rounded-lg">
-                      <h4 className="font-semibold mb-2 text-sm">Safety-Critical AI Development</h4>
+                      <h4 className="font-semibold mb-2 text-sm">From DARPA to Your Desktop</h4>
                       <div className="text-xs text-muted-foreground space-y-1">
-                        <p>• <strong>Safety Callbacks:</strong> Real-time performance monitoring</p>
-                        <p>• <strong>Robust Augmentation:</strong> Weather, lighting, and scenario variations</p>
-                        <p>• <strong>Redundancy Systems:</strong> Multiple model validation</p>
+                        <p>• <strong>Dataset:</strong> KITTI autonomous driving benchmark</p>
+                        <p>• <strong>Architecture:</strong> MobileNetV2 transfer learning for real-time detection</p>
+                        <p>• <strong>Deployment:</strong> Video processing, webcam, and edge devices</p>
                       </div>
+                    </div>
+
+                    <div className="mt-6 flex justify-center">
+                      <Button
+                        onClick={() => navigate('/keras-session-46')}
+                        className="bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white"
+                      >
+                        Start Session 46: Autonomous Vehicle Perception
+                        <ArrowRight className="ml-2 h-4 w-4" />
+                      </Button>
                     </div>
                   </div>
                 </div>

@@ -55,6 +55,11 @@ import NLPSessions3435 from "./pages/Artifacts/NLPSessions34-35";
 import DeepLearningSession36 from "./pages/Artifacts/DeepLearningSession36";
 import CNNSessions3738 from "./pages/Artifacts/CNNSessions37-38";
 import YOLOSessions3940 from "./pages/Artifacts/YOLOSessions39-40";
+import KerasSession42 from "./pages/Artifacts/KerasSession42";
+import KerasSession43 from "./pages/Artifacts/KerasSession43";
+import KerasSession44 from "./pages/Artifacts/KerasSession44";
+import KerasSession45 from "./pages/Artifacts/KerasSession45";
+import KerasSession46 from "./pages/Artifacts/KerasSession46";
 import SklearnDiscovery from "./pages/Artifacts/Layer2Artifacts/sklearn-discovery";
 import OpenCVConvolutionLab from "./pages/Artifacts/Layer2Artifacts/filters_and_edges";
 import ContoursSegmentationLab from "./pages/Artifacts/Layer2Artifacts/contours-segmentation-lab";
@@ -123,6 +128,11 @@ const App = () => (
                   <Route path="/artifacts/deep-learning-session36" element={<DeepLearningSession36 />} />
                   <Route path="/artifacts/cnn-sessions37-38" element={<CNNSessions3738 />} />
                   <Route path="/artifacts/yolo-sessions39-40" element={<YOLOSessions3940 />} />
+                  <Route path="/keras-session-42" element={<KerasSession42 />} />
+                  <Route path="/keras-session-43" element={<KerasSession43 />} />
+                  <Route path="/keras-session-44" element={<KerasSession44 />} />
+                  <Route path="/keras-session-45" element={<KerasSession45 />} />
+                  <Route path="/keras-session-46" element={<KerasSession46 />} />
                   <Route path="/artifacts/layer2/sklearn-discovery" element={<SklearnDiscovery />} />
                   <Route path="/artifacts/layer2/filters-and-edges" element={<OpenCVConvolutionLab />} />
                   <Route path="/artifacts/layer2/contours-segmentation" element={<ContoursSegmentationLab />} />
