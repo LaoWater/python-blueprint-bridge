@@ -45,12 +45,8 @@ const TEAM_LEAD_STEPS: GitStep[] = [
     commands: [
       {
         label: 'Clone your fork',
-        value: 'git clone https://github.com/<your-github-username>/python-blueprint-bridge.git',
-      },
-      {
-        label: 'Open the project folder',
-        value: 'cd python-blueprint-bridge',
-      },
+        value: 'git clone <your-fork.git>',
+      }
     ],
     note: 'Fork once per sprint. Keep your fork clean so collaborators always pull from a stable main branch.',
   },
@@ -60,8 +56,12 @@ const TEAM_LEAD_STEPS: GitStep[] = [
     description: 'Connect your fork to the official upstream repository so you can pull new changes from the source team.',
     commands: [
       {
+        label: 'Open the project folder',
+        value: 'cd <your-fork.git>',
+      },
+      {
         label: 'Add upstream remote',
-        value: 'git remote add upstream https://github.com/<main-org>/python-blueprint-bridge.git',
+        value: 'git remote add upstream https://github.com/RaresKeY/dj-blue-ai.git',
       },
       {
         label: 'Verify remotes',
@@ -106,6 +106,10 @@ const TEAM_LEAD_STEPS: GitStep[] = [
         value: 'git push -u origin feature/<task-name>',
       },
       {
+        label: 'Create GitHub branch (optional, for errors)',
+        value: 'git push --set-upstream origin feature/<task-name>',
+      },
+      {
         label: 'Raise the pull request',
         value: 'Open a PR from origin/feature/<task-name> into upstream/main',
         hint: 'Use the GitHub UI if you do not have the GitHub CLI installed.',
@@ -123,11 +127,11 @@ const GROUP_A_STEPS: GitStep[] = [
     commands: [
       {
         label: 'Clone the team fork',
-        value: 'git clone https://github.com/<team-lead-username>/python-blueprint-bridge.git',
+        value: 'git clone <your-team-fork.git>',
       },
       {
         label: 'Move into the project',
-        value: 'cd python-blueprint-bridge',
+        value: 'cd <your-team-fork.git>',
       },
     ],
     note: 'If you already have the repo, run git remote -v to verify origin points to the team lead fork.',
@@ -198,7 +202,7 @@ const FOUNDATION_COMMANDS: GitCommand[] = [
   },
   {
     label: 'Push the active branch',
-    value: 'git push origin <branch-name>',
+    value: 'git push -u origin <branch-name>',
   },
 ];
 
