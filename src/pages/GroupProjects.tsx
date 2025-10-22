@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Users, Rocket, Brain, Code, Globe, ChevronRight, ChevronLeft, Star, GitBranch, MessageSquare, Target, Loader2, Heart, BookOpen, Trophy, Medal, Award } from 'lucide-react';
+import { Users, Rocket, Brain, Code, Globe, ChevronRight, ChevronLeft, Star, GitBranch, MessageSquare, Target, Loader2, Heart, BookOpen, Trophy, Medal, Award, Copy, CheckCircle2 } from 'lucide-react';
 import MoodMusicProject from '../components/group-projects/dj_blue';
 import WellnessOracle from '../components/group-projects/WellnessOracle';
 import AIStudyBuddy from '../components/group-projects/AIStudyBuddy';
@@ -10,13 +10,300 @@ import { GroupProjectProvider } from '../contexts/GroupProjectContext';
 import { useGroupProjects } from '../hooks/useGroupProjects';
 import { useAuth } from '../components/AuthContext';
 import { toast } from 'sonner';
+import { Button } from '@/components/ui/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+
+type GitCommand = {
+  label: string;
+  value: string;
+  hint?: string;
+};
+
+type GitStep = {
+  id: string;
+  title: string;
+  description: string;
+  commands?: GitCommand[];
+  note?: string;
+};
+
+const TEAM_LEAD_STEPS: GitStep[] = [
+  {
+    id: 'lead-fork',
+    title: 'Fork and Clone Your Base',
+    description: 'Fork the main repository on GitHub, then clone your fork locally so you can manage reviewer-ready pull requests.',
+    commands: [
+      {
+        label: 'Clone your fork',
+        value: 'git clone https://github.com/<your-github-username>/python-blueprint-bridge.git',
+      },
+      {
+        label: 'Open the project folder',
+        value: 'cd python-blueprint-bridge',
+      },
+    ],
+    note: 'Fork once per sprint. Keep your fork clean so collaborators always pull from a stable main branch.',
+  },
+  {
+    id: 'lead-upstream',
+    title: 'Track the Main Upstream',
+    description: 'Connect your fork to the official upstream repository so you can pull new changes from the source team.',
+    commands: [
+      {
+        label: 'Add upstream remote',
+        value: 'git remote add upstream https://github.com/<main-org>/python-blueprint-bridge.git',
+      },
+      {
+        label: 'Verify remotes',
+        value: 'git remote -v',
+        hint: 'Expect to see origin (your fork) and upstream (main repository).',
+      },
+    ],
+    note: 'If the upstream remote already exists, move on—running the command twice will throw an error.',
+  },
+  {
+    id: 'lead-sync',
+    title: 'Stay in Sync Before Working',
+    description: 'Start every work block by syncing both your fork and the upstream main branch.',
+    commands: [
+      {
+        label: 'Pull latest from your fork',
+        value: 'git pull origin main',
+      },
+      {
+        label: 'Fetch upstream updates',
+        value: 'git fetch upstream',
+      },
+      {
+        label: 'Merge upstream main into local',
+        value: 'git pull upstream main',
+        hint: 'Resolve conflicts locally, then run git push origin main to refresh your fork for the team.',
+      },
+    ],
+    note: 'Keeping origin/main current means developers always pull a clean baseline.',
+  },
+  {
+    id: 'lead-pr',
+    title: 'Ship Features with Pull Requests',
+    description: 'Keep work on feature branches so you can push to your fork and request a pull into the upstream repository.',
+    commands: [
+      {
+        label: 'Create a feature branch',
+        value: 'git checkout -b feature/<task-name>',
+      },
+      {
+        label: 'Push your branch to your fork',
+        value: 'git push -u origin feature/<task-name>',
+      },
+      {
+        label: 'Raise the pull request',
+        value: 'Open a PR from origin/feature/<task-name> into upstream/main',
+        hint: 'Use the GitHub UI if you do not have the GitHub CLI installed.',
+      },
+    ],
+    note: 'Confirm your branch is merged into origin/main before syncing upstream again.',
+  },
+];
+
+const GROUP_A_STEPS: GitStep[] = [
+  {
+    id: 'dev-clone',
+    title: 'Clone the Team Lead Fork',
+    description: 'Your team lead adds you as a collaborator on their fork. Work directly against that fork to stay in sync.',
+    commands: [
+      {
+        label: 'Clone the team fork',
+        value: 'git clone https://github.com/<team-lead-username>/python-blueprint-bridge.git',
+      },
+      {
+        label: 'Move into the project',
+        value: 'cd python-blueprint-bridge',
+      },
+    ],
+    note: 'If you already have the repo, run git remote -v to verify origin points to the team lead fork.',
+  },
+  {
+    id: 'dev-branch',
+    title: 'Create a Branch Per Task',
+    description: 'Keep your changes isolated per feature so reviews are focused and easy to merge.',
+    commands: [
+      {
+        label: 'Start your feature branch',
+        value: 'git checkout -b feature/<your-task>',
+      },
+    ],
+    note: 'Avoid committing directly to main—feature branches keep history clean.',
+  },
+  {
+    id: 'dev-sync',
+    title: 'Sync Often from Team Lead Main',
+    description: 'Pull from origin/main (the team fork) at least once each work session to catch teammates’ changes.',
+    commands: [
+      {
+        label: 'Grab latest commits',
+        value: 'git pull origin main',
+        hint: 'Run this while on your feature branch to merge in the newest baseline. Use --rebase if your team prefers linear history.',
+      },
+    ],
+    note: 'Resolve conflicts locally and coordinate quickly so the team main branch never drifts.',
+  },
+  {
+    id: 'dev-push',
+    title: 'Push Back Into the Team Fork',
+    description: 'Ship your branch to the shared fork so the team lead can review or merge.',
+    commands: [
+      {
+        label: 'Push your branch',
+        value: 'git push -u origin feature/<your-task>',
+      },
+      {
+        label: 'Share the branch for review',
+        value: 'Create a pull request into origin/main on GitHub',
+        hint: 'Tag your team lead and outline the changes so they can merge upstream.',
+      },
+    ],
+    note: 'Once merged, sync your branch again or delete it locally with git branch -d feature/<your-task>.',
+  },
+];
+
+const FOUNDATION_COMMANDS: GitCommand[] = [
+  {
+    label: 'Check your current status',
+    value: 'git status',
+  },
+  {
+    label: 'Stage everything in the working directory',
+    value: 'git add .',
+    hint: 'Use git add <file> for precise staging when you do not want to commit everything.',
+  },
+  {
+    label: 'Commit staged changes',
+    value: 'git commit -m "feat: describe the change"',
+    hint: 'Follow the team convention: area: summary in present tense.',
+  },
+  {
+    label: 'List files Git already tracks',
+    value: 'git ls-files',
+    hint: 'Verify whether a file bypassed .gitignore before adding overrides.',
+  },
+  {
+    label: 'Push the active branch',
+    value: 'git push origin <branch-name>',
+  },
+];
+
+const DAILY_HABITS = [
+  'Run git status before and after each work session.',
+  'Pull from the correct remote (origin for team fork, upstream for main repo) before coding.',
+  'Commit small, meaningful chunks so reviews move fast.',
+  'Double-check .gitignore before adding new tools or generated files.',
+];
+
+const GITIGNORE_SNIPPET = `# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+.env`;
 
 export default function GroupProjects() {
   const [activeView, setActiveView] = useState('overview');
   const [selectedProject, setSelectedProject] = useState<string | null>(null);
+  const [gitModalOpen, setGitModalOpen] = useState(false);
+  const [copiedCommand, setCopiedCommand] = useState<string | null>(null);
+  const [gitDialogTab, setGitDialogTab] = useState<'teamLead' | 'developers' | 'essentials'>('teamLead');
   const { projects, teams, loading, error, fetchTeams, clearError } = useGroupProjects();
   const { user } = useAuth();
   const teamsFetchedRef = useRef<Set<string>>(new Set());
+  const copyTimeoutRef = useRef<number | null>(null);
+
+  const handleCopy = async (value: string) => {
+    try {
+      await navigator.clipboard.writeText(value);
+      if (copyTimeoutRef.current) {
+        window.clearTimeout(copyTimeoutRef.current);
+      }
+      setCopiedCommand(value);
+      toast.success('Copied to clipboard');
+      copyTimeoutRef.current = window.setTimeout(() => {
+        setCopiedCommand(null);
+        copyTimeoutRef.current = null;
+      }, 2000);
+    } catch {
+      toast.error('Copy failed. You can copy the command manually.');
+    }
+  };
+
+  const handleGitModalChange = (open: boolean) => {
+    setGitModalOpen(open);
+    if (!open) {
+      setGitDialogTab('teamLead');
+      setCopiedCommand(null);
+      if (copyTimeoutRef.current) {
+        window.clearTimeout(copyTimeoutRef.current);
+        copyTimeoutRef.current = null;
+      }
+    }
+  };
+
+  const renderCommandRow = (command: GitCommand) => (
+    <div
+      key={`${command.label}-${command.value}`}
+      className="flex items-start justify-between gap-3 rounded-xl border border-border/60 bg-secondary/40 px-4 py-3"
+    >
+      <div className="space-y-1">
+        <p className="text-sm font-semibold text-foreground">{command.label}</p>
+        <code className="block break-all font-mono text-xs md:text-sm text-muted-foreground">{command.value}</code>
+        {command.hint && <p className="text-xs text-muted-foreground">{command.hint}</p>}
+      </div>
+      <Button
+        variant="ghost"
+        size="icon"
+        aria-label={`Copy ${command.label}`}
+        onClick={() => handleCopy(command.value)}
+        className="mt-1 shrink-0 text-muted-foreground hover:text-primary"
+      >
+        {copiedCommand === command.value ? (
+          <CheckCircle2 className="h-4 w-4 text-green-500" />
+        ) : (
+          <Copy className="h-4 w-4" />
+        )}
+      </Button>
+    </div>
+  );
+
+  const handleTabChange = (value: string) =>
+    setGitDialogTab(value as 'teamLead' | 'developers' | 'essentials');
 
   // Auto-select first project - only once
   useEffect(() => {
@@ -45,6 +332,15 @@ export default function GroupProjects() {
     }
   }, [error, clearError]);
 
+  useEffect(() => {
+    return () => {
+      if (copyTimeoutRef.current) {
+        window.clearTimeout(copyTimeoutRef.current);
+        copyTimeoutRef.current = null;
+      }
+    };
+  }, []);
+
   // Scroll to top on page load
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -56,6 +352,141 @@ export default function GroupProjects() {
       <div className="relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-accent/10 dark:from-blue-600/20 dark:to-purple-600/20"></div>
         <div className="container mx-auto px-4 py-20 relative z-10">
+          <Dialog open={gitModalOpen} onOpenChange={handleGitModalChange}>
+            <div className="mb-10 flex justify-end">
+              <DialogTrigger asChild>
+                <Button
+                  variant="outline"
+                  className="group flex items-center gap-2 rounded-full border-primary/40 bg-white/80 px-5 py-2 text-primary shadow-lg transition hover:border-primary hover:bg-white dark:border-blue-500/40 dark:bg-slate-900/70 dark:text-blue-200"
+                >
+                  <GitBranch className="h-4 w-4 transition-transform group-hover:rotate-6" />
+                  <span className="text-sm font-semibold tracking-wide">GIT Blueprints</span>
+                </Button>
+              </DialogTrigger>
+            </div>
+            <DialogContent className="max-w-4xl sm:max-w-3xl max-h-[85vh] overflow-hidden">
+              <DialogHeader>
+                <DialogTitle className="flex items-center gap-2 text-2xl">
+                  <GitBranch className="h-5 w-5 text-primary" />
+                  Git Blueprints
+                </DialogTitle>
+                <DialogDescription>
+                  Role-specific workflows to keep forks, branches, and pull requests aligned for this group project.
+                </DialogDescription>
+              </DialogHeader>
+              <Tabs value={gitDialogTab} onValueChange={handleTabChange} className="flex h-full w-full flex-col overflow-hidden">
+                <TabsList className="grid w-full grid-cols-3">
+                  <TabsTrigger value="teamLead">Team Leads</TabsTrigger>
+                  <TabsTrigger value="developers">Group A Developers</TabsTrigger>
+                  <TabsTrigger value="essentials">Essentials</TabsTrigger>
+                </TabsList>
+                <TabsContent value="teamLead" className="space-y-4 overflow-y-auto pr-2 max-h-[55vh]">
+                  <Accordion type="single" collapsible className="space-y-3">
+                    {TEAM_LEAD_STEPS.map((step) => (
+                      <AccordionItem
+                        key={step.id}
+                        value={step.id}
+                        className="overflow-hidden rounded-2xl border border-border/60 bg-card/70 backdrop-blur"
+                      >
+                        <AccordionTrigger className="px-4 py-3 text-left text-base font-semibold">
+                          {step.title}
+                        </AccordionTrigger>
+                        <AccordionContent className="px-4 pb-4 pt-0">
+                          <div className="space-y-3">
+                            <p className="text-sm text-muted-foreground">{step.description}</p>
+                            {step.commands?.map(renderCommandRow)}
+                            {step.note && (
+                              <div className="rounded-xl border border-dashed border-primary/40 bg-primary/10 px-4 py-3 text-xs text-primary">
+                                {step.note}
+                              </div>
+                            )}
+                          </div>
+                        </AccordionContent>
+                      </AccordionItem>
+                    ))}
+                  </Accordion>
+                </TabsContent>
+                <TabsContent value="developers" className="space-y-4 overflow-y-auto pr-2 max-h-[55vh]">
+                  <Accordion type="single" collapsible className="space-y-3">
+                    {GROUP_A_STEPS.map((step) => (
+                      <AccordionItem
+                        key={step.id}
+                        value={step.id}
+                        className="overflow-hidden rounded-2xl border border-border/60 bg-card/70 backdrop-blur"
+                      >
+                        <AccordionTrigger className="px-4 py-3 text-left text-base font-semibold">
+                          {step.title}
+                        </AccordionTrigger>
+                        <AccordionContent className="px-4 pb-4 pt-0">
+                          <div className="space-y-3">
+                            <p className="text-sm text-muted-foreground">{step.description}</p>
+                            {step.commands?.map(renderCommandRow)}
+                            {step.note && (
+                              <div className="rounded-xl border border-dashed border-primary/40 bg-primary/10 px-4 py-3 text-xs text-primary">
+                                {step.note}
+                              </div>
+                            )}
+                          </div>
+                        </AccordionContent>
+                      </AccordionItem>
+                    ))}
+                  </Accordion>
+                </TabsContent>
+                <TabsContent value="essentials" className="space-y-4 overflow-y-auto pr-2 max-h-[55vh]">
+                  <div className="space-y-3 rounded-2xl border border-border/60 bg-card/70 p-4 backdrop-blur">
+                    <h3 className="text-lg font-semibold text-foreground">Daily Git Rhythm</h3>
+                    <div className="space-y-3">
+                      {FOUNDATION_COMMANDS.map(renderCommandRow)}
+                    </div>
+                  </div>
+                  <div className="space-y-3 rounded-2xl border border-border/60 bg-card/70 p-4 backdrop-blur">
+                    <div className="flex items-start justify-between gap-3">
+                      <div>
+                        <h3 className="text-lg font-semibold text-foreground">Project .gitignore</h3>
+                        <p className="text-sm text-muted-foreground">
+                          Keep generated files out of version control. This snippet matches the root .gitignore in the repo.
+                        </p>
+                      </div>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        aria-label="Copy .gitignore snippet"
+                        onClick={() => handleCopy(GITIGNORE_SNIPPET)}
+                        className="text-muted-foreground hover:text-primary"
+                      >
+                        {copiedCommand === GITIGNORE_SNIPPET ? (
+                          <CheckCircle2 className="h-4 w-4 text-green-500" />
+                        ) : (
+                          <Copy className="h-4 w-4" />
+                        )}
+                      </Button>
+                    </div>
+                    <pre className="max-h-64 overflow-y-auto whitespace-pre rounded-xl bg-secondary/40 p-4 text-xs leading-relaxed text-muted-foreground">
+                      {GITIGNORE_SNIPPET}
+                    </pre>
+                  </div>
+                  <div className="space-y-2 rounded-2xl border border-border/60 bg-card/70 p-4 backdrop-blur">
+                    <h3 className="text-lg font-semibold text-foreground">Habits that keep reviews smooth</h3>
+                    <ul className="list-disc space-y-1 pl-5 text-sm text-muted-foreground">
+                      {DAILY_HABITS.map((habit) => (
+                        <li key={habit}>{habit}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </TabsContent>
+              </Tabs>
+              <DialogFooter className="items-center justify-between gap-4 border-t border-border/60 pt-4">
+                <span className="text-xs text-muted-foreground">
+                  Tip: run git status before you code and before you push to catch surprises early.
+                </span>
+                <Button variant="outline" asChild>
+                  <a href="/git-blueprints" target="_blank" rel="noreferrer" className="no-underline">
+                    Open full Git guide
+                  </a>
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
           <div className="text-center max-w-4xl mx-auto">
             <h1 className="text-6xl font-bold mb-6 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 dark:from-blue-400 dark:via-purple-400 dark:to-pink-400 bg-clip-text text-transparent">
               Group Projects
