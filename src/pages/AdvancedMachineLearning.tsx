@@ -548,6 +548,16 @@ const AdvancedMachineLearning = () => {
                         </div>
                       </div>
                     </div>
+
+                    <div className="mt-6 flex justify-center">
+                      <Button
+                        onClick={() => navigate('/artifacts/production-deployment-session50')}
+                        className="bg-gradient-to-r from-purple-600 via-blue-600 to-indigo-600 hover:from-purple-700 hover:via-blue-700 hover:to-indigo-700 text-white shadow-lg"
+                      >
+                        Explore Session 50: Enterprise Scaling Artifact
+                        <ArrowRight className="ml-2 h-4 w-4" />
+                      </Button>
+                    </div>
                   </div>
                 </div>
               </div>
