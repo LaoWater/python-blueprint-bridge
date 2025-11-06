@@ -820,14 +820,76 @@ print("\\n🎉 Gata! Ai învățat să analizezi date e-commerce ca un PRO!")`}
                 </div>
               )}
               
-              <div className="bg-gradient-to-r from-green-100 to-teal-100 dark:from-green-900/20 dark:to-teal-900/20 p-4 rounded-lg mt-4">
-                <h4 className="font-bold text-gray-800 dark:text-white mb-2">🐼 Time Series cu Pandas:</h4>
-                <div className="text-sm space-y-1 text-gray-700 dark:text-gray-300">
-                  <code className="bg-gray-200 dark:bg-gray-700 px-2 py-1 rounded">pd.date_range('2024-01-01', periods=5, freq='M')</code><br/>
-                  <code className="bg-gray-200 dark:bg-gray-700 px-2 py-1 rounded">df.set_index('data').resample('M').sum()</code><br/>
-                  <code className="bg-gray-200 dark:bg-gray-700 px-2 py-1 rounded">df.rolling(window=3).mean()</code> - media mobilă
-                </div>
-              </div>
+              <CodeSnippet
+                codeId="time-series-analysis"
+                title="📊 Analiza trendurilor - Cod complet runnable"
+                code={`import pandas as pd
+import numpy as np
+from datetime import datetime, timedelta
+
+# Creăm date reale de vânzări lunare
+dates = pd.date_range('2024-01-01', periods=12, freq='M')
+vanzari_data = {
+    'data': dates,
+    'vanzari': [25000, 28000, 32000, 29000, 35000, 38000,
+                42000, 39000, 45000, 48000, 51000, 55000],
+    'comenzi': [120, 135, 150, 140, 165, 175,
+                190, 180, 210, 220, 235, 250],
+    'oras': ['București', 'Cluj', 'Timișoara', 'București', 'Cluj', 'București',
+             'Timișoara', 'București', 'Cluj', 'București', 'Timișoara', 'Cluj']
+}
+
+df = pd.DataFrame(vanzari_data)
+df.set_index('data', inplace=True)
+
+print("=== ANALIZA TRENDURILOR - TIME SERIES ===\\n")
+
+# 1. RESAMPLE - Agregare pe perioade
+print("1. RESAMPLE - Vânzări pe trimestre:")
+quarterly = df['vanzari'].resample('Q').sum()
+print(quarterly)
+print()
+
+# 2. ROLLING WINDOW - Media mobilă (trend smoothing)
+print("2. ROLLING WINDOW - Media mobilă pe 3 luni:")
+df['vanzari_ma3'] = df['vanzari'].rolling(window=3).mean()
+print(df[['vanzari', 'vanzari_ma3']].head(6))
+print()
+
+# 3. TREND DETECTION - Creștere procentuală
+print("3. TREND DETECTION - Creștere lunară (%):")
+df['crestere_pct'] = df['vanzari'].pct_change() * 100
+print(df[['vanzari', 'crestere_pct']].head(6))
+print()
+
+# 4. STATISTICI DESCRIPTIVE
+print("4. STATISTICI COMPLETE:")
+print(df['vanzari'].describe())
+print()
+
+# 5. IDENTIFICARE PEAK și LOW
+print("5. IDENTIFICARE PEAK ȘI LOW:")
+peak_month = df['vanzari'].idxmax()
+low_month = df['vanzari'].idxmin()
+print(f"Luna de vârf: {peak_month.strftime('%B %Y')} - {df['vanzari'].max():,} lei")
+print(f"Luna cea mai slabă: {low_month.strftime('%B %Y')} - {df['vanzari'].min():,} lei")
+print()
+
+# 6. CUMULATIVE SUM - Vânzări cumulative
+print("6. VÂNZĂRI CUMULATIVE:")
+df['vanzari_cumulative'] = df['vanzari'].cumsum()
+print(f"Total an: {df['vanzari_cumulative'].iloc[-1]:,} lei")
+print()
+
+# 7. SEASONAL ANALYSIS - Analiza pe orașe
+print("7. ANALIZA PE ORAȘE:")
+vanzari_oras = df.groupby('oras')['vanzari'].agg(['sum', 'mean', 'count'])
+print(vanzari_oras)
+print()
+
+print("✅ Gata! Ai învățat să analizezi trenduri ca un data scientist PRO!")
+`}
+              />
             </div>
           </div>
         </div>
@@ -856,19 +918,126 @@ print("\\n🎉 Gata! Ai învățat să analizezi date e-commerce ca un PRO!")`}
                 Generează Pivot Table
               </Button>
               
-              <div className="bg-gradient-to-r from-indigo-100 to-purple-100 dark:from-indigo-900/20 dark:to-purple-900/20 p-4 rounded-lg mt-4">
-                <h4 className="font-bold text-gray-800 dark:text-white mb-2">🐼 Pandas Pivot:</h4>
-                <div className="text-sm text-gray-700 dark:text-gray-300">
-                  <code className="bg-gray-200 dark:bg-gray-700 px-2 py-1 rounded block mb-2">
-                    df.pivot_table(<br/>
-                    &nbsp;&nbsp;values='pret',<br/>
-                    &nbsp;&nbsp;index='oras',<br/>
-                    &nbsp;&nbsp;columns='produs',<br/>
-                    &nbsp;&nbsp;aggfunc='sum'<br/>
-                    )
-                  </code>
-                </div>
-              </div>
+              <CodeSnippet
+                codeId="pivot-tables-complete"
+                title="🎯 Pivot Tables: Din haos la rapoarte - Cod complet runnable"
+                code={`import pandas as pd
+import numpy as np
+
+# Creăm date reale de comenzi e-commerce
+comenzi_data = {
+    'data': ['2024-01-15', '2024-01-16', '2024-01-17', '2024-01-18',
+             '2024-01-19', '2024-01-20', '2024-01-21', '2024-01-22',
+             '2024-02-01', '2024-02-02', '2024-02-03', '2024-02-04'],
+    'produs': ['Laptop', 'Mouse', 'Tastatură', 'Monitor',
+               'Laptop', 'Mouse', 'Tastatură', 'Monitor',
+               'Laptop', 'Mouse', 'Tastatură', 'Monitor'],
+    'pret': [2500, 150, 200, 800,
+             2500, 150, 200, 800,
+             2500, 150, 200, 800],
+    'cantitate': [2, 5, 3, 1,
+                  1, 8, 4, 2,
+                  3, 6, 5, 1],
+    'oras': ['București', 'Cluj', 'București', 'Timișoara',
+             'Cluj', 'București', 'Timișoara', 'București',
+             'București', 'Cluj', 'Timișoara', 'Cluj'],
+    'categorie': ['Electronics', 'Accessories', 'Accessories', 'Electronics',
+                  'Electronics', 'Accessories', 'Accessories', 'Electronics',
+                  'Electronics', 'Accessories', 'Accessories', 'Electronics']
+}
+
+df = pd.DataFrame(comenzi_data)
+df['data'] = pd.to_datetime(df['data'])
+df['valoare_totala'] = df['pret'] * df['cantitate']
+
+print("=== PIVOT TABLES: DIN HAOS LA RAPOARTE ===\\n")
+print("Date brute (primele 5 rânduri):")
+print(df.head())
+print("\\n" + "="*60 + "\\n")
+
+# 1. PIVOT BASIC - Vânzări pe oraș și produs
+print("1. PIVOT TABLE - Vânzări totale pe Oraș × Produs:")
+pivot1 = df.pivot_table(
+    values='valoare_totala',
+    index='oras',
+    columns='produs',
+    aggfunc='sum',
+    fill_value=0
+)
+print(pivot1)
+print()
+
+# 2. MULTI-INDEX PIVOT - Oraș × Categorie cu statistici
+print("2. PIVOT AVANSAT - Oraș × Categorie cu statistici multiple:")
+pivot2 = df.pivot_table(
+    values='valoare_totala',
+    index='oras',
+    columns='categorie',
+    aggfunc=['sum', 'mean', 'count'],
+    fill_value=0
+)
+print(pivot2)
+print()
+
+# 3. PIVOT CU MARGINI (TOTALS) - Raport executive
+print("3. PIVOT CU TOTALS - Raport executive complet:")
+pivot3 = df.pivot_table(
+    values='valoare_totala',
+    index='oras',
+    columns='produs',
+    aggfunc='sum',
+    fill_value=0,
+    margins=True,  # Adaugă totals
+    margins_name='TOTAL'
+)
+print(pivot3)
+print()
+
+# 4. CROSS-TAB - Analiza cantităților
+print("4. CROSS-TAB - Număr de comenzi pe Oraș × Produs:")
+crosstab = pd.crosstab(
+    df['oras'],
+    df['produs'],
+    values=df['cantitate'],
+    aggfunc='sum',
+    margins=True
+)
+print(crosstab)
+print()
+
+# 5. GROUPBY + PIVOT - Analiza complexă
+print("5. ANALIZA COMPLEXĂ - Top produse pe oraș:")
+grouped = df.groupby(['oras', 'produs']).agg({
+    'valoare_totala': 'sum',
+    'cantitate': 'sum',
+    'data': 'count'
+}).rename(columns={'data': 'nr_comenzi'})
+print(grouped.sort_values('valoare_totala', ascending=False))
+print()
+
+# 6. INSIGHTS AUTOMATE
+print("6. INSIGHTS AUTOMATE:")
+print(f"   • Orașul cu cele mai mari vânzări: {pivot3.drop('TOTAL')['TOTAL'].idxmax()}")
+print(f"   • Produsul best-seller: {df.groupby('produs')['valoare_totala'].sum().idxmax()}")
+print(f"   • Valoarea medie pe comandă: {df['valoare_totala'].mean():.2f} lei")
+print(f"   • Total vânzări: {df['valoare_totala'].sum():,.2f} lei")
+print()
+
+# 7. PIVOT PENTRU TIMELINE
+print("7. ANALIZA TIMELINE - Vânzări zilnice:")
+df['luna'] = df['data'].dt.to_period('M')
+pivot_time = df.pivot_table(
+    values='valoare_totala',
+    index='luna',
+    columns='produs',
+    aggfunc='sum',
+    fill_value=0
+)
+print(pivot_time)
+
+print("\\n🎉 Gata! Din haos ai creat rapoarte executive profesionale!")
+`}
+              />
             </div>
             
             <div>
@@ -930,24 +1099,140 @@ print("\\n🎉 Gata! Ai învățat să analizezi date e-commerce ca un PRO!")`}
                 În loc să faci manual aceleași pași, creezi un pipeline automat.
               </p>
               
-              <div className="bg-gray-100 dark:bg-gray-700 rounded-lg p-4 mb-4">
-                <h4 className="font-bold text-gray-800 dark:text-white mb-2">📝 Funcția ta de curățare:</h4>
-                <code className="text-sm text-gray-700 dark:text-gray-300 block whitespace-pre">
-{`def curata_datele(df):
-    # 1. Elimină duplicatele
-    df = df.drop_duplicates()
-    
-    # 2. Completează valorile lipsă
-    df['nume'].fillna('Necunoscut', inplace=True)
-    df['pret'].fillna(df['pret'].mean(), inplace=True)
-    
-    # 3. Convertește tipurile
-    df['data'] = pd.to_datetime(df['data'])
-    
-    # 4. Returnează DataFrame curat
-    return df`}
-                </code>
-              </div>
+              <CodeSnippet
+                codeId="data-pipeline-complete"
+                title="🔄 Pipeline complet de procesare date - Cod runnable"
+                code={`import pandas as pd
+import numpy as np
+from datetime import datetime, timedelta
+
+print("=== PIPELINE AUTOMAT DE PROCESARE DATE ===\\n")
+
+# STEP 1: Simulăm citirea unui CSV "murdar"
+print("📄 STEP 1: Citesc fișierul CSV cu date problematice...")
+raw_data = {
+    'id': [1, 2, 3, 4, 5, 5, 6, 7, 8, 9, 10],  # 5 duplicat!
+    'nume': ['Alex', None, 'Maria', 'Ion', 'Ana', 'Ana', 'George', '', 'Diana', 'Paul', 'Laura'],
+    'email': ['alex@ex.com', 'invalid', 'maria@ex.com', 'ion@ex.com', None,
+              'ana@ex.com', 'george@ex.com', 'test@ex.com', None, 'paul@ex.com', 'laura@ex.com'],
+    'varsta': [28, 34, None, 45, 29, 29, -5, 150, 32, None, 27],  # Valori invalide!
+    'salariu': [None, 4500, 5200, 3800, 4200, 4200, 3000, 5500, None, 4800, 5000],
+    'oras': ['București', 'Cluj', '', 'Timișoara', 'bucurești', 'București',
+             'cluj', 'Timișoara', 'Iași', 'București', ''],
+    'data_angajare': ['2020-01-15', '2019-05-20', '2021-03-10', 'invalid',
+                      '2020-08-15', '2020-08-15', '2022-01-01', '2018-12-01',
+                      '2021-06-15', None, '2023-02-01']
+}
+
+df = pd.DataFrame(raw_data)
+initial_rows = len(df)
+print(f"Date citite: {initial_rows} rânduri, {len(df.columns)} coloane")
+print("\\nPrimele 5 rânduri (RAW):")
+print(df.head())
+print("\\n" + "="*60 + "\\n")
+
+# STEP 2: Curățarea datelor
+print("🧹 STEP 2: Curăț datele lipsă și duplicate...")
+
+# 2.1: Elimină duplicate EXACTE
+df_cleaned = df.drop_duplicates()
+duplicates_removed = initial_rows - len(df_cleaned)
+print(f"   ✓ {duplicates_removed} duplicate eliminate")
+
+# 2.2: Tratează valorile lipsă
+# Nume lipsă
+df_cleaned['nume'].fillna('Necunoscut', inplace=True)
+df_cleaned['nume'].replace('', 'Necunoscut', inplace=True)
+
+# Email lipsă
+df_cleaned['email'].fillna('unknown@example.com', inplace=True)
+
+# Vârstă lipsă (cu media)
+varsta_medie = df_cleaned['varsta'].mean()
+df_cleaned['varsta'].fillna(varsta_medie, inplace=True)
+
+# Salariu lipsă (cu media)
+salariu_mediu = df_cleaned['salariu'].mean()
+df_cleaned['salariu'].fillna(salariu_mediu, inplace=True)
+
+# Oraș lipsă
+df_cleaned['oras'].replace('', 'Necunoscut', inplace=True)
+
+missing_filled = df.isnull().sum().sum()
+print(f"   ✓ {missing_filled} valori lipsă completate")
+print()
+
+# STEP 3: Validarea și normalizarea datelor
+print("🔢 STEP 3: Convertesc tipurile de date și validez...")
+
+# 3.1: Normalizează oraș (lowercase inconsistencies)
+df_cleaned['oras'] = df_cleaned['oras'].str.title()
+
+# 3.2: Validează vârsta (trebuie între 18 și 70)
+invalid_ages = df_cleaned[(df_cleaned['varsta'] < 18) | (df_cleaned['varsta'] > 70)]
+print(f"   ⚠️  {len(invalid_ages)} vârste invalide detectate")
+df_cleaned.loc[(df_cleaned['varsta'] < 18) | (df_cleaned['varsta'] > 70), 'varsta'] = varsta_medie
+print(f"   ✓ Vârste invalide înlocuite cu media: {varsta_medie:.1f}")
+
+# 3.3: Convertește data_angajare în datetime
+df_cleaned['data_angajare'] = pd.to_datetime(df_cleaned['data_angajare'], errors='coerce')
+invalid_dates = df_cleaned['data_angajare'].isnull().sum()
+print(f"   ✓ Date convertite în format datetime ({invalid_dates} invalide → NaT)")
+print()
+
+# STEP 4: Feature Engineering
+print("📊 STEP 4: Calculez metrici noi...")
+
+# Calculează ani de experiență
+df_cleaned['ani_experienta'] = (datetime.now() - df_cleaned['data_angajare']).dt.days / 365.25
+df_cleaned['ani_experienta'] = df_cleaned['ani_experienta'].fillna(0).round(1)
+
+# Calculează salariu pe an experiență
+df_cleaned['salariu_per_exp'] = (df_cleaned['salariu'] /
+                                  df_cleaned['ani_experienta'].replace(0, 1)).round(2)
+
+print(f"   ✓ Adăugate 2 coloane noi: ani_experienta, salariu_per_exp")
+print()
+
+# STEP 5: Statistici finale
+print("📈 STEP 5: Generez statistici...")
+stats = {
+    'Total angajați': len(df_cleaned),
+    'Vârsta medie': df_cleaned['varsta'].mean(),
+    'Salariu mediu': df_cleaned['salariu'].mean(),
+    'Experiență medie': df_cleaned['ani_experienta'].mean(),
+    'Orașe unice': df_cleaned['oras'].nunique()
+}
+
+for key, value in stats.items():
+    if isinstance(value, float):
+        print(f"   • {key}: {value:.2f}")
+    else:
+        print(f"   • {key}: {value}")
+print()
+
+# STEP 6: Export rezultate
+print("💾 STEP 6: Export rezultate...")
+print("\\nDate CURATE (primele 5 rânduri):")
+print(df_cleaned[['nume', 'varsta', 'salariu', 'oras', 'ani_experienta']].head())
+print()
+
+# Salvează în CSV (opțional - decomentează dacă vrei să salvezi)
+# df_cleaned.to_csv('date_curate.csv', index=False)
+# print("   ✓ Fișier salvat: date_curate.csv")
+
+print("\\n" + "="*60)
+print("✅ PIPELINE COMPLET! Date prelucrate și gata de analiză!")
+print("="*60)
+
+# BONUS: Raport rezumativ
+print("\\n📋 RAPORT FINAL:")
+print(f"   Rânduri procesate: {initial_rows} → {len(df_cleaned)}")
+print(f"   Duplicate eliminate: {duplicates_removed}")
+print(f"   Valori invalide corectate: {len(invalid_ages) + invalid_dates}")
+print(f"   Calitatea datelor: {(len(df_cleaned) / initial_rows * 100):.1f}%")
+`}
+              />
               
               <Button
                 onClick={runDataPipeline}
