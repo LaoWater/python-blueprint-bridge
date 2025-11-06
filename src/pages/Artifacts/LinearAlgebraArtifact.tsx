@@ -239,7 +239,7 @@ const LinearAlgebraArtifact = () => {
         {/* The Grand Story */}
         <div className="artifact-card bg-white rounded-3xl p-8 md:p-12 mb-8 shadow-2xl animate-slideIn">
           <h2 className="text-2xl md:text-3xl font-bold text-purple-600 mb-6 flex items-center gap-3">
-            ✨ Povestea Supremă: De la Matematică la Minte Artificială
+            De la Matematică la Modele Artificiale
           </h2>
           
           <div className="bg-gradient-to-r from-purple-50 to-pink-50 p-6 rounded-2xl mb-6 relative">
@@ -997,7 +997,7 @@ componenta_2 = eigenvectori_sortati[:, 1]
         {/* Final Inspiration */}
         <div className="artifact-card bg-gradient-to-br from-violet-600 to-purple-700 text-white rounded-3xl p-8 md:p-12 shadow-2xl animate-slideIn">
           <h2 className="text-2xl md:text-3xl font-bold mb-6 flex items-center gap-3">
-            ✨ Momentul Revelației: Când Matematica Devine Conștiință
+            Când Matematica Devine Inteligenta
           </h2>
           
           <div className="text-lg leading-relaxed mb-6">

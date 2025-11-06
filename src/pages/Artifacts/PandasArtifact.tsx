@@ -315,7 +315,7 @@ const PandasArtifact = () => {
             </div>
             <div>
               <h2 className="text-3xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent">
-                🏦 Povestea Pandas: Când Excel nu mai ajungea
+                🏦 Povestea Pandas: Excel nu mai ajungea
               </h2>
               <p className="text-gray-600 dark:text-gray-300 text-sm">O poveste adevărată de inovație născută din desperare</p>
             </div>
@@ -1075,7 +1075,7 @@ print("\\n🎉 Gata! Ai învățat să analizezi date e-commerce ca un PRO!")`}
               
               <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:bg-white/15 transition-all duration-300 hover:scale-105">
                 <div className="text-5xl mb-4 animate-pulse">⚡</div>
-                <h3 className="text-xl font-bold mb-3">Vrăjitorul Vitezei</h3>
+                <h3 className="text-xl font-bold mb-3">Viteza</h3>
                 <p className="text-blue-100 text-sm leading-relaxed">
                   Procesezi milioane de rânduri în secunde cu operații vectorizate
                 </p>
@@ -1087,7 +1087,7 @@ print("\\n🎉 Gata! Ai învățat să analizezi date e-commerce ca un PRO!")`}
               
               <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:bg-white/15 transition-all duration-300 hover:scale-105">
                 <div className="text-5xl mb-4 animate-pulse">🎯</div>
-                <h3 className="text-xl font-bold mb-3">Detectivul Insight-urilor</h3>
+                <h3 className="text-xl font-bold mb-3">Insights</h3>
                 <p className="text-blue-100 text-sm leading-relaxed">
                   Transformi CSV-uri brute în rapoarte executive cu câteva linii magice
                 </p>
@@ -1099,9 +1099,9 @@ print("\\n🎉 Gata! Ai învățat să analizezi date e-commerce ca un PRO!")`}
               
               <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:bg-white/15 transition-all duration-300 hover:scale-105">
                 <div className="text-5xl mb-4 animate-pulse">🧹</div>
-                <h3 className="text-xl font-bold mb-3">Maestrul Curățeniei</h3>
+                <h3 className="text-xl font-bold mb-3">Clean Data</h3>
                 <p className="text-blue-100 text-sm leading-relaxed">
-                  Îmblânzești datele dezordonate și le dai sens cu pipeline-uri elegante
+                  Cureti datele dezordonate și le dai sens cu pipeline-uri elegante
                 </p>
                 <div className="mt-3 flex items-center text-xs text-cyan-300">
                   <span className="mr-2">✨</span>
