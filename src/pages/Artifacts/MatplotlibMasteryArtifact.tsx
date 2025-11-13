@@ -9,7 +9,10 @@ import { CodeBlockR } from '@/components/CodeBlockR';
 
 const MatplotlibMasteryArtifact = () => {
   const navigate = useNavigate();
-  
+
+  // Language State
+  const [language, setLanguage] = useState<'en' | 'ro'>('en');
+
   // Origin Story State
   const [storyStep, setStoryStep] = useState(-1);
   const [isStoryRunning, setIsStoryRunning] = useState(false);
@@ -56,35 +59,126 @@ const MatplotlibMasteryArtifact = () => {
   // Interactive Code State
   const [codeResult, setCodeResult] = useState('');
   const [isCodeRunning, setIsCodeRunning] = useState(false);
-  
-  // Story progression
-  const storyChapters = [
-    {
-      title: "📊 The Visual Breakthrough",
-      content: "John Tukey, Princeton University, 1960s. The father of exploratory data analysis realizes that raw numbers hide stories that only visualization can reveal.",
-      details: "'The greatest value of a picture is when it forces us to notice what we never expected to see.' Tukey's insight would revolutionize how we understand data."
+
+  // Translations
+  const translations = {
+    en: {
+      header: {
+        title: "Matplotlib Mastery",
+        subtitle: "Sessions 18-19: Complete Data Visualization Journey",
+        backToCourse: "Back to Course",
+        interactive: "Interactive",
+        handsOn: "Hands-on"
+      },
+      originStory: {
+        title: "The Origin Story: How Visualization Changed Everything",
+        subtitle: "Every great tool begins with a problem that demands a solution",
+        beginStory: "Begin Story",
+        playing: "Playing...",
+        clickToStart: "Click \"Begin Story\" to start the visualization journey"
+      },
+      chapters: [
+        {
+          title: "📊 The Visual Breakthrough",
+          content: "John Tukey, Princeton University, 1960s. The father of exploratory data analysis realizes that raw numbers hide stories that only visualization can reveal.",
+          details: "'The greatest value of a picture is when it forces us to notice what we never expected to see.' Tukey's insight would revolutionize how we understand data."
+        },
+        {
+          title: "💻 The Digital Revolution",
+          content: "1987: John D. Hunter, PhD student at University of Chicago, frustrated with expensive plotting software that crashes constantly during his neurobiological research.",
+          details: "Commercial plotting tools cost $10,000+ and took hours to generate simple charts. Hunter knew there had to be a better way."
+        },
+        {
+          title: "🐍 Python Emerges",
+          content: "2003: Hunter starts Matplotlib project. Vision: 'Make Python plotting as easy as MATLAB, but free and infinitely more powerful.'",
+          details: "Working nights and weekends, Hunter built the foundation that would become the backbone of Python's data visualization ecosystem."
+        },
+        {
+          title: "🌍 Global Impact",
+          content: "Today: NASA visualizes Mars missions, Netflix analyzes viewing patterns, Goldman Sachs tracks market trends - all using Matplotlib.",
+          details: "Over 50 million downloads annually. From academic papers to billion-dollar business decisions, Matplotlib powers the visual language of data."
+        },
+        {
+          title: "🚀 Your Journey Begins",
+          content: "Now it's your turn. Every chart you create, every pattern you reveal, every insight you visualize builds upon this foundation.",
+          details: "Welcome to the world where data becomes stories, numbers become narratives, and you become the storyteller."
+        }
+      ],
+      fundamentals: {
+        title: "Chapter 1: The Fundamentals",
+        subtitle: "Master the core chart types that solve 80% of visualization needs"
+      },
+      realWorld: {
+        title: "Chapter 2: Real-World Impact",
+        subtitle: "Apply visualization to your actual life and see immediate value"
+      },
+      advanced: {
+        title: "Chapter 3: Professional Mastery",
+        subtitle: "Advanced techniques that separate amateurs from professionals"
+      }
     },
-    {
-      title: "💻 The Digital Revolution", 
-      content: "1987: John D. Hunter, PhD student at University of Chicago, frustrated with expensive plotting software that crashes constantly during his neurobiological research.",
-      details: "Commercial plotting tools cost $10,000+ and took hours to generate simple charts. Hunter knew there had to be a better way."
-    },
-    {
-      title: "🐍 Python Emerges",
-      content: "2003: Hunter starts Matplotlib project. Vision: 'Make Python plotting as easy as MATLAB, but free and infinitely more powerful.'",
-      details: "Working nights and weekends, Hunter built the foundation that would become the backbone of Python's data visualization ecosystem."
-    },
-    {
-      title: "🌍 Global Impact",
-      content: "Today: NASA visualizes Mars missions, Netflix analyzes viewing patterns, Goldman Sachs tracks market trends - all using Matplotlib.",
-      details: "Over 50 million downloads annually. From academic papers to billion-dollar business decisions, Matplotlib powers the visual language of data."
-    },
-    {
-      title: "🚀 Your Journey Begins",
-      content: "Now it's your turn. Every chart you create, every pattern you reveal, every insight you visualize builds upon this foundation.",
-      details: "Welcome to the world where data becomes stories, numbers become narratives, and you become the storyteller."
+    ro: {
+      header: {
+        title: "Stăpânirea Matplotlib",
+        subtitle: "Sesiunile 18-19: Călătoria Completă în Vizualizarea Datelor",
+        backToCourse: "Înapoi la Curs",
+        interactive: "Interactiv",
+        handsOn: "Practic"
+      },
+      originStory: {
+        title: "Povestea Originii: Cum Vizualizarea a Schimbat Totul",
+        subtitle: "Fiecare unealtă măreață începe cu o problemă care cere o soluție",
+        beginStory: "Începe Povestea",
+        playing: "Se redă...",
+        clickToStart: "Apasă \"Începe Povestea\" pentru a porni călătoria în vizualizare"
+      },
+      chapters: [
+        {
+          title: "📊 Descoperirea Vizuală",
+          content: "John Tukey, Universitatea Princeton, anii 1960. Părintele analizei exploratoare de date realizează că numerele brute ascund povești pe care doar vizualizarea le poate dezvălui.",
+          details: "'Cea mai mare valoare a unei imagini este atunci când ne forțează să observăm ceea ce nu ne-am așteptat niciodată să vedem.' Intuiția lui Tukey avea să revoluționeze modul în care înțelegem datele."
+        },
+        {
+          title: "💻 Revoluția Digitală",
+          content: "1987: John D. Hunter, doctorand la Universitatea din Chicago, frustrat de software-ul scump de creare a graficelor care se blochează constant în timpul cercetării sale neurobiologice.",
+          details: "Instrumentele comerciale de creare a graficelor costau peste 10.000$ și necesitau ore întregi pentru a genera grafice simple. Hunter știa că trebuie să existe o cale mai bună."
+        },
+        {
+          title: "🐍 Apariția Python",
+          content: "2003: Hunter pornește proiectul Matplotlib. Viziunea: 'Să facem crearea de grafice în Python la fel de ușoară ca în MATLAB, dar gratuită și infinit mai puternică.'",
+          details: "Lucrând nopți și weekend-uri, Hunter a construit fundația care avea să devină coloana vertebrală a ecosistemului de vizualizare Python."
+        },
+        {
+          title: "🌍 Impact Global",
+          content: "Astăzi: NASA vizualizează misiunile pe Marte, Netflix analizează tiparele de vizionare, Goldman Sachs urmărește tendințele pieței - toate folosind Matplotlib.",
+          details: "Peste 50 de milioane de descărcări anual. De la lucrări academice la decizii de afaceri de miliarde de dolari, Matplotlib alimentează limbajul vizual al datelor."
+        },
+        {
+          title: "🚀 Călătoria Ta Începe",
+          content: "Acum este rândul tău. Fiecare grafic pe care îl creezi, fiecare tipar pe care îl dezvălui, fiecare perspectivă pe care o vizualizezi se construiește pe această fundație.",
+          details: "Bine ai venit în lumea în care datele devin povești, numerele devin narațiuni, și tu devii povestitor."
+        }
+      ],
+      fundamentals: {
+        title: "Capitolul 1: Fundamentele",
+        subtitle: "Stăpânește tipurile de bază de grafice care rezolvă 80% din necesitățile de vizualizare"
+      },
+      realWorld: {
+        title: "Capitolul 2: Impact în Lumea Reală",
+        subtitle: "Aplică vizualizarea în viața ta reală și vezi valoare imediată"
+      },
+      advanced: {
+        title: "Capitolul 3: Măiestrie Profesională",
+        subtitle: "Tehnici avansate care separă amatorii de profesioniști"
+      }
     }
-  ];
+  };
+
+  // Get current language translations
+  const t = translations[language];
+
+  // Story progression
+  const storyChapters = t.chapters;
   
   const fundamentalConcepts = [
     {
@@ -95,7 +189,7 @@ import numpy as np
 
 # Your daily step count over 2 weeks
 days = range(1, 15)
-steps = [8500, 7200, 9100, 10200, 6800, 9500, 11200, 
+steps = [8500, 7200, 9100, 10200, 6800, 9500, 11200,
          8800, 7600, 9800, 10500, 8900, 7400, 9200]
 
 plt.figure(figsize=(10, 6))
@@ -108,9 +202,12 @@ plt.tight_layout()
 plt.show()`
     },
     {
-      title: "📊 Bar Charts: Categories Comparison", 
+      title: "📊 Bar Charts: Categories Comparison",
       description: "Compare different categories - expenses, sales by region, survey results",
-      code: `# Monthly expenses breakdown
+      code: `import matplotlib.pyplot as plt
+import numpy as np
+
+# Monthly expenses breakdown
 categories = ['Rent', 'Food', 'Transport', 'Entertainment', 'Savings']
 amounts = [1200, 750, 200, 400, 650]
 colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7']
@@ -131,13 +228,16 @@ plt.show()`
     {
       title: "🥧 Pie Charts: Parts of a Whole",
       description: "Show proportions and percentages - market share, time allocation, survey responses",
-      code: `# How you spend your day
+      code: `import matplotlib.pyplot as plt
+import numpy as np
+
+# How you spend your day
 activities = ['Work', 'Sleep', 'Exercise', 'Leisure', 'Commute', 'Meals']
 hours = [8, 8, 1, 4, 1.5, 1.5]
 colors = ['#FF9999', '#66B2FF', '#99FF99', '#FFCC99', '#FF99CC', '#FFD700']
 
 plt.figure(figsize=(10, 8))
-wedges, texts, autotexts = plt.pie(hours, labels=activities, colors=colors, 
+wedges, texts, autotexts = plt.pie(hours, labels=activities, colors=colors,
                                    autopct='%1.1f%%', startangle=90)
 
 # Make percentage labels bold
@@ -156,7 +256,10 @@ plt.show()`
     {
       title: "🎨 Custom Styling & Themes",
       description: "Professional styling that separates amateur from expert visualizations",
-      code: `# Professional styling example
+      code: `import matplotlib.pyplot as plt
+import numpy as np
+
+# Professional styling example
 plt.style.use('seaborn-v0_8')  # Modern, clean style
 
 fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(15, 6))
@@ -186,7 +289,11 @@ plt.show()`
     {
       title: "📍 Annotations & Highlights",
       description: "Draw attention to key points and insights in your data",
-      code: `# Stock price with key events annotated
+      code: `import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+
+# Stock price with key events annotated
 dates = pd.date_range('2024-01-01', periods=100, freq='D')
 price = 100 + np.cumsum(np.random.randn(100) * 0.5)
 
@@ -194,12 +301,12 @@ plt.figure(figsize=(12, 8))
 plt.plot(dates, price, linewidth=2, color='#2E8B57')
 
 # Highlight key events
-plt.annotate('Product Launch', 
+plt.annotate('Product Launch',
              xy=(dates[30], price[30]), xytext=(dates[40], price[30] + 10),
              arrowprops=dict(arrowstyle='->', color='red', lw=2),
              fontsize=12, fontweight='bold', color='red')
 
-plt.annotate('Market Crash', 
+plt.annotate('Market Crash',
              xy=(dates[70], price[70]), xytext=(dates[60], price[70] - 10),
              arrowprops=dict(arrowstyle='->', color='blue', lw=2),
              fontsize=12, fontweight='bold', color='blue')
@@ -214,7 +321,11 @@ plt.show()`
     {
       title: "📊 Subplots & Complex Layouts",
       description: "Multiple visualizations in one figure for comprehensive analysis",
-      code: `# Financial dashboard layout
+      code: `import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+
+# Financial dashboard layout
 fig = plt.figure(figsize=(16, 12))
 
 # Define a complex grid
@@ -348,31 +459,52 @@ plt.show()`
         <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <Button 
-                variant="ghost" 
-                size="sm" 
+              <Button
+                variant="ghost"
+                size="sm"
                 onClick={() => navigate('/data-visualizing')}
                 className="flex items-center gap-2"
               >
                 <ArrowLeft className="w-4 h-4" />
-                Back to Course
+                {t.header.backToCourse}
               </Button>
               <div className="w-px h-6 bg-border" />
               <div>
                 <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                  Matplotlib Mastery
+                  {t.header.title}
                 </h1>
-                <p className="text-sm text-muted-foreground">Sessions 18-19: Complete Data Visualization Journey</p>
+                <p className="text-sm text-muted-foreground">{t.header.subtitle}</p>
               </div>
             </div>
             <div className="flex items-center gap-3">
+              {/* Language Switcher */}
+              <div className="flex items-center gap-2 border rounded-md p-1 bg-background">
+                <Button
+                  variant={language === 'en' ? 'default' : 'ghost'}
+                  size="sm"
+                  onClick={() => setLanguage('en')}
+                  className="h-8 px-2"
+                  title="English"
+                >
+                  🇬🇧 EN
+                </Button>
+                <Button
+                  variant={language === 'ro' ? 'default' : 'ghost'}
+                  size="sm"
+                  onClick={() => setLanguage('ro')}
+                  className="h-8 px-2"
+                  title="Română"
+                >
+                  🇷🇴 RO
+                </Button>
+              </div>
               <Badge variant="secondary" className="bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
                 <BarChart3 className="w-3 h-3 mr-1" />
-                Interactive
+                {t.header.interactive}
               </Badge>
               <Badge variant="secondary" className="bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200">
                 <Code className="w-3 h-3 mr-1" />
-                Hands-on
+                {t.header.handsOn}
               </Badge>
             </div>
           </div>
@@ -388,27 +520,27 @@ plt.show()`
                 <div>
                   <CardTitle className="flex items-center gap-2 text-blue-700 dark:text-blue-300">
                     <Target className="w-5 h-5" />
-                    The Origin Story: How Visualization Changed Everything
+                    {t.originStory.title}
                   </CardTitle>
                   <CardDescription className="text-lg mt-2">
-                    Every great tool begins with a problem that demands a solution
+                    {t.originStory.subtitle}
                   </CardDescription>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Button 
-                    onClick={runOriginStory} 
+                  <Button
+                    onClick={runOriginStory}
                     disabled={isStoryRunning}
                     className="bg-blue-600 hover:bg-blue-700 text-white"
                   >
                     {isStoryRunning ? (
                       <>
                         <Pause className="w-4 h-4 mr-2" />
-                        Playing...
+                        {t.originStory.playing}
                       </>
                     ) : (
                       <>
                         <Play className="w-4 h-4 mr-2" />
-                        Begin Story
+                        {t.originStory.beginStory}
                       </>
                     )}
                   </Button>
@@ -423,11 +555,11 @@ plt.show()`
                 <div className="space-y-4">
                   <div className="grid gap-4">
                     {storyChapters.map((chapter, index) => (
-                      <div 
+                      <div
                         key={index}
                         className={`p-4 rounded-lg border transition-all duration-500 ${
-                          index <= storyStep 
-                            ? 'bg-blue-50 dark:bg-blue-950/20 border-blue-200 dark:border-blue-800 opacity-100' 
+                          index <= storyStep
+                            ? 'bg-blue-50 dark:bg-blue-950/20 border-blue-200 dark:border-blue-800 opacity-100'
                             : 'bg-muted/20 border-muted opacity-0'
                         }`}
                       >
@@ -454,7 +586,7 @@ plt.show()`
               )}
               {!showStoryDetails && (
                 <div className="text-center py-8">
-                  <p className="text-muted-foreground">Click "Begin Story" to start the visualization journey</p>
+                  <p className="text-muted-foreground">{t.originStory.clickToStart}</p>
                 </div>
               )}
             </CardContent>
@@ -468,8 +600,8 @@ plt.show()`
               <BarChart3 className="w-5 h-5 text-white" />
             </div>
             <div>
-              <h2 className="text-2xl font-bold text-foreground">Chapter 1: The Fundamentals</h2>
-              <p className="text-muted-foreground">Master the core chart types that solve 80% of visualization needs</p>
+              <h2 className="text-2xl font-bold text-foreground">{t.fundamentals.title}</h2>
+              <p className="text-muted-foreground">{t.fundamentals.subtitle}</p>
             </div>
           </div>
 
@@ -530,8 +662,8 @@ plt.show()`
               <Activity className="w-5 h-5 text-white" />
             </div>
             <div>
-              <h2 className="text-2xl font-bold text-foreground">Chapter 2: Real-World Impact</h2>
-              <p className="text-muted-foreground">Apply visualization to your actual life and see immediate value</p>
+              <h2 className="text-2xl font-bold text-foreground">{t.realWorld.title}</h2>
+              <p className="text-muted-foreground">{t.realWorld.subtitle}</p>
             </div>
           </div>
 
@@ -661,8 +793,8 @@ plt.show()`
               <Palette className="w-5 h-5 text-white" />
             </div>
             <div>
-              <h2 className="text-2xl font-bold text-foreground">Chapter 3: Professional Mastery</h2>
-              <p className="text-muted-foreground">Advanced techniques that separate amateurs from professionals</p>
+              <h2 className="text-2xl font-bold text-foreground">{t.advanced.title}</h2>
+              <p className="text-muted-foreground">{t.advanced.subtitle}</p>
             </div>
           </div>
 
