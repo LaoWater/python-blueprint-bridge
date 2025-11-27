@@ -24,14 +24,16 @@ import {
   BarChart3,
   LineChart,
   PieChart,
-  ArrowLeft
+  ArrowLeft,
+  Check
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { CodeBlockR } from '@/components/CodeBlockR';
 
 // Interactive Code Block Component
-const CodeBlock = ({ title, code, language = "python", runnable = false, filename = "" }) => {
+const CodeBlock = ({ title, code, language = "python", runnable = false, filename = "", defaultCollapsed = true }) => {
   const [copied, setCopied] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(!defaultCollapsed);
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(code);
@@ -41,42 +43,55 @@ const CodeBlock = ({ title, code, language = "python", runnable = false, filenam
 
   return (
     <div className="rounded-lg overflow-hidden border border-gray-700">
-      {(title || runnable) && (
-        <div className="bg-gray-800 px-4 py-2 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            {filename && <span className="text-yellow-400 text-sm font-mono">{filename}</span>}
-            {title && <span className="text-gray-300 text-sm">{title}</span>}
-          </div>
-          <div className="flex items-center gap-2">
-            {runnable && (
-              <Badge variant="secondary" className="bg-green-600 text-white text-xs">
-                ▶ Runnable
-              </Badge>
-            )}
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={copyToClipboard}
-              className="text-gray-400 hover:text-white h-6 px-2 bg-gray-800/80 hover:bg-gray-700/80"
-            >
-              {copied ? '✓' : '📋'}
-            </Button>
-          </div>
+      <div className="bg-gray-800 px-4 py-2 flex items-center justify-between cursor-pointer" onClick={() => setIsExpanded(!isExpanded)}>
+        <div className="flex items-center gap-2">
+          {filename && <span className="text-yellow-400 text-sm font-mono">{filename}</span>}
+          {title && <span className="text-gray-300 text-sm">{title}</span>}
+          <span className="text-gray-500 text-xs">
+            {isExpanded ? '▼ Hide' : '▶ Show'} Code
+          </span>
+        </div>
+        <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
+          {runnable && (
+            <Badge variant="secondary" className="bg-green-600 text-white text-xs">
+              ▶ Runnable
+            </Badge>
+          )}
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={copyToClipboard}
+            className="text-gray-400 hover:text-white h-6 px-2 bg-gray-800/80 hover:bg-gray-700/80"
+          >
+            {copied ? '✓' : '📋'}
+          </Button>
+        </div>
+      </div>
+      {isExpanded && (
+        <div className="rounded-b-lg overflow-hidden">
+          <CodeBlockR language={language}>{code}</CodeBlockR>
         </div>
       )}
-      <div className={title || runnable ? 'rounded-b-lg overflow-hidden' : ''}>
-        <CodeBlockR language={language}>{code}</CodeBlockR>
-      </div>
     </div>
   );
 };
 
 const StreamlitUnifiedArtifact = () => {
   const navigate = useNavigate();
+
+  // Language State
+  const [language, setLanguage] = useState<'en' | 'ro'>('en');
+
   const [currentSection, setCurrentSection] = useState('intro');
   const [completedSections, setCompletedSections] = useState(new Set());
   const [animationStep, setAnimationStep] = useState(0);
   const [hasLoadedOnce, setHasLoadedOnce] = useState(false);
+
+  // Code expansion state for collapsible code blocks
+  const [expandedCode, setExpandedCode] = useState({});
+
+  // Code copy state
+  const [copiedCode, setCopiedCode] = useState<string | null>(null);
 
   // Scroll to top on initial page load (not on refresh)
   useEffect(() => {
@@ -103,23 +118,460 @@ const StreamlitUnifiedArtifact = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const toggleCodeExpansion = (index) => {
+    setExpandedCode(prev => ({
+      ...prev,
+      [index]: !prev[index]
+    }));
+  };
+
+  const copyCodeToClipboard = async (code: string, index: string) => {
+    try {
+      await navigator.clipboard.writeText(code);
+      setCopiedCode(index);
+      setTimeout(() => setCopiedCode(null), 3000);
+    } catch (err) {
+      console.error('Failed to copy code:', err);
+    }
+  };
+
+  // Translations
+  const translations = {
+    en: {
+      header: {
+        title: "Unified Lesson: Streamlit",
+        subtitle: "Sessions 23-26 • 🕒 ~10 hours",
+        description: "Building Interactive Dashboards with Streamlit",
+        objective: "🎯 Complete Objective:",
+        objectiveText: "Learn to build interactive applications with Streamlit – from simple prototypes to professional dashboards connected to databases and ready for cloud deployment.",
+        backButton: "Back to Data Visualizing",
+        sessions: "Sessions 23-26"
+      },
+      navigation: {
+        progressTitle: "Journey Progress",
+        sectionsCompleted: "sections completed"
+      },
+      sections: {
+        intro: "The Problem Statement",
+        healthNeed: "Health Tracking Crisis",
+        financeNeed: "Financial Insight Gap",
+        solutionEmerges: "The Solution Emerges",
+        session23: "Session 23: First Dashboard",
+        session24: "Session 24: Interactive Analytics",
+        session25: "Session 25: Real-time Systems",
+        session26: "Session 26: Production Ready"
+      },
+      storyStages: [
+        "📊 You've mastered data visualization...",
+        "🤔 But charts don't solve real problems...",
+        "💡 People need interactive applications...",
+        "🚀 That's where Streamlit enters..."
+      ],
+      codeActions: {
+        showCode: "▶ Show Code",
+        hideCode: "▼ Hide Code",
+        copyCode: "Copy Code to Run",
+        codeCopied: "Code Copied! Go run it!",
+        runnable: "▶ Runnable"
+      },
+      intro: {
+        title: "The Problem Statement: \"Now What?\"",
+        subtitle: "The inevitable question every data scientist faces after mastering visualization",
+        opening: "You've conquered matplotlib. You've mastered seaborn. Your Plotly charts are works of art. You can transform any dataset into compelling visual stories.",
+        realityTitle: "But then reality hits...",
+        healthScattered: "Your personal health data is scattered across apps",
+        healthDesc: "Sleep tracking in one app, exercise in another, nutrition somewhere else...",
+        financeTrapped: "Your financial insights are trapped in static charts",
+        financeDesc: "Beautiful visualizations, but you can't interact, filter, or explore patterns dynamically...",
+        familyCant: "Your family/friends can't benefit from your analysis",
+        familyDesc: "They'd love to use your insights, but they can't run Jupyter notebooks...",
+        quote: "The best analysis in the world is useless if it can't be shared, explored, and acted upon by the people who need it most.",
+        quoteAuthor: "— Every data scientist's realization",
+        frustrationTitle: "💔 The Frustration: Beautiful Analysis, Zero Impact",
+        codeTitle: "Your amazing analysis that nobody can use",
+        problemText: "The Problem: This analysis is a dead end. It creates insights but doesn't enable action. Your family can't use it, you can't interact with it, and updating it requires running the entire script again.",
+        continueButton: "Continue to Real-World Scenarios"
+      },
+      healthNeed: {
+        title: "Real Need #1: The Health Tracking Crisis",
+        subtitle: "When scattered health data becomes a barrier to wellness",
+        paradoxTitle: "The Modern Health Paradox",
+        paradoxText: "We live in the age of health tracking. Apple Watch monitors heart rate, sleep apps track rest quality, nutrition apps count calories, fitness apps log workouts.",
+        problemTitle: "The Problem:",
+        dataSilos: "Data Silos",
+        dataSilosDesc: "Sleep data in Health app, workouts in Strava, nutrition in MyFitnessPal",
+        noCorrelations: "No Correlations",
+        noCorrelationsDesc: "Can't see how sleep affects workout performance, or how nutrition impacts mood",
+        staticReports: "Static Reports",
+        staticReportsDesc: "Weekly summaries that don't help you understand patterns or optimize behavior",
+        personalOnly: "Personal Only",
+        personalOnlyDesc: "Can't share insights with family, trainer, or healthcare provider",
+        realityTitle: "😤 Your Current Health Data Reality",
+        codeTitle: "The scattered health data nightmare",
+        needTitle: "What We Actually Need:",
+        need1: "Unified Health Dashboard",
+        need1Desc: "All health metrics in one place, with real-time updates",
+        need2: "Interactive Correlation Explorer",
+        need2Desc: "Click and filter to discover how sleep affects energy, exercise impacts mood",
+        need3: "Shareable Insights",
+        need3Desc: "Send your trainer a link to your progress, share family health goals",
+        need4: "Personalized Recommendations",
+        need4Desc: "AI-powered suggestions based on your unique patterns",
+        continueButton: "Explore Financial Need"
+      },
+      financeNeed: {
+        title: "Real Need #2: The Financial Insight Gap",
+        subtitle: "When beautiful charts don't translate to better financial decisions",
+        trapTitle: "The Personal Finance Visualization Trap",
+        trapText: "You've created stunning expense charts, elegant budget visualizations, and insightful spending analysis. Your matplotlib and seaborn skills are on point. But somehow, your finances haven't improved.",
+        gapTitle: "The Gap Between Analysis and Action:",
+        staticAnalysis: "Static Analysis Paralysis",
+        staticAnalysisDesc: "Monthly expense reports that show what happened, but don't help prevent overspending",
+        delayedInsights: "Delayed Insights",
+        delayedInsightsDesc: "By the time you analyze last month's spending, this month's damage is already done",
+        continueButton: "Discover The Solution"
+      },
+      solutionEmerges: {
+        title: "The Solution Emerges: Why Streamlit?",
+        subtitle: "When need meets the perfect tool - the birth of interactive applications",
+        storyTitle: "The Streamlit Story: Need Driving Innovation",
+        originTitle: "The Origin Story (2019):",
+        originText: "Adrien Treuille, Amanda Kelly, and Thiago Teixeira at Uber were facing the exact same problem you just experienced:",
+        ml: "Machine Learning engineers",
+        mlDesc: "spent weeks building web interfaces for their models",
+        dataScientists: "Data scientists",
+        dataScientistsDesc: "created brilliant analyses that only they could access",
+        stakeholders: "Business stakeholders",
+        stakeholdersDesc: "wanted to interact with data, not just view static reports",
+        quote: "What if we could turn a Python script into a web app with just a few lines of code?",
+        quoteAuthor: "— Adrien Treuille, Streamlit Co-founder",
+        philosophyTitle: "The Philosophy Match:",
+        traditional: "✅ Traditional Web Development",
+        streamlitApproach: "🚀 Streamlit Approach",
+        continueButton: "Start Session 23"
+      },
+      session23: {
+        title: "Session 23: First Dashboard - Health & Finance Foundations",
+        subtitle: "Build your first interactive Streamlit applications in under 30 minutes",
+        magicTitle: "The First Touch of Magic",
+        magicText: "This session is your introduction to the Streamlit mindset. We start with the simplest possible versions of your health and finance dashboards - just enough to feel the magic of turning Python scripts into web applications.",
+        whatYouBuild: "What You'll Build:",
+        personalHealthTracker: "Personal Health Tracker",
+        budgetMonitor: "Budget Monitor",
+        learningObjectives: "Learning Objectives:",
+        fundamentals: "Streamlit Fundamentals",
+        dataInputPatterns: "Data Input Patterns",
+        stateManagement: "State Management Basics",
+        localDeployment: "Local Deployment",
+        healthDashboard: "🏥 Project: Personal Health Dashboard",
+        healthDesc: "Transform your scattered health data into a unified, interactive application that reveals patterns and helps optimize your wellness routines.",
+        coreFeatures: "Core Features:",
+        dailyLogging: "📊 Daily Logging",
+        interactiveAnalysis: "📈 Interactive Analysis",
+        continueButton: "Continue to Session 24"
+      },
+      session24: {
+        title: "Session 24: Interactive Analytics - Machine Learning Integration",
+        subtitle: "Adding predictive power and advanced analytics to your applications",
+        predictiveTitle: "From Reactive to Predictive",
+        predictiveText: "Session 23 showed you what happened. Session 24 predicts what will happen. We integrate machine learning models that turn your applications from data viewers into intelligent assistants.",
+        intelligenceLayer: "Intelligence Layer:",
+        healthIntelligence: "Health Intelligence",
+        healthFeature1: "• Predict tomorrow's energy levels",
+        healthFeature2: "• Recommend optimal sleep schedules",
+        healthFeature3: "• Suggest workout timing based on patterns",
+        healthFeature4: "• Alert to potential health risks",
+        financeIntelligence: "Finance Intelligence",
+        financeFeature1: "• Predict next month's spending",
+        financeFeature2: "• Detect spending anomalies",
+        financeFeature3: "• Recommend saving opportunities",
+        financeFeature4: "• Alert when exceeding budget",
+        continueButton: "Continue to Session 25"
+      },
+      session25: {
+        title: "Session 25: Real-time Systems - Live Data & Collaboration",
+        subtitle: "Database integration, real-time updates, and multi-user collaboration",
+        familySystemsTitle: "From Personal Tools to Family Systems",
+        familySystemsText: "Your applications are no longer single-user toys. They become family systems, couple tools, and shared platforms where multiple people can collaborate on health and financial goals.",
+        transformation: "Real-world Transformation:",
+        familyHealthHub: "Family Health Hub",
+        familyHealthFeature1: "• Parents and kids log activities together",
+        familyHealthFeature2: "• Real-time family step challenges",
+        familyHealthFeature3: "• Shared meal planning and nutrition goals",
+        familyHealthFeature4: "• Live dashboard on family tablet",
+        coupleFinance: "Couple Finance System",
+        coupleFinanceFeature1: "• Both partners log expenses in real-time",
+        coupleFinanceFeature2: "• Instant budget alerts for both users",
+        coupleFinanceFeature3: "• Collaborative savings goal tracking",
+        coupleFinanceFeature4: "• Real-time spending notifications",
+        techArchitectureTitle: "Technical Architecture Evolution:",
+        continueButton: "Continue to Session 26"
+      },
+      session26: {
+        title: "Session 26: Production Ready - Deployment & Scaling",
+        subtitle: "Launch your apps to the cloud and handle real traffic",
+        productionTitle: "From Prototype to Production",
+        productionText: "Your applications are no longer running on your laptop. They're deployed to the cloud, accessible from anywhere, secured properly, and ready to serve your family and friends reliably.",
+        productionFeatures: "Production-Ready Features:",
+        cloudDeployment: "Cloud Deployment",
+        cloudFeature1: "• Streamlit Cloud hosting",
+        cloudFeature2: "• Custom domain setup",
+        cloudFeature3: "• SSL certificates",
+        cloudFeature4: "• Global CDN delivery",
+        enterpriseSecurity: "Enterprise Security",
+        securityFeature1: "• OAuth2 authentication",
+        securityFeature2: "• Data encryption at rest",
+        securityFeature3: "• GDPR compliance features",
+        securityFeature4: "• Audit logging",
+        journeyTitle: "The Full Journey - What You've Built:",
+        cloudDeploymentStrategy: "☁️ Cloud Deployment Strategy",
+        productionDeploymentSetup: "🚀 Production Deployment Setup",
+        productionDeploymentChecklist: "🎯 Production Deployment Checklist",
+        continueButton: "Complete Course"
+      },
+      tabLabels: {
+        overview: "Overview",
+        healthApp: "Health App",
+        financeApp: "Finance App",
+        deployment: "Deployment",
+        healthML: "Health ML",
+        financeML: "Finance ML",
+        advanced: "Advanced",
+        patterns: "Patterns",
+        realtime: "Real-time",
+        collaboration: "Collaboration",
+        performance: "Performance",
+        database: "Database",
+        security: "Security",
+        monitoring: "Monitoring"
+      }
+    },
+    ro: {
+      header: {
+        title: "Lecție Unificată: Streamlit",
+        subtitle: "Sesiunile 23-26 • 🕒 ~10 ore",
+        description: "Construirea de Dashboarduri Interactive cu Streamlit",
+        objective: "🎯 Obiectiv Complet:",
+        objectiveText: "Învățăm să construim aplicații interactive cu Streamlit – de la prototipuri simple la dashboarduri profesionale conectate la baze de date și gata de deployment în cloud.",
+        backButton: "Înapoi la Vizualizarea Datelor",
+        sessions: "Sesiunile 23-26"
+      },
+      navigation: {
+        progressTitle: "Progresul Călătoriei",
+        sectionsCompleted: "secțiuni completate"
+      },
+      sections: {
+        intro: "Declararea Problemei",
+        healthNeed: "Criza Urmăririi Sănătății",
+        financeNeed: "Decalajul Perspectivelor Financiare",
+        solutionEmerges: "Soluția Apare",
+        session23: "Sesiunea 23: Primul Dashboard",
+        session24: "Sesiunea 24: Analiză Interactivă",
+        session25: "Sesiunea 25: Sisteme în Timp Real",
+        session26: "Sesiunea 26: Gata de Producție"
+      },
+      storyStages: [
+        "📊 Ai stăpânit vizualizarea datelor...",
+        "🤔 Dar graficele nu rezolvă probleme reale...",
+        "💡 Oamenii au nevoie de aplicații interactive...",
+        "🚀 Aici intervine Streamlit..."
+      ],
+      codeActions: {
+        showCode: "▶ Arată Cod",
+        hideCode: "▼ Ascunde Cod",
+        copyCode: "Copiază Cod pentru Rulare",
+        codeCopied: "Cod Copiat! Du-te și rulează-l!",
+        runnable: "▶ Rulabil"
+      },
+      intro: {
+        title: "Declararea Problemei: \"Și Acum Ce?\"",
+        subtitle: "Întrebarea inevitabilă pe care fiecare data scientist o întâmpină după stăpânirea vizualizării",
+        opening: "Ai cucerit matplotlib. Ai stăpânit seaborn. Graficele tale Plotly sunt opere de artă. Poți transforma orice set de date în povești vizuale convingătoare.",
+        realityTitle: "Dar apoi realitatea lovește...",
+        healthScattered: "Datele tale personale de sănătate sunt împrăștiate prin aplicații",
+        healthDesc: "Urmărirea somnului într-o aplicație, exercițiile în alta, nutriția undeva altundeva...",
+        financeTrapped: "Perspectivele tale financiare sunt prinse în grafice statice",
+        financeDesc: "Vizualizări frumoase, dar nu poți interacționa, filtra sau explora tipare dinamic...",
+        familyCant: "Familia/prietenii tăi nu pot beneficia de analiza ta",
+        familyDesc: "Ar dori să folosească perspectivele tale, dar nu pot rula notebook-uri Jupyter...",
+        quote: "Cea mai bună analiză din lume este inutilă dacă nu poate fi împărtășită, explorată și acționată de către oamenii care au cel mai mult nevoie de ea.",
+        quoteAuthor: "— Realizarea fiecărui data scientist",
+        frustrationTitle: "💔 Frustrarea: Analiză Frumoasă, Impact Zero",
+        codeTitle: "Analiza ta uimitoare pe care nimeni nu o poate folosi",
+        problemText: "Problema: Această analiză este un impas. Creează perspective dar nu permite acțiune. Familia ta nu o poate folosi, tu nu poți interacționa cu ea, și actualizarea ei necesită rularea întregului script din nou.",
+        continueButton: "Continuă la Scenarii din Lumea Reală"
+      },
+      healthNeed: {
+        title: "Nevoie Reală #1: Criza Urmăririi Sănătății",
+        subtitle: "Când datele de sănătate împrăștiate devin o barieră pentru wellness",
+        paradoxTitle: "Paradoxul Sănătății Moderne",
+        paradoxText: "Trăim în era urmăririi sănătății. Apple Watch monitorizează ritmul cardiac, aplicațiile de somn urmăresc calitatea odihnei, aplicațiile de nutriție numără caloriile, aplicațiile de fitness înregistrează antrenamentele.",
+        problemTitle: "Problema:",
+        dataSilos: "Silozuri de Date",
+        dataSilosDesc: "Date de somn în aplicația Health, antrenamente în Strava, nutriție în MyFitnessPal",
+        noCorrelations: "Fără Corelații",
+        noCorrelationsDesc: "Nu poți vedea cum somnul afectează performanța antrenamentului sau cum nutriția impactează starea de spirit",
+        staticReports: "Rapoarte Statice",
+        staticReportsDesc: "Rezumate săptămânale care nu te ajută să înțelegi tiparele sau să optimizezi comportamentul",
+        personalOnly: "Doar Personal",
+        personalOnlyDesc: "Nu poți împărtăși perspective cu familia, antrenorul sau furnizorul de îngrijiri medicale",
+        realityTitle: "😤 Realitatea Actuală a Datelor Tale de Sănătate",
+        codeTitle: "Coșmarul datelor de sănătate împrăștiate",
+        needTitle: "Ce Avem Nevoie de Fapt:",
+        need1: "Dashboard Unificat de Sănătate",
+        need1Desc: "Toate metricile de sănătate într-un singur loc, cu actualizări în timp real",
+        need2: "Explorator Interactiv de Corelații",
+        need2Desc: "Click și filtrează pentru a descoperi cum somnul afectează energia, exercițiul impactează starea de spirit",
+        need3: "Perspective Partajabile",
+        need3Desc: "Trimite antrenorului tău un link către progresul tău, împărtășește obiective de sănătate în familie",
+        need4: "Recomandări Personalizate",
+        need4Desc: "Sugestii alimentate de AI bazate pe tiparele tale unice",
+        continueButton: "Explorează Nevoia Financiară"
+      },
+      financeNeed: {
+        title: "Nevoie Reală #2: Decalajul Perspectivelor Financiare",
+        subtitle: "Când graficele frumoase nu se traduc în decizii financiare mai bune",
+        trapTitle: "Capcana Vizualizării Finanțelor Personale",
+        trapText: "Ai creat grafice de cheltuieli uluitoare, vizualizări elegante de buget și analize perspicace ale cheltuielilor. Abilitățile tale matplotlib și seaborn sunt perfecte. Dar cumva, finanțele tale nu s-au îmbunătățit.",
+        gapTitle: "Decalajul Între Analiză și Acțiune:",
+        staticAnalysis: "Paralizia Analizei Statice",
+        staticAnalysisDesc: "Rapoarte lunare de cheltuieli care arată ce s-a întâmplat, dar nu ajută la prevenirea cheltuirii excesive",
+        delayedInsights: "Perspective Întârziate",
+        delayedInsightsDesc: "Până când analizezi cheltuielile lunii trecute, paguba lunii acesteia este deja făcută",
+        continueButton: "Descoperă Soluția"
+      },
+      solutionEmerges: {
+        title: "Soluția Apare: De Ce Streamlit?",
+        subtitle: "Când nevoia întâlnește instrumentul perfect - nașterea aplicațiilor interactive",
+        storyTitle: "Povestea Streamlit: Nevoia Conduce Inovația",
+        originTitle: "Povestea Originii (2019):",
+        originText: "Adrien Treuille, Amanda Kelly și Thiago Teixeira de la Uber se confruntau cu exact aceeași problemă pe care tocmai ai experimentat-o:",
+        ml: "Inginerii de Machine Learning",
+        mlDesc: "petreceau săptămâni construind interfețe web pentru modelele lor",
+        dataScientists: "Data scientists",
+        dataScientistsDesc: "creaseră analize strălucite la care doar ei puteau accesa",
+        stakeholders: "Stakeholderii de business",
+        stakeholdersDesc: "doreau să interacționeze cu datele, nu doar să vadă rapoarte statice",
+        quote: "Ce ar fi dacă am putea transforma un script Python într-o aplicație web cu doar câteva linii de cod?",
+        quoteAuthor: "— Adrien Treuille, Co-fondator Streamlit",
+        philosophyTitle: "Potrivirea Filosofiei:",
+        traditional: "✅ Dezvoltare Web Tradițională",
+        streamlitApproach: "🚀 Abordarea Streamlit",
+        continueButton: "Începe Sesiunea 23"
+      },
+      session23: {
+        title: "Sesiunea 23: Primul Dashboard - Fundații Sănătate & Finanțe",
+        subtitle: "Construiește-ți primele aplicații Streamlit interactive în sub 30 de minute",
+        magicTitle: "Primul Contact cu Magia",
+        magicText: "Această sesiune este introducerea ta în mentalitatea Streamlit. Începem cu cele mai simple versiuni posibile ale dashboard-urilor tale de sănătate și finanțe - doar suficient pentru a simți magia transformării scripturilor Python în aplicații web.",
+        whatYouBuild: "Ce Vei Construi:",
+        personalHealthTracker: "Tracker Personal de Sănătate",
+        budgetMonitor: "Monitor de Buget",
+        learningObjectives: "Obiective de Învățare:",
+        fundamentals: "Fundamentele Streamlit",
+        dataInputPatterns: "Tipare de Intrare Date",
+        stateManagement: "Managementul de Bază al Stării",
+        localDeployment: "Deployment Local",
+        healthDashboard: "🏥 Proiect: Dashboard Personal de Sănătate",
+        healthDesc: "Transformă datele tale de sănătate împrăștiate într-o aplicație unificată, interactivă care dezvăluie tipare și ajută la optimizarea rutinelor tale de wellness.",
+        coreFeatures: "Funcționalități de Bază:",
+        dailyLogging: "📊 Înregistrare Zilnică",
+        interactiveAnalysis: "📈 Analiză Interactivă",
+        continueButton: "Continuă la Sesiunea 24"
+      },
+      session24: {
+        title: "Sesiunea 24: Analiză Interactivă - Integrare Machine Learning",
+        subtitle: "Adaugă putere predictivă și analiză avansată aplicațiilor tale",
+        predictiveTitle: "De la Reactiv la Predictiv",
+        predictiveText: "Sesiunea 23 ți-a arătat ce s-a întâmplat. Sesiunea 24 prezice ce se va întâmpla. Integrăm modele de machine learning care transformă aplicațiile tale din vizualizatoare de date în asistenți inteligenți.",
+        intelligenceLayer: "Strat de Inteligență:",
+        healthIntelligence: "Inteligență Sănătate",
+        healthFeature1: "• Prezice nivelurile de energie de mâine",
+        healthFeature2: "• Recomandă programele optime de somn",
+        healthFeature3: "• Sugerează momentul antrenamentului bazat pe tipare",
+        healthFeature4: "• Alertează la potențiale riscuri de sănătate",
+        financeIntelligence: "Inteligență Financiară",
+        financeFeature1: "• Prezice cheltuielile lunii viitoare",
+        financeFeature2: "• Detectează anomalii de cheltuieli",
+        financeFeature3: "• Recomandă oportunități de economisire",
+        financeFeature4: "• Alertează când depășești bugetul",
+        continueButton: "Continuă la Sesiunea 25"
+      },
+      session25: {
+        title: "Sesiunea 25: Sisteme în Timp Real - Date Live & Colaborare",
+        subtitle: "Integrare bază de date, actualizări în timp real și colaborare multi-utilizator",
+        familySystemsTitle: "De la Instrumente Personale la Sisteme de Familie",
+        familySystemsText: "Aplicațiile tale nu mai sunt jucării pentru un singur utilizator. Ele devin sisteme de familie, instrumente pentru cupluri și platforme partajate unde mai mulți oameni pot colabora la obiective de sănătate și financiare.",
+        transformation: "Transformare în Lumea Reală:",
+        familyHealthHub: "Hub de Sănătate Familie",
+        familyHealthFeature1: "• Părinții și copiii înregistrează activități împreună",
+        familyHealthFeature2: "• Provocări de pași în timp real pentru familie",
+        familyHealthFeature3: "• Planificare comună a meselor și obiective nutriționale",
+        familyHealthFeature4: "• Dashboard live pe tableta familiei",
+        coupleFinance: "Sistem Finanțe Cuplu",
+        coupleFinanceFeature1: "• Ambii parteneri înregistrează cheltuieli în timp real",
+        coupleFinanceFeature2: "• Alerte instant de buget pentru ambii utilizatori",
+        coupleFinanceFeature3: "• Urmărire colaborativă a obiectivelor de economisire",
+        coupleFinanceFeature4: "• Notificări în timp real de cheltuieli",
+        techArchitectureTitle: "Evoluția Arhitecturii Tehnice:",
+        continueButton: "Continuă la Sesiunea 26"
+      },
+      session26: {
+        title: "Sesiunea 26: Gata de Producție - Deployment & Scaling",
+        subtitle: "Lansează aplicațiile tale în cloud și gestionează trafic real",
+        productionTitle: "De la Prototip la Producție",
+        productionText: "Aplicațiile tale nu mai rulează pe laptop. Sunt lansate în cloud, accesibile de oriunde, securizate corespunzător și gata să servească familia și prietenii tăi în mod fiabil.",
+        productionFeatures: "Caracteristici Gata de Producție:",
+        cloudDeployment: "Deployment Cloud",
+        cloudFeature1: "• Hosting Streamlit Cloud",
+        cloudFeature2: "• Configurare domeniu personalizat",
+        cloudFeature3: "• Certificate SSL",
+        cloudFeature4: "• Livrare CDN global",
+        enterpriseSecurity: "Securitate Enterprise",
+        securityFeature1: "• Autentificare OAuth2",
+        securityFeature2: "• Criptare date la repaus",
+        securityFeature3: "• Funcții de conformitate GDPR",
+        securityFeature4: "• Logging audit",
+        journeyTitle: "Călătoria Completă - Ce Ai Construit:",
+        cloudDeploymentStrategy: "☁️ Strategie Deployment Cloud",
+        productionDeploymentSetup: "🚀 Configurare Deployment Producție",
+        productionDeploymentChecklist: "🎯 Lista de Verificare Deployment Producție",
+        continueButton: "Finalizează Cursul"
+      },
+      tabLabels: {
+        overview: "Prezentare",
+        healthApp: "Aplicație Sănătate",
+        financeApp: "Aplicație Finanțe",
+        deployment: "Deployment",
+        healthML: "ML Sănătate",
+        financeML: "ML Finanțe",
+        advanced: "Avansat",
+        patterns: "Tipare",
+        realtime: "Timp Real",
+        collaboration: "Colaborare",
+        performance: "Performanță",
+        database: "Bază de Date",
+        security: "Securitate",
+        monitoring: "Monitorizare"
+      }
+    }
+  };
+
+  // Get current language translations
+  const t = translations[language];
+
   const sections = [
-    { id: 'intro', title: 'The Problem Statement', icon: Target },
-    { id: 'health-need', title: 'Health Tracking Crisis', icon: Heart },
-    { id: 'finance-need', title: 'Financial Insight Gap', icon: DollarSign },
-    { id: 'solution-emerges', title: 'The Solution Emerges', icon: Lightbulb },
-    { id: 'session-23', title: 'Session 23: First Dashboard', icon: BarChart3 },
-    { id: 'session-24', title: 'Session 24: Interactive Analytics', icon: LineChart },
-    { id: 'session-25', title: 'Session 25: Real-time Systems', icon: Zap },
-    { id: 'session-26', title: 'Session 26: Production Ready', icon: Cloud }
+    { id: 'intro', title: t.sections.intro, icon: Target },
+    { id: 'health-need', title: t.sections.healthNeed, icon: Heart },
+    { id: 'finance-need', title: t.sections.financeNeed, icon: DollarSign },
+    { id: 'solution-emerges', title: t.sections.solutionEmerges, icon: Lightbulb },
+    { id: 'session-23', title: t.sections.session23, icon: BarChart3 },
+    { id: 'session-24', title: t.sections.session24, icon: LineChart },
+    { id: 'session-25', title: t.sections.session25, icon: Zap },
+    { id: 'session-26', title: t.sections.session26, icon: Cloud }
   ];
 
-  const storyStages = [
-    "📊 You've mastered data visualization...",
-    "🤔 But charts don't solve real problems...", 
-    "💡 People need interactive applications...",
-    "🚀 That's where Streamlit enters..."
-  ];
+  const storyStages = t.storyStages;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-gray-900 dark:via-blue-900 dark:to-purple-900">
@@ -127,7 +579,7 @@ const StreamlitUnifiedArtifact = () => {
       <div className="relative overflow-hidden bg-gradient-to-r from-indigo-600 to-purple-600 text-white">
         <div className="absolute inset-0 bg-black/20" />
         <div className="relative z-10 max-w-7xl mx-auto px-4 py-16">
-          {/* Back Button and Badge */}
+          {/* Back Button, Language Switcher, and Badge */}
           <div className="flex items-center justify-between mb-8">
             <Button
               variant="outline"
@@ -136,9 +588,34 @@ const StreamlitUnifiedArtifact = () => {
               className="bg-white/20 text-white border-white/30 hover:bg-white/30 backdrop-blur-sm"
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Data Visualizing
+              {t.header.backButton}
             </Button>
-            <Badge className="bg-white/20 text-white">Sessions 23-26</Badge>
+
+            <div className="flex items-center gap-3">
+              {/* Language Switcher */}
+              <div className="flex items-center gap-2 border border-white/30 rounded-md p-1 bg-white/10 backdrop-blur-sm">
+                <Button
+                  variant={language === 'en' ? 'default' : 'ghost'}
+                  size="sm"
+                  onClick={() => setLanguage('en')}
+                  className={`h-8 px-2 ${language === 'en' ? 'bg-white/90 text-indigo-600 hover:bg-white' : 'text-white hover:bg-white/20'}`}
+                  title="English"
+                >
+                  🇬🇧 EN
+                </Button>
+                <Button
+                  variant={language === 'ro' ? 'default' : 'ghost'}
+                  size="sm"
+                  onClick={() => setLanguage('ro')}
+                  className={`h-8 px-2 ${language === 'ro' ? 'bg-white/90 text-indigo-600 hover:bg-white' : 'text-white hover:bg-white/20'}`}
+                  title="Română"
+                >
+                  🇷🇴 RO
+                </Button>
+              </div>
+
+              <Badge className="bg-white/20 text-white">{t.header.sessions}</Badge>
+            </div>
           </div>
 
           <div className="text-center">
@@ -147,20 +624,19 @@ const StreamlitUnifiedArtifact = () => {
                 <Code className="w-8 h-8" />
               </div>
               <div>
-                <h1 className="text-4xl font-bold">Lecție Unificată: Streamlit</h1>
-                <p className="text-xl text-blue-100">Sessions 23-26 • 🕒 ~10 ore</p>
+                <h1 className="text-4xl font-bold">{t.header.title}</h1>
+                <p className="text-xl text-blue-100">{t.header.subtitle}</p>
               </div>
             </div>
-            
+
             <p className="text-2xl font-light mb-8 max-w-4xl mx-auto">
-              Construirea de Dashboarduri Interactive cu Streamlit
+              {t.header.description}
             </p>
-            
+
             <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 max-w-2xl mx-auto">
-              <p className="text-lg font-medium mb-2">🎯 Obiectiv Complet:</p>
+              <p className="text-lg font-medium mb-2">{t.header.objective}</p>
               <p className="text-blue-100">
-                Învățăm să construim aplicații interactive cu Streamlit – de la prototipuri simple 
-                la dashboarduri profesionale conectate la baze de date și gata de deployment în cloud.
+                {t.header.objectiveText}
               </p>
             </div>
 
@@ -180,10 +656,10 @@ const StreamlitUnifiedArtifact = () => {
           <div className="lg:col-span-1">
             <Card className="sticky top-8">
               <CardHeader>
-                <CardTitle className="text-lg">Progresul Călătoriei</CardTitle>
+                <CardTitle className="text-lg">{t.navigation.progressTitle}</CardTitle>
                 <Progress value={(completedSections.size / sections.length) * 100} className="w-full" />
                 <p className="text-sm text-muted-foreground">
-                  {completedSections.size} / {sections.length} secțiuni completate
+                  {completedSections.size} / {sections.length} {t.navigation.sectionsCompleted}
                 </p>
               </CardHeader>
               <CardContent className="space-y-2">
@@ -218,57 +694,56 @@ const StreamlitUnifiedArtifact = () => {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2 text-orange-700 dark:text-orange-300">
                     <Target className="w-5 h-5" />
-                    The Problem Statement: "Now What?"
+                    {t.intro.title}
                   </CardTitle>
                   <CardDescription>
-                    The inevitable question every data scientist faces after mastering visualization
+                    {t.intro.subtitle}
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">
                   <div className="prose dark:prose-invert max-w-none">
                     <p className="text-lg leading-relaxed">
-                      You've conquered matplotlib. You've mastered seaborn. Your Plotly charts are works of art. 
-                      You can transform any dataset into compelling visual stories.
+                      {t.intro.opening}
                     </p>
-                    
+
                     <div className="bg-gradient-to-r from-orange-50 to-red-50 dark:from-orange-950/20 dark:to-red-950/20 p-6 rounded-lg border border-orange-200 dark:border-orange-800 my-6">
                       <h3 className="text-xl font-semibold text-orange-800 dark:text-orange-200 mb-3">
-                        But then reality hits...
+                        {t.intro.realityTitle}
                       </h3>
                       <div className="space-y-4">
                         <div className="flex items-start gap-3">
                           <Heart className="w-6 h-6 text-red-500 mt-1" />
                           <div>
-                            <p className="font-semibold">Your personal health data is scattered across apps</p>
-                            <p className="text-sm text-muted-foreground">Sleep tracking in one app, exercise in another, nutrition somewhere else...</p>
+                            <p className="font-semibold">{t.intro.healthScattered}</p>
+                            <p className="text-sm text-muted-foreground">{t.intro.healthDesc}</p>
                           </div>
                         </div>
                         <div className="flex items-start gap-3">
                           <DollarSign className="w-6 h-6 text-green-500 mt-1" />
                           <div>
-                            <p className="font-semibold">Your financial insights are trapped in static charts</p>
-                            <p className="text-sm text-muted-foreground">Beautiful visualizations, but you can't interact, filter, or explore patterns dynamically...</p>
+                            <p className="font-semibold">{t.intro.financeTrapped}</p>
+                            <p className="text-sm text-muted-foreground">{t.intro.financeDesc}</p>
                           </div>
                         </div>
                         <div className="flex items-start gap-3">
                           <Users className="w-6 h-6 text-blue-500 mt-1" />
                           <div>
-                            <p className="font-semibold">Your family/friends can't benefit from your analysis</p>
-                            <p className="text-sm text-muted-foreground">They'd love to use your insights, but they can't run Jupyter notebooks...</p>
+                            <p className="font-semibold">{t.intro.familyCant}</p>
+                            <p className="text-sm text-muted-foreground">{t.intro.familyDesc}</p>
                           </div>
                         </div>
                       </div>
                     </div>
 
                     <blockquote className="border-l-4 border-blue-500 pl-4 italic text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-950/20 p-4 rounded-r-lg">
-                      "The best analysis in the world is useless if it can't be shared, explored, and acted upon by the people who need it most."
-                      <footer className="text-sm mt-2 not-italic">— Every data scientist's realization</footer>
+                      "{t.intro.quote}"
+                      <footer className="text-sm mt-2 not-italic">{t.intro.quoteAuthor}</footer>
                     </blockquote>
 
                     <div className="mt-6">
-                      <h4 className="text-lg font-semibold mb-3">💔 The Frustration: Beautiful Analysis, Zero Impact</h4>
+                      <h4 className="text-lg font-semibold mb-3">{t.intro.frustrationTitle}</h4>
                       <CodeBlock
-                        title="Your amazing analysis that nobody can use"
+                        title={t.intro.codeTitle}
                         filename="amazing_analysis.py"
                         code={`# You've built this incredible analysis...
 import pandas as pd
@@ -314,24 +789,23 @@ print("😢 Can't share with friends who want similar analysis...")`}
                         language="python"
                         runnable={true}
                       />
-                      
+
                       <div className="mt-4 p-4 bg-red-50 dark:bg-red-950/20 rounded-lg border border-red-200 dark:border-red-800">
                         <p className="text-sm text-red-700 dark:text-red-300">
-                          <strong>The Problem:</strong> This analysis is a dead end. It creates insights but doesn't enable action. 
-                          Your family can't use it, you can't interact with it, and updating it requires running the entire script again.
+                          <strong>{language === 'en' ? 'The Problem:' : 'Problema:'}</strong> {t.intro.problemText}
                         </p>
                       </div>
                     </div>
                   </div>
 
-                  <Button 
+                  <Button
                     onClick={() => {
                       handleSectionChange('health-need');
                       markSectionComplete('intro');
                     }}
                     className="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600"
                   >
-                    Continue to Real-World Scenarios <ChevronRight className="w-4 h-4 ml-2" />
+                    {t.intro.continueButton} <ChevronRight className="w-4 h-4 ml-2" />
                   </Button>
                 </CardContent>
               </Card>
@@ -343,58 +817,57 @@ print("😢 Can't share with friends who want similar analysis...")`}
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2 text-red-700 dark:text-red-300">
                     <Heart className="w-5 h-5" />
-                    Real Need #1: The Health Tracking Crisis
+                    {t.healthNeed.title}
                   </CardTitle>
                   <CardDescription>
-                    When scattered health data becomes a barrier to wellness
+                    {t.healthNeed.subtitle}
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">
                   <div className="prose dark:prose-invert max-w-none">
-                    <h3 className="text-xl font-semibold mb-4">The Modern Health Paradox</h3>
+                    <h3 className="text-xl font-semibold mb-4">{t.healthNeed.paradoxTitle}</h3>
                     <p className="text-lg leading-relaxed">
-                      We live in the age of health tracking. Apple Watch monitors heart rate, 
-                      sleep apps track rest quality, nutrition apps count calories, fitness apps log workouts.
+                      {t.healthNeed.paradoxText}
                     </p>
-                    
+
                     <div className="bg-gradient-to-r from-red-50 to-pink-50 dark:from-red-950/20 dark:to-pink-950/20 p-6 rounded-lg border border-red-200 dark:border-red-800">
-                      <h4 className="font-semibold text-red-800 dark:text-red-200 mb-3">The Problem:</h4>
+                      <h4 className="font-semibold text-red-800 dark:text-red-200 mb-3">{t.healthNeed.problemTitle}</h4>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="space-y-3">
                           <div className="flex items-center gap-2">
                             <Smartphone className="w-5 h-5 text-red-500" />
-                            <span className="font-medium">Data Silos</span>
+                            <span className="font-medium">{t.healthNeed.dataSilos}</span>
                           </div>
-                          <p className="text-sm">Sleep data in Health app, workouts in Strava, nutrition in MyFitnessPal</p>
+                          <p className="text-sm">{t.healthNeed.dataSilosDesc}</p>
                         </div>
                         <div className="space-y-3">
                           <div className="flex items-center gap-2">
                             <Brain className="w-5 h-5 text-red-500" />
-                            <span className="font-medium">No Correlations</span>
+                            <span className="font-medium">{t.healthNeed.noCorrelations}</span>
                           </div>
-                          <p className="text-sm">Can't see how sleep affects workout performance, or how nutrition impacts mood</p>
+                          <p className="text-sm">{t.healthNeed.noCorrelationsDesc}</p>
                         </div>
                         <div className="space-y-3">
                           <div className="flex items-center gap-2">
                             <Clock className="w-5 h-5 text-red-500" />
-                            <span className="font-medium">Static Reports</span>
+                            <span className="font-medium">{t.healthNeed.staticReports}</span>
                           </div>
-                          <p className="text-sm">Weekly summaries that don't help you understand patterns or optimize behavior</p>
+                          <p className="text-sm">{t.healthNeed.staticReportsDesc}</p>
                         </div>
                         <div className="space-y-3">
                           <div className="flex items-center gap-2">
                             <Users className="w-5 h-5 text-red-500" />
-                            <span className="font-medium">Personal Only</span>
+                            <span className="font-medium">{t.healthNeed.personalOnly}</span>
                           </div>
-                          <p className="text-sm">Can't share insights with family, trainer, or healthcare provider</p>
+                          <p className="text-sm">{t.healthNeed.personalOnlyDesc}</p>
                         </div>
                       </div>
                     </div>
 
                     <div className="mt-6">
-                      <h4 className="text-lg font-semibold mb-3">😤 Your Current Health Data Reality</h4>
+                      <h4 className="text-lg font-semibold mb-3">{t.healthNeed.realityTitle}</h4>
                       <CodeBlock
-                        title="The scattered health data nightmare"
+                        title={t.healthNeed.codeTitle}
                         filename="scattered_health_tracking.py"
                         code={`# This is how most people track health today...
 import json
@@ -444,49 +917,49 @@ print("💔 Can't share progress with trainer or doctor")`}
                       />
                     </div>
 
-                    <h4 className="text-lg font-semibold mt-6 mb-3">What We Actually Need:</h4>
+                    <h4 className="text-lg font-semibold mt-6 mb-3">{t.healthNeed.needTitle}</h4>
                     <div className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950/20 dark:to-emerald-950/20 p-6 rounded-lg border border-green-200 dark:border-green-800">
                       <div className="space-y-4">
                         <div className="flex items-start gap-3">
                           <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center text-white text-sm font-bold">1</div>
                           <div>
-                            <p className="font-semibold">Unified Health Dashboard</p>
-                            <p className="text-sm text-muted-foreground">All health metrics in one place, with real-time updates</p>
+                            <p className="font-semibold">{t.healthNeed.need1}</p>
+                            <p className="text-sm text-muted-foreground">{t.healthNeed.need1Desc}</p>
                           </div>
                         </div>
                         <div className="flex items-start gap-3">
                           <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center text-white text-sm font-bold">2</div>
                           <div>
-                            <p className="font-semibold">Interactive Correlation Explorer</p>
-                            <p className="text-sm text-muted-foreground">Click and filter to discover how sleep affects energy, exercise impacts mood</p>
+                            <p className="font-semibold">{t.healthNeed.need2}</p>
+                            <p className="text-sm text-muted-foreground">{t.healthNeed.need2Desc}</p>
                           </div>
                         </div>
                         <div className="flex items-start gap-3">
                           <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center text-white text-sm font-bold">3</div>
                           <div>
-                            <p className="font-semibold">Shareable Insights</p>
-                            <p className="text-sm text-muted-foreground">Send your trainer a link to your progress, share family health goals</p>
+                            <p className="font-semibold">{t.healthNeed.need3}</p>
+                            <p className="text-sm text-muted-foreground">{t.healthNeed.need3Desc}</p>
                           </div>
                         </div>
                         <div className="flex items-start gap-3">
                           <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center text-white text-sm font-bold">4</div>
                           <div>
-                            <p className="font-semibold">Personalized Recommendations</p>
-                            <p className="text-sm text-muted-foreground">AI-powered suggestions based on your unique patterns</p>
+                            <p className="font-semibold">{t.healthNeed.need4}</p>
+                            <p className="text-sm text-muted-foreground">{t.healthNeed.need4Desc}</p>
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
 
-                  <Button 
+                  <Button
                     onClick={() => {
                       handleSectionChange('finance-need');
                       markSectionComplete('health-need');
                     }}
                     className="w-full bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600"
                   >
-                    Explore Financial Need <ChevronRight className="w-4 h-4 ml-2" />
+                    {t.healthNeed.continueButton} <ChevronRight className="w-4 h-4 ml-2" />
                   </Button>
                 </CardContent>
               </Card>
@@ -498,38 +971,37 @@ print("💔 Can't share progress with trainer or doctor")`}
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2 text-green-700 dark:text-green-300">
                     <DollarSign className="w-5 h-5" />
-                    Real Need #2: The Financial Insight Gap
+                    {t.financeNeed.title}
                   </CardTitle>
                   <CardDescription>
-                    When beautiful charts don't translate to better financial decisions
+                    {t.financeNeed.subtitle}
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">
                   <div className="prose dark:prose-invert max-w-none">
-                    <h3 className="text-xl font-semibold mb-4">The Personal Finance Visualization Trap</h3>
+                    <h3 className="text-xl font-semibold mb-4">{t.financeNeed.trapTitle}</h3>
                     <p className="text-lg leading-relaxed">
-                      You've created stunning expense charts, elegant budget visualizations, and insightful spending analysis. 
-                      Your matplotlib and seaborn skills are on point. But somehow, your finances haven't improved.
+                      {t.financeNeed.trapText}
                     </p>
-                    
+
                     <div className="bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-950/20 dark:to-orange-950/20 p-6 rounded-lg border border-yellow-200 dark:border-yellow-800">
-                      <h4 className="font-semibold text-yellow-800 dark:text-yellow-200 mb-3">The Gap Between Analysis and Action:</h4>
+                      <h4 className="font-semibold text-yellow-800 dark:text-yellow-200 mb-3">{t.financeNeed.gapTitle}</h4>
                       <div className="space-y-4">
                         <div className="flex items-start gap-3">
                           <BarChart3 className="w-6 h-6 text-yellow-500 mt-1" />
                           <div>
-                            <p className="font-semibold">Static Analysis Paralysis</p>
+                            <p className="font-semibold">{t.financeNeed.staticAnalysis}</p>
                             <p className="text-sm text-muted-foreground">
-                              Monthly expense reports that show what happened, but don't help prevent overspending
+                              {t.financeNeed.staticAnalysisDesc}
                             </p>
                           </div>
                         </div>
                         <div className="flex items-start gap-3">
                           <Clock className="w-6 h-6 text-yellow-500 mt-1" />
                           <div>
-                            <p className="font-semibold">Delayed Insights</p>
+                            <p className="font-semibold">{t.financeNeed.delayedInsights}</p>
                             <p className="text-sm text-muted-foreground">
-                              By the time you analyze last month's spending, this month's damage is already done
+                              {t.financeNeed.delayedInsightsDesc}
                             </p>
                           </div>
                         </div>
@@ -688,52 +1160,52 @@ print("🔮 Predictive insights: 'At current rate, you'll overspend by €300'")
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2 text-blue-700 dark:text-blue-300">
                     <Lightbulb className="w-5 h-5" />
-                    The Solution Emerges: Why Streamlit?
+                    {t.solutionEmerges.title}
                   </CardTitle>
                   <CardDescription>
-                    When need meets the perfect tool - the birth of interactive applications
+                    {t.solutionEmerges.subtitle}
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">
                   <div className="prose dark:prose-invert max-w-none">
-                    <h3 className="text-xl font-semibold mb-4">The Streamlit Story: Need Driving Innovation</h3>
-                    
+                    <h3 className="text-xl font-semibold mb-4">{t.solutionEmerges.storyTitle}</h3>
+
                     <div className="bg-gradient-to-r from-purple-50 to-indigo-50 dark:from-purple-950/20 dark:to-indigo-950/20 p-6 rounded-lg border border-purple-200 dark:border-purple-800">
-                      <h4 className="font-semibold text-purple-800 dark:text-purple-200 mb-3">The Origin Story (2019):</h4>
+                      <h4 className="font-semibold text-purple-800 dark:text-purple-200 mb-3">{t.solutionEmerges.originTitle}</h4>
                       <p className="text-purple-700 dark:text-purple-300 mb-4">
-                        Adrien Treuille, Amanda Kelly, and Thiago Teixeira at Uber were facing the exact same problem you just experienced:
+                        {t.solutionEmerges.originText}
                       </p>
                       <div className="space-y-3">
                         <div className="flex items-start gap-3">
                           <Brain className="w-5 h-5 text-purple-500 mt-1" />
                           <p className="text-sm">
-                            <strong>Machine Learning engineers</strong> spent weeks building web interfaces for their models
+                            <strong>{t.solutionEmerges.ml}</strong> {t.solutionEmerges.mlDesc}
                           </p>
                         </div>
                         <div className="flex items-start gap-3">
                           <Code className="w-5 h-5 text-purple-500 mt-1" />
                           <p className="text-sm">
-                            <strong>Data scientists</strong> created brilliant analyses that only they could access
+                            <strong>{t.solutionEmerges.dataScientists}</strong> {t.solutionEmerges.dataScientistsDesc}
                           </p>
                         </div>
                         <div className="flex items-start gap-3">
                           <Users className="w-5 h-5 text-purple-500 mt-1" />
                           <p className="text-sm">
-                            <strong>Business stakeholders</strong> wanted to interact with data, not just view static reports
+                            <strong>{t.solutionEmerges.stakeholders}</strong> {t.solutionEmerges.stakeholdersDesc}
                           </p>
                         </div>
                       </div>
                     </div>
 
                     <blockquote className="border-l-4 border-blue-500 pl-4 italic text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-950/20 p-4 rounded-r-lg">
-                      "What if we could turn a Python script into a web app with just a few lines of code?"
-                      <footer className="text-sm mt-2 not-italic">— Adrien Treuille, Streamlit Co-founder</footer>
+                      "{t.solutionEmerges.quote}"
+                      <footer className="text-sm mt-2 not-italic">{t.solutionEmerges.quoteAuthor}</footer>
                     </blockquote>
 
-                    <h4 className="text-lg font-semibold mt-6 mb-3">The Philosophy Match:</h4>
+                    <h4 className="text-lg font-semibold mt-6 mb-3">{t.solutionEmerges.philosophyTitle}</h4>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-950/20 dark:to-emerald-950/20 p-4 rounded-lg border border-green-200 dark:border-green-800">
-                        <h5 className="font-semibold text-green-800 dark:text-green-200 mb-2">✅ Traditional Web Development</h5>
+                        <h5 className="font-semibold text-green-800 dark:text-green-200 mb-2">{t.solutionEmerges.traditional}</h5>
                         <ul className="text-sm space-y-1 text-green-700 dark:text-green-300">
                           <li>• Months to build a simple app</li>
                           <li>• HTML, CSS, JavaScript required</li>
@@ -742,7 +1214,7 @@ print("🔮 Predictive insights: 'At current rate, you'll overspend by €300'")
                         </ul>
                       </div>
                       <div className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950/20 dark:to-indigo-950/20 p-4 rounded-lg border border-blue-200 dark:border-blue-800">
-                        <h5 className="font-semibold text-blue-800 dark:text-blue-200 mb-2">🚀 Streamlit Approach</h5>
+                        <h5 className="font-semibold text-blue-800 dark:text-blue-200 mb-2">{t.solutionEmerges.streamlitApproach}</h5>
                         <ul className="text-sm space-y-1 text-blue-700 dark:text-blue-300">
                           <li>• Hours to build interactive apps</li>
                           <li>• Pure Python, no web tech needed</li>
@@ -915,36 +1387,35 @@ st.markdown("*This is the power of Streamlit: Analysis → Application*")`}
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2 text-purple-700 dark:text-purple-300">
                     <BarChart3 className="w-5 h-5" />
-                    Session 23: First Dashboard - Health & Finance Foundations
+                    {t.session23.title}
                   </CardTitle>
                   <CardDescription>
-                    🕒 3 hours • Building your first interactive applications from real personal data
+                    {t.session23.subtitle}
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">
                   <Tabs defaultValue="overview" className="w-full">
                     <TabsList className="grid w-full grid-cols-4">
-                      <TabsTrigger value="overview">Overview</TabsTrigger>
-                      <TabsTrigger value="health-app">Health App</TabsTrigger>
-                      <TabsTrigger value="finance-app">Finance App</TabsTrigger>
-                      <TabsTrigger value="deployment">Deployment</TabsTrigger>
+                      <TabsTrigger value="overview">{t.tabLabels.overview}</TabsTrigger>
+                      <TabsTrigger value="health-app">{t.tabLabels.healthApp}</TabsTrigger>
+                      <TabsTrigger value="finance-app">{t.tabLabels.financeApp}</TabsTrigger>
+                      <TabsTrigger value="deployment">{t.tabLabels.deployment}</TabsTrigger>
                     </TabsList>
                     
                     <TabsContent value="overview" className="space-y-4">
                       <div className="prose dark:prose-invert max-w-none">
-                        <h3 className="text-xl font-semibold mb-4">The First Touch of Magic</h3>
+                        <h3 className="text-xl font-semibold mb-4">{t.session23.magicTitle}</h3>
                         <p className="text-lg leading-relaxed">
-                          This session is your introduction to the Streamlit mindset. We start with the simplest possible versions 
-                          of your health and finance dashboards - just enough to feel the magic of turning Python scripts into web applications.
+                          {t.session23.magicText}
                         </p>
-                        
+
                         <div className="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-950/20 dark:to-pink-950/20 p-6 rounded-lg border border-purple-200 dark:border-purple-800">
-                          <h4 className="font-semibold text-purple-800 dark:text-purple-200 mb-3">What You'll Build:</h4>
+                          <h4 className="font-semibold text-purple-800 dark:text-purple-200 mb-3">{t.session23.whatYouBuild}</h4>
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div className="space-y-3">
                               <div className="flex items-center gap-2">
                                 <Heart className="w-5 h-5 text-red-500" />
-                                <span className="font-medium">Personal Health Tracker</span>
+                                <span className="font-medium">{t.session23.personalHealthTracker}</span>
                               </div>
                               <ul className="text-sm space-y-1">
                                 <li>• Sleep, exercise, mood logging</li>
@@ -956,7 +1427,7 @@ st.markdown("*This is the power of Streamlit: Analysis → Application*")`}
                             <div className="space-y-3">
                               <div className="flex items-center gap-2">
                                 <DollarSign className="w-5 h-5 text-green-500" />
-                                <span className="font-medium">Budget Monitor</span>
+                                <span className="font-medium">{t.session23.budgetMonitor}</span>
                               </div>
                               <ul className="text-sm space-y-1">
                                 <li>• Expense category tracking</li>
@@ -968,33 +1439,33 @@ st.markdown("*This is the power of Streamlit: Analysis → Application*")`}
                           </div>
                         </div>
 
-                        <h4 className="text-lg font-semibold mt-6 mb-3">Learning Objectives:</h4>
+                        <h4 className="text-lg font-semibold mt-6 mb-3">{t.session23.learningObjectives}</h4>
                         <div className="space-y-3">
                           <div className="flex items-start gap-3">
                             <div className="w-6 h-6 bg-purple-500 rounded-full flex items-center justify-center text-white text-xs font-bold">1</div>
                             <div>
-                              <p className="font-semibold">Streamlit Fundamentals</p>
+                              <p className="font-semibold">{t.session23.fundamentals}</p>
                               <p className="text-sm text-muted-foreground">st.title(), st.sidebar, st.columns, st.plotly_chart()</p>
                             </div>
                           </div>
                           <div className="flex items-start gap-3">
                             <div className="w-6 h-6 bg-purple-500 rounded-full flex items-center justify-center text-white text-xs font-bold">2</div>
                             <div>
-                              <p className="font-semibold">Data Input Patterns</p>
+                              <p className="font-semibold">{t.session23.dataInputPatterns}</p>
                               <p className="text-sm text-muted-foreground">Forms, sliders, file uploads, manual data entry</p>
                             </div>
                           </div>
                           <div className="flex items-start gap-3">
                             <div className="w-6 h-6 bg-purple-500 rounded-full flex items-center justify-center text-white text-xs font-bold">3</div>
                             <div>
-                              <p className="font-semibold">State Management Basics</p>
+                              <p className="font-semibold">{t.session23.stateManagement}</p>
                               <p className="text-sm text-muted-foreground">Session state for data persistence between interactions</p>
                             </div>
                           </div>
                           <div className="flex items-start gap-3">
                             <div className="w-6 h-6 bg-purple-500 rounded-full flex items-center justify-center text-white text-xs font-bold">4</div>
                             <div>
-                              <p className="font-semibold">Local Deployment</p>
+                              <p className="font-semibold">{t.session23.localDeployment}</p>
                               <p className="text-sm text-muted-foreground">Running apps locally, sharing with family on home network</p>
                             </div>
                           </div>
@@ -1005,18 +1476,17 @@ st.markdown("*This is the power of Streamlit: Analysis → Application*")`}
                     <TabsContent value="health-app" className="space-y-4">
                       <div className="bg-gradient-to-r from-red-50 to-pink-50 dark:from-red-950/20 dark:to-pink-950/20 p-6 rounded-lg border border-red-200 dark:border-red-800">
                         <h4 className="font-semibold text-red-800 dark:text-red-200 mb-3">
-                          🏥 Project: Personal Health Dashboard
+                          {t.session23.healthDashboard}
                         </h4>
                         <p className="text-red-700 dark:text-red-300 mb-4">
-                          Transform your scattered health data into a unified, interactive application that reveals patterns 
-                          and helps optimize your wellness routines.
+                          {t.session23.healthDesc}
                         </p>
-                        
+
                         <div className="bg-white dark:bg-gray-900 rounded-lg p-4 border">
-                          <h5 className="font-medium mb-3">Core Features:</h5>
+                          <h5 className="font-medium mb-3">{t.session23.coreFeatures}</h5>
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                             <div>
-                              <p className="font-medium text-blue-600">📊 Daily Logging</p>
+                              <p className="font-medium text-blue-600">{t.session23.dailyLogging}</p>
                               <ul className="mt-1 space-y-1 text-muted-foreground">
                                 <li>• Sleep hours & quality (1-10)</li>
                                 <li>• Exercise type & duration</li>
@@ -1025,7 +1495,7 @@ st.markdown("*This is the power of Streamlit: Analysis → Application*")`}
                               </ul>
                             </div>
                             <div>
-                              <p className="font-medium text-green-600">📈 Interactive Analysis</p>
+                              <p className="font-medium text-green-600">{t.session23.interactiveAnalysis}</p>
                               <ul className="mt-1 space-y-1 text-muted-foreground">
                                 <li>• Sleep vs energy correlation</li>
                                 <li>• Exercise impact on mood</li>
@@ -1871,54 +2341,53 @@ st.markdown("*Built with Streamlit • Master your money, master your life 💰*
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2 text-indigo-700 dark:text-indigo-300">
                     <LineChart className="w-5 h-5" />
-                    Session 24: Interactive Analytics - Machine Learning Integration
+                    {t.session24.title}
                   </CardTitle>
                   <CardDescription>
-                    🕒 3 hours • Adding predictive power and advanced analytics to your applications
+                    {t.session24.subtitle}
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">
                   <Tabs defaultValue="overview" className="w-full">
                     <TabsList className="grid w-full grid-cols-4">
-                      <TabsTrigger value="overview">Overview</TabsTrigger>
-                      <TabsTrigger value="health-ml">Health ML</TabsTrigger>
-                      <TabsTrigger value="finance-ml">Finance ML</TabsTrigger>
-                      <TabsTrigger value="advanced">Advanced</TabsTrigger>
+                      <TabsTrigger value="overview">{t.tabLabels.overview}</TabsTrigger>
+                      <TabsTrigger value="health-ml">{t.tabLabels.healthML}</TabsTrigger>
+                      <TabsTrigger value="finance-ml">{t.tabLabels.financeML}</TabsTrigger>
+                      <TabsTrigger value="advanced">{t.tabLabels.advanced}</TabsTrigger>
                     </TabsList>
-                    
+
                     <TabsContent value="overview" className="space-y-4">
                       <div className="prose dark:prose-invert max-w-none">
-                        <h3 className="text-xl font-semibold mb-4">From Reactive to Predictive</h3>
+                        <h3 className="text-xl font-semibold mb-4">{t.session24.predictiveTitle}</h3>
                         <p className="text-lg leading-relaxed">
-                          Session 23 showed you what happened. Session 24 predicts what will happen. 
-                          We integrate machine learning models that turn your applications from data viewers into intelligent assistants.
+                          {t.session24.predictiveText}
                         </p>
-                        
+
                         <div className="bg-gradient-to-r from-indigo-50 to-blue-50 dark:from-indigo-950/20 dark:to-blue-950/20 p-6 rounded-lg border border-indigo-200 dark:border-indigo-800">
-                          <h4 className="font-semibold text-indigo-800 dark:text-indigo-200 mb-3">Intelligence Layer:</h4>
+                          <h4 className="font-semibold text-indigo-800 dark:text-indigo-200 mb-3">{t.session24.intelligenceLayer}</h4>
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div className="space-y-3">
                               <div className="flex items-center gap-2">
                                 <Brain className="w-5 h-5 text-blue-500" />
-                                <span className="font-medium">Health Intelligence</span>
+                                <span className="font-medium">{t.session24.healthIntelligence}</span>
                               </div>
                               <ul className="text-sm space-y-1">
-                                <li>• Predict tomorrow's energy levels</li>
-                                <li>• Recommend optimal sleep schedules</li>
-                                <li>• Suggest workout timing based on patterns</li>
-                                <li>• Alert to potential health risks</li>
+                                <li>{t.session24.healthFeature1}</li>
+                                <li>{t.session24.healthFeature2}</li>
+                                <li>{t.session24.healthFeature3}</li>
+                                <li>{t.session24.healthFeature4}</li>
                               </ul>
                             </div>
                             <div className="space-y-3">
                               <div className="flex items-center gap-2">
                                 <TrendingUp className="w-5 h-5 text-green-500" />
-                                <span className="font-medium">Financial Intelligence</span>
+                                <span className="font-medium">{t.session24.financeIntelligence}</span>
                               </div>
                               <ul className="text-sm space-y-1">
-                                <li>• Predict end-of-month cash flow</li>
-                                <li>• Detect unusual spending patterns</li>
-                                <li>• Recommend budget adjustments</li>
-                                <li>• Forecast savings goal achievement</li>
+                                <li>{t.session24.financeFeature1}</li>
+                                <li>{t.session24.financeFeature2}</li>
+                                <li>{t.session24.financeFeature3}</li>
+                                <li>{t.session24.financeFeature4}</li>
                               </ul>
                             </div>
                           </div>
@@ -3008,51 +3477,50 @@ st.markdown("*Real families report 25% better budget adherence and 15% increased
                 <CardContent className="space-y-6">
                   <Tabs defaultValue="overview" className="w-full">
                     <TabsList className="grid w-full grid-cols-4">
-                      <TabsTrigger value="overview">Overview</TabsTrigger>
-                      <TabsTrigger value="realtime">Real-time</TabsTrigger>
-                      <TabsTrigger value="collaboration">Collaboration</TabsTrigger>
-                      <TabsTrigger value="performance">Performance</TabsTrigger>
+                      <TabsTrigger value="overview">{t.tabLabels.overview}</TabsTrigger>
+                      <TabsTrigger value="realtime">{t.tabLabels.realtime}</TabsTrigger>
+                      <TabsTrigger value="collaboration">{t.tabLabels.collaboration}</TabsTrigger>
+                      <TabsTrigger value="performance">{t.tabLabels.performance}</TabsTrigger>
                     </TabsList>
                     
                     <TabsContent value="overview" className="space-y-4">
                       <div className="prose dark:prose-invert max-w-none">
-                        <h3 className="text-xl font-semibold mb-4">From Personal Tools to Family Systems</h3>
+                        <h3 className="text-xl font-semibold mb-4">{t.session25.familySystemsTitle}</h3>
                         <p className="text-lg leading-relaxed">
-                          Your applications are no longer single-user toys. They become family systems, couple tools, 
-                          and shared platforms where multiple people can collaborate on health and financial goals.
+                          {t.session25.familySystemsText}
                         </p>
                         
                         <div className="bg-gradient-to-r from-cyan-50 to-blue-50 dark:from-cyan-950/20 dark:to-blue-950/20 p-6 rounded-lg border border-cyan-200 dark:border-cyan-800">
-                          <h4 className="font-semibold text-cyan-800 dark:text-cyan-200 mb-3">Real-world Transformation:</h4>
+                          <h4 className="font-semibold text-cyan-800 dark:text-cyan-200 mb-3">{t.session25.transformation}</h4>
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div className="space-y-3">
                               <div className="flex items-center gap-2">
                                 <Heart className="w-5 h-5 text-red-500" />
-                                <span className="font-medium">Family Health Hub</span>
+                                <span className="font-medium">{t.session25.familyHealthHub}</span>
                               </div>
                               <ul className="text-sm space-y-1">
-                                <li>• Parents and kids log activities together</li>
-                                <li>• Real-time family step challenges</li>
-                                <li>• Shared meal planning and nutrition goals</li>
-                                <li>• Live dashboard on family tablet</li>
+                                <li>{t.session25.familyHealthFeature1}</li>
+                                <li>{t.session25.familyHealthFeature2}</li>
+                                <li>{t.session25.familyHealthFeature3}</li>
+                                <li>{t.session25.familyHealthFeature4}</li>
                               </ul>
                             </div>
                             <div className="space-y-3">
                               <div className="flex items-center gap-2">
                                 <DollarSign className="w-5 h-5 text-green-500" />
-                                <span className="font-medium">Couple Finance System</span>
+                                <span className="font-medium">{t.session25.coupleFinance}</span>
                               </div>
                               <ul className="text-sm space-y-1">
-                                <li>• Both partners log expenses in real-time</li>
-                                <li>• Instant budget alerts for both users</li>
-                                <li>• Collaborative savings goal tracking</li>
-                                <li>• Real-time spending notifications</li>
+                                <li>{t.session25.coupleFinanceFeature1}</li>
+                                <li>{t.session25.coupleFinanceFeature2}</li>
+                                <li>{t.session25.coupleFinanceFeature3}</li>
+                                <li>{t.session25.coupleFinanceFeature4}</li>
                               </ul>
                             </div>
                           </div>
                         </div>
 
-                        <h4 className="text-lg font-semibold mt-6 mb-3">Technical Architecture Evolution:</h4>
+                        <h4 className="text-lg font-semibold mt-6 mb-3">{t.session25.techArchitectureTitle}</h4>
                         <div className="space-y-3">
                           <div className="flex items-start gap-3">
                             <div className="w-6 h-6 bg-cyan-500 rounded-full flex items-center justify-center text-white text-xs font-bold">1</div>
@@ -3814,51 +4282,50 @@ st.markdown("*Real-time family collaboration powered by Streamlit* 👨‍👩�
                 <CardContent className="space-y-6">
                   <Tabs defaultValue="overview" className="w-full">
                     <TabsList className="grid w-full grid-cols-4">
-                      <TabsTrigger value="overview">Overview</TabsTrigger>
-                      <TabsTrigger value="deployment">Deployment</TabsTrigger>
-                      <TabsTrigger value="security">Security</TabsTrigger>
-                      <TabsTrigger value="monitoring">Monitoring</TabsTrigger>
+                      <TabsTrigger value="overview">{t.tabLabels.overview}</TabsTrigger>
+                      <TabsTrigger value="deployment">{t.tabLabels.deployment}</TabsTrigger>
+                      <TabsTrigger value="security">{t.tabLabels.security}</TabsTrigger>
+                      <TabsTrigger value="monitoring">{t.tabLabels.monitoring}</TabsTrigger>
                     </TabsList>
                     
                     <TabsContent value="overview" className="space-y-4">
                       <div className="prose dark:prose-invert max-w-none">
-                        <h3 className="text-xl font-semibold mb-4">From Prototype to Production</h3>
+                        <h3 className="text-xl font-semibold mb-4">{t.session26.productionTitle}</h3>
                         <p className="text-lg leading-relaxed">
-                          Your applications are no longer running on your laptop. They're deployed to the cloud, 
-                          accessible from anywhere, secured properly, and ready to serve your family and friends reliably.
+                          {t.session26.productionText}
                         </p>
-                        
+
                         <div className="bg-gradient-to-r from-emerald-50 to-green-50 dark:from-emerald-950/20 dark:to-green-950/20 p-6 rounded-lg border border-emerald-200 dark:border-emerald-800">
-                          <h4 className="font-semibold text-emerald-800 dark:text-emerald-200 mb-3">Production-Ready Features:</h4>
+                          <h4 className="font-semibold text-emerald-800 dark:text-emerald-200 mb-3">{t.session26.productionFeatures}</h4>
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div className="space-y-3">
                               <div className="flex items-center gap-2">
                                 <Cloud className="w-5 h-5 text-blue-500" />
-                                <span className="font-medium">Cloud Deployment</span>
+                                <span className="font-medium">{t.session26.cloudDeployment}</span>
                               </div>
                               <ul className="text-sm space-y-1">
-                                <li>• Streamlit Cloud hosting</li>
-                                <li>• Custom domain setup</li>
-                                <li>• SSL certificates</li>
-                                <li>• Global CDN delivery</li>
+                                <li>{t.session26.cloudFeature1}</li>
+                                <li>{t.session26.cloudFeature2}</li>
+                                <li>{t.session26.cloudFeature3}</li>
+                                <li>{t.session26.cloudFeature4}</li>
                               </ul>
                             </div>
                             <div className="space-y-3">
                               <div className="flex items-center gap-2">
                                 <Shield className="w-5 h-5 text-green-500" />
-                                <span className="font-medium">Enterprise Security</span>
+                                <span className="font-medium">{t.session26.enterpriseSecurity}</span>
                               </div>
                               <ul className="text-sm space-y-1">
-                                <li>• OAuth2 authentication</li>
-                                <li>• Data encryption at rest</li>
-                                <li>• GDPR compliance features</li>
-                                <li>• Audit logging</li>
+                                <li>{t.session26.securityFeature1}</li>
+                                <li>{t.session26.securityFeature2}</li>
+                                <li>{t.session26.securityFeature3}</li>
+                                <li>{t.session26.securityFeature4}</li>
                               </ul>
                             </div>
                           </div>
                         </div>
 
-                        <h4 className="text-lg font-semibold mt-6 mb-3">The Full Journey - What You've Built:</h4>
+                        <h4 className="text-lg font-semibold mt-6 mb-3">{t.session26.journeyTitle}</h4>
                         <div className="space-y-3">
                           <div className="flex items-start gap-3">
                             <div className="w-6 h-6 bg-emerald-500 rounded-full flex items-center justify-center text-white text-xs font-bold">✓</div>
@@ -3904,7 +4371,7 @@ st.markdown("*Real-time family collaboration powered by Streamlit* 👨‍👩�
                     <TabsContent value="deployment" className="space-y-4">
                       <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/20 dark:to-indigo-950/20 p-6 rounded-lg border border-blue-200 dark:border-blue-800">
                         <h4 className="font-semibold text-blue-800 dark:text-blue-200 mb-3">
-                          ☁️ Cloud Deployment Strategy
+                          {t.session26.cloudDeploymentStrategy}
                         </h4>
                         
                         <div className="space-y-4">
@@ -3967,7 +4434,7 @@ st.markdown("*Real-time family collaboration powered by Streamlit* 👨‍👩�
                         </div>
                         
                         <div className="mt-6">
-                          <h4 className="text-lg font-semibold mb-3">🚀 Production Deployment Setup</h4>
+                          <h4 className="text-lg font-semibold mb-3">{t.session26.productionDeploymentSetup}</h4>
                           <p className="text-sm text-muted-foreground mb-4">
                             Complete deployment configuration with monitoring and scaling. Save each file as indicated.
                           </p>
@@ -4553,7 +5020,7 @@ if __name__ == "__main__":
                           </div>
                           
                           <div className="mt-4 p-4 bg-green-50 dark:bg-green-950/20 rounded-lg border border-green-200 dark:border-green-800">
-                            <h5 className="font-semibold text-green-800 dark:text-green-200 mb-2">🎯 Production Deployment Checklist</h5>
+                            <h5 className="font-semibold text-green-800 dark:text-green-200 mb-2">{t.session26.productionDeploymentChecklist}</h5>
                             <div className="text-sm text-green-700 dark:text-green-300 space-y-1">
                               <div>✅ Database properly configured with indexes and constraints</div>
                               <div>✅ Authentication and security measures implemented</div>

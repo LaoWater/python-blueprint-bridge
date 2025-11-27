@@ -4,12 +4,15 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ArrowLeft, Play, Pause, RotateCcw, TrendingUp, BarChart3, Grid, Target, Lightbulb, Code, Download, Zap, Activity, Calendar, DollarSign, Briefcase, Heart, Brain, Palette, Eye, LineChart } from 'lucide-react';
+import { ArrowLeft, Play, Pause, RotateCcw, TrendingUp, BarChart3, Grid, Target, Lightbulb, Code, Download, Zap, Activity, Calendar, DollarSign, Briefcase, Heart, Brain, Palette, Eye, LineChart, Check } from 'lucide-react';
 import { CodeBlockR } from '@/components/CodeBlockR';
 
 const SeabornMasteryArtifact = () => {
   const navigate = useNavigate();
-  
+
+  // Language State
+  const [language, setLanguage] = useState<'en' | 'ro'>('en');
+
   // Origin Story State
   const [storyStep, setStoryStep] = useState(-1);
   const [isStoryRunning, setIsStoryRunning] = useState(false);
@@ -46,40 +49,148 @@ const SeabornMasteryArtifact = () => {
   
   // Code Snippets State
   const [expandedCode, setExpandedCode] = useState({});
-  
-  // Story progression
-  const storyChapters = [
-    {
-      title: "🧠 The Statistical Visualization Crisis",
-      content: "2012: Michael Waskom, Stanford neuroscience PhD student, spends 6 hours creating a single publication-ready correlation matrix in matplotlib. His advisor asks for 'just a small color change' - another 2 hours lost.",
-      details: "Academic research demands both statistical rigor and visual elegance. Beautiful visualizations aren't luxury - they're essential for communicating complex statistical relationships to peers, reviewers, and the public."
+
+  // Code Copy State
+  const [copiedCode, setCopiedCode] = useState<string | null>(null);
+
+  // Translations
+  const translations = {
+    en: {
+      header: {
+        title: "Seaborn Mastery",
+        subtitle: "Sessions 20-21: Statistical Visualization Excellence",
+        backToCourse: "Back to Course",
+        statistical: "Statistical",
+        advanced: "Advanced"
+      },
+      originStory: {
+        title: "The Origin Story: When Beautiful Statistics Became Essential",
+        subtitle: "From academic frustration to the most elegant statistical visualization library",
+        beginStory: "Begin Story",
+        playing: "Playing...",
+        clickToStart: "Click \"Begin Story\" to start the statistical visualization journey"
+      },
+      chapters: [
+        {
+          title: "🧠 The Statistical Visualization Crisis",
+          content: "2012: Michael Waskom, Stanford neuroscience PhD student, spends 6 hours creating a single publication-ready correlation matrix in matplotlib. His advisor asks for 'just a small color change' - another 2 hours lost.",
+          details: "Academic research demands both statistical rigor and visual elegance. Beautiful visualizations aren't luxury - they're essential for communicating complex statistical relationships to peers, reviewers, and the public."
+        },
+        {
+          title: "💡 The Breakthrough Insight",
+          content: "Waskom realizes the problem: matplotlib is a general plotting library, but statistical visualization has specific needs. Distributions, correlations, categorical comparisons - these require specialized tools.",
+          details: "The scientific community needed a library that understood statistical concepts natively, not just as raw data points to be plotted."
+        },
+        {
+          title: "🎨 Beautiful Statistics Born",
+          content: "2012: Seaborn is born. Vision: 'Make statistical visualization in Python as intuitive as statistical thinking itself.' First principle: beautiful defaults that communicate statistical concepts clearly.",
+          details: "Waskom built Seaborn on top of matplotlib but with statistical intelligence. It knows the difference between categorical and continuous data, between distributions and relationships."
+        },
+        {
+          title: "🌍 Academic to Enterprise",
+          content: "Today: From Nature publications to Netflix algorithms. Pharmaceutical companies use Seaborn for FDA submissions. Tech giants use it for A/B test analysis. Academic citation rates for papers with Seaborn visualizations are 40% higher.",
+          details: "Beautiful statistical communication became a competitive advantage across industries. Seaborn made statistical insight accessible to non-statisticians."
+        },
+        {
+          title: "🚀 Your Statistical Journey",
+          content: "Now you'll master the art of statistical storytelling. Every distribution you visualize, every correlation you reveal, every categorical comparison you make builds statistical intuition.",
+          details: "Welcome to the world where statistics become stories, patterns become insights, and you become the statistical storyteller."
+        }
+      ],
+      fundamentals: {
+        title: "Chapter 1: Statistical Foundations",
+        subtitle: "Master the core statistical plots that reveal hidden patterns"
+      },
+      applications: {
+        title: "Chapter 2: Statistical Applications",
+        subtitle: "Apply statistical visualization to optimize your life"
+      },
+      advanced: {
+        title: "Chapter 3: Advanced Statistical Mastery",
+        subtitle: "Professional-grade statistical visualization and analysis"
+      },
+      challenges: {
+        title: "🎯 Your Statistical Mastery Challenges",
+        subtitle: "Real statistical projects that will transform how you understand your world"
+      }
     },
-    {
-      title: "💡 The Breakthrough Insight", 
-      content: "Waskom realizes the problem: matplotlib is a general plotting library, but statistical visualization has specific needs. Distributions, correlations, categorical comparisons - these require specialized tools.",
-      details: "The scientific community needed a library that understood statistical concepts natively, not just as raw data points to be plotted."
-    },
-    {
-      title: "🎨 Beautiful Statistics Born",
-      content: "2012: Seaborn is born. Vision: 'Make statistical visualization in Python as intuitive as statistical thinking itself.' First principle: beautiful defaults that communicate statistical concepts clearly.",
-      details: "Waskom built Seaborn on top of matplotlib but with statistical intelligence. It knows the difference between categorical and continuous data, between distributions and relationships."
-    },
-    {
-      title: "🌍 Academic to Enterprise",
-      content: "Today: From Nature publications to Netflix algorithms. Pharmaceutical companies use Seaborn for FDA submissions. Tech giants use it for A/B test analysis. Academic citation rates for papers with Seaborn visualizations are 40% higher.",
-      details: "Beautiful statistical communication became a competitive advantage across industries. Seaborn made statistical insight accessible to non-statisticians."
-    },
-    {
-      title: "🚀 Your Statistical Journey",
-      content: "Now you'll master the art of statistical storytelling. Every distribution you visualize, every correlation you reveal, every categorical comparison you make builds statistical intuition.",
-      details: "Welcome to the world where statistics become stories, patterns become insights, and you become the statistical storyteller."
+    ro: {
+      header: {
+        title: "Stăpânirea Seaborn",
+        subtitle: "Sesiunile 20-21: Excelență în Vizualizarea Statistică",
+        backToCourse: "Înapoi la Curs",
+        statistical: "Statistic",
+        advanced: "Avansat"
+      },
+      originStory: {
+        title: "Povestea Originii: Când Statisticile Frumoase au Devenit Esențiale",
+        subtitle: "De la frustrare academică la cea mai elegantă bibliotecă de vizualizare statistică",
+        beginStory: "Începe Povestea",
+        playing: "Se redă...",
+        clickToStart: "Apasă \"Începe Povestea\" pentru a porni călătoria în vizualizarea statistică"
+      },
+      chapters: [
+        {
+          title: "🧠 Criza Vizualizării Statistice",
+          content: "2012: Michael Waskom, doctorand în neuroștiințe la Stanford, petrece 6 ore creând o singură matrice de corelație gata de publicare în matplotlib. Coordonatorul său cere 'doar o mică schimbare de culoare' - încă 2 ore pierdute.",
+          details: "Cercetarea academică necesită atât rigoare statistică, cât și eleganță vizuală. Vizualizările frumoase nu sunt lux - sunt esențiale pentru comunicarea relațiilor statistice complexe către colegi, evaluatori și public."
+        },
+        {
+          title: "💡 Intuiția Revoluționară",
+          content: "Waskom realizează problema: matplotlib este o bibliotecă generală de grafice, dar vizualizarea statistică are nevoi specifice. Distribuții, corelații, comparații categoriale - acestea necesită instrumente specializate.",
+          details: "Comunitatea științifică avea nevoie de o bibliotecă care înțelege conceptele statistice în mod nativ, nu doar ca puncte de date brute de trasat."
+        },
+        {
+          title: "🎨 Nașterea Statisticilor Frumoase",
+          content: "2012: Seaborn se naște. Viziunea: 'Să facem vizualizarea statistică în Python la fel de intuitivă ca gândirea statistică însăși.' Primul principiu: valori implicite frumoase care comunică clar conceptele statistice.",
+          details: "Waskom a construit Seaborn pe baza matplotlib dar cu inteligență statistică. Știe diferența dintre date categoriale și continue, între distribuții și relații."
+        },
+        {
+          title: "🌍 De la Academic la Enterprise",
+          content: "Astăzi: De la publicații Nature la algoritmi Netflix. Companiile farmaceutice folosesc Seaborn pentru depuneri FDA. Giganții tech îl folosesc pentru analiza testelor A/B. Rata de citări academice pentru lucrări cu vizualizări Seaborn este cu 40% mai mare.",
+          details: "Comunicarea statistică frumoasă a devenit un avantaj competitiv în toate industriile. Seaborn a făcut perspectivele statistice accesibile non-statisticienilor."
+        },
+        {
+          title: "🚀 Călătoria Ta Statistică",
+          content: "Acum vei stăpâni arta povestirii statistice. Fiecare distribuție pe care o vizualizezi, fiecare corelație pe care o dezvălui, fiecare comparație categorială pe care o faci construiește intuiția statistică.",
+          details: "Bine ai venit în lumea în care statisticile devin povești, tiparele devin perspective, și tu devii povestitor statistic."
+        }
+      ],
+      fundamentals: {
+        title: "Capitolul 1: Fundamente Statistice",
+        subtitle: "Stăpânește graficele statistice de bază care dezvăluie tipare ascunse"
+      },
+      applications: {
+        title: "Capitolul 2: Aplicații Statistice",
+        subtitle: "Aplică vizualizarea statistică pentru a-ți optimiza viața"
+      },
+      advanced: {
+        title: "Capitolul 3: Măiestrie Statistică Avansată",
+        subtitle: "Vizualizare și analiză statistică de nivel profesional"
+      },
+      challenges: {
+        title: "🎯 Provocările Tale de Stăpânire Statistică",
+        subtitle: "Proiecte statistice reale care vor transforma modul în care înțelegi lumea ta"
+      }
     }
-  ];
-  
-  const fundamentalConcepts = [
+  };
+
+  // Get current language translations
+  const t = translations[language];
+
+  // Story progression - use translated chapters
+  const storyChapters = t.chapters;
+
+  const fundamentalConceptsData = [
     {
-      title: "📊 Distributions: Understanding Your Data's Shape",
-      description: "Reveal the hidden patterns in your data distributions - essential for any statistical analysis",
+      title: {
+        en: "📊 Distributions: Understanding Your Data's Shape",
+        ro: "📊 Distribuții: Înțelegerea Formei Datelor Tale"
+      },
+      description: {
+        en: "Reveal the hidden patterns in your data distributions - essential for any statistical analysis",
+        ro: "Dezvăluie tiparele ascunse în distribuțiile tale de date - esențial pentru orice analiză statistică"
+      },
       code: `import seaborn as sns
 import matplotlib.pyplot as plt
 import numpy as np
@@ -118,16 +229,30 @@ plt.show()
 print(f"Your average sleep: {sleep_hours.mean():.1f} hours")
 print(f"Sleep consistency: {sleep_hours.std():.1f} hour standard deviation")
 print(f"Energy correlation: {np.corrcoef(sleep_hours, energy_levels)[0,1]:.2f}")`,
-      insights: [
-        "Histograms show data frequency - essential for understanding normality",
-        "KDE curves reveal distribution shape beyond simple bars",
-        "Box plots instantly highlight outliers and quartiles",
-        "Violin plots combine distribution shape with statistical summaries"
-      ]
+      insights: {
+        en: [
+          "Histograms show data frequency - essential for understanding normality",
+          "KDE curves reveal distribution shape beyond simple bars",
+          "Box plots instantly highlight outliers and quartiles",
+          "Violin plots combine distribution shape with statistical summaries"
+        ],
+        ro: [
+          "Histogramele arată frecvența datelor - esențial pentru înțelegerea normalității",
+          "Curbele KDE dezvăluie forma distribuției dincolo de bare simple",
+          "Diagramele box evidențiază instantaneu valorile extreme și cuartilele",
+          "Diagramele violin combină forma distribuției cu rezumate statistice"
+        ]
+      }
     },
     {
-      title: "🔗 Relationships: Uncovering Hidden Correlations",
-      description: "Discover how variables relate to each other - the foundation of all predictive analytics",
+      title: {
+        en: "🔗 Relationships: Uncovering Hidden Correlations",
+        ro: "🔗 Relații: Descoperirea Corelațiilor Ascunse"
+      },
+      description: {
+        en: "Discover how variables relate to each other - the foundation of all predictive analytics",
+        ro: "Descoperă cum variabilele se leagă între ele - fundamentul tuturor analizelor predictive"
+      },
       code: `# Personal finance correlation analysis
 # Real example: Find which expenses correlate with life satisfaction
 
@@ -176,16 +301,30 @@ print("💡 INSIGHTS:")
 print(f"Entertainment-Satisfaction correlation: {df['Entertainment'].corr(df['Satisfaction']):.2f}")
 print(f"Gym-Satisfaction correlation: {df['Gym'].corr(df['Satisfaction']):.2f}")
 print(f"Food Delivery-Satisfaction correlation: {df['Food_Delivery'].corr(df['Satisfaction']):.2f}")`,
-      insights: [
-        "Regression lines show trend direction and strength",
-        "Scatter plots reveal linear and non-linear relationships", 
-        "Correlation matrices provide complete relationship overview",
-        "Bubble sizes add third dimension to relationship analysis"
-      ]
+      insights: {
+        en: [
+          "Regression lines show trend direction and strength",
+          "Scatter plots reveal linear and non-linear relationships",
+          "Correlation matrices provide complete relationship overview",
+          "Bubble sizes add third dimension to relationship analysis"
+        ],
+        ro: [
+          "Liniile de regresie arată direcția și puterea tendinței",
+          "Graficele scatter dezvăluie relații liniare și neliniare",
+          "Matricele de corelație oferă o vedere completă a relațiilor",
+          "Dimensiunile bulelor adaugă a treia dimensiune analizei relațiilor"
+        ]
+      }
     },
     {
-      title: "📂 Categories: Comparing Groups Like a Pro",
-      description: "Compare categories with statistical rigor - from A/B tests to market segmentation",
+      title: {
+        en: "📂 Categories: Comparing Groups Like a Pro",
+        ro: "📂 Categorii: Compararea Grupurilor ca un Profesionist"
+      },
+      description: {
+        en: "Compare categories with statistical rigor - from A/B tests to market segmentation",
+        ro: "Compară categorii cu rigoare statistică - de la teste A/B la segmentarea pieței"
+      },
       code: `# Real example: Analyze your daily habits by weekday vs weekend
 # Track yourself for 30 days and see the patterns!
 import seaborn as sns
@@ -458,14 +597,30 @@ Other useful scipy.stats functions:
    • stats.mannwhitneyu() - Non-parametric alternative to t-test
 """)
 print("="*70 + "\n")`,
-      insights: [
-        "Box plots show median, quartiles, and outliers for statistical rigor",
-        "Violin plots reveal distribution shapes within categories",
-        "Swarm plots show every individual data point without overlap",
-        "Confidence intervals indicate statistical reliability of differences"
-      ]
+      insights: {
+        en: [
+          "Box plots show median, quartiles, and outliers for statistical rigor",
+          "Violin plots reveal distribution shapes within categories",
+          "Swarm plots show every individual data point without overlap",
+          "Confidence intervals indicate statistical reliability of differences"
+        ],
+        ro: [
+          "Diagramele box arată mediana, cuartilele și valorile extreme pentru rigoare statistică",
+          "Diagramele violin dezvăluie formele distribuțiilor în categorii",
+          "Diagramele swarm arată fiecare punct de date individual fără suprapunere",
+          "Intervalele de încredere indică fiabilitatea statistică a diferențelor"
+        ]
+      }
     }
   ];
+
+  // Create language-specific fundamental concepts
+  const fundamentalConcepts = fundamentalConceptsData.map(concept => ({
+    title: concept.title[language],
+    description: concept.description[language],
+    code: concept.code,
+    insights: concept.insights[language]
+  }));
   
   const advancedTechniques = [
     {
@@ -776,6 +931,16 @@ print(f"• Recommendation: {'Optimize weekend habits' if weekday_mean > weekend
     }));
   };
 
+  const copyCodeToClipboard = async (code: string, index: number) => {
+    try {
+      await navigator.clipboard.writeText(code);
+      setCopiedCode(`code-${index}`);
+      setTimeout(() => setCopiedCode(null), 3000);
+    } catch (err) {
+      console.error('Failed to copy code:', err);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
       {/* Header */}
@@ -783,31 +948,52 @@ print(f"• Recommendation: {'Optimize weekend habits' if weekday_mean > weekend
         <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <Button 
-                variant="ghost" 
-                size="sm" 
+              <Button
+                variant="ghost"
+                size="sm"
                 onClick={() => navigate('/data-visualizing')}
                 className="flex items-center gap-2"
               >
                 <ArrowLeft className="w-4 h-4" />
-                Back to Course
+                {t.header.backToCourse}
               </Button>
               <div className="w-px h-6 bg-border" />
               <div>
                 <h1 className="text-2xl font-bold bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent">
-                  Seaborn Mastery
+                  {t.header.title}
                 </h1>
-                <p className="text-sm text-muted-foreground">Sessions 20-21: Statistical Visualization Excellence</p>
+                <p className="text-sm text-muted-foreground">{t.header.subtitle}</p>
               </div>
             </div>
             <div className="flex items-center gap-3">
+              {/* Language Switcher */}
+              <div className="flex items-center gap-2 border rounded-md p-1 bg-background">
+                <Button
+                  variant={language === 'en' ? 'default' : 'ghost'}
+                  size="sm"
+                  onClick={() => setLanguage('en')}
+                  className="h-8 px-2"
+                  title="English"
+                >
+                  🇬🇧 EN
+                </Button>
+                <Button
+                  variant={language === 'ro' ? 'default' : 'ghost'}
+                  size="sm"
+                  onClick={() => setLanguage('ro')}
+                  className="h-8 px-2"
+                  title="Română"
+                >
+                  🇷🇴 RO
+                </Button>
+              </div>
               <Badge variant="secondary" className="bg-violet-100 text-violet-800 dark:bg-violet-900 dark:text-violet-200">
                 <TrendingUp className="w-3 h-3 mr-1" />
-                Statistical
+                {t.header.statistical}
               </Badge>
               <Badge variant="secondary" className="bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200">
                 <Brain className="w-3 h-3 mr-1" />
-                Advanced
+                {t.header.advanced}
               </Badge>
             </div>
           </div>
@@ -823,27 +1009,27 @@ print(f"• Recommendation: {'Optimize weekend habits' if weekday_mean > weekend
                 <div>
                   <CardTitle className="flex items-center gap-2 text-violet-700 dark:text-violet-300">
                     <Target className="w-5 h-5" />
-                    The Origin Story: When Beautiful Statistics Became Essential
+                    {t.originStory.title}
                   </CardTitle>
                   <CardDescription className="text-lg mt-2">
-                    From academic frustration to the most elegant statistical visualization library
+                    {t.originStory.subtitle}
                   </CardDescription>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Button 
-                    onClick={runOriginStory} 
+                  <Button
+                    onClick={runOriginStory}
                     disabled={isStoryRunning}
                     className="bg-violet-600 hover:bg-violet-700 text-white"
                   >
                     {isStoryRunning ? (
                       <>
                         <Pause className="w-4 h-4 mr-2" />
-                        Playing...
+                        {t.originStory.playing}
                       </>
                     ) : (
                       <>
                         <Play className="w-4 h-4 mr-2" />
-                        Begin Story
+                        {t.originStory.beginStory}
                       </>
                     )}
                   </Button>
@@ -898,8 +1084,8 @@ print(f"• Recommendation: {'Optimize weekend habits' if weekday_mean > weekend
               <BarChart3 className="w-5 h-5 text-white" />
             </div>
             <div>
-              <h2 className="text-2xl font-bold text-foreground">Chapter 1: Statistical Foundations</h2>
-              <p className="text-muted-foreground">Master the core statistical plots that reveal hidden patterns</p>
+              <h2 className="text-2xl font-bold text-foreground">{t.fundamentals.title}</h2>
+              <p className="text-muted-foreground">{t.fundamentals.subtitle}</p>
             </div>
           </div>
 
@@ -917,27 +1103,61 @@ print(f"• Recommendation: {'Optimize weekend habits' if weekday_mean > weekend
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
-                    <div className="rounded-lg overflow-hidden border border-gray-700">
-                      <CodeBlockR language="python">{concept.code}</CodeBlockR>
-                    </div>
-                    
-                    <div className="flex gap-2">
-                      <Button 
-                        variant="outline"
-                        onClick={() => simulateVisualization(index === 0 ? 'distribution' : index === 1 ? 'relationship' : 'categories')}
-                        className="bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border-emerald-200"
+                    {/* Collapsible Code Block */}
+                    <div className="border border-gray-700 rounded-lg overflow-hidden">
+                      <Button
+                        variant="ghost"
+                        onClick={() => toggleCodeExpansion(`code-${index}`)}
+                        className="w-full flex items-center justify-between p-3 bg-gray-800 dark:bg-gray-900 hover:bg-gray-750 text-left"
                       >
-                        <Play className="w-4 h-4 mr-2" />
-                        Run Example
+                        <span className="text-sm font-medium text-gray-200">
+                          {expandedCode[`code-${index}`]
+                            ? (language === 'en' ? '▼ Hide Code Example' : '▼ Ascunde Exemplu Cod')
+                            : (language === 'en' ? '▶ Show Code Example' : '▶ Arată Exemplu Cod')
+                          }
+                        </span>
+                        <Code className="w-4 h-4 text-gray-400" />
                       </Button>
-                      <Button variant="ghost" onClick={() => toggleCodeExpansion(`fund-${index}`)}>
-                        {expandedCode[`fund-${index}`] ? 'Show Less' : 'Show More Insights'}
+                      {expandedCode[`code-${index}`] && (
+                        <div className="border-t border-gray-700">
+                          <CodeBlockR language="python">{concept.code}</CodeBlockR>
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="flex gap-2">
+                      <Button
+                        variant="outline"
+                        onClick={() => copyCodeToClipboard(concept.code, index)}
+                        className={`${
+                          copiedCode === `code-${index}`
+                            ? 'bg-green-50 hover:bg-green-100 text-green-700 border-green-300'
+                            : 'bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border-emerald-200'
+                        }`}
+                      >
+                        {copiedCode === `code-${index}` ? (
+                          <>
+                            <Check className="w-4 h-4 mr-2" />
+                            {language === 'en' ? 'Code Copied! Go run it!' : 'Cod Copiat! Du-te și rulează-l!'}
+                          </>
+                        ) : (
+                          <>
+                            <Play className="w-4 h-4 mr-2" />
+                            {language === 'en' ? 'Copy Code to Run' : 'Copiază Cod pentru Rulare'}
+                          </>
+                        )}
+                      </Button>
+                      <Button variant="ghost" onClick={() => toggleCodeExpansion(`insights-${index}`)}>
+                        {expandedCode[`insights-${index}`]
+                          ? (language === 'en' ? 'Show Less' : 'Arată Mai Puțin')
+                          : (language === 'en' ? 'Show More Insights' : 'Arată Mai Multe Perspective')
+                        }
                       </Button>
                     </div>
 
-                    {expandedCode[`fund-${index}`] && (
+                    {expandedCode[`insights-${index}`] && (
                       <div className="mt-4 p-4 bg-muted/50 rounded-lg">
-                        <h5 className="font-semibold mb-2">💡 Key Statistical Insights:</h5>
+                        <h5 className="font-semibold mb-2">💡 {language === 'en' ? 'Key Statistical Insights:' : 'Perspective Statistice Cheie:'}</h5>
                         <ul className="space-y-2 text-sm">
                           {concept.insights.map((insight, idx) => (
                             <li key={idx} className="flex items-start gap-2">
@@ -962,8 +1182,8 @@ print(f"• Recommendation: {'Optimize weekend habits' if weekday_mean > weekend
               <Activity className="w-5 h-5 text-white" />
             </div>
             <div>
-              <h2 className="text-2xl font-bold text-foreground">Chapter 2: Statistical Applications</h2>
-              <p className="text-muted-foreground">Apply statistical visualization to optimize your life</p>
+              <h2 className="text-2xl font-bold text-foreground">{t.applications.title}</h2>
+              <p className="text-muted-foreground">{t.applications.subtitle}</p>
             </div>
           </div>
 
@@ -1099,8 +1319,8 @@ print(f"• Recommendation: {'Optimize weekend habits' if weekday_mean > weekend
               <Brain className="w-5 h-5 text-white" />
             </div>
             <div>
-              <h2 className="text-2xl font-bold text-foreground">Chapter 3: Advanced Statistical Mastery</h2>
-              <p className="text-muted-foreground">Professional-grade statistical visualization and analysis</p>
+              <h2 className="text-2xl font-bold text-foreground">{t.advanced.title}</h2>
+              <p className="text-muted-foreground">{t.advanced.subtitle}</p>
             </div>
           </div>
 
@@ -1119,14 +1339,32 @@ print(f"• Recommendation: {'Optimize weekend habits' if weekday_mean > weekend
                 <CardContent>
                   <Tabs defaultValue="code" className="w-full">
                     <TabsList className="grid w-full grid-cols-3">
-                      <TabsTrigger value="code">Code</TabsTrigger>
-                      <TabsTrigger value="explanation">Statistical Theory</TabsTrigger>
-                      <TabsTrigger value="examples">Professional Applications</TabsTrigger>
+                      <TabsTrigger value="code">{language === 'en' ? 'Code' : 'Cod'}</TabsTrigger>
+                      <TabsTrigger value="explanation">{language === 'en' ? 'Statistical Theory' : 'Teorie Statistică'}</TabsTrigger>
+                      <TabsTrigger value="examples">{language === 'en' ? 'Professional Applications' : 'Aplicații Profesionale'}</TabsTrigger>
                     </TabsList>
-                    
+
                     <TabsContent value="code" className="space-y-4">
-                      <div className="rounded-lg overflow-hidden border border-gray-700">
-                        <CodeBlockR language="python">{technique.code}</CodeBlockR>
+                      {/* Collapsible Code Block for Advanced Techniques */}
+                      <div className="border border-gray-700 rounded-lg overflow-hidden">
+                        <Button
+                          variant="ghost"
+                          onClick={() => toggleCodeExpansion(`advanced-code-${index}`)}
+                          className="w-full flex items-center justify-between p-3 bg-gray-800 dark:bg-gray-900 hover:bg-gray-750 text-left"
+                        >
+                          <span className="text-sm font-medium text-gray-200">
+                            {expandedCode[`advanced-code-${index}`]
+                              ? (language === 'en' ? '▼ Hide Advanced Code' : '▼ Ascunde Cod Avansat')
+                              : (language === 'en' ? '▶ Show Advanced Code' : '▶ Arată Cod Avansat')
+                            }
+                          </span>
+                          <Code className="w-4 h-4 text-gray-400" />
+                        </Button>
+                        {expandedCode[`advanced-code-${index}`] && (
+                          <div className="border-t border-gray-700">
+                            <CodeBlockR language="python">{technique.code}</CodeBlockR>
+                          </div>
+                        )}
                       </div>
                     </TabsContent>
                     
@@ -1207,10 +1445,10 @@ print(f"• Recommendation: {'Optimize weekend habits' if weekday_mean > weekend
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-indigo-700 dark:text-indigo-300">
                 <Target className="w-5 h-5" />
-                🎯 Your Statistical Mastery Challenges
+                {t.challenges.title}
               </CardTitle>
               <CardDescription className="text-lg">
-                Real statistical projects that will transform how you understand your world
+                {t.challenges.subtitle}
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -1284,12 +1522,12 @@ print(f"• Recommendation: {'Optimize weekend habits' if weekday_mean > weekend
         <div className="flex justify-between items-center mt-12 pt-8 border-t">
           <Button variant="outline" onClick={() => navigate('/data-visualizing')}>
             <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Course Overview
+            {t.header.backToCourse}
           </Button>
           <div className="flex items-center gap-2">
-            <Badge variant="secondary">Sessions 20-21 Complete</Badge>
+            <Badge variant="secondary">{language === 'en' ? 'Sessions 20-21 Complete' : 'Sesiunile 20-21 Complete'}</Badge>
             <Button className="bg-gradient-to-r from-violet-600 to-purple-600 text-white">
-              Continue to Interactive Visualization
+              {language === 'en' ? 'Continue to Interactive Visualization' : 'Continuă la Vizualizare Interactivă'}
               <ArrowLeft className="w-4 h-4 ml-2 rotate-180" />
             </Button>
           </div>

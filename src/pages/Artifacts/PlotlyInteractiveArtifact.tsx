@@ -1852,7 +1852,7 @@ print("✅ Dashboard salvat ca 'health_dashboard.html'")`}</CodeBlockR>
           </Button>
           
           <Button
-            onClick={() => navigate('/artifacts/streamlit-dashboards')}
+            onClick={() => navigate('/artifacts/streamlit-unified')}
             className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white flex items-center gap-2"
           >
             Next: Streamlit Dashboards
