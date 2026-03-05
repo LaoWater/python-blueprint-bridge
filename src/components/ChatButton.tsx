@@ -145,8 +145,18 @@ const ChatButton: React.FC<ChatButtonProps> = ({ disabled: propDisabled = false,
     setIsLoading(true); // Set loading for the button
 
     try {
+      // Build conversation history for short-term memory (exclude initial greeting)
+      const conversationHistory = messages
+        .filter((_, i) => i > 0) // skip the initial assistant greeting
+        .map(msg => ({
+          role: msg.sender === 'user' ? 'user' : 'assistant',
+          content: msg.content,
+        }));
+      // Add the current message the user just typed
+      conversationHistory.push({ role: 'user', content: currentInput });
+
       const { data, error } = await supabase.functions.invoke('chat-assistant', {
-        body: { message: currentInput }
+        body: { messages: conversationHistory }
       });
 
       if (error) {

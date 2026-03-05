@@ -43,12 +43,21 @@ serve(async (req) => {
   }
 
   try {
-    const { message } = await req.json();
-    console.log('Received message:', message);
+    const { messages } = await req.json();
+    const totalChars = Array.isArray(messages)
+      ? messages.reduce((sum: number, m: { content?: string }) => sum + (m.content?.length || 0), 0)
+      : 0;
+    console.log(`Received ${messages?.length || 0} messages | Total content length: ${totalChars} chars`);
 
     if (!openAIApiKey) {
       throw new Error('OpenAI API key not configured');
     }
+
+    // Build the full conversation: system prompt + conversation history
+    const chatMessages = [
+      { role: 'system', content: SYSTEM_PROMPT },
+      ...(Array.isArray(messages) ? messages : [{ role: 'user', content: messages }]),
+    ];
 
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
@@ -58,11 +67,8 @@ serve(async (req) => {
       },
       body: JSON.stringify({
         model: 'gpt-4.1-2025-04-14',
-        messages: [
-          { role: 'system', content: SYSTEM_PROMPT },
-          { role: 'user', content: message }
-        ],
-        max_completion_tokens: 2000,
+        messages: chatMessages,
+        max_completion_tokens: 16000,
       }),
     });
 

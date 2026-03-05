@@ -8,16 +8,25 @@ RUN apk add --no-cache \
     git \
     nano
 
+
+
+
 # Install only essential Python packages
 RUN pip install --no-cache-dir \
     requests \
     numpy
 
+
+
+
 # Create user - use /tmp as workspace for write permissions  
 RUN adduser -D -s /bin/bash pythonuser
 
+
 USER pythonuser
 WORKDIR /tmp
+
+
 
 # Clean shell setup for terminal output
 RUN echo 'export PS1="🐍 \\w $ "' >> ~/.bashrc && \
